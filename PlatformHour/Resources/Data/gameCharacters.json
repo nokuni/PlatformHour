@@ -1,0 +1,10 @@
+[
+    {
+        "id": "Player",
+        "sprites": "Player Sprites",
+    },
+    {
+        "id": "Opossum",
+        "sprites": "Opossum Sprites"
+    }
+]
