@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Temple Snow",
+        "middle": "templeMiddleGround",
+        "top": "templeTopGround",
+        "bottom": "templeBottomGround",
+        "left": "templeLeftGround",
+        "right": "templeRightGround",
+        "topLeft": "templeTopLeftGround",
+        "topRight": "templeTopRightGround",
+        "bottomLeft": "templeBottomLeftGround",
+        "bottomRight": "templeBottomRightGround",
+    }
+]

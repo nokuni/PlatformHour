@@ -25,10 +25,19 @@ extension Sprite {
         case noGameCharacterFound = "No game character found in data"
     }
     
-    static let all: [Sprite] = try! Bundle.main.decode("sprites.json")
+    static func all() throws -> [Sprite] {
+        do {
+            let sprites: [Sprite] = try Bundle.main.decodeJSON("sprites.json")
+            return sprites
+        } catch {
+            throw SpriteError.noSpriteFound
+        }
+    }
     
     static func get(_ name: String, state: Sprite.State) throws -> Sprite {
-        if let sprite = Sprite.all.first(where: { $0.name == name && $0.state == state }) {
+        if let sprite = try Sprite.all().first(where: {
+            $0.name == name && $0.state == state
+        }) {
             return sprite
         }
         throw SpriteError.noSpriteFound.rawValue

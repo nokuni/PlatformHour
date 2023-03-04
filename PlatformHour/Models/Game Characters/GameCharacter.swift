@@ -25,7 +25,7 @@ extension GameCharacter {
         case noGameCharacterFound = "No game character found in data"
     }
     
-    static let all: [GameCharacter] = try! Bundle.main.decode("gameCharacters.json")
+    static let all: [GameCharacter] = try! Bundle.main.decodeJSON("gameCharacters.json")
     
     static func get(_ id: String) throws -> GameCharacter {
         if let gameCharacter = GameCharacter.all.first(where: { $0.id == id }) {

@@ -9,7 +9,7 @@ import SwiftUI
 import SpriteKit
 
 struct ContentView: View {
-    @StateObject var scene = GameScene()
+    var scene = GameScene()
     var body: some View {
         SpriteView(scene: scene)
             .ignoresSafeArea()

@@ -1,8 +1,15 @@
 [
     {
-        "category": "numberBox"
+        "name": "Crate",
+        "image": "crate",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true
+        },
+        "animation": {
+            "hit": ["crateHit0", "crateHit1", "crate"],
+            "death": ["crateShards0", "crateShards1", "crateShards2"],
+        }
     },
-    {
-        "category": "lockBox"
-    }
 ]

@@ -9,15 +9,15 @@ import SpriteKit
 import GameController
 import PlayfulKit
 
-final public class GameScene: SKScene, ObservableObject, SKPhysicsContactDelegate {
+final public class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    @Published var player = Player()
+    var game = Game()
+    var player = Player()
     
     var dimension: GameDimension?
     var gameCamera: GameCamera?
     var animation: GameAnimation?
     var collision: GameCollision?
-    var controller: GameControllerManager?
     var state: GameState?
     var environment: GameEnvironment?
     var content: GameContent?
@@ -26,29 +26,34 @@ final public class GameScene: SKScene, ObservableObject, SKPhysicsContactDelegat
     var hud: GameHUD?
     
     func startGame() {
-        size = CGSize.screen
-        physicsWorld.gravity = CGVector(dx: 0, dy: -10)
+        setup(gravity: GameCore.gravity)
         physicsWorld.contactDelegate = self
         
         print("Game started")
         
+        state = GameState(scene: self)
+        hud = GameHUD(scene: self)
+        sound = GameSound(scene: self)
         dimension = GameDimension(scene: self)
         
-        gameCamera = GameCamera(scene: self)
-        animation = GameAnimation(scene: self)
-        collision = GameCollision(scene: self)
-        controller = GameControllerManager(scene: self)
-        state = GameState(scene: self)
+        animation = GameAnimation(scene: self, dimension: dimension!)
         
-        environment = GameEnvironment(scene: self)
-        content = GameContent(scene: self)
-        logic = GameLogic(scene: self)
-        sound = GameSound(scene: self)
-        hud = GameHUD(scene: self)
+        logic = GameLogic(scene: self, animation: animation!)
+        
+        collision = GameCollision(scene: self, game: game, animation: animation!, logic: logic!)
+        
+        environment = GameEnvironment(scene: self, dimension: dimension!, animation: animation!)
+        
+        gameCamera = GameCamera(scene: self, environment: environment!)
+        
+        content = GameContent(scene: self, dimension: dimension!, environment: environment!, animation: animation!)
+        
+        game.controller = GameControllerManager(scene: self, state: state!, dimension: dimension!, environment: environment!, content: content!)
     }
     
     public override func didMove(to view: SKView) {
         startGame()
+        //cameraGesture(view)
     }
     
     public override func update(_ currentTime: TimeInterval) {
@@ -61,6 +66,7 @@ final public class GameScene: SKScene, ObservableObject, SKPhysicsContactDelegat
         
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
+        
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
             firstBody = contact.bodyA
             secondBody = contact.bodyB
@@ -69,15 +75,7 @@ final public class GameScene: SKScene, ObservableObject, SKPhysicsContactDelegat
             secondBody = contact.bodyA
         }
         
-        collision.hitObject(
-            GameCollision.NodeBody(body: firstBody, bitmaskCategory: collision.playerMask),
-            with: GameCollision.NodeBody(body: secondBody, bitmaskCategory: collision.objectMask)
-        )
-        
-        collision.landOnGround(
-            GameCollision.NodeBody(body: firstBody, bitmaskCategory: collision.playerMask),
-            with: GameCollision.NodeBody(body: secondBody, bitmaskCategory: collision.wallMask)
-        )
+        collision.all(firstBody: firstBody, secondBody: secondBody)
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -89,19 +87,20 @@ final public class GameScene: SKScene, ObservableObject, SKPhysicsContactDelegat
         for touchedNode in touchedNodes {
             if let name = touchedNode.name {
                 
-                if let direction = GameControllerManager.Direction.allCases.first(where: { $0.rawValue == name }) {
-                    controller?.virtual?.touchDirectionalPad(direction)
+                if let direction = ActionLogic.Direction.allCases.first(where: { $0.rawValue == name }) {
+                    game.controller?.virtualController.touchDirectionalPad(direction)
                 }
                 
                 if let button = GameControllerManager.Button.allCases.first(where: { $0.rawValue == name }) {
-                    controller?.virtual?.touchButton(button)
+                    game.controller?.virtualController.touchButton(button)
                 }
             }
         }
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        controller?.action?.stopMovement()
+        game.controller?.action.stopMovement()
+        game.controller?.virtualController.hasPressedAnyInput = false
     }
     
 }

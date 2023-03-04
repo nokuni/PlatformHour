@@ -6,24 +6,52 @@
 //
 
 import Foundation
+import PlayfulKit
+
+struct GameObjectLogic: Codable {
+    var health: Int
+    var damage: Int
+    var isDestructible: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case health, damage, isDestructible
+    }
+}
+
+struct GameObjectAnimation: Codable {
+    var hit: [String]
+    var death: [String]
+}
+
 
 struct GameObject: Codable {
-    let category: Category
+    let name: String
+    let image: String
+    var logic: GameObjectLogic
+    var animation: GameObjectAnimation
+    var coordinate: Coordinate = Coordinate.zero
     
-    enum Category: String, Codable {
-        case numberBox
+    enum CodingKeys: String, CodingKey {
+        case name, image, logic, animation
     }
 }
 
 extension GameObject {
+    
     enum GameObjectError: String, Error {
         case objectNotFound
     }
     
-    static let all: [GameObject] = try! Bundle.main.decode("objects.json")
+    static var all: [GameObject] {
+        do {
+            return try Bundle.main.decodeJSON("objects.json")
+        } catch {
+            fatalError("Something wrong in the JSON.")
+        }
+    }
     
-    static func get(_ category: GameObject.Category) throws -> GameObject {
-        if let object = GameObject.all.first(where: { $0.category == category }) {
+    static func get(_ name: String) throws -> GameObject {
+        if let object = GameObject.all.first(where: { $0.name == name }) {
             return object
         }
         throw GameObjectError.objectNotFound.rawValue
