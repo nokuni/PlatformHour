@@ -22,9 +22,10 @@ final public class GameControllerManager {
         self.action = ActionLogic(scene: scene , state: state, environment: environment, content: content)
         self.virtualController = GameVirtualController(scene: scene, dimension: dimension, action: action)
         
+        print("Game Controller initialized ...")
         virtualController.create()
         observeForGameControllers()
-        //connectControllers()
+        connectControllers()
     }
     
     enum Button: String, CaseIterable {
@@ -53,16 +54,14 @@ final public class GameControllerManager {
     }
     
     @objc private func connectControllers() {
-        virtualController.remove()
+//        if !GCController.controllers().isEmpty {
+//            virtualController.remove()
+//        }
         scene.isPaused = false
         print("Controller connected ...")
-        var indexNumber = 0
-        for controller in GCController.controllers() {
-            if controller.extendedGamepad != nil {
-                controller.playerIndex = GCControllerPlayerIndex.init(rawValue: indexNumber)!
-                indexNumber += 1
-                setupControllerControls(controller: controller)
-            }
+        
+        if let currentGameController = GCController.current {
+            setupControllerControls(controller: currentGameController)
         }
     }
     

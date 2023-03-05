@@ -21,20 +21,23 @@ final public class GameCamera {
     
     public var camera = CameraManager()
     
+    // 1.1 - 1.25
     private let zoom = UIDevice.isOnPhone ? 1.1 : 1.25
     private let catchUpDelay: CGFloat = 0
     
-    private var position : CGPoint {
-        let mapTileNode = environment.map.tileNode(at: scene.game.playerCoordinate)
-        let mapTilePosition = mapTileNode?.position ?? .zero
-        return UIDevice.isOnPhone ?
-        CGPoint(x: mapTilePosition.x, y: mapTilePosition.y + (CGSize.screen.height * 0.2)) :
-        CGPoint(x: mapTilePosition.x, y: mapTilePosition.y + (CGSize.screen.height * 0.3))
+    private var adjustement: CGFloat {
+        return UIDevice.isOnPhone ? (CGSize.screen.height * 0.2) : (CGSize.screen.height * 0.3)
     }
+    
+    private var position : CGPoint {
+        guard let playerCoordinate = scene.game?.playerCoordinate else { return .zero }
+        guard let position = environment.map.tilePosition(from: playerCoordinate) else { return .zero }
+        let adjustedPosition = CGPoint(x: position.x, y: position.y + adjustement)
+        return adjustedPosition
+    }
+    
     private var playerPosition: CGPoint {
-        return UIDevice.isOnPhone ?
-        CGPoint(x: scene.player.node.position.x, y: scene.player.node.position.y + (CGSize.screen.height * 0.2)) :
-        CGPoint(x: scene.player.node.position.x, y: scene.player.node.position.y + (CGSize.screen.height * 0.3))
+        return CGPoint(x: scene.player.node.position.x, y: scene.player.node.position.y + adjustement)
     }
     
     private func configure() {
@@ -47,6 +50,10 @@ final public class GameCamera {
     
     public func followPlayer() {
         guard scene.isExistingChildNode(named: "Player") else { return }
-        camera.move(to: playerPosition)
+        if let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 17)) {
+            if playerPosition.x > minCameraPosition.x {
+                camera.move(to: playerPosition)
+            }
+        }
     }
 }

@@ -94,7 +94,7 @@ final public class GameAnimation {
     
     public func destroy(node: PKObjectNode,
                         filteringMode: SKTextureFilteringMode = .linear,
-                        timeInterval: TimeInterval = 0.05) {
+                        timeInterval: TimeInterval = 0.05, actionAfter: (() -> Void)?) {
         guard node.animation(from: StateID.death.rawValue) != nil else { return }
         
         let sequence = SKAction.sequence([
@@ -102,8 +102,9 @@ final public class GameAnimation {
                     identifier: .death,
                     filteringMode: filteringMode,
                     hitTimeInterval: timeInterval),
-            SKAction.removeFromParent()
+            SKAction.removeFromParent(),
         ])
-        node.run(sequence)
+        
+        manager.start(actionBeforeAnimation: nil, with: sequence, on: node, and: actionAfter)
     }
 }

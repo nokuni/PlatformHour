@@ -84,7 +84,7 @@ final public class GameContent {
     }
     
     func spawn() {
-        let position = environment.map.tilePosition(from: scene.game.playerCoordinate) ?? .zero
+        let position = environment.map.tilePosition(from: scene.game?.playerCoordinate ?? .zero) ?? .zero
         let effect = animation.effect(effect: animation.spark, at: position, alpha: 0.5)
         scene.addChild(effect)
         let sequence = SKAction.sequence([
@@ -103,12 +103,15 @@ final public class GameContent {
         scene.player.node = object(name: "Player",
                                    physicsBodySizeTailoring: -dimension.tileSize.width * 0.1,
                                    collision: collision)
+        
         scene.player.node.physicsBody?.friction = 0
         scene.player.node.physicsBody?.allowsRotation = false
+        scene.player.node.physicsBody?.affectedByGravity = false
+        
         addArrow("arrowRight", named: "Player Arrow", on: scene.player.node)
         
-        scene.player.node.coordinate = scene.game.playerCoordinate
-        scene.player.node.position = environment.map.tilePosition(from: scene.game.playerCoordinate) ?? .zero
+        scene.player.node.coordinate = scene.game?.playerCoordinate ?? .zero
+        scene.player.node.position = environment.map.tilePosition(from: scene.game?.playerCoordinate ?? .zero) ?? .zero
         scene.player.node.texture = SKTexture(imageNamed: "playerIdle0")
         scene.player.node.texture?.filteringMode = .nearest
         scene.addChild(scene.player.node)

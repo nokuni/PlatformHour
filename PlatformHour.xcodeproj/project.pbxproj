@@ -33,6 +33,9 @@
 		9654053B298C340900620E76 /* 8-bit Arcade In.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9654053A298C340900620E76 /* 8-bit Arcade In.ttf */; };
 		9654053D298D042500620E76 /* GameVirtualController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9654053C298D042500620E76 /* GameVirtualController.swift */; };
 		96540542298D217700620E76 /* GameDimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96540541298D217700620E76 /* GameDimension.swift */; };
+		96B7F80729B5358C001584E3 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B7F80629B5358C001584E3 /* PersistenceController.swift */; };
+		96B7F80A29B535D6001584E3 /* PlatformHour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96B7F80829B535D6001584E3 /* PlatformHour.xcdatamodeld */; };
+		96B7F80C29B536D1001584E3 /* SaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B7F80B29B536D1001584E3 /* SaveManager.swift */; };
 		96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE969A298FB1A000273A9D /* GameLogic.swift */; };
 		96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96A5298FCE9E00273A9D /* GameSound.swift */; };
 		96EE96AC298FD28300273A9D /* diceRoll.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96EE96AB298FD28300273A9D /* diceRoll.wav */; };
@@ -77,6 +80,9 @@
 		9654053A298C340900620E76 /* 8-bit Arcade In.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "8-bit Arcade In.ttf"; sourceTree = "<group>"; };
 		9654053C298D042500620E76 /* GameVirtualController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameVirtualController.swift; sourceTree = "<group>"; };
 		96540541298D217700620E76 /* GameDimension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDimension.swift; sourceTree = "<group>"; };
+		96B7F80629B5358C001584E3 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		96B7F80929B535D6001584E3 /* PlatformHour.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PlatformHour.xcdatamodel; sourceTree = "<group>"; };
+		96B7F80B29B536D1001584E3 /* SaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManager.swift; sourceTree = "<group>"; };
 		96EE969A298FB1A000273A9D /* GameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogic.swift; sourceTree = "<group>"; };
 		96EE96A5298FCE9E00273A9D /* GameSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSound.swift; sourceTree = "<group>"; };
 		96EE96AB298FD28300273A9D /* diceRoll.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceRoll.wav; sourceTree = "<group>"; };
@@ -230,6 +236,16 @@
 			path = World;
 			sourceTree = "<group>";
 		};
+		96B7F80529B53560001584E3 /* Save */ = {
+			isa = PBXGroup;
+			children = (
+				96B7F80629B5358C001584E3 /* PersistenceController.swift */,
+				96B7F80829B535D6001584E3 /* PlatformHour.xcdatamodeld */,
+				96B7F80B29B536D1001584E3 /* SaveManager.swift */,
+			);
+			path = Save;
+			sourceTree = "<group>";
+		};
 		96EE967A298D8DDB00273A9D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +268,7 @@
 		96EE9699298EB1F500273A9D /* App */ = {
 			isa = PBXGroup;
 			children = (
+				96B7F80529B53560001584E3 /* Save */,
 				962A0CC229891900004DB446 /* ContentView.swift */,
 				962A0CC029891900004DB446 /* PlatformHourApp.swift */,
 			);
@@ -431,6 +448,7 @@
 				96FE62A1298AD81A00B2C614 /* Player.swift in Sources */,
 				961946622996894F000859C8 /* GameWorld.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,
+				96B7F80729B5358C001584E3 /* PersistenceController.swift in Sources */,
 				962A0CCF29891B8B004DB446 /* GameScene.swift in Sources */,
 				9619465F29968760000859C8 /* Game.swift in Sources */,
 				96FE62B5298BCF0B00B2C614 /* GameAnimation.swift in Sources */,
@@ -438,6 +456,7 @@
 				962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */,
 				961946682996928B000859C8 /* Ground.swift in Sources */,
 				964311F229B35FA40019E184 /* GameCore.swift in Sources */,
+				96B7F80C29B536D1001584E3 /* SaveManager.swift in Sources */,
 				9654052C298C249600620E76 /* GameCamera.swift in Sources */,
 				96FE62B0298BAFAD00B2C614 /* GameCollision.swift in Sources */,
 				962A0CC329891900004DB446 /* ContentView.swift in Sources */,
@@ -452,6 +471,7 @@
 				96540522298C21F800620E76 /* GameObject.swift in Sources */,
 				96EE96B5298FF9BB00273A9D /* GameState.swift in Sources */,
 				96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */,
+				96B7F80A29B535D6001584E3 /* PlatformHour.xcdatamodeld in Sources */,
 				96EE96B929900E2B00273A9D /* GameHUD.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -672,6 +692,19 @@
 			productName = PlayfulKit;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		96B7F80829B535D6001584E3 /* PlatformHour.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				96B7F80929B535D6001584E3 /* PlatformHour.xcdatamodel */,
+			);
+			currentVersion = 96B7F80929B535D6001584E3 /* PlatformHour.xcdatamodel */;
+			path = PlatformHour.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 962A0CB529891900004DB446 /* Project object */;
 }

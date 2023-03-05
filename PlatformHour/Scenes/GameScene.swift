@@ -11,7 +11,7 @@ import PlayfulKit
 
 final public class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var game = Game()
+    var game: Game?
     var player = Player()
     
     var dimension: GameDimension?
@@ -29,7 +29,7 @@ final public class GameScene: SKScene, SKPhysicsContactDelegate {
         setup(gravity: GameCore.gravity)
         physicsWorld.contactDelegate = self
         
-        print("Game started")
+        game = Game()
         
         state = GameState(scene: self)
         hud = GameHUD(scene: self)
@@ -38,17 +38,17 @@ final public class GameScene: SKScene, SKPhysicsContactDelegate {
         
         animation = GameAnimation(scene: self, dimension: dimension!)
         
-        logic = GameLogic(scene: self, animation: animation!)
-        
-        collision = GameCollision(scene: self, game: game, animation: animation!, logic: logic!)
-        
         environment = GameEnvironment(scene: self, dimension: dimension!, animation: animation!)
+        
+        logic = GameLogic(scene: self, dimension: dimension!, animation: animation!, environment: environment!)
+        
+        collision = GameCollision(scene: self, animation: animation!, environment: environment!, logic: logic!)
         
         gameCamera = GameCamera(scene: self, environment: environment!)
         
         content = GameContent(scene: self, dimension: dimension!, environment: environment!, animation: animation!)
         
-        game.controller = GameControllerManager(scene: self, state: state!, dimension: dimension!, environment: environment!, content: content!)
+        game?.controller = GameControllerManager(scene: self, state: state!, dimension: dimension!, environment: environment!, content: content!)
     }
     
     public override func didMove(to view: SKView) {
@@ -88,19 +88,19 @@ final public class GameScene: SKScene, SKPhysicsContactDelegate {
             if let name = touchedNode.name {
                 
                 if let direction = ActionLogic.Direction.allCases.first(where: { $0.rawValue == name }) {
-                    game.controller?.virtualController.touchDirectionalPad(direction)
+                    game?.controller?.virtualController.touchDirectionalPad(direction)
                 }
                 
                 if let button = GameControllerManager.Button.allCases.first(where: { $0.rawValue == name }) {
-                    game.controller?.virtualController.touchButton(button)
+                    game?.controller?.virtualController.touchButton(button)
                 }
             }
         }
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        game.controller?.action.stopMovement()
-        game.controller?.virtualController.hasPressedAnyInput = false
+        game?.controller?.action.stopMovement()
+        game?.controller?.virtualController.hasPressedAnyInput = false
     }
     
 }

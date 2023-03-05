@@ -12,15 +12,16 @@ struct GameObjectLogic: Codable {
     var health: Int
     var damage: Int
     var isDestructible: Bool
+    var isIntangible: Bool
     
     enum CodingKeys: String, CodingKey {
-        case health, damage, isDestructible
+        case health, damage, isDestructible, isIntangible
     }
 }
 
 struct GameObjectAnimation: Codable {
-    var hit: [String]
-    var death: [String]
+    var identifier: String
+    var frames: [String]
 }
 
 
@@ -28,7 +29,7 @@ struct GameObject: Codable {
     let name: String
     let image: String
     var logic: GameObjectLogic
-    var animation: GameObjectAnimation
+    var animation: [GameObjectAnimation]
     var coordinate: Coordinate = Coordinate.zero
     
     enum CodingKeys: String, CodingKey {

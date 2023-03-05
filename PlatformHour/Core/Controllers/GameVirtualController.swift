@@ -120,8 +120,16 @@ final public class GameVirtualController {
             hasPressedAnyInput = true
             switch direction {
             case .none: print("Tapped None")
-            case .up: print("Tapped Up")
-            case .down: print("Tapped Down")
+            case .up:
+                if !action.isAttacking {
+                    scene.player.orientation = .up
+                    action.switchPlayerArrowDirection()
+                }
+            case .down:
+                if !action.isAttacking {
+                    scene.player.orientation = .down
+                    action.switchPlayerArrowDirection()
+                }
             case .right:
                 action.moveRight()
             case .left:

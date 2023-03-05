@@ -5,11 +5,57 @@
         "logic": {
             "health": 1,
             "damage": 0,
-            "isDestructible": true
+            "isDestructible": true,
+            "isIntangible": false
         },
-        "animation": {
-            "hit": ["crateHit0", "crateHit1", "crate"],
-            "death": ["crateShards0", "crateShards1", "crateShards2"],
-        }
+        "animation":
+        [
+            {
+                "identifier": "hit",
+                "frames": ["crateHit0", "crateHit1", "crate"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["crateShards0", "crateShards1", "crateShards2"]
+            }
+        ]
+    },
+    {
+        "name": "Portal",
+        "image": "",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": true
+        },
+        "animation":
+        [
+            {
+                "identifier": "close",
+                "frames": ["closedPortal0", "closedPortal1", "closedPortal2", "closedPortal3", "closedPortal4", "closedPortal5", "closedPortal6", "closedPortal7"]
+            },
+            {
+                "identifier": "open",
+                "frames": ["openPortal0", "openPortal1", "openPortal2"]
+            }
+        ]
+    },
+    {
+        "name": "Portal Energy",
+        "image": "",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": true
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["portalEnergy1", "portalEnergy2", "portalEnergy3", "portalEnergy4", "portalEnergy3", "portalEnergy2", "portalEnergy1", "portalEnergy0", "portalEnergy1"]
+            },
+        ]
     },
 ]

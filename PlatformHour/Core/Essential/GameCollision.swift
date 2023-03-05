@@ -10,16 +10,19 @@ import PlayfulKit
 
 final public class GameCollision {
     
-    init(scene: GameScene, game: Game, animation: GameAnimation, logic: GameLogic) {
+    init(scene: GameScene,
+         animation: GameAnimation,
+         environment: GameEnvironment,
+         logic: GameLogic) {
         self.scene = scene
-        self.game = game
         self.animation = animation
-        self.collisionLogic = CollisionLogic(scene: scene, game: game, animation: animation, logic: logic)
+        self.environment = environment
+        self.collisionLogic = CollisionLogic(scene: scene, animation: animation, logic: logic)
     }
     
     var scene: GameScene
-    var game: Game
     var animation: GameAnimation
+    var environment: GameEnvironment
     var collisionLogic: CollisionLogic
     
     struct NodeBody {

@@ -124,6 +124,15 @@ public class ActionLogic {
                 self.scene.player.node.coordinate = destinationCoordinate
                 self.scene.sound?.step()
                 self.scene.player.node.physicsBody?.velocity = .zero
+                if let exitCoordinate = self.scene.game?.exitCoordinate,
+                   let exitPosition = self.environment.map.tilePosition(from: exitCoordinate) {
+                    if (destinationPosition == exitPosition) && self.environment.isExitOpen {
+                        self.scene.game?.goToNextLevel()
+                        let newScene = GameScene()
+                        let transition = SKTransition.fade(withDuration: 2)
+                        self.scene.view?.presentScene(newScene, transition: transition)
+                    }
+                }
             }
         ])
         let cancelSequence = SKAction.sequence([

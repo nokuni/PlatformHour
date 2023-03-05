@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import PlayfulKit
 
 struct GameLevel: Codable {
     let id: Int
+    var requirement: Int
+    let exitCoordinate: Int
 }
 
 extension GameLevel {

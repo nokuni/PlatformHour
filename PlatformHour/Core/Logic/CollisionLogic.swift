@@ -10,15 +10,13 @@ import PlayfulKit
 
 class CollisionLogic {
     
-    public init(scene: GameScene, game: Game, animation: GameAnimation, logic: GameLogic) {
+    public init(scene: GameScene, animation: GameAnimation, logic: GameLogic) {
         self.scene = scene
-        self.game = game
         self.animation = animation
         self.logic = logic
     }
     
     public var scene: GameScene
-    public var game: Game
     public var animation: GameAnimation
     public var logic: GameLogic
     
@@ -33,7 +31,7 @@ class CollisionLogic {
     public func landingOnground() {
         scene.player.node.physicsBody?.velocity = .zero
         
-        if let controller = game.controller {
+        if let controller = scene.game?.controller {
             if controller.action.isJumping {
                 controller.action.isJumping = false
                 controller.virtualController.hasPressedAnyInput = false
