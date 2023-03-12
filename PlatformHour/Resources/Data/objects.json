@@ -18,13 +18,19 @@
     },
     {
         "name": "Sphere",
-        "image": "sphere",
+        "image": "sphere0",
         "logic": {
             "health": 1,
             "damage": 0,
             "isDestructible": true,
             "isIntangible": false
         },
-        "animation": []
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["sphere0", "sphere1"]
+            }
+        ]
     },
 ]

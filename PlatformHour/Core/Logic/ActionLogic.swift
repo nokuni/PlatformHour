@@ -119,6 +119,7 @@ public class ActionLogic {
     func dismissStatueRequirementPopUp() {
         guard let requirementPopUp = scene.childNode(withName: "Requirement pop up") else { return }
         requirementPopUp.removeFromParent()
+        scene.player?.interactionStatus = .none
     }
     
     // MARK: - Actions
@@ -165,6 +166,23 @@ public class ActionLogic {
         if !isAttacking {
             scene.player?.orientation = .down
             switchPlayerArrowDirection()
+        }
+    }
+    
+    func interactWithStatue() {
+        guard let level = scene.game?.level else { return }
+        guard !level.statue.requirement.isEmpty else { return }
+        
+        guard let player = scene.player else { return }
+        guard !player.bag.isEmpty else { return }
+        
+        if player.interactionStatus == .onStatue {
+            scene.game?.level?.statue.requirement.removeLast()
+            scene.player?.bag.removeLast()
+            scene.core?.hud?.updateItemAmountHUD()
+            scene.core?.environment?.updateStatueRequirementPopUp()
+            if scene.player!.bag.isEmpty { dismissButtonPopUp() }
+            if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
         }
     }
     

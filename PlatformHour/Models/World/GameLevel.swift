@@ -10,7 +10,7 @@ import PlayfulKit
 
 struct GameLevel: Codable {
     let id: Int
-    let statue: GameStatue
+    var statue: GameStatue
     let containers: [GameObjectContainer]
 }
 

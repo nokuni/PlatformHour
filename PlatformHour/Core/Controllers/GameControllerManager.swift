@@ -61,6 +61,7 @@ final public class GameControllerManager {
         manager?.action = ControllerManager.ControllerAction()
         manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack)
         manager?.action?.buttonB = ControllerManager.ButtonAction(press: touch)
+        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interactWithStatue)
         manager?.action?.dpad = ControllerManager.DPadAction(left: action.moveLeft,
                                                              right: action.moveRight,
                                                              up: action.upAction,

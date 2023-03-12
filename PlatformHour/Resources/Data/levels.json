@@ -11,7 +11,7 @@
                 "springStatueBottonRight"
             ],
             "coordinates": [1211, 1212, 1311, 1312],
-            "requirement": ["Sphere", "Sphere", "Sphere", "Sphere", "Sphere"]
+            "requirement": ["Sphere", "Sphere", "Sphere"]
         },
         "containers":
         [
@@ -52,7 +52,7 @@
                 "springStatueBottonRight"
             ],
             "coordinates": [1222, 1223, 1322, 1323],
-            "requirement": ["Sphere", "Sphere", "Sphere", "Sphere", "Sphere"]
+            "requirement": ["Sphere", "Sphere", "Sphere"]
         },
         "containers":
         [

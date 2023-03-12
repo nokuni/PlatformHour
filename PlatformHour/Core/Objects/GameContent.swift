@@ -149,6 +149,16 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.player])
         
+        let pillarCoordinate = Coordinate(x: statue.coordinates[2].coordinate.x,
+                                          y: statue.coordinates[0].coordinate.y - 1)
+        
+        environment.map.addObject(environment.backgroundObjectElement(name: "Pillar", collision: collision),
+                                  image: "springStatuePillar",
+                                  filteringMode: .nearest,
+                                  logic: LogicBody(isIntangible: true),
+                                  animations: [],
+                                  at: pillarCoordinate)
+        
         environment.map.addObject(environment.backgroundObjectElement(name: "Statue", collision: collision),
                                   image: "springStatueTopLeft",
                                   filteringMode: .nearest,
@@ -293,18 +303,30 @@ final public class GameContent {
     }
     
     public func dropItem(_ item: GameItem, at coordinate: Coordinate) {
+        
+        let dataObject = try? GameObject.get(item.name)
+        
         let collision = Collision(category: .object,
                                   collision: [.structure],
                                   contact: [.player])
+        
+        guard let idle = dataObject?.animation.first(where: { $0.identifier == "idle" }) else { return }
+        
+        let animations = [
+            ObjectAnimation(identifier: idle.identifier, frames: idle.frames)
+        ]
         
         let itemNode = environment.objectElement(name: item.name,
                                                  physicsBodySizeTailoring: -(dimension.tileSize.width / 2),
                                                  collision: collision)
         itemNode.texture = SKTexture(imageNamed: item.sprite)
         itemNode.texture?.filteringMode = .nearest
+        itemNode.animations = animations
         let position = environment.map.tilePosition(from: coordinate)
         itemNode.position = position ?? .zero
         scene.addChildSafely(itemNode)
+        
+        scene.core?.animation?.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
     }
     
     // Additions

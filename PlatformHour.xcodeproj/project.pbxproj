@@ -22,6 +22,7 @@
 		962A0D1C29892C47004DB446 /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1B29892C47004DB446 /* Sprite.swift */; };
 		962A0D1E29892C7F004DB446 /* SpriteOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1D29892C7F004DB446 /* SpriteOrientation.swift */; };
 		962A0D2029892CD4004DB446 /* GameCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1F29892CD4004DB446 /* GameCharacter.swift */; };
+		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
 		96540522298C21F800620E76 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96540521298C21F800620E76 /* GameObject.swift */; };
 		96540526298C22EF00620E76 /* objects.json in Resources */ = {isa = PBXBuildFile; fileRef = 96540525298C22EF00620E76 /* objects.json */; };
 		96540528298C23B700620E76 /* GameLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96540527298C23B700620E76 /* GameLevel.swift */; };
@@ -72,6 +73,7 @@
 		962A0D1B29892C47004DB446 /* Sprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
 		962A0D1D29892C7F004DB446 /* SpriteOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteOrientation.swift; sourceTree = "<group>"; };
 		962A0D1F29892CD4004DB446 /* GameCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacter.swift; sourceTree = "<group>"; };
+		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
 		96540521298C21F800620E76 /* GameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
 		96540525298C22EF00620E76 /* objects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = objects.json; sourceTree = "<group>"; };
 		96540527298C23B700620E76 /* GameLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLevel.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 			children = (
 				962A0D1F29892CD4004DB446 /* GameCharacter.swift */,
 				96FE62A0298AD81A00B2C614 /* Player.swift */,
+				964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */,
 			);
 			path = "Game Characters";
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				962A0D2029892CD4004DB446 /* GameCharacter.swift in Sources */,
 				96FE62A1298AD81A00B2C614 /* Player.swift in Sources */,
 				961946622996894F000859C8 /* GameWorld.swift in Sources */,
+				964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,
 				96C51EC629BD6A8500DDCBAB /* GameStatue.swift in Sources */,
 				96B7F80729B5358C001584E3 /* PersistenceController.swift in Sources */,

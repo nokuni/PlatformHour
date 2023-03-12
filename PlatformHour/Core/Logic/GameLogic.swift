@@ -34,9 +34,7 @@ final public class GameLogic {
             objectNode.physicsBody?.collisionBitMask = .zero
             scene.core?.animation?.destroy(node: objectNode,
                               filteringMode: .nearest) {
-                print(objectNode.drops.first)
                 if let item = objectNode.drops.first as? GameItem {
-                    print("Item dropped")
                     self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
                 }
             }

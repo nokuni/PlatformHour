@@ -43,7 +43,7 @@ final public class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.object.rawValue)
         )
         
-        playerTouchStatue(
+        playerTouchStatuePillar(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.object.rawValue)
         )
@@ -66,11 +66,12 @@ final public class GameCollision {
         }
     }
     
-    func playerTouchStatue(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    func playerTouchStatuePillar(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == "Statue" else { return }
+        guard object.name == "Pillar" else { return }
         if manager.isColliding(first, with: second) {
             scene.core?.environment?.showStatueInteractionPopUp()
+            scene.player?.interactionStatus = .onStatue
         }
     }
 }

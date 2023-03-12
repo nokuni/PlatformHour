@@ -217,13 +217,15 @@ final public class GameEnvironment {
         button.position = position
         buttonPopUp.addChildSafely(button)
         
-        let action = SKAction.animate(with: controllerButtonSprites(buttonSymbol), filteringMode: .nearest, timePerFrame: 0.1)
+        let action = SKAction.animate(with: controllerButtonSprites(buttonSymbol), filteringMode: .nearest, timePerFrame: 0.5)
         
-        button.run(action)
+        button.run(SKAction.repeatForever(action))
     }
+    
     private func createStatueRequirementPopUp(position: CGPoint) {
         
         guard let statue = scene.game?.level?.statue else { return }
+        guard !statue.requirement.isEmpty else { return }
         
         let requirementPopUp = SKNode()
         requirementPopUp.name = "Requirement pop up"
@@ -232,6 +234,7 @@ final public class GameEnvironment {
         scene.addChildSafely(requirementPopUp)
         
         let number = SKSpriteNode(imageNamed: "indicator\(statue.requirement.count)")
+        number.name = "Number"
         number.texture?.filteringMode = .nearest
         number.size = dimension.tileSize
         number.position = CGPoint(x: -dimension.tileSize.width, y: 0)
@@ -242,6 +245,21 @@ final public class GameEnvironment {
         item.size = dimension.tileSize
         item.position = .zero
         requirementPopUp.addChildSafely(item)
+    }
+    public func updateStatueRequirementPopUp() {
+        
+        guard let statue = scene.game?.level?.statue else { return }
+        
+        guard let requirementPopUp = scene.childNode(withName: "Requirement pop up") else {
+            return
+        }
+        
+        guard let number = requirementPopUp.childNode(withName: "Number") as? SKSpriteNode else {
+            return
+        }
+        
+        number.texture = SKTexture(imageNamed: "indicator\(statue.requirement.count)")
+        number.texture?.filteringMode = .nearest
     }
     
     public func pause() { map.isPaused = true }

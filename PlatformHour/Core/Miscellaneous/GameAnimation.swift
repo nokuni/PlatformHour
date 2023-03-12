@@ -81,6 +81,17 @@ final public class GameAnimation {
         return animation
     }
     
+    public func idle(node: PKObjectNode,
+                     filteringMode: SKTextureFilteringMode = .linear,
+                     timeInterval: TimeInterval = 0.05) {
+        let action = animate(node: node,
+                             identifier: .idle,
+                             filteringMode: filteringMode,
+                             hitTimeInterval: timeInterval)
+        
+        node.run(SKAction.repeatForever(action))
+    }
+    
     public func hit(node: PKObjectNode,
                     filteringMode: SKTextureFilteringMode = .linear,
                     timeInterval: TimeInterval = 0.05) {

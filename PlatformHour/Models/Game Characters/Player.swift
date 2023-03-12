@@ -62,6 +62,7 @@ public struct Player: Identifiable {
     public var range: CGFloat
     public var attackSpeed: CGFloat
     
+    public var interactionStatus: PlayerInteractionStatus = .none
     public var bag: [GameItem] = []
 }
 
