@@ -61,6 +61,8 @@ public struct Player: Identifiable {
     public var currentRoll: Roll
     public var range: CGFloat
     public var attackSpeed: CGFloat
+    
+    public var bag: [GameItem] = []
 }
 
 extension Player {

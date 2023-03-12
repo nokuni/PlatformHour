@@ -17,27 +17,6 @@
         ]
     },
     {
-        "name": "Portal",
-        "image": "",
-        "logic": {
-            "health": 1,
-            "damage": 0,
-            "isDestructible": false,
-            "isIntangible": true
-        },
-        "animation":
-        [
-            {
-                "identifier": "close",
-                "frames": ["closedPortal0", "closedPortal1", "closedPortal2", "closedPortal3", "closedPortal4", "closedPortal5", "closedPortal6", "closedPortal7"]
-            },
-            {
-                "identifier": "open",
-                "frames": ["openPortal0", "openPortal1", "openPortal2"]
-            }
-        ]
-    },
-    {
         "name": "Sphere",
         "image": "sphere",
         "logic": {

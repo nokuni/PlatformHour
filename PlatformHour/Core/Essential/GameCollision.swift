@@ -38,7 +38,7 @@ final public class GameCollision {
                                             bitmaskCategory: CollisionCategory.object.rawValue)
         )
         
-        playerTouchSphere(
+        playerTouchItem(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.object.rawValue)
         )
@@ -57,11 +57,12 @@ final public class GameCollision {
         }
     }
     
-    func playerTouchSphere(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    func playerTouchItem(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == "Sphere" else { return }
+        guard let itemName = object.name else { return }
+        guard GameItem.allNames.contains(itemName) else { return }
         if manager.isColliding(first, with: second) {
-            object.removeFromParent()
+            collisionLogic.pickUpItem(object: object, name: itemName)
         }
     }
     
@@ -69,7 +70,7 @@ final public class GameCollision {
         guard let object = second.body.node as? PKObjectNode else { return }
         guard object.name == "Statue" else { return }
         if manager.isColliding(first, with: second) {
-            scene.core?.environment?.showInteractionMessage()
+            scene.core?.environment?.showStatueInteractionPopUp()
         }
     }
 }

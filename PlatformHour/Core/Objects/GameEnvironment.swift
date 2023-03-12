@@ -150,35 +150,98 @@ final public class GameEnvironment {
     }
     
     // MARK: - Miscellaneous
-    public func showInteractionMessage() {
+    private func controllerButtonSprites(_ buttonSymbol: ControllerManager.ButtonSymbol) -> [String] {
+        guard let controllerManager = scene.game?.controller?.manager else { return [] }
+        guard let currentProductCategory = controllerManager.currentProductCategory else { return [] }
+        switch buttonSymbol {
+        case .a:
+            switch currentProductCategory {
+            case .xbox:
+                return ["xboxAButtonReleased", "xboxAButtonPressed"]
+            case .playstation:
+                return ["playstationCrossButtonReleased", "playstationCrossButtonPressed"]
+            case .nintendo:
+                return ["joyconAButtonReleased", "joyconAButtonPressed"]
+            }
+        case .b:
+            switch currentProductCategory {
+            case .xbox:
+                return ["xboxBButtonReleased", "xboxBButtonPressed"]
+            case .playstation:
+                return ["playstationCircleButtonReleased", "playstationCircleButtonPressed"]
+            case .nintendo:
+                return ["joyconBButtonReleased", "joyconBButtonPressed"]
+            }
+        case .x:
+            switch currentProductCategory {
+            case .xbox:
+                return ["xboxXButtonReleased", "xboxXButtonPressed"]
+            case .playstation:
+                return ["playstationSquareButtonReleased", "playstationSquareButtonPressed"]
+            case .nintendo:
+                return ["joyconXButtonReleased", "joyconXButtonPressed"]
+            }
+        case .y:
+            switch currentProductCategory {
+            case .xbox:
+                return ["xboxYButtonReleased", "xboxYButtonPressed"]
+            case .playstation:
+                return ["playstationTriangleButtonReleased", "playstationTriangleButtonPressed"]
+            case .nintendo:
+                return ["joyconYButtonReleased", "joyconYButtonPressed"]
+            }
+        }
+    }
+    public func showStatueInteractionPopUp() {
+        guard let player = scene.player else { return }
         guard let statue = scene.game?.level?.statue else { return }
         
         if let position = map.tilePosition(from: statue.coordinates[0].coordinate) {
-            let finalPosition = CGPoint(x: position.x + (dimension.tileSize.width / 2), y: position.y + dimension.tileSize.height)
-            createInteractionMessage(buttonSymbol: .x, position: finalPosition)
+            let requirementPosition = CGPoint(x: position.x + (dimension.tileSize.width * 0.75), y: position.y + (dimension.tileSize.height * 0.5))
+            let buttonPosition = CGPoint(x: position.x + (dimension.tileSize.width * 0.5), y: position.y + (dimension.tileSize.height * 1.5))
+            createStatueRequirementPopUp(position: requirementPosition)
+            if !player.bag.isEmpty {
+                createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
+            }
         }
     }
-    private func createInteractionMessage(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
-        //guard let buttonName = scene.game?.controller?.manager?.buttonName(buttonSymbol) else { return }
+    private func createButtonPopUp(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
-        let interactionNode = SKNode()
-        interactionNode.name = "Interaction"
-        scene.addChildSafely(interactionNode)
+        let buttonPopUp = SKNode()
+        buttonPopUp.name = "Button pop up"
+        scene.addChildSafely(buttonPopUp)
         
-        let buttonNode = SKSpriteNode(imageNamed: "triangleButton")
-        buttonNode.texture?.filteringMode = .nearest
-        buttonNode.size = dimension.tileSize
-        buttonNode.position = position
-        interactionNode.addChildSafely(buttonNode)
+        let button = SKSpriteNode()
+        button.size = dimension.tileSize
+        button.setScale(0.6)
+        button.position = position
+        buttonPopUp.addChildSafely(button)
         
-        let action = SKAction.scaleUpAndDown(from: 0.8,
-                                             with: 0.5,
-                                             to: 1,
-                                             with: 0.5,
-                                             during: 0,
-                                             isRepeatingForever: true)
+        let action = SKAction.animate(with: controllerButtonSprites(buttonSymbol), filteringMode: .nearest, timePerFrame: 0.1)
         
-        buttonNode.run(action)
+        button.run(action)
+    }
+    private func createStatueRequirementPopUp(position: CGPoint) {
+        
+        guard let statue = scene.game?.level?.statue else { return }
+        
+        let requirementPopUp = SKNode()
+        requirementPopUp.name = "Requirement pop up"
+        requirementPopUp.setScale(0.6)
+        requirementPopUp.position = position
+        scene.addChildSafely(requirementPopUp)
+        
+        let number = SKSpriteNode(imageNamed: "indicator\(statue.requirement.count)")
+        number.texture?.filteringMode = .nearest
+        number.size = dimension.tileSize
+        number.position = CGPoint(x: -dimension.tileSize.width, y: 0)
+        requirementPopUp.addChildSafely(number)
+        
+        let item = SKSpriteNode(imageNamed: "hudSphere")
+        item.texture?.filteringMode = .nearest
+        item.size = dimension.tileSize
+        item.position = .zero
+        requirementPopUp.addChildSafely(item)
     }
     
     public func pause() { map.isPaused = true }

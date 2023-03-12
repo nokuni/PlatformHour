@@ -61,7 +61,8 @@ public class ActionLogic {
         
         let moveSequence = SKAction.sequence([
             SKAction.run {
-                self.dismissInteractionMessage()
+                self.dismissButtonPopUp()
+                self.dismissStatueRequirementPopUp()
             },
             SKAction.move(to: destinationPosition, duration: 0.15),
             SKAction.run {
@@ -111,9 +112,13 @@ public class ActionLogic {
             arrowNode.texture?.filteringMode = .nearest
         }
     }
-    func dismissInteractionMessage() {
-        guard let interactionNode = scene.childNode(withName: "Interaction") else { return }
-        interactionNode.removeFromParent()
+    func dismissButtonPopUp() {
+        guard let buttonPopUp = scene.childNode(withName: "Button pop up") else { return }
+        buttonPopUp.removeFromParent()
+    }
+    func dismissStatueRequirementPopUp() {
+        guard let requirementPopUp = scene.childNode(withName: "Requirement pop up") else { return }
+        requirementPopUp.removeFromParent()
     }
     
     // MARK: - Actions

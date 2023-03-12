@@ -38,6 +38,8 @@
 		96C51EC429BD31CD00DDCBAB /* Karmatic Arcade.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC329BD31CD00DDCBAB /* Karmatic Arcade.ttf */; };
 		96C51EC629BD6A8500DDCBAB /* GameStatue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC529BD6A8500DDCBAB /* GameStatue.swift */; };
 		96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */; };
+		96C51ECA29BE2B3900DDCBAB /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC929BE2B3900DDCBAB /* items.json */; };
+		96C51ECC29BE30D800DDCBAB /* GameItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51ECB29BE30D800DDCBAB /* GameItem.swift */; };
 		96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE969A298FB1A000273A9D /* GameLogic.swift */; };
 		96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96A5298FCE9E00273A9D /* GameSound.swift */; };
 		96EE96AC298FD28300273A9D /* diceRoll.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96EE96AB298FD28300273A9D /* diceRoll.wav */; };
@@ -87,6 +89,8 @@
 		96C51EC329BD31CD00DDCBAB /* Karmatic Arcade.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karmatic Arcade.ttf"; sourceTree = "<group>"; };
 		96C51EC529BD6A8500DDCBAB /* GameStatue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStatue.swift; sourceTree = "<group>"; };
 		96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObjectContainer.swift; sourceTree = "<group>"; };
+		96C51EC929BE2B3900DDCBAB /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
+		96C51ECB29BE30D800DDCBAB /* GameItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameItem.swift; sourceTree = "<group>"; };
 		96EE969A298FB1A000273A9D /* GameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogic.swift; sourceTree = "<group>"; };
 		96EE96A5298FCE9E00273A9D /* GameSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSound.swift; sourceTree = "<group>"; };
 		96EE96AB298FD28300273A9D /* diceRoll.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceRoll.wav; sourceTree = "<group>"; };
@@ -210,7 +214,10 @@
 		9654051E298C21ED00620E76 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */,
+				96C51EC529BD6A8500DDCBAB /* GameStatue.swift */,
 				96540521298C21F800620E76 /* GameObject.swift */,
+				96C51ECB29BE30D800DDCBAB /* GameItem.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -234,8 +241,6 @@
 				96540527298C23B700620E76 /* GameLevel.swift */,
 				961946612996894F000859C8 /* GameWorld.swift */,
 				961946672996928B000859C8 /* Ground.swift */,
-				96C51EC529BD6A8500DDCBAB /* GameStatue.swift */,
-				96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */,
 			);
 			path = World;
 			sourceTree = "<group>";
@@ -248,6 +253,15 @@
 				96B7F80B29B536D1001584E3 /* SaveManager.swift */,
 			);
 			path = Save;
+			sourceTree = "<group>";
+		};
+		96C51ECD29BE3C5000DDCBAB /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				9619465E29968760000859C8 /* Game.swift */,
+				96B7F80D29B788DA001584E3 /* GameCore.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 		96EE967A298D8DDB00273A9D /* Resources */ = {
@@ -321,6 +335,7 @@
 				96FE6291298ABD2300B2C614 /* sprites.json */,
 				96FE6295298ABD2300B2C614 /* gameCharacters.json */,
 				96540525298C22EF00620E76 /* objects.json */,
+				96C51EC929BE2B3900DDCBAB /* items.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -345,12 +360,11 @@
 		96FE62A9298B8C5200B2C614 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				9619465E29968760000859C8 /* Game.swift */,
+				96C51ECD29BE3C5000DDCBAB /* Main */,
 				96540534298C276300620E76 /* World */,
 				9654051E298C21ED00620E76 /* Objects */,
 				96FE62AA298B8C6D00B2C614 /* Sprite */,
 				96FE62A2298AE57600B2C614 /* Game Characters */,
-				96B7F80D29B788DA001584E3 /* GameCore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -436,6 +450,7 @@
 				962A0CC529891901004DB446 /* Assets.xcassets in Resources */,
 				9619466C2996941E000859C8 /* structures.json in Resources */,
 				96C51EC429BD31CD00DDCBAB /* Karmatic Arcade.ttf in Resources */,
+				96C51ECA29BE2B3900DDCBAB /* items.json in Resources */,
 				9654053B298C340900620E76 /* 8-bit Arcade In.ttf in Resources */,
 				9619466429968F0C000859C8 /* worlds.json in Resources */,
 				96FE629B298ABD2300B2C614 /* gameCharacters.json in Resources */,
@@ -472,6 +487,7 @@
 				96FE6314298C1E1600B2C614 /* CollisionLogic.swift in Sources */,
 				96540542298D217700620E76 /* GameDimension.swift in Sources */,
 				962A0CC129891900004DB446 /* PlatformHourApp.swift in Sources */,
+				96C51ECC29BE30D800DDCBAB /* GameItem.swift in Sources */,
 				96540528298C23B700620E76 /* GameLevel.swift in Sources */,
 				962A0D1E29892C7F004DB446 /* SpriteOrientation.swift in Sources */,
 				96540530298C263E00620E76 /* GameEnvironment.swift in Sources */,
