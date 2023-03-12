@@ -13,12 +13,10 @@ final public class GameContent {
     
     init(scene: GameScene,
          dimension: GameDimension,
-         environment: GameEnvironment,
-         animation: GameAnimation) {
+         environment: GameEnvironment) {
         self.scene = scene
         self.dimension = dimension
         self.environment = environment
-        self.animation = animation
         configurePlayer()
         createPlayer()
     }
@@ -26,7 +24,6 @@ final public class GameContent {
     var scene: GameScene
     var dimension: GameDimension
     var environment: GameEnvironment
-    var animation: GameAnimation
     
     private func createContent() {
         createPlayer()
@@ -86,14 +83,13 @@ final public class GameContent {
     }
     
     // Setups
-    
     func configurePlayer() {
         let collision = Collision(category: .player,
                                   collision: [.structure],
                                   contact: [.enemyProjectile, .object])
         scene.player?.node = object(name: "Player",
-                                   physicsBodySizeTailoring: -dimension.tileSize.width * 0.1,
-                                   collision: collision)
+                                    physicsBodySizeTailoring: -dimension.tileSize.width * 0.1,
+                                    collision: collision)
         
         scene.player?.node.physicsBody?.friction = 0
         scene.player?.node.physicsBody?.allowsRotation = false
@@ -114,6 +110,182 @@ final public class GameContent {
         if let player = scene.player {
             scene.addChild(player.node)
         }
+    }
+    
+    // MARK: - Ground
+    private func createGround() {
+        let coordinate = Coordinate(x: 14, y: 0)
+        
+        if let world = scene.game?.world {
+            let structure: MapStructure = MapStructure(topLeft: world.ground.topLeft,
+                                                       topRight: world.ground.topRight,
+                                                       bottomLeft: world.ground.bottomLeft,
+                                                       bottomRight: world.ground.bottomRight,
+                                                       left: world.ground.left,
+                                                       right: world.ground.right,
+                                                       top: world.ground.top,
+                                                       bottom: world.ground.bottom,
+                                                       middle: world.ground.middle)
+            environment.map.addObject(environment.structureObjectElement,
+                                      structure: structure,
+                                      filteringMode: .nearest,
+                                      logic: LogicBody(),
+                                      animations: [],
+                                      startingCoordinate: coordinate,
+                                      matrix: Matrix(row: 4, column: Game.mapMatrix.column))
+        }
+    }
+    
+    // MARK: - Objects
+    private func createStatue() {
+        
+        guard let statue = scene.game?.level?.statue else { return }
+        
+        let collision = Collision(category: .object,
+                                  collision: [.allClear],
+                                  contact: [.player])
+        
+        environment.map.addObject(environment.backgroundObjectElement(name: "Statue", collision: collision),
+                                  image: "springStatueTopLeft",
+                                  filteringMode: .nearest,
+                                  logic: LogicBody(isIntangible: true),
+                                  animations: [],
+                                  at: statue.coordinates[0].coordinate)
+        
+        environment.map.addObject(environment.backgroundObjectElement(name: "Statue", collision: collision),
+                                  image: "springStatueTopRight",
+                                  filteringMode: .nearest,
+                                  logic: LogicBody(isIntangible: true),
+                                  animations: [],
+                                  at: statue.coordinates[1].coordinate)
+        
+        environment.map.addObject(environment.backgroundObjectElement(name: "Statue", collision: collision),
+                                  image: "springStatueBottomLeft",
+                                  filteringMode: .nearest,
+                                  logic: LogicBody(isIntangible: true),
+                                  animations: [],
+                                  at: statue.coordinates[2].coordinate)
+        
+        environment.map.addObject(environment.backgroundObjectElement(name: "Statue", collision: collision),
+                                  image: "springStatueBottomRight",
+                                  filteringMode: .nearest,
+                                  logic: LogicBody(isIntangible: true),
+                                  animations: [],
+                                  at: statue.coordinates[3].coordinate)
+    }
+    private func createTrees() {
+        let collision = Collision(category: .allClear,
+                                  collision: [.allClear],
+                                  contact: [.allClear])
+        
+        var startingCoordinate = Coordinate(x: 13, y: 0)
+        for _ in 0..<6 {
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 1))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 2))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeBottomRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 1))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeBottomLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 2))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 3))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 6))
+            
+            environment.map.addObject(environment.backgroundObjectElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 7))
+            
+            startingCoordinate.y += 10
+        }
+    }
+    private func createContainers() {
+        if let level = scene.game?.level {
+            for container in level.containers {
+                let coordinate = container.coordinate.coordinate
+                createContainer(container, at: coordinate)
+            }
+        }
+    }
+    
+    private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
+        if let dataObject = try? GameObject.get(container.name) {
+            let collision = Collision(category: .object,
+                                      collision: [.player, .structure],
+                                      contact: [.playerProjectile, .enemyProjectile])
+            let logic = LogicBody(health: dataObject.logic.health, damage: dataObject.logic.damage, isDestructible: dataObject.logic.isDestructible, isIntangible: dataObject.logic.isIntangible)
+            guard let death = dataObject.animation.first(where: { $0.identifier == "death" }) else { return }
+            let animations = [
+                ObjectAnimation(identifier: death.identifier, frames: death.frames)
+            ]
+            
+            let objectNode = PKObjectNode()
+            objectNode.name = dataObject.name
+            objectNode.size = dimension.tileSize
+            objectNode.applyPhysicsBody(size: dimension.tileSize, collision: collision)
+            objectNode.physicsBody?.isDynamic = false
+            
+            environment.map.addObject(objectNode,
+                          image: dataObject.image,
+                          filteringMode: .nearest,
+                          logic: logic,
+                          animations: animations,
+                          at: coordinate)
+        }
+    }
+    public func createSphere(at coordinate: Coordinate) {
+        let collision = Collision(category: .object,
+                                  collision: [.structure],
+                                  contact: [.player])
+        
+        let sphereNode = environment.objectElement(name: "Sphere",
+                                       physicsBodySizeTailoring: -(dimension.tileSize.width / 2),
+                                       collision: collision)
+        sphereNode.texture = SKTexture(imageNamed: "sphere")
+        sphereNode.texture?.filteringMode = .nearest
+        let position = environment.map.tilePosition(from: coordinate)
+        sphereNode.position = position ?? .zero
+        scene.addChildSafely(sphereNode)
     }
     
     // Additions

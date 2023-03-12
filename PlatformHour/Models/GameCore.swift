@@ -47,30 +47,20 @@ public struct GameCore {
         state = GameState(scene: scene)
         hud = GameHUD(scene: scene)
         sound = GameSound(scene: scene)
-        
-        guard let state = state else { return }
-        
         dimension = GameDimension(scene: scene)
+        logic = GameLogic(scene: scene)
+        animation = GameAnimation(scene: scene)
+        collision = GameCollision(scene: scene)
         
         guard let dimension = dimension else { return }
         
-        animation = GameAnimation(scene: scene, dimension: dimension)
-        
-        guard let animation = animation else { return }
-        
-        environment = GameEnvironment(scene: scene, dimension: dimension, animation: animation)
+        environment = GameEnvironment(scene: scene, dimension: dimension)
         
         guard let environment = environment else { return }
         
-        logic = GameLogic(scene: scene, dimension: dimension, animation: animation, environment: environment)
-        
-        guard let logic = logic else { return }
-        
-        collision = GameCollision(scene: scene, animation: animation, environment: environment, logic: logic)
-        
         gameCamera = GameCamera(scene: scene, environment: environment)
         
-        content = GameContent(scene: scene, dimension: dimension, environment: environment, animation: animation)
+        content = GameContent(scene: scene, dimension: dimension, environment: environment)
         
         //        guard let content = content else { return }
         //        

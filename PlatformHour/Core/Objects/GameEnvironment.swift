@@ -10,32 +10,20 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-extension String.StringInterpolation {
-    mutating func appendImageInterpolation(_ value: String) {
-        appendInterpolation("My name is \(value) and I'm \(value)")
-    }
-}
-
 final public class GameEnvironment {
     
     public init(scene: GameScene,
-                dimension: GameDimension,
-                animation: GameAnimation) {
+                dimension: GameDimension) {
         self.scene = scene
         self.dimension = dimension
-        self.animation = animation
         createEnvironment()
     }
     
     public var scene: GameScene
     public var dimension: GameDimension
-    public var animation: GameAnimation
     public var map = PKMapNode()
     
-    private let mapMatrix = Matrix(row: 18, column: 50)
-    
-    /// Coordinates of all objects in the map.
-    public var coordinates: [Coordinate] {
+    public var collisionCoordinates: [Coordinate] {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
         return coordinates
@@ -50,8 +38,14 @@ final public class GameEnvironment {
         levelRequirement == 0
     }
     
-    // MARK: - Objects
-    public func object(name: String? = nil,
+    // MARK: - Main
+    private func createEnvironment() {
+        createMap()
+        createBackground()
+    }
+    
+    // MARK: - Elements
+    public func objectElement(name: String? = nil,
                        physicsBodySizeTailoring: CGFloat = 0,
                        collision: Collision) -> PKObjectNode {
         
@@ -66,241 +60,96 @@ final public class GameEnvironment {
         
         return object
     }
-    public var structureElement: PKObjectNode {
+    public var structureObjectElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
                                   contact: [.player, .object, .playerProjectile, .enemyProjectile])
-        let structureElement = object(collision: collision)
+        let structureElement = objectElement(collision: collision)
         structureElement.physicsBody?.friction = 0
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
         structureElement.physicsBody?.usesPreciseCollisionDetection = true
         return structureElement
     }
-    public func backgroundElement(name: String? = nil, collision: Collision) -> PKObjectNode {
-        let structureElement = object(collision: collision)
+    public func backgroundObjectElement(name: String? = nil, collision: Collision) -> PKObjectNode {
+        let structureElement = objectElement(collision: collision)
         structureElement.name = name
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
         return structureElement
     }
     
-    // MARK: - Creations
-    private func createEnvironment() {
-        createMap()
+    // MARK: - Background
+    private func createBackground() {
         createSky()
-        createGround()
-        createTrees()
-        createStatue()
-        createContainers()
+        createClouds()
+        createMountains()
     }
     
     private func createMap() {
         map = PKMapNode(squareSize: dimension.tileSize,
-                        matrix: mapMatrix)
+                        matrix: Game.mapMatrix)
         scene.addChild(map)
     }
     private func createSky() {
         if let world = scene.game?.world {
-            let matrix = Matrix(row: mapMatrix.row - 4, column: mapMatrix.column)
+            let matrix = Matrix(row: Game.mapMatrix.row - 4, column: Game.mapMatrix.column)
             map.drawTexture(world.skyName,
                             filteringMode: .nearest,
                             matrix: matrix,
                             startingCoordinate: Coordinate.zero)
         }
     }
-    
-    private func createGround() {
-        let coordinate = Coordinate(x: 14, y: 0)
-        
-        if let world = scene.game?.world {
-            let structure: MapStructure = MapStructure(topLeft: world.ground.topLeft,
-                                                       topRight: world.ground.topRight,
-                                                       bottomLeft: world.ground.bottomLeft,
-                                                       bottomRight: world.ground.bottomRight,
-                                                       left: world.ground.left,
-                                                       right: world.ground.right,
-                                                       top: world.ground.top,
-                                                       bottom: world.ground.bottom,
-                                                       middle: world.ground.middle)
-            map.addObject(structureElement,
-                          structure: structure,
-                          filteringMode: .nearest,
-                          logic: LogicBody(),
-                          animations: [],
-                          startingCoordinate: coordinate,
-                          matrix: Matrix(row: 4, column: mapMatrix.column))
+    private func createClouds() {
+        var firstStartingCoordinate = Coordinate(x: 9, y: 0)
+        for _ in 0..<3 {
+            
+            map.drawTexture("cloud0Left",
+                            filteringMode: .nearest,
+                            at: .init(x: firstStartingCoordinate.x, y: firstStartingCoordinate.y))
+            
+            map.drawTexture("cloud0Middle",
+                            filteringMode: .nearest,
+                            at: .init(x: firstStartingCoordinate.x, y: firstStartingCoordinate.y + 1))
+            
+            map.drawTexture("cloud0Right",
+                            filteringMode: .nearest,
+                            at: .init(x: firstStartingCoordinate.x, y: firstStartingCoordinate.y + 2))
+            
+            firstStartingCoordinate.y += 20
         }
-    }
-    
-    private func createStatue() {
-        
-        guard let statue = scene.game?.level?.statue else { return }
-        
-        let collision = Collision(category: .object,
-                                  collision: [.allClear],
-                                  contact: [.player])
-        
-        map.addObject(backgroundElement(name: "Statue", collision: collision),
-                      image: "springStatueTopLeft",
-                      filteringMode: .nearest,
-                      logic: LogicBody(isIntangible: true),
-                      animations: [],
-                      at: statue.coordinates[0].coordinate)
-        
-        map.addObject(backgroundElement(name: "Statue", collision: collision),
-                      image: "springStatueTopRight",
-                      filteringMode: .nearest,
-                      logic: LogicBody(isIntangible: true),
-                      animations: [],
-                      at: statue.coordinates[1].coordinate)
-        
-        map.addObject(backgroundElement(name: "Statue", collision: collision),
-                      image: "springStatueBottomLeft",
-                      filteringMode: .nearest,
-                      logic: LogicBody(isIntangible: true),
-                      animations: [],
-                      at: statue.coordinates[2].coordinate)
-        
-        map.addObject(backgroundElement(name: "Statue", collision: collision),
-                      image: "springStatueBottomRight",
-                      filteringMode: .nearest,
-                      logic: LogicBody(isIntangible: true),
-                      animations: [],
-                      at: statue.coordinates[3].coordinate)
-    }
-    private func createTrees() {
-        
-        let collision = Collision(category: .allClear,
-                                  collision: [.allClear],
-                                  contact: [.allClear])
-        
-        var startingCoordinate = Coordinate(x: 13, y: 0)
-        
+        var secondStartingCoordinate = Coordinate(x: 10, y: 5)
         for _ in 0..<6 {
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopLeft",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 1))
+            map.drawTexture("cloud1Left",
+                            filteringMode: .nearest,
+                            at: .init(x: secondStartingCoordinate.x, y: secondStartingCoordinate.y))
             
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopRight",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 2))
+            map.drawTexture("cloud1Middle",
+                            filteringMode: .nearest,
+                            at: .init(x: secondStartingCoordinate.x, y: secondStartingCoordinate.y + 1))
             
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeBottomRight",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 1))
+            map.drawTexture("cloud1Right",
+                            filteringMode: .nearest,
+                            at: .init(x: secondStartingCoordinate.x, y: secondStartingCoordinate.y + 2))
             
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeBottomLeft",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 2))
-            
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopLeft",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y))
-            
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopRight",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 3))
-            
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopLeft",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 6))
-            
-            map.addObject(backgroundElement(collision: collision),
-                          image: "springTreeTopRight",
-                          filteringMode: .nearest,
-                          logic: LogicBody(isIntangible: true),
-                          animations: [],
-                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 7))
-            
-            startingCoordinate.y += 10
+            secondStartingCoordinate.y += 10
         }
     }
-    
-    private func createContainers() {
-        if let level = scene.game?.level {
-            for container in level.containers {
-                let coordinate = container.coordinate.coordinate
-                createContainer(container, at: coordinate)
-            }
-        }
-    }
-    
-    func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
-        if let dataObject = try? GameObject.get(container.name) {
-            let collision = Collision(category: .object,
-                                      collision: [.player, .structure],
-                                      contact: [.playerProjectile, .enemyProjectile])
-            let logic = LogicBody(health: dataObject.logic.health, damage: dataObject.logic.damage, isDestructible: dataObject.logic.isDestructible, isIntangible: dataObject.logic.isIntangible)
-            guard let death = dataObject.animation.first(where: { $0.identifier == "death" }) else { return }
-            let animations = [
-                ObjectAnimation(identifier: death.identifier, frames: death.frames)
-            ]
-            
-            let objectNode = PKObjectNode()
-            objectNode.name = dataObject.name
-            objectNode.size = dimension.tileSize
-            objectNode.applyPhysicsBody(size: dimension.tileSize, collision: collision)
-            objectNode.physicsBody?.isDynamic = false
-            
-            map.addObject(objectNode,
-                          image: dataObject.image,
-                          filteringMode: .nearest,
-                          logic: logic,
-                          animations: animations,
-                          at: coordinate)
-        }
-    }
-    func createSphere(at coordinate: Coordinate) {
-        let collision = Collision(category: .object,
-                                  collision: [.structure],
-                                  contact: [.player])
+    private func createMountains() {
+        let array = 0..<Game.mapMatrix.column
+        let coordinates = array.map { Coordinate(x: 13, y: $0) }
+        let leftCoordinates = coordinates.filter { $0.y.isEven }
+        let rightCoordinates = coordinates.filter { $0.y.isOdd }
         
-        let sphereNode = object(name: "Sphere",
-                                physicsBodySizeTailoring: -(dimension.tileSize.width / 2),
-                                collision: collision)
-        sphereNode.texture = SKTexture(imageNamed: "sphere")
-        sphereNode.texture?.filteringMode = .nearest
-        let position = map.tilePosition(from: coordinate)
-        sphereNode.position = position ?? .zero
-        scene.addChildSafely(sphereNode)
+        map.drawTexture("mountainsLeft",
+                        filteringMode: .nearest,
+                        row: 13, excluding: rightCoordinates)
+        map.drawTexture("mountainsRight",
+                        filteringMode: .nearest,
+                        row: 13, excluding: leftCoordinates)
     }
     
-    func addPortalRequirement(node: PKObjectNode) {
-        let portalRequirementNode = SKNode()
-        portalRequirementNode.name = "Portal Requirement"
-//        if let requirement = scene.game?.level?.requirement {
-//            requirement.intoSprites(with: "indicator",
-//                                    filteringMode: .nearest,
-//                                    spacing: 0.5,
-//                                    of: CGSize(width: 50, height: 50),
-//                                    at: CGPoint(x: 0, y: dimension.tileSize.height),
-//                                    on: portalRequirementNode)
-//            node.addChild(portalRequirementNode)
-//        }
-    }
-    
+    // MARK: - Miscellaneous
     public func showInteractionMessage() {
         guard let statue = scene.game?.level?.statue else { return }
         
@@ -309,7 +158,6 @@ final public class GameEnvironment {
             createInteractionMessage(buttonSymbol: .x, position: finalPosition)
         }
     }
-    
     private func createInteractionMessage(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         //guard let buttonName = scene.game?.controller?.manager?.buttonName(buttonSymbol) else { return }
         
@@ -333,8 +181,6 @@ final public class GameEnvironment {
         buttonNode.run(action)
     }
     
-    /// Pause the map
     public func pause() { map.isPaused = true }
-    /// Unpause the map
     public func unpause() { map.isPaused = false }
 }

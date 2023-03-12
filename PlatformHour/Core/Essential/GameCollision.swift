@@ -10,19 +10,12 @@ import PlayfulKit
 
 final public class GameCollision {
     
-    public init(scene: GameScene,
-                animation: GameAnimation,
-                environment: GameEnvironment,
-                logic: GameLogic) {
+    public init(scene: GameScene) {
         self.scene = scene
-        self.animation = animation
-        self.environment = environment
-        self.collisionLogic = CollisionLogic(scene: scene, animation: animation, logic: logic)
+        self.collisionLogic = CollisionLogic(scene: scene)
     }
     
     public var scene: GameScene
-    public var animation: GameAnimation
-    public var environment: GameEnvironment
     public var collisionLogic: CollisionLogic
     
     public var manager = CollisionManager()
@@ -43,12 +36,6 @@ final public class GameCollision {
                                       bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
             with: CollisionManager.NodeBody(body: secondBody,
                                             bitmaskCategory: CollisionCategory.object.rawValue)
-        )
-        
-        // Player collision with structure
-        landOnGround(
-            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
-            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
         playerTouchSphere(
@@ -82,14 +69,7 @@ final public class GameCollision {
         guard let object = second.body.node as? PKObjectNode else { return }
         guard object.name == "Statue" else { return }
         if manager.isColliding(first, with: second) {
-            print("Statue collide")
-            environment.showInteractionMessage()
-        }
-    }
-    
-    func landOnGround(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
-        if manager.isColliding(first, with: second) {
-            collisionLogic.landingOnground()
+            scene.core?.environment?.showInteractionMessage()
         }
     }
 }

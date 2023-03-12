@@ -12,14 +12,12 @@ import Utility_Toolbox
 
 final public class GameAnimation {
     
-    public init(scene: GameScene, dimension: GameDimension) {
+    public init(scene: GameScene) {
         self.scene = scene
-        self.dimension = dimension
     }
     
     public var manager = AnimationManager()
     public var scene: GameScene
-    public var dimension: GameDimension
     
     public struct SpecialEffect {
         let image: String
@@ -35,6 +33,7 @@ final public class GameAnimation {
     public let spark = GameAnimation.SpecialEffect(image: "spark", frameCount: 3)
     
     public func effect(effect: SpecialEffect, at position: CGPoint, alpha: Double = 1) -> SKSpriteNode {
+        guard let dimension = scene.core?.dimension else { return SKSpriteNode() }
         let effect = SKSpriteNode()
         effect.alpha = alpha
         effect.size = dimension.tileSize * 1.2
@@ -56,6 +55,7 @@ final public class GameAnimation {
     }
     
     public func circularSmoke(on node: SKNode) {
+        guard let dimension = scene.core?.dimension else { return }
         let frameCount = 8
         let images = Array(0..<frameCount).map { "circularSmoke" + "\($0)" }
         let size = CGSize(width: dimension.tileSize.width, height: dimension.tileSize.height * 0.3)

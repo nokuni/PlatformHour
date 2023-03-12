@@ -2,7 +2,7 @@
     {
         "id": 0,
         "name": "Timeless Temple",
-        "skyName": "templeSkySquare",
+        "skyName": "sky",
         "groundName": "Temple Snow",
         "levelIDs": [0,1,2,3,4]
     }

@@ -50,19 +50,44 @@ public class ActionLogic {
     // MARK: - Movements
     func moveRight() { move(on: .right, by: 1) }
     func moveLeft() { move(on: .left, by: -1) }
-    func upAction() {
-        if !isAttacking {
-            scene.player?.orientation = .up
-            switchPlayerArrowDirection()
-        }
-    }
-    func downAction() {
-        if !isAttacking {
-            scene.player?.orientation = .down
-            switchPlayerArrowDirection()
+    func moveAnimation(by amount: Int) {
+        guard let player = scene.player else { return }
+        let playerCoordinate = player.node.coordinate
+        
+        let destinationCoordinate = Coordinate(x: playerCoordinate.x,
+                                               y: playerCoordinate.y + amount)
+        
+        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
+        
+        let moveSequence = SKAction.sequence([
+            SKAction.run {
+                self.dismissInteractionMessage()
+            },
+            SKAction.move(to: destinationPosition, duration: 0.15),
+            SKAction.run {
+                self.scene.player?.node.coordinate = destinationCoordinate
+                self.scene.core?.sound?.step()
+                self.scene.player?.node.physicsBody?.velocity = .zero
+                self.scene.player?.node.removeAllActions()
+            }
+        ])
+        let cancelSequence = SKAction.sequence([
+            SKAction.wait(forDuration: 0.1),
+            SKAction.run { self.scene.player?.node.physicsBody?.velocity = .zero }
+        ])
+        
+        if environment.collisionCoordinates.contains(destinationCoordinate) {
+            scene.player?.node.run(cancelSequence)
+        } else {
+            scene.player?.node.run(moveSequence)
         }
     }
     
+    func stopMovement() {
+        timer?.invalidate()
+        direction = .none
+        scene.player?.stop()
+    }
     func changeOrientation(direction: Direction) {
         switch direction {
         case .right:
@@ -125,6 +150,19 @@ public class ActionLogic {
         }
     }
     
+    func upAction() {
+        if !isAttacking {
+            scene.player?.orientation = .up
+            switchPlayerArrowDirection()
+        }
+    }
+    func downAction() {
+        if !isAttacking {
+            scene.player?.orientation = .down
+            switchPlayerArrowDirection()
+        }
+    }
+    
     // MARK: - PROJECTILES
     
     func projectileFollowPlayer() {
@@ -137,40 +175,6 @@ public class ActionLogic {
                     isProjectileTurningBack = false
                 }
             }
-        }
-    }
-    
-    // MARK: - Animations
-    func moveAnimation(by amount: Int) {
-        guard let player = scene.player else { return }
-        let playerCoordinate = player.node.coordinate
-        
-        let destinationCoordinate = Coordinate(x: playerCoordinate.x,
-                                               y: playerCoordinate.y + amount)
-        
-        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
-        
-        let moveSequence = SKAction.sequence([
-            SKAction.run {
-                self.dismissInteractionMessage()
-            },
-            SKAction.move(to: destinationPosition, duration: 0.15),
-            SKAction.run {
-                self.scene.player?.node.coordinate = destinationCoordinate
-                self.scene.core?.sound?.step()
-                self.scene.player?.node.physicsBody?.velocity = .zero
-                self.scene.player?.node.removeAllActions()
-            }
-        ])
-        let cancelSequence = SKAction.sequence([
-            SKAction.wait(forDuration: 0.1),
-            SKAction.run { self.scene.player?.node.physicsBody?.velocity = .zero }
-        ])
-        
-        if environment.coordinates.contains(destinationCoordinate) {
-            scene.player?.node.run(cancelSequence)
-        } else {
-            scene.player?.node.run(moveSequence)
         }
     }
     func projectileAnimation(_ projectileNode: PKObjectNode) {
@@ -195,10 +199,5 @@ public class ActionLogic {
         ])
         
         projectileNode.run(sequence)
-    }
-    func stopMovement() {
-        timer?.invalidate()
-        direction = .none
-        scene.player?.stop()
     }
 }

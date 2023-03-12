@@ -26,11 +26,9 @@ public final class Game: ObservableObject {
     var world: GameWorld?
     var level: GameLevel?
     
-    let playerCoordinate: Coordinate = Coordinate(x: 13, y: 8)
+    static let mapMatrix = Matrix(row: 18, column: 50)
     
-//    var exitCoordinate: Coordinate? {
-//        return level?.exitCoordinate.coordinate
-//    }
+    let playerCoordinate: Coordinate = Coordinate(x: 13, y: 8)
     
     func createSave() {
         if saves.isEmpty {
