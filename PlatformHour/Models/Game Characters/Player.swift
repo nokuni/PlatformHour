@@ -8,13 +8,29 @@
 import SpriteKit
 import PlayfulKit
 
-struct Player: Identifiable {
-    var id = UUID()
-    var sprite: String = "playerIdle"
-    var orientation: Orientation = .right
-    var node = PKObjectNode()
+public struct Player: Identifiable {
+    internal init(id: UUID = UUID(),
+                  sprite: String = "playerIdle",
+                  orientation: Player.Orientation = .right,
+                  node: PKObjectNode = PKObjectNode(),
+                  currentRoll: Player.Roll = .one,
+                  range: CGFloat = 5,
+                  attackSpeed: CGFloat = 0.5) {
+        self.id = id
+        self.sprite = sprite
+        self.orientation = orientation
+        self.node = node
+        self.currentRoll = currentRoll
+        self.range = range
+        self.attackSpeed = attackSpeed
+    }
     
-    enum Roll: Int, CaseIterable {
+    public var id: UUID
+    public var sprite: String
+    public var orientation: Orientation
+    public var node: PKObjectNode
+    
+    public enum Roll: Int, CaseIterable {
         case one = 1
         case two = 2
         case three = 3
@@ -22,7 +38,7 @@ struct Player: Identifiable {
         case five = 5
         case six = 6
     }
-    enum Orientation {
+    public enum Orientation {
         case right
         case left
         case up
@@ -42,9 +58,9 @@ struct Player: Identifiable {
         }
     }
     
-    var currentRoll: Roll = .one
-    var range: CGFloat = 5
-    var attackSpeed: CGFloat = 0.5
+    public var currentRoll: Roll
+    public var range: CGFloat
+    public var attackSpeed: CGFloat
 }
 
 extension Player {

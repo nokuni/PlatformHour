@@ -33,8 +33,6 @@ final public class GameAnimation {
     }
     
     public let spark = GameAnimation.SpecialEffect(image: "spark", frameCount: 3)
-//    private var spark: SpecialEffect { SpecialEffect(image: "spark", frameCount: 3) }
-//    private var crateDestruction: SpecialEffect { SpecialEffect(image: "crateShards", frameCount: 3) }
     
     public func effect(effect: SpecialEffect, at position: CGPoint, alpha: Double = 1) -> SKSpriteNode {
         let effect = SKSpriteNode()

@@ -8,61 +8,37 @@
 import SpriteKit
 import GameController
 import PlayfulKit
+import Utility_Toolbox
 
 final public class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    var player: Player?
     var game: Game?
-    var player = Player()
-    
-    var dimension: GameDimension?
-    var gameCamera: GameCamera?
-    var animation: GameAnimation?
-    var collision: GameCollision?
-    var state: GameState?
-    var environment: GameEnvironment?
-    var content: GameContent?
-    var logic: GameLogic?
-    var sound: GameSound?
-    var hud: GameHUD?
+    var core: GameCore?
     
     func startGame() {
-        setup(gravity: GameCore.gravity)
+        setup(gravity: CGVector(dx: 0, dy: -10))
         physicsWorld.contactDelegate = self
-        
+        player = Player()
+        core = GameCore()
         game = Game()
-        
-        state = GameState(scene: self)
-        hud = GameHUD(scene: self)
-        sound = GameSound(scene: self)
-        dimension = GameDimension(scene: self)
-        
-        animation = GameAnimation(scene: self, dimension: dimension!)
-        
-        environment = GameEnvironment(scene: self, dimension: dimension!, animation: animation!)
-        
-        logic = GameLogic(scene: self, dimension: dimension!, animation: animation!, environment: environment!)
-        
-        collision = GameCollision(scene: self, animation: animation!, environment: environment!, logic: logic!)
-        
-        gameCamera = GameCamera(scene: self, environment: environment!)
-        
-        content = GameContent(scene: self, dimension: dimension!, environment: environment!, animation: animation!)
-        
-        game?.controller = GameControllerManager(scene: self, state: state!, dimension: dimension!, environment: environment!, content: content!)
+        core?.start(game: game, scene: self)
+        core?.animateLaunch(game: game, scene: self, player: player)
     }
     
     public override func didMove(to view: SKView) {
         startGame()
-        //cameraGesture(view)
+        //core?.gameCamera?.camera.cameraGesture(view)
     }
     
     public override func update(_ currentTime: TimeInterval) {
-        gameCamera?.followPlayer()
+        core?.gameCamera?.followPlayer()
+        game?.controller?.action.projectileFollowPlayer()
     }
     
     public func didBegin(_ contact: SKPhysicsContact) {
         
-        guard let collision = collision else { return }
+        guard let collision = core?.collision else { return }
         
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
@@ -79,28 +55,10 @@ final public class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        let touchedNodes = nodes(at: location)
-        guard !touchedNodes.isEmpty else { return }
         
-        for touchedNode in touchedNodes {
-            if let name = touchedNode.name {
-                
-                if let direction = ActionLogic.Direction.allCases.first(where: { $0.rawValue == name }) {
-                    game?.controller?.virtualController.touchDirectionalPad(direction)
-                }
-                
-                if let button = GameControllerManager.Button.allCases.first(where: { $0.rawValue == name }) {
-                    game?.controller?.virtualController.touchButton(button)
-                }
-            }
-        }
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        game?.controller?.action.stopMovement()
-        game?.controller?.virtualController.hasPressedAnyInput = false
+        
     }
-    
 }

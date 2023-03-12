@@ -43,9 +43,7 @@ final public class GameLogic {
             objectNode.physicsBody?.collisionBitMask = .zero
             animation.destroy(node: objectNode,
                               filteringMode: .nearest) {
-                self.environment.createPortalEnergy(at: objectNode.coordinate) { node in
-                    self.movePortalEnergy(to: node)
-                }
+                self.environment.createSphere(at: objectNode.coordinate)
             }
         }
     }
@@ -60,7 +58,7 @@ final public class GameLogic {
         destroy(objectNode)
     }
     
-    private func updatePortalRequirement() {
+    private func updateSphereRequirement() {
         guard let portalNode = environment.map.childNode(withName: "Portal") as? PKObjectNode else { return }
         guard let portalRequirementNode = portalNode.childNode(withName: "Portal Requirement") else { return }
         portalRequirementNode.removeAllChildren()
@@ -77,17 +75,17 @@ final public class GameLogic {
         }
     }
     
-    public func movePortalEnergy(to objectNode: PKObjectNode) {
-        if let exitCoordinate = scene.game?.exitCoordinate,
-           let exitPosition = environment.map.tilePosition(from: exitCoordinate) {
-            let sequence = SKAction.sequence([
-                objectNode.animatedAction(with: "idle", filteringMode: .nearest, timeInterval: 0.1),
-                SKAction.move(from: objectNode.position, to: exitPosition, at: 500),
-                SKAction.removeFromParent(),
-                SKAction.run { self.updatePortalRequirement() }
-            ])
-            
-            objectNode.run(sequence)
-        }
+    public func moveSpherePart(to objectNode: PKObjectNode) {
+//        if let exitCoordinate = scene.game?.exitCoordinate,
+//           let exitPosition = environment.map.tilePosition(from: exitCoordinate) {
+//            let sequence = SKAction.sequence([
+//                objectNode.animatedAction(with: "idle", filteringMode: .nearest, timeInterval: 0.1),
+//                SKAction.move(from: objectNode.position, to: exitPosition, at: 500),
+//                SKAction.removeFromParent(),
+//                SKAction.run { self.updateSphereRequirement() }
+//            ])
+//            
+//            objectNode.run(sequence)
+//        }
     }
 }

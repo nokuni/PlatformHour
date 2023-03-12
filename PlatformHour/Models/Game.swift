@@ -8,7 +8,7 @@
 import SwiftUI
 import PlayfulKit
 
-class Game: ObservableObject {
+public final class Game: ObservableObject {
     
     init() {
         print("Game Initialized ...")
@@ -26,11 +26,11 @@ class Game: ObservableObject {
     var world: GameWorld?
     var level: GameLevel?
     
-    let playerCoordinate: Coordinate = Coordinate(x: 13, y: 18)
+    let playerCoordinate: Coordinate = Coordinate(x: 13, y: 8)
     
-    var exitCoordinate: Coordinate? {
-        return level?.exitCoordinate.coordinate
-    }
+//    var exitCoordinate: Coordinate? {
+//        return level?.exitCoordinate.coordinate
+//    }
     
     func createSave() {
         if saves.isEmpty {

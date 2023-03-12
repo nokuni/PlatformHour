@@ -10,8 +10,8 @@ import PlayfulKit
 
 struct GameLevel: Codable {
     let id: Int
-    var requirement: Int
-    let exitCoordinate: Int
+    let statue: GameStatue
+    let containers: [GameObjectContainer]
 }
 
 extension GameLevel {

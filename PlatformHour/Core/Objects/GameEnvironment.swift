@@ -5,9 +5,16 @@
 //  Created by Maertens Yann-Christophe on 02/02/23.
 //
 
+import SwiftUI
 import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
+
+extension String.StringInterpolation {
+    mutating func appendImageInterpolation(_ value: String) {
+        appendInterpolation("My name is \(value) and I'm \(value)")
+    }
+}
 
 final public class GameEnvironment {
     
@@ -33,10 +40,12 @@ final public class GameEnvironment {
         let coordinates = objects.map { $0.coordinate }
         return coordinates
     }
+    
     public var levelRequirement: Int {
-        let crates = map.objects.filter { $0.name == "Crate" }
-        return crates.count
+        let vases = map.objects.filter { $0.name == "Vase" }
+        return vases.count
     }
+    
     public var isExitOpen: Bool {
         levelRequirement == 0
     }
@@ -57,7 +66,7 @@ final public class GameEnvironment {
         
         return object
     }
-    var structureElement: PKObjectNode {
+    public var structureElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
                                   contact: [.player, .object, .playerProjectile, .enemyProjectile])
@@ -68,21 +77,22 @@ final public class GameEnvironment {
         structureElement.physicsBody?.usesPreciseCollisionDetection = true
         return structureElement
     }
+    public func backgroundElement(name: String? = nil, collision: Collision) -> PKObjectNode {
+        let structureElement = object(collision: collision)
+        structureElement.name = name
+        structureElement.physicsBody?.isDynamic = false
+        structureElement.physicsBody?.affectedByGravity = false
+        return structureElement
+    }
     
     // MARK: - Creations
     private func createEnvironment() {
         createMap()
         createSky()
         createGround()
-        createWall()
-        
-        createCrate(at: .init(x: 13, y: 11))
-        createCrate(at: .init(x: 13, y: 30))
-        createCrate(at: .init(x: 10, y: 35))
-        
-        if let portalCoordinate = scene.game?.level?.exitCoordinate.coordinate {
-            createPortal(at: portalCoordinate)
-        }
+        createTrees()
+        createStatue()
+        createContainers()
     }
     
     private func createMap() {
@@ -99,6 +109,7 @@ final public class GameEnvironment {
                             startingCoordinate: Coordinate.zero)
         }
     }
+    
     private func createGround() {
         let coordinate = Coordinate(x: 14, y: 0)
         
@@ -121,45 +132,129 @@ final public class GameEnvironment {
                           matrix: Matrix(row: 4, column: mapMatrix.column))
         }
     }
-    private func createWall() {
-        let coordinate = Coordinate(x: 7, y: 0)
-        let matrix = Matrix(row: 7, column: 9)
+    
+    private func createStatue() {
         
-        map.addObject(structureElement,
-                      image: "blackCrate",
+        guard let statue = scene.game?.level?.statue else { return }
+        
+        let collision = Collision(category: .object,
+                                  collision: [.allClear],
+                                  contact: [.player])
+        
+        map.addObject(backgroundElement(name: "Statue", collision: collision),
+                      image: "springStatueTopLeft",
                       filteringMode: .nearest,
-                      logic: LogicBody(),
+                      logic: LogicBody(isIntangible: true),
                       animations: [],
-                      matrix: matrix,
-                      startingCoordinate: coordinate)
-        /*map.addObject(structureElement,
-                      structure: .init(
-                        topLeft: "blackCrate",
-                        topRight: "blackCrate",
-                        bottomLeft: "blackCrate",
-                        bottomRight: "blackCrate",
-                        left: "blackCrate",
-                        right: "blackCrate",
-                        top: "blackCrate",
-                        bottom: "blackCrate",
-                        middle: "blackCrate"),
+                      at: statue.coordinates[0].coordinate)
+        
+        map.addObject(backgroundElement(name: "Statue", collision: collision),
+                      image: "springStatueTopRight",
                       filteringMode: .nearest,
-                      logic: LogicBody(),
+                      logic: LogicBody(isIntangible: true),
                       animations: [],
-                      startingCoordinate: coordinate,
-                      matrix: Matrix(row: 4, column: 8))*/
+                      at: statue.coordinates[1].coordinate)
+        
+        map.addObject(backgroundElement(name: "Statue", collision: collision),
+                      image: "springStatueBottomLeft",
+                      filteringMode: .nearest,
+                      logic: LogicBody(isIntangible: true),
+                      animations: [],
+                      at: statue.coordinates[2].coordinate)
+        
+        map.addObject(backgroundElement(name: "Statue", collision: collision),
+                      image: "springStatueBottomRight",
+                      filteringMode: .nearest,
+                      logic: LogicBody(isIntangible: true),
+                      animations: [],
+                      at: statue.coordinates[3].coordinate)
+    }
+    private func createTrees() {
+        
+        let collision = Collision(category: .allClear,
+                                  collision: [.allClear],
+                                  contact: [.allClear])
+        
+        var startingCoordinate = Coordinate(x: 13, y: 0)
+        
+        for _ in 0..<6 {
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 1))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 2))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeBottomRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 1))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeBottomLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 2))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 3))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopLeft",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 6))
+            
+            map.addObject(backgroundElement(collision: collision),
+                          image: "springTreeTopRight",
+                          filteringMode: .nearest,
+                          logic: LogicBody(isIntangible: true),
+                          animations: [],
+                          at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 7))
+            
+            startingCoordinate.y += 10
+        }
     }
     
-    func createCrate(at coordinate: Coordinate) {
-        if let dataObject = try? GameObject.get("Crate") {
+    private func createContainers() {
+        if let level = scene.game?.level {
+            for container in level.containers {
+                let coordinate = container.coordinate.coordinate
+                createContainer(container, at: coordinate)
+            }
+        }
+    }
+    
+    func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
+        if let dataObject = try? GameObject.get(container.name) {
             let collision = Collision(category: .object,
                                       collision: [.player, .structure],
                                       contact: [.playerProjectile, .enemyProjectile])
-            let logic = LogicBody(health: dataObject.logic.health, damage: dataObject.logic.damage, isDestructible: dataObject.logic.isDestructible)
-            guard let hit = dataObject.animation.first(where: { $0.identifier == "hit" }) else { return }
+            let logic = LogicBody(health: dataObject.logic.health, damage: dataObject.logic.damage, isDestructible: dataObject.logic.isDestructible, isIntangible: dataObject.logic.isIntangible)
             guard let death = dataObject.animation.first(where: { $0.identifier == "death" }) else { return }
             let animations = [
-                ObjectAnimation(identifier: hit.identifier, frames: hit.frames),
                 ObjectAnimation(identifier: death.identifier, frames: death.frames)
             ]
             
@@ -177,78 +272,65 @@ final public class GameEnvironment {
                           at: coordinate)
         }
     }
-    func createPortal(at coordinate: Coordinate) {
-        if let dataObject = try? GameObject.get("Portal") {
-            let logic = LogicBody(health: dataObject.logic.health,
-                                  damage: dataObject.logic.damage,
-                                  isDestructible: dataObject.logic.isDestructible,
-                                  isIntangible: dataObject.logic.isIntangible)
-            
-            guard let close = dataObject.animation.first(where: { $0.identifier == "close" }) else { return }
-            guard let open = dataObject.animation.first(where: { $0.identifier == "open" }) else { return }
-            
-            let animations = [
-                ObjectAnimation(identifier: close.identifier, frames: close.frames),
-                ObjectAnimation(identifier: open.identifier, frames: open.frames)
-            ]
-            
-            let objectNode = PKObjectNode()
-            objectNode.name = "Portal"
-            objectNode.logic = logic
-            objectNode.size = dimension.tileSize
-            objectNode.animations = animations
-            
-            map.addUniqueObject(objectNode, at: coordinate)
-            
-            let action = objectNode.animatedAction(with: "close", filteringMode: .nearest, timeInterval: 0.1, isRepeatingForever: true)
-            
-            objectNode.run(action)
-            
-            addPortalRequirement(node: objectNode)
-        }
-    }
-    func createPortalEnergy(at coordinate: Coordinate, action: ((PKObjectNode) -> Void)?) {
-        if let dataObject = try? GameObject.get("Portal Energy") {
-            
-            let logic = LogicBody(health: dataObject.logic.health,
-                                  damage: dataObject.logic.damage,
-                                  isDestructible: dataObject.logic.isDestructible,
-                                  isIntangible: dataObject.logic.isIntangible)
-            
-            guard let idle = dataObject.animation.first(where: { $0.identifier == "idle" }) else { return }
-            
-            let animations = [
-                ObjectAnimation(identifier: idle.identifier, frames: idle.frames)
-            ]
-            
-            let objectNode = PKObjectNode()
-            objectNode.name = "Portal Energy"
-            objectNode.logic = logic
-            objectNode.size = dimension.tileSize
-            objectNode.animations = animations
-            
-            map.addUniqueObject(objectNode, at: coordinate)
-            
-            action?(objectNode)
-            
-//            let action = objectNode.animatedAction(with: "idle", filteringMode: .nearest, timeInterval: 0.1)
-//
-//            objectNode.run(action)
-        }
+    func createSphere(at coordinate: Coordinate) {
+        let collision = Collision(category: .object,
+                                  collision: [.structure],
+                                  contact: [.player])
+        
+        let sphereNode = object(name: "Sphere",
+                                physicsBodySizeTailoring: -(dimension.tileSize.width / 2),
+                                collision: collision)
+        sphereNode.texture = SKTexture(imageNamed: "sphere")
+        sphereNode.texture?.filteringMode = .nearest
+        let position = map.tilePosition(from: coordinate)
+        sphereNode.position = position ?? .zero
+        scene.addChildSafely(sphereNode)
     }
     
     func addPortalRequirement(node: PKObjectNode) {
         let portalRequirementNode = SKNode()
         portalRequirementNode.name = "Portal Requirement"
-        if let requirement = scene.game?.level?.requirement {
-            requirement.intoSprites(with: "indicator",
-                                    filteringMode: .nearest,
-                                    spacing: 0.5,
-                                    of: CGSize(width: 50, height: 50),
-                                    at: CGPoint(x: 0, y: dimension.tileSize.height),
-                                    on: portalRequirementNode)
-            node.addChild(portalRequirementNode)
+//        if let requirement = scene.game?.level?.requirement {
+//            requirement.intoSprites(with: "indicator",
+//                                    filteringMode: .nearest,
+//                                    spacing: 0.5,
+//                                    of: CGSize(width: 50, height: 50),
+//                                    at: CGPoint(x: 0, y: dimension.tileSize.height),
+//                                    on: portalRequirementNode)
+//            node.addChild(portalRequirementNode)
+//        }
+    }
+    
+    public func showInteractionMessage() {
+        guard let statue = scene.game?.level?.statue else { return }
+        
+        if let position = map.tilePosition(from: statue.coordinates[0].coordinate) {
+            let finalPosition = CGPoint(x: position.x + (dimension.tileSize.width / 2), y: position.y + dimension.tileSize.height)
+            createInteractionMessage(buttonSymbol: .x, position: finalPosition)
         }
+    }
+    
+    private func createInteractionMessage(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
+        //guard let buttonName = scene.game?.controller?.manager?.buttonName(buttonSymbol) else { return }
+        
+        let interactionNode = SKNode()
+        interactionNode.name = "Interaction"
+        scene.addChildSafely(interactionNode)
+        
+        let buttonNode = SKSpriteNode(imageNamed: "triangleButton")
+        buttonNode.texture?.filteringMode = .nearest
+        buttonNode.size = dimension.tileSize
+        buttonNode.position = position
+        interactionNode.addChildSafely(buttonNode)
+        
+        let action = SKAction.scaleUpAndDown(from: 0.8,
+                                             with: 0.5,
+                                             to: 1,
+                                             with: 0.5,
+                                             during: 0,
+                                             isRepeatingForever: true)
+        
+        buttonNode.run(action)
     }
     
     /// Pause the map

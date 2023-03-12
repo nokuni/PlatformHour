@@ -9,8 +9,8 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-class GameHUD {
-    init(scene: GameScene) {
+public class GameHUD {
+    public init(scene: GameScene) {
         self.scene = scene
     }
     

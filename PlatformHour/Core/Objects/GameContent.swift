@@ -19,8 +19,8 @@ final public class GameContent {
         self.dimension = dimension
         self.environment = environment
         self.animation = animation
-        spawn()
-        //createContent()
+        configurePlayer()
+        createPlayer()
     }
     
     var scene: GameScene
@@ -49,7 +49,8 @@ final public class GameContent {
         return object
     }
     public var projectileNode: PKObjectNode {
-        let currentRoll = scene.player.currentRoll.rawValue
+        guard let player = scene.player else { return PKObjectNode() }
+        let currentRoll = player.currentRoll.rawValue
         
         let collision = Collision(category: .playerProjectile,
                                   collision: [.allClear],
@@ -60,9 +61,10 @@ final public class GameContent {
                                 collision: collision)
         
         attackNode.logic.damage = currentRoll
-        attackNode.texture = SKTexture(imageNamed: scene.player.node.texture?.name ?? "")
-        attackNode.coordinate = scene.player.node.coordinate
-        attackNode.position = scene.player.node.position
+        attackNode.texture = SKTexture(imageNamed: player.node.texture?.name ?? "")
+        attackNode.texture?.filteringMode = .nearest
+        attackNode.coordinate = player.node.coordinate
+        attackNode.position = player.node.position
         attackNode.alpha = 0.5
         
         attackNode.physicsBody?.affectedByGravity = false
@@ -83,44 +85,41 @@ final public class GameContent {
         return arrowNode
     }
     
-    func spawn() {
-        let position = environment.map.tilePosition(from: scene.game?.playerCoordinate ?? .zero) ?? .zero
-        let effect = animation.effect(effect: animation.spark, at: position, alpha: 0.5)
-        scene.addChild(effect)
-        let sequence = SKAction.sequence([
-            animation.effectAnimation(effect: animation.spark, timePerFrame: 0.05, count: 5),
-            SKAction.run { self.createPlayer() }
-        ])
-        effect.run(sequence)
+    // Setups
+    
+    func configurePlayer() {
+        let collision = Collision(category: .player,
+                                  collision: [.structure],
+                                  contact: [.enemyProjectile, .object])
+        scene.player?.node = object(name: "Player",
+                                   physicsBodySizeTailoring: -dimension.tileSize.width * 0.1,
+                                   collision: collision)
+        
+        scene.player?.node.physicsBody?.friction = 0
+        scene.player?.node.physicsBody?.allowsRotation = false
+        scene.player?.node.physicsBody?.affectedByGravity = false
+        
+        if let player = scene.player {
+            addArrow("arrowRight", named: "Player Arrow", on: player.node)
+        }
+        
+        scene.player?.node.coordinate = scene.game?.playerCoordinate ?? .zero
+        scene.player?.node.position = environment.map.tilePosition(from: scene.game?.playerCoordinate ?? .zero) ?? .zero
+        scene.player?.node.texture = SKTexture(imageNamed: "playerIdle0")
+        scene.player?.node.texture?.filteringMode = .nearest
     }
     
     // Creations
     private func createPlayer() {
-        
-        let collision = Collision(category: .player,
-                                  collision: [.structure, .object],
-                                  contact: [.enemyProjectile])
-        scene.player.node = object(name: "Player",
-                                   physicsBodySizeTailoring: -dimension.tileSize.width * 0.1,
-                                   collision: collision)
-        
-        scene.player.node.physicsBody?.friction = 0
-        scene.player.node.physicsBody?.allowsRotation = false
-        scene.player.node.physicsBody?.affectedByGravity = false
-        
-        addArrow("arrowRight", named: "Player Arrow", on: scene.player.node)
-        
-        scene.player.node.coordinate = scene.game?.playerCoordinate ?? .zero
-        scene.player.node.position = environment.map.tilePosition(from: scene.game?.playerCoordinate ?? .zero) ?? .zero
-        scene.player.node.texture = SKTexture(imageNamed: "playerIdle0")
-        scene.player.node.texture?.filteringMode = .nearest
-        scene.addChild(scene.player.node)
+        if let player = scene.player {
+            scene.addChild(player.node)
+        }
     }
     
     // Additions
     func addArrow(_ image: String, named name: String, on node: SKNode) {
         let arrow = arrow(image, named: name)
-        arrow.position = CGPoint(x: 0, y: node.frame.size.height)
+        arrow.position = CGPoint(x: 0, y: node.frame.size.height / 2)
         node.addChild(arrow)
     }
     

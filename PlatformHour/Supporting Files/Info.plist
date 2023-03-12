@@ -5,6 +5,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>8-bit Arcade In.ttf</string>
+		<string>Karmatic Arcade.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

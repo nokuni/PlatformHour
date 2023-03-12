@@ -8,7 +8,7 @@
 import SpriteKit
 import PlayfulKit
 
-class CollisionLogic {
+public class CollisionLogic {
     
     public init(scene: GameScene, animation: GameAnimation, logic: GameLogic) {
         self.scene = scene
@@ -21,21 +21,17 @@ class CollisionLogic {
     public var logic: GameLogic
     
     public func projectileHitObject(_ projectileNode: PKObjectNode, objectNode: PKObjectNode) {
-        let effect = animation.effect(effect: animation.spark, at: projectileNode.position, alpha: 0.5)
-        scene.addChild(effect)
-        let collisionAnimation = animation.effectAnimation(effect: animation.spark, timePerFrame: 0.05)
-        effect.run(collisionAnimation)
         logic.damageObject(objectNode, with: projectileNode)
     }
     
     public func landingOnground() {
-        scene.player.node.physicsBody?.velocity = .zero
+        guard let player = scene.player else { return }
+        player.node.physicsBody?.velocity = .zero
         
         if let controller = scene.game?.controller {
             if controller.action.isJumping {
                 controller.action.isJumping = false
-                controller.virtualController.hasPressedAnyInput = false
-                scene.animation?.circularSmoke(on: scene.player.node)
+                scene.core?.animation?.circularSmoke(on: player.node)
             }
         }
     }

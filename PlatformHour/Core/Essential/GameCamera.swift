@@ -37,7 +37,8 @@ final public class GameCamera {
     }
     
     private var playerPosition: CGPoint {
-        return CGPoint(x: scene.player.node.position.x, y: scene.player.node.position.y + adjustement)
+        guard let player = scene.player else { return .zero }
+        return CGPoint(x: player.node.position.x, y: player.node.position.y + adjustement)
     }
     
     private func configure() {
@@ -49,9 +50,15 @@ final public class GameCamera {
     }
     
     public func followPlayer() {
+        guard let action = scene.game?.controller?.action else { return }
         guard scene.isExistingChildNode(named: "Player") else { return }
-        if let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 17)) {
-            if playerPosition.x > minCameraPosition.x {
+        guard action.isAnimating else { return }
+        
+        let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8))
+        let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 41))
+        
+        if let minCameraPosition, let maxCameraPosition {
+            if (playerPosition.x > minCameraPosition.x) && (playerPosition.x < maxCameraPosition.x) {
                 camera.move(to: playerPosition)
             }
         }

@@ -1,12 +1,60 @@
 [
     {
         "id": 0,
-        "requirement": 3,
-        "exitCoordinate": 1341
+        "statue":
+        {
+            "sprites":
+            [
+                "springStatueTopLeft",
+                "springStatueTopRight",
+                "springStatueBottomLeft",
+                "springStatueBottonRight"
+            ],
+            "coordinates": [1241, 1242, 1341, 1342]
+        },
+        "containers":
+        [
+            {
+                "name": "Vase",
+                "coordinate": 1311
+            },
+            {
+                "name": "Vase",
+                "coordinate": 1316
+            },
+            {
+                "name": "Vase",
+                "coordinate": 1321
+            },
+            {
+                "name": "Vase",
+                "coordinate": 1326
+            },
+            {
+                "name": "Vase",
+                "coordinate": 1331
+            }
+        ]
     },
     {
         "id": 1,
-        "requirement": 3,
-        "exitCoordinate": 1345
+        "statue":
+        {
+            "sprites":
+            [
+                "springStatueTopLeft",
+                "springStatueTopRight",
+                "springStatueBottomLeft",
+                "springStatueBottonRight"
+            ],
+            "coordinates": [1222, 1223, 1322, 1323]
+        },
+        "containers":
+        [
+            {
+                "name": "Vase",
+                "coordinate": 1311
+            }
+        ]
     }
 ]
