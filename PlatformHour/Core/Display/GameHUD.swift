@@ -62,6 +62,7 @@ public class GameHUD {
         score.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
+        item.name = "Sphere"
         item.texture?.filteringMode = .nearest
         item.size = dimension.tileSize
         item.position = .zero

@@ -60,6 +60,7 @@ final public class GameEnvironment {
         
         return object
     }
+
     public var structureObjectElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
@@ -71,6 +72,7 @@ final public class GameEnvironment {
         structureElement.physicsBody?.usesPreciseCollisionDetection = true
         return structureElement
     }
+
     public func backgroundObjectElement(name: String? = nil, collision: Collision) -> PKObjectNode {
         let structureElement = objectElement(collision: collision)
         structureElement.name = name
@@ -91,6 +93,7 @@ final public class GameEnvironment {
                         matrix: Game.mapMatrix)
         scene.addChild(map)
     }
+
     private func createSky() {
         if let world = scene.game?.world {
             let matrix = Matrix(row: Game.mapMatrix.row - 4, column: Game.mapMatrix.column)
@@ -100,6 +103,7 @@ final public class GameEnvironment {
                             startingCoordinate: Coordinate.zero)
         }
     }
+
     private func createClouds() {
         var firstStartingCoordinate = Coordinate(x: 9, y: 0)
         for _ in 0..<3 {
@@ -135,6 +139,7 @@ final public class GameEnvironment {
             secondStartingCoordinate.y += 10
         }
     }
+
     private func createMountains() {
         let array = 0..<Game.mapMatrix.column
         let coordinates = array.map { Coordinate(x: 13, y: $0) }
@@ -192,6 +197,7 @@ final public class GameEnvironment {
             }
         }
     }
+
     public func showStatueInteractionPopUp() {
         guard let player = scene.player else { return }
         guard let statue = scene.game?.level?.statue else { return }
@@ -205,6 +211,7 @@ final public class GameEnvironment {
             }
         }
     }
+
     private func createButtonPopUp(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
         let buttonPopUp = SKNode()
@@ -216,7 +223,8 @@ final public class GameEnvironment {
         button.setScale(0.6)
         button.position = position
         buttonPopUp.addChildSafely(button)
-        
+
+
         let action = SKAction.animate(with: controllerButtonSprites(buttonSymbol), filteringMode: .nearest, timePerFrame: 0.5)
         
         button.run(SKAction.repeatForever(action))
@@ -246,6 +254,7 @@ final public class GameEnvironment {
         item.position = .zero
         requirementPopUp.addChildSafely(item)
     }
+
     public func updateStatueRequirementPopUp() {
         
         guard let statue = scene.game?.level?.statue else { return }
@@ -263,5 +272,6 @@ final public class GameEnvironment {
     }
     
     public func pause() { map.isPaused = true }
+
     public func unpause() { map.isPaused = false }
 }

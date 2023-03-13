@@ -168,25 +168,49 @@ public class ActionLogic {
             switchPlayerArrowDirection()
         }
     }
-    
-    func interactWithStatue() {
-        guard let level = scene.game?.level else { return }
-        guard !level.statue.requirement.isEmpty else { return }
-        
+
+    func animateItemMovingToStatue() {
+        guard let statue = scene.game?.level?.statue else { return }
+        guard let environment = scene.core?.environment else { return }
+        guard let dimension = scene.core?.dimension else { return }
+
+        if let statuePosition = environment.map.tilePosition(from: statue.coordinates[0].coordinate) {
+
+            let position = CGPoint(x: statuePosition.x + (dimension.tileSize.width * 0.5), y: statuePosition.y - dimension.tileSize.height)
+
+            let item = SKSpriteNode(imageNamed: "sphereStatue")
+            item.texture?.filteringMode = .nearest
+            item.size = scene.core?.dimension?.tileSize ?? .zero
+            item.position = scene.player?.node.position ?? .zero
+            environment.map.addChildSafely(item)
+
+            let moveAction = SKAction.move(to: position, duration: 0.5)
+
+            item.run(moveAction)
+        }
+    }
+    func giveItemToStatue() {
+        scene.game?.level?.statue.requirement.removeLast()
+        scene.player?.bag.removeLast()
+        scene.core?.hud?.updateItemAmountHUD()
+        scene.core?.environment?.updateStatueRequirementPopUp()
+        if scene.player!.bag.isEmpty { dismissButtonPopUp() }
+        if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
+        animateItemMovingToStatue()
+    }
+    func interact() {
         guard let player = scene.player else { return }
         guard !player.bag.isEmpty else { return }
-        
-        if player.interactionStatus == .onStatue {
-            scene.game?.level?.statue.requirement.removeLast()
-            scene.player?.bag.removeLast()
-            scene.core?.hud?.updateItemAmountHUD()
-            scene.core?.environment?.updateStatueRequirementPopUp()
-            if scene.player!.bag.isEmpty { dismissButtonPopUp() }
-            if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
+
+        switch player.interactionStatus {
+        case .none:
+            ()
+        case .onStatue:
+            giveItemToStatue()
         }
     }
     
-    // MARK: - PROJECTILES
+    // MARK: - Projectiles
     
     func projectileFollowPlayer() {
         if let player = scene.player,
