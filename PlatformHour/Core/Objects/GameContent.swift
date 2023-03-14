@@ -261,7 +261,39 @@ final public class GameContent {
             }
         }
     }
-    
+
+    public func createPortal() {
+        let name = "Portal"
+
+        let dataObject = try? GameObject.get(name)
+
+        let collision = Collision(category: .object,
+                                  collision: [.allClear],
+                                  contact: [.player])
+
+        guard let idle = dataObject?.animation.first(where: { $0.identifier == "idle" }) else { return
+        }
+
+        print("Portal Created")
+
+        let animations = [
+            ObjectAnimation(identifier: idle.identifier, frames: idle.frames)
+        ]
+
+        let coordinate = Coordinate(x: 13, y: 6)
+
+        let portal = environment.objectElement(name: name, collision: collision)
+        portal.texture = SKTexture(imageNamed: "portal")
+        portal.texture?.filteringMode = .nearest
+        portal.animations = animations
+        let position = environment.map.tilePosition(from: coordinate)
+        portal.position = position!
+        portal.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(portal)
+
+        portal.run(SKAction.fadeOutAndIn())
+        //scene.core?.animation?.idle(node: portal, filteringMode: .nearest, timeInterval: 0.1)
+    }
     private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
         if let dataObject = try? GameObject.get(container.name) {
             

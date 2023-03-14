@@ -197,6 +197,7 @@ public class ActionLogic {
         if scene.player!.bag.isEmpty { dismissButtonPopUp() }
         if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
         animateItemMovingToStatue()
+
     }
     func interact() {
         guard let player = scene.player else { return }
@@ -208,6 +209,11 @@ public class ActionLogic {
         case .onStatue:
             giveItemToStatue()
         }
+    }
+    func showExit() {
+        guard let player = scene.player else { return }
+        guard let position = environment.map.tilePosition(from: Coordinate(x: 13, y: 30)) else { return }
+        scene.core?.gameCamera?.camera.showcase(.init(startingPoint: player.node.position, endingPoint: position))
     }
     
     // MARK: - Projectiles

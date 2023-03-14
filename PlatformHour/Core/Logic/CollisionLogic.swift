@@ -25,6 +25,7 @@ public class CollisionLogic {
             scene.player?.bag.append(item)
             scene.core?.hud?.updateItemAmountHUD()
             object.removeFromParent()
+            scene.core?.content?.createPortal()
         }
     }
 }

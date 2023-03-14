@@ -20,8 +20,8 @@ final public class GameCamera {
     public var environment: GameEnvironment
     
     public var camera = CameraManager()
-    
-    // 1.1 - 1.25
+    public var isFollowingPlayer: Bool = true
+
     private let zoom = UIDevice.isOnPhone ? 1.1 : 1.25
     private let catchUpDelay: CGFloat = 0
     
@@ -42,15 +42,16 @@ final public class GameCamera {
     }
     
     private func configure() {
+        isFollowingPlayer = true
         camera.scene = scene
         camera.position = position
         camera.zoom = zoom
-        camera.catchUpDelay = catchUpDelay
         camera.add()
     }
     
     public func followPlayer() {
         guard let action = scene.game?.controller?.action else { return }
+        guard isFollowingPlayer else { return }
         guard scene.isExistingChildNode(named: "Player") else { return }
         guard action.isAnimating else { return }
         
@@ -59,7 +60,7 @@ final public class GameCamera {
         
         if let minCameraPosition, let maxCameraPosition {
             if (playerPosition.x > minCameraPosition.x) && (playerPosition.x < maxCameraPosition.x) {
-                camera.move(to: playerPosition)
+                camera.move(to: playerPosition, catchUpDelay: catchUpDelay)
             }
         }
     }
