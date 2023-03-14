@@ -32,7 +32,9 @@ final public class GameAnimation {
     
     public let spark = GameAnimation.SpecialEffect(image: "spark", frameCount: 3)
     
-    public func effect(effect: SpecialEffect, at position: CGPoint, alpha: Double = 1) -> SKSpriteNode {
+    public func effect(effect: SpecialEffect,
+                       at position: CGPoint,
+                       alpha: Double = 1) -> SKSpriteNode {
         guard let dimension = scene.core?.dimension else { return SKSpriteNode() }
         let effect = SKSpriteNode()
         effect.alpha = alpha

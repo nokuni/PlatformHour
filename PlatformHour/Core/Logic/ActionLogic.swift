@@ -197,7 +197,7 @@ public class ActionLogic {
         if scene.player!.bag.isEmpty { dismissButtonPopUp() }
         if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
         animateItemMovingToStatue()
-
+        showExit()
     }
     func interact() {
         guard let player = scene.player else { return }
@@ -211,9 +211,10 @@ public class ActionLogic {
         }
     }
     func showExit() {
-        guard let player = scene.player else { return }
         guard let position = environment.map.tilePosition(from: Coordinate(x: 13, y: 30)) else { return }
-        scene.core?.gameCamera?.camera.showcase(.init(startingPoint: player.node.position, endingPoint: position))
+        scene.core?.gameCamera?.camera.showcase(.init(targetPoint: position)) {
+            self.scene.core?.gameCamera?.camera.move(to: self.scene.core?.gameCamera?.playerPosition ?? .zero)
+        }
     }
     
     // MARK: - Projectiles

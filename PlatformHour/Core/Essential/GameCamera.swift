@@ -36,7 +36,7 @@ final public class GameCamera {
         return adjustedPosition
     }
     
-    private var playerPosition: CGPoint {
+    public var playerPosition: CGPoint {
         guard let player = scene.player else { return .zero }
         return CGPoint(x: player.node.position.x, y: player.node.position.y + adjustement)
     }
