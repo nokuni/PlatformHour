@@ -68,6 +68,11 @@ extension Dice {
         }
         return frames
     }
+    var runDuration: Double {
+        guard let framesCount = rightRunFrames?.count else { return 0 }
+        let duration = Double(framesCount) * GameApp.playerConfiguration.runTimePerFrame
+        return duration
+    }
     
     func run() {
         guard let rightRunFrames = rightRunFrames else { return }

@@ -66,20 +66,21 @@ public class ActionLogic {
         guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
         
         let moveSequence = moveSequence(destinationPosition: destinationPosition,
-                                        destinationCoordinate: destinationCoordinate)
+                                        destinationCoordinate: destinationCoordinate, amount: amount)
         
         scene.player?.node.run(moveSequence)
     }
     
-    func moveSequence(destinationPosition: CGPoint, destinationCoordinate: Coordinate) -> SKAction {
+    func moveSequence(destinationPosition: CGPoint,
+                      destinationCoordinate: Coordinate,
+                      amount: Int) -> SKAction {
         guard let environment = scene.core?.environment else { return SKAction.empty() }
-        #warning("0.4 needs to changes for runTimerPerframe multiplied by number of frames")
         let sequence = SKAction.sequence([
             SKAction.run {
                 self.scene.core?.event?.dismissButtonPopUp()
                 self.scene.core?.event?.dismissStatueRequirementPopUp()
             },
-            SKAction.move(to: destinationPosition, duration: 0.4),
+            SKAction.move(to: destinationPosition, duration: scene.player?.runDuration ?? 0),
             SKAction.run {
                 self.scene.player?.advanceRoll()
                 self.scene.player?.node.coordinate = destinationCoordinate
@@ -87,7 +88,10 @@ public class ActionLogic {
                 self.scene.player?.node.removeAllActions()
             }
         ])
-        return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
+        #warning("if can 2 and can't one, one. if can 2 and can one, two")
+        let coordinate = Coordinate(x: destinationCoordinate.x, y: destinationCoordinate.y + (amount - 1))
+        let coordinates = [destinationCoordinate, coordinate]
+        return !environment.collisionCoordinates.contains(coordinates) ? sequence : SKAction.empty()
     }
     
     func changeOrientation(direction: Direction) {

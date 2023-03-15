@@ -13,8 +13,6 @@ import SwiftUI
 
 // The player can't move at least 1 when he can't move 2.
 
-// The interaction button pop up and the statue requirement pop do not diappear when leaving.
-
 // MARK: - NOT IMPORTANT
 
 // Make the vase death animation more faster to not block the player when he moves.
