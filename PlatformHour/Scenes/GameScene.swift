@@ -10,25 +10,23 @@ import GameController
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameScene: SKScene, SKPhysicsContactDelegate {
+final public class GameScene: SKScene {
     
-    var player: Player?
+    var player: Dice?
     var game: Game?
     var core: GameCore?
     
     func startGame() {
-        setup(gravity: CGVector(dx: 0, dy: -10))
-        physicsWorld.contactDelegate = self
-        player = Player()
-        core = GameCore()
+        setup(configuration: .init(gravity: GameApp.worldConfiguration.gravity))
+        player = Dice()
         game = Game()
+        core = GameCore()
         core?.start(game: game, scene: self)
         core?.animateLaunch(game: game, scene: self, player: player)
     }
     
     public override func didMove(to view: SKView) {
         startGame()
-        //core?.gameCamera?.camera.cameraGesture(view)
     }
     
     public override func update(_ currentTime: TimeInterval) {

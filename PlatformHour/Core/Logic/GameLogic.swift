@@ -32,7 +32,7 @@ final public class GameLogic {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-            scene.core?.animation?.destroy(node: objectNode,
+            scene.core?.animation.destroy(node: objectNode,
                               filteringMode: .nearest) {
                 if let item = objectNode.drops.first as? GameItem {
                     self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
@@ -42,7 +42,7 @@ final public class GameLogic {
     }
     
     private func hit(_ objectNode: PKObjectNode) {
-        scene.core?.animation?.hit(node: objectNode,
+        scene.core?.animation.hit(node: objectNode,
                       filteringMode: .nearest)
     }
     

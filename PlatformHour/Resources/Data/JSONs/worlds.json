@@ -1,0 +1,10 @@
+[
+    {
+        "id": 0,
+        "name": "Timeless Temple",
+        "skyName": "sky",
+        "groundName": "Spring Ground",
+        "cloudName": "Spring Cloud",
+        "levelIDs": [0,1,2,3,4]
+    }
+]

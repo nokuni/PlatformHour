@@ -7,12 +7,10 @@
 
 import SpriteKit
 
-public class GameState {
-    public init(scene: GameScene) {
-        self.scene = scene
-    }
+public final class GameState {
     
-    public var scene: GameScene
+    public init() { }
+    
     public var status: Status = .inGame
     
     public enum Status {

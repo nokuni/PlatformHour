@@ -12,33 +12,24 @@ import Utility_Toolbox
 
 final public class GameAnimation {
     
-    public init(scene: GameScene) {
-        self.scene = scene
-    }
-    
-    public var manager = AnimationManager()
-    public var scene: GameScene
+    public init() { }
     
     public struct SpecialEffect {
         let image: String
         let frameCount: Int
     }
-    
     public enum StateID: String {
         case idle = "idle"
         case hit = "hit"
         case death = "death"
     }
     
-    public let spark = GameAnimation.SpecialEffect(image: "spark", frameCount: 3)
-    
     public func effect(effect: SpecialEffect,
                        at position: CGPoint,
                        alpha: Double = 1) -> SKSpriteNode {
-        guard let dimension = scene.core?.dimension else { return SKSpriteNode() }
         let effect = SKSpriteNode()
         effect.alpha = alpha
-        effect.size = dimension.tileSize * 1.2
+        effect.size = GameApp.worldConfiguration.tileSize * 1.2
         effect.position = position
         return effect
     }
@@ -54,22 +45,6 @@ final public class GameAnimation {
             SKAction.removeFromParent()
         ])
         return sequence
-    }
-    
-    public func circularSmoke(on node: SKNode) {
-        guard let dimension = scene.core?.dimension else { return }
-        let frameCount = 8
-        let images = Array(0..<frameCount).map { "circularSmoke" + "\($0)" }
-        let size = CGSize(width: dimension.tileSize.width, height: dimension.tileSize.height * 0.3)
-        let circularSmokeNode = SKSpriteNode()
-        circularSmokeNode.size = size
-        circularSmokeNode.position = CGPoint(x: node.position.x, y: node.position.y - dimension.tileSize.height * 0.35)
-        let sequence = SKAction.sequence([
-            SKAction.animate(with: images, filteringMode: .nearest, timePerFrame: 0.05),
-            SKAction.removeFromParent()
-        ])
-        scene.addChild(circularSmokeNode)
-        circularSmokeNode.run(sequence)
     }
     
     public func animate(node: PKObjectNode,
@@ -116,6 +91,6 @@ final public class GameAnimation {
             SKAction.removeFromParent(),
         ])
         
-        manager.start(actionBeforeAnimation: nil, with: sequence, on: node, and: actionAfter)
+        SKAction.start(actionOnLaunch: nil, animation: sequence, node: node, actionOnEnd: actionAfter)
     }
 }

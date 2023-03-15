@@ -23,26 +23,16 @@ public struct GameItem: Codable {
 
 extension GameItem {
     
-    enum GameItemError: String, Error {
-        case itemNotFound
+    static var all: [GameItem]? {
+        return try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.items)
     }
     
-    static var all: [GameItem] {
-        do {
-            return try Bundle.main.decodeJSON("items.json")
-        } catch {
-            fatalError("Something wrong in the JSON.")
-        }
+    static var allNames: [String]? {
+        GameItem.all?.map { $0.name }
     }
     
-    static var allNames: [String] {
-        GameItem.all.map { $0.name }
-    }
-    
-    static func get(_ name: String) throws -> GameItem {
-        if let object = GameItem.all.first(where: { $0.name == name }) {
-            return object
-        }
-        throw GameItemError.itemNotFound.rawValue
+    static func get(_ name: String) throws -> GameItem? {
+        let object = GameItem.all?.first(where: { $0.name == name })
+        return object
     }
 }

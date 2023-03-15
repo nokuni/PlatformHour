@@ -12,30 +12,18 @@ import Utility_Toolbox
 
 final public class GameEnvironment {
     
-    public init(scene: GameScene,
-                dimension: GameDimension) {
+    public init(scene: GameScene) {
         self.scene = scene
-        self.dimension = dimension
         createEnvironment()
     }
     
     public var scene: GameScene
-    public var dimension: GameDimension
     public var map = PKMapNode()
     
     public var collisionCoordinates: [Coordinate] {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
         return coordinates
-    }
-    
-    public var levelRequirement: Int {
-        let vases = map.objects.filter { $0.name == "Vase" }
-        return vases.count
-    }
-    
-    public var isExitOpen: Bool {
-        levelRequirement == 0
     }
     
     // MARK: - Main
@@ -46,12 +34,12 @@ final public class GameEnvironment {
     
     // MARK: - Elements
     public func objectElement(name: String? = nil,
-                       physicsBodySizeTailoring: CGFloat = 0,
-                       collision: Collision) -> PKObjectNode {
+                              physicsBodySizeTailoring: CGFloat = 0,
+                              collision: Collision) -> PKObjectNode {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = dimension.tileSize
+        object.size = GameApp.worldConfiguration.tileSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -60,7 +48,7 @@ final public class GameEnvironment {
         
         return object
     }
-
+    
     public var structureObjectElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
@@ -72,7 +60,7 @@ final public class GameEnvironment {
         structureElement.physicsBody?.usesPreciseCollisionDetection = true
         return structureElement
     }
-
+    
     public func backgroundObjectElement(name: String? = nil, collision: Collision) -> PKObjectNode {
         let structureElement = objectElement(collision: collision)
         structureElement.name = name
@@ -89,11 +77,11 @@ final public class GameEnvironment {
     }
     
     private func createMap() {
-        map = PKMapNode(squareSize: dimension.tileSize,
+        map = PKMapNode(squareSize: GameApp.worldConfiguration.tileSize,
                         matrix: Game.mapMatrix)
         scene.addChild(map)
     }
-
+    
     private func createSky() {
         if let world = scene.game?.world {
             let matrix = Matrix(row: Game.mapMatrix.row - 4, column: Game.mapMatrix.column)
@@ -103,7 +91,7 @@ final public class GameEnvironment {
                             startingCoordinate: Coordinate.zero)
         }
     }
-
+    
     private func createClouds() {
         var firstStartingCoordinate = Coordinate(x: 9, y: 0)
         for _ in 0..<3 {
@@ -139,7 +127,7 @@ final public class GameEnvironment {
             secondStartingCoordinate.y += 10
         }
     }
-
+    
     private func createMountains() {
         let array = 0..<Game.mapMatrix.column
         let coordinates = array.map { Coordinate(x: 13, y: $0) }
@@ -155,63 +143,72 @@ final public class GameEnvironment {
     }
     
     // MARK: - Miscellaneous
-    private func controllerButtonSprites(_ buttonSymbol: ControllerManager.ButtonSymbol) -> [String] {
-        guard let controllerManager = scene.game?.controller?.manager else { return [] }
-        guard let currentProductCategory = controllerManager.currentProductCategory else { return [] }
+    private func controllerButtonSprites(_ buttonSymbol: ControllerManager.ButtonSymbol) -> [String]? {
+        guard let controllerManager = scene.game?.controller?.manager else {
+            return nil
+        }
         switch buttonSymbol {
         case .a:
-            switch currentProductCategory {
+            switch controllerManager.currentProductCategory {
             case .xbox:
-                return ["xboxAButtonReleased", "xboxAButtonPressed"]
+                return ControllerButton.button(.a, of: .xbox)
             case .playstation:
-                return ["playstationCrossButtonReleased", "playstationCrossButtonPressed"]
+                return ControllerButton.button(.a, of: .playstation)
             case .nintendo:
-                return ["joyconAButtonReleased", "joyconAButtonPressed"]
+                return ControllerButton.button(.a, of: .nintendo)
+            case .none:
+                return ControllerButton.button(.a, of: .nintendo)
             }
         case .b:
-            switch currentProductCategory {
+            switch controllerManager.currentProductCategory {
             case .xbox:
-                return ["xboxBButtonReleased", "xboxBButtonPressed"]
+                return ControllerButton.button(.b, of: .xbox)
             case .playstation:
-                return ["playstationCircleButtonReleased", "playstationCircleButtonPressed"]
+                return ControllerButton.button(.b, of: .playstation)
             case .nintendo:
-                return ["joyconBButtonReleased", "joyconBButtonPressed"]
+                return ControllerButton.button(.b, of: .nintendo)
+            case .none:
+                return ControllerButton.button(.b, of: .nintendo)
             }
         case .x:
-            switch currentProductCategory {
+            switch controllerManager.currentProductCategory {
             case .xbox:
-                return ["xboxXButtonReleased", "xboxXButtonPressed"]
+                return ControllerButton.button(.x, of: .xbox)
             case .playstation:
-                return ["playstationSquareButtonReleased", "playstationSquareButtonPressed"]
+                return ControllerButton.button(.x, of: .playstation)
             case .nintendo:
-                return ["joyconXButtonReleased", "joyconXButtonPressed"]
+                return ControllerButton.button(.x, of: .nintendo)
+            case .none:
+                return ControllerButton.button(.x, of: .nintendo)
             }
         case .y:
-            switch currentProductCategory {
+            switch controllerManager.currentProductCategory {
             case .xbox:
-                return ["xboxYButtonReleased", "xboxYButtonPressed"]
+                return ControllerButton.button(.y, of: .xbox)
             case .playstation:
-                return ["playstationTriangleButtonReleased", "playstationTriangleButtonPressed"]
+                return ControllerButton.button(.y, of: .playstation)
             case .nintendo:
-                return ["joyconYButtonReleased", "joyconYButtonPressed"]
+                return ControllerButton.button(.y, of: .nintendo)
+            case .none:
+                return ControllerButton.button(.y, of: .nintendo)
             }
         }
     }
-
+    
     public func showStatueInteractionPopUp() {
         guard let player = scene.player else { return }
         guard let statue = scene.game?.level?.statue else { return }
         
         if let position = map.tilePosition(from: statue.coordinates[0].coordinate) {
-            let requirementPosition = CGPoint(x: position.x + (dimension.tileSize.width * 0.75), y: position.y + (dimension.tileSize.height * 0.5))
-            let buttonPosition = CGPoint(x: position.x + (dimension.tileSize.width * 0.5), y: position.y + (dimension.tileSize.height * 1.5))
+            let requirementPosition = CGPoint(x: position.x + (GameApp.worldConfiguration.tileSize.width * 0.75), y: position.y + (GameApp.worldConfiguration.tileSize.height * 0.5))
+            let buttonPosition = CGPoint(x: position.x + (GameApp.worldConfiguration.tileSize.width * 0.5), y: position.y + (GameApp.worldConfiguration.tileSize.height * 1.5))
             createStatueRequirementPopUp(position: requirementPosition)
             if !player.bag.isEmpty {
                 createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
             }
         }
     }
-
+    
     private func createButtonPopUp(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
         let buttonPopUp = SKNode()
@@ -219,15 +216,15 @@ final public class GameEnvironment {
         scene.addChildSafely(buttonPopUp)
         
         let button = SKSpriteNode()
-        button.size = dimension.tileSize
+        button.size = GameApp.worldConfiguration.tileSize
         button.setScale(0.6)
         button.position = position
         buttonPopUp.addChildSafely(button)
-
-
-        let action = SKAction.animate(with: controllerButtonSprites(buttonSymbol), filteringMode: .nearest, timePerFrame: 0.5)
         
-        button.run(SKAction.repeatForever(action))
+        if let sprites = controllerButtonSprites(buttonSymbol) {
+            let action = SKAction.animate(with: sprites, filteringMode: .nearest, timePerFrame: 0.5)
+            button.run(SKAction.repeatForever(action))
+        }
     }
     
     private func createStatueRequirementPopUp(position: CGPoint) {
@@ -244,34 +241,18 @@ final public class GameEnvironment {
         let number = SKSpriteNode(imageNamed: "indicator\(statue.requirement.count)")
         number.name = "Number"
         number.texture?.filteringMode = .nearest
-        number.size = dimension.tileSize
-        number.position = CGPoint(x: -dimension.tileSize.width, y: 0)
+        number.size = GameApp.worldConfiguration.tileSize
+        number.position = CGPoint(x: -GameApp.worldConfiguration.tileSize.width, y: 0)
         requirementPopUp.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
         item.texture?.filteringMode = .nearest
-        item.size = dimension.tileSize
+        item.size = GameApp.worldConfiguration.tileSize
         item.position = .zero
         requirementPopUp.addChildSafely(item)
     }
-
-    public func updateStatueRequirementPopUp() {
-        
-        guard let statue = scene.game?.level?.statue else { return }
-        
-        guard let requirementPopUp = scene.childNode(withName: "Requirement pop up") else {
-            return
-        }
-        
-        guard let number = requirementPopUp.childNode(withName: "Number") as? SKSpriteNode else {
-            return
-        }
-        
-        number.texture = SKTexture(imageNamed: "indicator\(statue.requirement.count)")
-        number.texture?.filteringMode = .nearest
-    }
     
     public func pause() { map.isPaused = true }
-
+    
     public func unpause() { map.isPaused = false }
 }

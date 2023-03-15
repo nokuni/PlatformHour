@@ -13,22 +13,30 @@ struct GameWorld: Codable {
     let name: String
     let skyName: String
     let groundName: String
+    let cloudName: String
     let levelIDs: [Int]
 }
 
 extension GameWorld {
     
-    enum GameWorldError: String, Error {
-        case worldNotFound
+    static var all: [GameWorld]? {
+        try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.worlds)
     }
     
-    static var all: [GameWorld] { try! Bundle.main.decodeJSON("worlds.json") }
-    static func get(_ name: String) throws -> GameWorld {
-        let world = GameWorld.all.first(where: { $0.name == name })
-        if let world = world { return world }
-        throw GameWorldError.worldNotFound.rawValue
+    static func get(_ name: String) -> GameWorld? {
+        let world = GameWorld.all?.first(where: {
+            $0.name == name
+        })
+        return world
     }
     
-    var ground: MapStructure { try! MapStructure.get(groundName) }
-    var levels: [GameLevel] { levelIDs.map { try! GameLevel.get($0) } }
+    var ground: MapStructure? {
+        try? MapStructure.get(groundName)
+    }
+    
+    var levels: [GameLevel] {
+        levelIDs.compactMap {
+            GameLevel.get($0)
+        }
+    }
 }

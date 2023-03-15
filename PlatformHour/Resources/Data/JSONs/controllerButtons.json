@@ -1,0 +1,74 @@
+[
+    {
+        "pressedSprite": "xboxAButtonPressed",
+        "releasedSprite": "xboxAButtonReleased",
+        "category": "a",
+        "product": "xbox"
+    },
+    {
+        "pressedSprite": "xboxBButtonPressed",
+        "releasedSprite": "xboxBButtonReleased",
+        "category": "b",
+        "product": "xbox"
+    },
+    {
+        "pressedSprite": "xboxXButtonPressed",
+        "releasedSprite": "xboxXButtonReleased",
+        "category": "x",
+        "product": "xbox"
+    },
+    {
+        "pressedSprite": "xboxYButtonPressed",
+        "releasedSprite": "xboxYButtonReleased",
+        "category": "y",
+        "product": "xbox"
+    },
+    {
+        "pressedSprite": "playstationCrossButtonPressed",
+        "releasedSprite": "playstationCrossButtonReleased",
+        "category": "a",
+        "product": "playstation"
+    },
+    {
+        "pressedSprite": "playstationCircleButtonPressed",
+        "releasedSprite": "playstationCircleButtonReleased",
+        "category": "b",
+        "product": "playstation"
+    },
+    {
+        "pressedSprite": "playstationSquareButtonPressed",
+        "releasedSprite": "playstationSquareButtonReleased",
+        "category": "x",
+        "product": "playstation"
+    },
+    {
+        "pressedSprite": "playstationTriangleButtonPressed",
+        "releasedSprite": "playstationTriangleButtonReleased",
+        "category": "y",
+        "product": "playstation"
+    },
+    {
+        "pressedSprite": "joyconAButtonPressed",
+        "releasedSprite": "joyconAButtonReleased",
+        "category": "a",
+        "product": "nintendo"
+    },
+    {
+        "pressedSprite": "joyconBButtonPressed",
+        "releasedSprite": "joyconBButtonReleased",
+        "category": "b",
+        "product": "nintendo"
+    },
+    {
+        "pressedSprite": "joyconXButtonPressed",
+        "releasedSprite": "joyconXButtonReleased",
+        "category": "x",
+        "product": "nintendo"
+    },
+    {
+        "pressedSprite": "joyconYButtonPressed",
+        "releasedSprite": "joyconYButtonReleased",
+        "category": "y",
+        "product": "nintendo"
+    }
+]

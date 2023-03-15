@@ -11,17 +11,9 @@ import PlayfulKit
 
 final public class GameControllerManager {
     
-    init(scene: GameScene,
-         state: GameState,
-         dimension: GameDimension,
-         environment: GameEnvironment,
-         content: GameContent) {
+    init(scene: GameScene) {
         self.scene = scene
-        self.state = state
-        self.environment = environment
-        self.content = content
-        self.action = ActionLogic(scene: scene , state: state, environment: environment, content: content)
-        
+        self.action = ActionLogic(scene: scene)
         print("Game Controller initialized ...")
         setupControllers()
     }
@@ -39,9 +31,6 @@ final public class GameControllerManager {
     }
     
     var scene: GameScene
-    var state: GameState
-    var environment: GameEnvironment
-    var content: GameContent
     var action: ActionLogic
     
     var manager: ControllerManager?
@@ -66,6 +55,6 @@ final public class GameControllerManager {
     }
     
     private func setupVirtualController() {
-        manager?.virtualControllerElements = [.directionPad, .buttonA, .buttonB]
+        manager?.virtualControllerElements = [.directionPad, .buttonA, .buttonB, .buttonX, .buttonY]
     }
 }

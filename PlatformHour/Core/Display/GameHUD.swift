@@ -10,17 +10,15 @@ import PlayfulKit
 import Utility_Toolbox
 
 public class GameHUD {
-    public init(scene: GameScene, dimension: GameDimension) {
+    public init(scene: GameScene) {
         self.scene = scene
-        self.dimension = dimension
-        createFilter()
-        createItemAmountHUD()
+        createLayer()
+        createHUD()
     }
     
     var scene: GameScene
-    var dimension: GameDimension
     
-    let filter = SKShapeNode(rectOf: .screen)
+    private let layer = SKShapeNode(rectOf: .screen)
     
     func createBackgroundFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
         guard let camera = scene.camera else { return }
@@ -32,12 +30,15 @@ public class GameHUD {
         node.addChild(filterNode)
     }
     
-    private func createFilter() {
-        filter.fillColor = .clear
-        filter.strokeColor = .clear
-        scene.camera!.addChildSafely(filter)
+    // MARK: - Creations
+    public func createLayer() {
+        layer.fillColor = .clear
+        layer.strokeColor = .clear
+        scene.camera?.addChildSafely(layer)
     }
-    
+    public func createHUD() {
+        createItemAmountHUD()
+    }
     private func createItemAmountHUD() {
         
         guard let player = scene.player else { return }
@@ -45,32 +46,33 @@ public class GameHUD {
         let score = SKNode()
         score.name = "Score"
         score.setScale(0.8)
-        score.position = filter.cornerPosition(corner: .topRight, node: score, padding: 40)
-        filter.addChildSafely(score)
+        score.position = layer.cornerPosition(corner: .topRight, node: score, padding: 40)
+        layer.addChildSafely(score)
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
         xLetter.texture?.filteringMode = .nearest
-        xLetter.size = dimension.tileSize
-        xLetter.position = CGPoint(x: -(dimension.tileSize.width * 2), y: 0)
+        xLetter.size = GameApp.worldConfiguration.tileSize
+        xLetter.position = CGPoint(x: -(GameApp.worldConfiguration.tileSize.width * 2), y: 0)
         score.addChildSafely(xLetter)
         
         let number = SKSpriteNode(imageNamed: "indicator\(player.bag.count)")
         number.name = "Number"
         number.texture?.filteringMode = .nearest
-        number.size = dimension.tileSize
-        number.position = CGPoint(x: -dimension.tileSize.width, y: 0)
+        number.size = GameApp.worldConfiguration.tileSize
+        number.position = CGPoint(x: -GameApp.worldConfiguration.tileSize.width, y: 0)
         score.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
         item.name = "Sphere"
         item.texture?.filteringMode = .nearest
-        item.size = dimension.tileSize
+        item.size = GameApp.worldConfiguration.tileSize
         item.position = .zero
         score.addChildSafely(item)
     }
+    
     public func updateItemAmountHUD() {
         guard let player = scene.player else { return }
-        guard let score = filter.childNode(withName: "Score") else { return }
+        guard let score = layer.childNode(withName: "Score") else { return }
         guard let number = score.childNode(withName: "Number") as? SKSpriteNode else { return }
         number.texture = SKTexture(imageNamed: "indicator\(player.bag.count)")
         number.texture?.filteringMode = .nearest

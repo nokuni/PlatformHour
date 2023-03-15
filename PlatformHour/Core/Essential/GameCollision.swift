@@ -60,7 +60,8 @@ final public class GameCollision {
     func playerTouchItem(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
         guard let itemName = object.name else { return }
-        guard GameItem.allNames.contains(itemName) else { return }
+        guard let allItemNames = GameItem.allNames else { return }
+        guard allItemNames.contains(itemName) else { return }
         if manager.isColliding(first, with: second) {
             collisionLogic.pickUpItem(object: object, name: itemName)
         }
@@ -68,7 +69,7 @@ final public class GameCollision {
     
     func playerTouchStatuePillar(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == "Pillar" else { return }
+        guard object.name == GameApp.sceneConfigurationKey.pillar else { return }
         if manager.isColliding(first, with: second) {
             scene.core?.environment?.showStatueInteractionPopUp()
             scene.player?.interactionStatus = .onStatue

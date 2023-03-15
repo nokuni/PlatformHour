@@ -1,0 +1,28 @@
+[
+    {
+        "id": "Dice Run Right",
+        "frames": [
+            "dice#Run0",
+            "dice#Run1",
+            "dice#Run2",
+            "dice#Idle",
+            "dice#Run0",
+            "dice#Run1",
+            "dice#Run2",
+            "dice#Idle"
+        ]
+    },
+    {
+        "id": "Dice Run Left",
+        "frames": [
+            "dice#Run2",
+            "dice#Run1",
+            "dice#Run0",
+            "dice#Idle",
+            "dice#Run2",
+            "dice#Run1",
+            "dice#Run0",
+            "dice#Idle"
+        ]
+    },
+]
