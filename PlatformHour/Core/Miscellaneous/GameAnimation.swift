@@ -29,7 +29,7 @@ final public class GameAnimation {
                        alpha: Double = 1) -> SKSpriteNode {
         let effect = SKSpriteNode()
         effect.alpha = alpha
-        effect.size = GameApp.worldConfiguration.tileSize * 1.2
+        effect.size = GameConfiguration.worldConfiguration.tileSize * 1.2
         effect.position = position
         return effect
     }

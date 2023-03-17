@@ -39,7 +39,7 @@ final public class GameEnvironment {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = GameApp.worldConfiguration.tileSize
+        object.size = GameConfiguration.worldConfiguration.tileSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -77,7 +77,7 @@ final public class GameEnvironment {
     }
     
     private func createMap() {
-        map = PKMapNode(squareSize: GameApp.worldConfiguration.tileSize,
+        map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
                         matrix: Game.mapMatrix)
         scene.addChild(map)
     }
@@ -200,8 +200,8 @@ final public class GameEnvironment {
         guard let statue = scene.game?.level?.statue else { return }
         
         if let position = map.tilePosition(from: statue.coordinates[0].coordinate) {
-            let requirementPosition = CGPoint(x: position.x + (GameApp.worldConfiguration.tileSize.width * 0.75), y: position.y + (GameApp.worldConfiguration.tileSize.height * 0.5))
-            let buttonPosition = CGPoint(x: position.x + (GameApp.worldConfiguration.tileSize.width * 0.5), y: position.y + (GameApp.worldConfiguration.tileSize.height * 1.5))
+            let requirementPosition = CGPoint(x: position.x + (GameConfiguration.worldConfiguration.tileSize.width * 0.75), y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 0.5))
+            let buttonPosition = CGPoint(x: position.x + (GameConfiguration.worldConfiguration.tileSize.width * 0.5), y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 1.5))
             createStatueRequirementPopUp(position: requirementPosition)
             if !player.bag.isEmpty {
                 createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
@@ -216,7 +216,7 @@ final public class GameEnvironment {
         scene.addChildSafely(buttonPopUp)
         
         let button = SKSpriteNode()
-        button.size = GameApp.worldConfiguration.tileSize
+        button.size = GameConfiguration.worldConfiguration.tileSize
         button.setScale(0.6)
         button.position = position
         buttonPopUp.addChildSafely(button)
@@ -241,13 +241,13 @@ final public class GameEnvironment {
         let number = SKSpriteNode(imageNamed: "indicator\(statue.requirement.count)")
         number.name = "Number"
         number.texture?.filteringMode = .nearest
-        number.size = GameApp.worldConfiguration.tileSize
-        number.position = CGPoint(x: -GameApp.worldConfiguration.tileSize.width, y: 0)
+        number.size = GameConfiguration.worldConfiguration.tileSize
+        number.position = CGPoint(x: -GameConfiguration.worldConfiguration.tileSize.width, y: 0)
         requirementPopUp.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
         item.texture?.filteringMode = .nearest
-        item.size = GameApp.worldConfiguration.tileSize
+        item.size = GameConfiguration.worldConfiguration.tileSize
         item.position = .zero
         requirementPopUp.addChildSafely(item)
     }

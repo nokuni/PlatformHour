@@ -17,14 +17,14 @@ public final class GameEvent {
     var scene: GameScene
     
     public func dismissButtonPopUp() {
-        guard let buttonPopUp = scene.childNode(withName: GameApp.sceneConfigurationKey.buttonPopUp) else {
+        guard let buttonPopUp = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.buttonPopUp) else {
             return
         }
         buttonPopUp.removeFromParent()
     }
     
     public func dismissStatueRequirementPopUp() {
-        guard let requirementPopUp = scene.childNode(withName: GameApp.sceneConfigurationKey.requirementPopUp) else {
+        guard let requirementPopUp = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.requirementPopUp) else {
             return
         }
         requirementPopUp.removeFromParent()
@@ -35,15 +35,15 @@ public final class GameEvent {
         
         guard let statue = scene.game?.level?.statue else { return }
         
-        guard let requirementPopUp = scene.childNode(withName: GameApp.sceneConfigurationKey.requirementPopUp) else {
+        guard let requirementPopUp = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.requirementPopUp) else {
             return
         }
         
-        guard let number = requirementPopUp.childNode(withName: GameApp.sceneConfigurationKey.number) as? SKSpriteNode else {
+        guard let number = requirementPopUp.childNode(withName: GameConfiguration.sceneConfigurationKey.number) as? SKSpriteNode else {
             return
         }
         
-        number.texture = SKTexture(imageNamed: "\(GameApp.imageConfigurationKey.indicator)\(statue.requirement.count)")
+        number.texture = SKTexture(imageNamed: "\(GameConfiguration.imageConfigurationKey.indicator)\(statue.requirement.count)")
         number.texture?.filteringMode = .nearest
     }
     
@@ -64,11 +64,11 @@ public final class GameEvent {
         
         if let statuePosition = environment.map.tilePosition(from: statue.coordinates[0].coordinate) {
             
-            let position = CGPoint(x: statuePosition.x + (GameApp.worldConfiguration.tileSize.width * 0.5), y: statuePosition.y - GameApp.worldConfiguration.tileSize.height)
+            let position = CGPoint(x: statuePosition.x + (GameConfiguration.worldConfiguration.tileSize.width * 0.5), y: statuePosition.y - GameConfiguration.worldConfiguration.tileSize.height)
             
             let item = SKSpriteNode(imageNamed: "sphereStatue")
             item.texture?.filteringMode = .nearest
-            item.size = GameApp.worldConfiguration.tileSize
+            item.size = GameConfiguration.worldConfiguration.tileSize
             item.position = scene.player?.node.position ?? .zero
             environment.map.addChildSafely(item)
             

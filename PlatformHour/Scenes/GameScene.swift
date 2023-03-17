@@ -17,7 +17,7 @@ final public class GameScene: SKScene {
     var core: GameCore?
     
     func startGame() {
-        setup(configuration: .init(gravity: GameApp.worldConfiguration.gravity))
+        setup(configuration: .init(gravity: GameConfiguration.worldConfiguration.gravity))
         player = Dice()
         game = Game()
         core = GameCore()

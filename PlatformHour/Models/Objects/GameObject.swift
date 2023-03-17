@@ -27,7 +27,7 @@ extension GameObject {
     }
     
     static var all: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.objects)
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.objects)
     }
     
     static func get(_ name: String) -> GameObject? {

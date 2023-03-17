@@ -11,7 +11,7 @@ import PlayfulKit
 extension MapStructure {
     
     static var all: [MapStructure]? {
-        try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.structures)
+        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.structures)
     }
     
     static func get(_ name: String) throws -> MapStructure? {

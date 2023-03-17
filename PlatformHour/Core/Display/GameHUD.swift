@@ -51,21 +51,21 @@ public class GameHUD {
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
         xLetter.texture?.filteringMode = .nearest
-        xLetter.size = GameApp.worldConfiguration.tileSize
-        xLetter.position = CGPoint(x: -(GameApp.worldConfiguration.tileSize.width * 2), y: 0)
+        xLetter.size = GameConfiguration.worldConfiguration.tileSize
+        xLetter.position = CGPoint(x: -(GameConfiguration.worldConfiguration.tileSize.width * 2), y: 0)
         score.addChildSafely(xLetter)
         
         let number = SKSpriteNode(imageNamed: "indicator\(player.bag.count)")
         number.name = "Number"
         number.texture?.filteringMode = .nearest
-        number.size = GameApp.worldConfiguration.tileSize
-        number.position = CGPoint(x: -GameApp.worldConfiguration.tileSize.width, y: 0)
+        number.size = GameConfiguration.worldConfiguration.tileSize
+        number.position = CGPoint(x: -GameConfiguration.worldConfiguration.tileSize.width, y: 0)
         score.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
         item.name = "Sphere"
         item.texture?.filteringMode = .nearest
-        item.size = GameApp.worldConfiguration.tileSize
+        item.size = GameConfiguration.worldConfiguration.tileSize
         item.position = .zero
         score.addChildSafely(item)
     }

@@ -15,6 +15,6 @@ final public class GameSound {
     let manager = SoundManager()
     
     public func step() {
-        manager.playSFX(name: GameApp.soundConfigurationKey.diceRoll, loops: 1, volume: GameApp.worldConfiguration.soundSFXVolume)
+        manager.playSFX(name: GameConfiguration.soundConfigurationKey.diceRoll, loops: 1, volume: GameConfiguration.worldConfiguration.soundSFXVolume)
     }
 }

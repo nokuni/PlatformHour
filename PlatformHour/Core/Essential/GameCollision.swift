@@ -69,7 +69,7 @@ final public class GameCollision {
     
     func playerTouchStatuePillar(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameApp.sceneConfigurationKey.pillar else { return }
+        guard object.name == GameConfiguration.sceneConfigurationKey.pillar else { return }
         if manager.isColliding(first, with: second) {
             scene.core?.environment?.showStatueInteractionPopUp()
             scene.player?.interactionStatus = .onStatue

@@ -23,11 +23,11 @@ final public class GameCamera {
     public var camera: CameraManager
     public var isFollowingPlayer: Bool = true
     
-    private let zoom = GameApp.worldConfiguration.cameraZoom
-    private let catchUpDelay: CGFloat = GameApp.worldConfiguration.cameraCatchUpDelay
+    private let zoom = GameConfiguration.worldConfiguration.cameraZoom
+    private let catchUpDelay: CGFloat = GameConfiguration.worldConfiguration.cameraCatchUpDelay
     
     private var adjustement: CGFloat {
-        GameApp.worldConfiguration.cameraAdjustement
+        GameConfiguration.worldConfiguration.cameraAdjustement
     }
     
     private var position : CGPoint {
@@ -50,7 +50,7 @@ final public class GameCamera {
     public func followPlayer() {
         guard let action = scene.game?.controller?.action else { return }
         guard isFollowingPlayer else { return }
-        guard scene.isExistingChildNode(named: GameApp.sceneConfigurationKey.player) else { return }
+        guard scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.player) else { return }
         guard action.isAnimating else { return }
         
         let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8))

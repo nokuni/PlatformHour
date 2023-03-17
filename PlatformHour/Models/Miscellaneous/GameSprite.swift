@@ -15,7 +15,7 @@ struct GameSpriteAnimation: Codable {
 extension GameSpriteAnimation {
     
     static var all: [GameSpriteAnimation]? {
-        return try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.spriteAnimations)
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.spriteAnimations)
     }
     
     static func get(_ id: String) -> GameSpriteAnimation? {

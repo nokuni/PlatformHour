@@ -20,7 +20,7 @@ struct GameWorld: Codable {
 extension GameWorld {
     
     static var all: [GameWorld]? {
-        try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.worlds)
+        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.worlds)
     }
     
     static func get(_ name: String) -> GameWorld? {

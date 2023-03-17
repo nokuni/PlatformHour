@@ -18,7 +18,7 @@ struct GameLevel: Codable {
 extension GameLevel {
     
     static var all: [GameLevel]? {
-        try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.levels)
+        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.levels)
     }
     
     static func get(_ id: Int) -> GameLevel? {

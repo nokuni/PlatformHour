@@ -35,7 +35,7 @@ public class ActionLogic {
         return player.node.hasActions()
     }
     var isAttacking: Bool {
-        scene.isExistingChildNode(named: GameApp.sceneConfigurationKey.playerProjectile)
+        scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.playerProjectile)
     }
     
     // MARK: - Movements
@@ -44,15 +44,16 @@ public class ActionLogic {
             self.direction = direction
             changeOrientation(direction: self.direction)
             moveAnimation(by: amount)
+            scene.player?.advanceRoll()
             scene.player?.run()
             switchPlayerArrowDirection()
         }
     }
     func moveRight() {
-        move(on: .right, by: 2)
+        move(on: .right, by: GameConfiguration.playerConfiguration.movementSpeed)
     }
     func moveLeft() {
-        move(on: .left, by: -2)
+        move(on: .left, by: -GameConfiguration.playerConfiguration.movementSpeed)
     }
     func moveAnimation(by amount: Int) {
         guard let player = scene.player else { return }
@@ -82,16 +83,12 @@ public class ActionLogic {
             },
             SKAction.move(to: destinationPosition, duration: scene.player?.runDuration ?? 0),
             SKAction.run {
-                self.scene.player?.advanceRoll()
                 self.scene.player?.node.coordinate = destinationCoordinate
                 self.scene.core?.sound.step()
                 self.scene.player?.node.removeAllActions()
             }
         ])
-        #warning("if can 2 and can't one, one. if can 2 and can one, two")
-        let coordinate = Coordinate(x: destinationCoordinate.x, y: destinationCoordinate.y + (amount - 1))
-        let coordinates = [destinationCoordinate, coordinate]
-        return !environment.collisionCoordinates.contains(coordinates) ? sequence : SKAction.empty()
+        return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
     }
     
     func changeOrientation(direction: Direction) {
@@ -112,7 +109,7 @@ public class ActionLogic {
     // MARK: - Others
     func switchPlayerArrowDirection() {
         if let player = scene.player,
-           let arrowNode = player.node.childNode(withName: GameApp.sceneConfigurationKey.playerArrow) as? SKSpriteNode {
+           let arrowNode = player.node.childNode(withName: GameConfiguration.sceneConfigurationKey.playerArrow) as? SKSpriteNode {
             arrowNode.texture = SKTexture(imageNamed: player.orientation.arrow)
             arrowNode.texture?.filteringMode = .nearest
         }
@@ -171,7 +168,7 @@ public class ActionLogic {
     
     func projectileFollowPlayer() {
         if let player = scene.player,
-           let projectile = scene.childNode(withName: GameApp.sceneConfigurationKey.playerProjectile) {
+           let projectile = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.playerProjectile) {
             if isProjectileTurningBack {
                 projectile.run(SKAction.follow(player.node, duration: player.attackSpeed))
                 if projectile.contains(player.node.position) {

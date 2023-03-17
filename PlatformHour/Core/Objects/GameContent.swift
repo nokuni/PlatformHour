@@ -28,7 +28,7 @@ final public class GameContent {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = GameApp.worldConfiguration.tileSize
+        object.size = GameConfiguration.worldConfiguration.tileSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -45,7 +45,7 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.object, .structure])
         
-        let attackNode = object(name: GameApp.sceneConfigurationKey.playerProjectile,
+        let attackNode = object(name: GameConfiguration.sceneConfigurationKey.playerProjectile,
                                 physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                                 collision: collision)
         
@@ -69,7 +69,7 @@ final public class GameContent {
         let arrowNode = SKSpriteNode(imageNamed: image)
         arrowNode.name = name
         arrowNode.texture?.filteringMode = .nearest
-        arrowNode.size = GameApp.worldConfiguration.tileSize
+        arrowNode.size = GameConfiguration.worldConfiguration.tileSize
         
         return arrowNode
     }
@@ -102,15 +102,15 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object])
         
-        scene.player?.node = object(name: GameApp.sceneConfigurationKey.player,
-                                    physicsBodySizeTailoring: -GameApp.worldConfiguration.tileSize.width * 0.1,
+        scene.player?.node = object(name: GameConfiguration.sceneConfigurationKey.player,
+                                    physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.1,
                                     collision: collision)
         
         dice.node.physicsBody?.friction = 0
         dice.node.physicsBody?.allowsRotation = false
         dice.node.physicsBody?.affectedByGravity = false
         
-        addArrow(dice.orientation.arrow, named: GameApp.sceneConfigurationKey.playerArrow, on: dice.node)
+        addArrow(dice.orientation.arrow, named: GameConfiguration.sceneConfigurationKey.playerArrow, on: dice.node)
         
         guard let position = environment.map.tilePosition(from: level.playerCoordinate.coordinate) else {
             return
@@ -158,35 +158,35 @@ final public class GameContent {
         let pillarCoordinate = Coordinate(x: statue.coordinates[2].coordinate.x,
                                           y: statue.coordinates[0].coordinate.y - 1)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameApp.sceneConfigurationKey.pillar, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.pillar, collision: collision),
                                   image: "springStatuePillar",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
                                   animations: [],
                                   at: pillarCoordinate)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameApp.sceneConfigurationKey.statue, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
                                   image: "springStatueTopLeft",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
                                   animations: [],
                                   at: statue.coordinates[0].coordinate)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameApp.sceneConfigurationKey.statue, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
                                   image: "springStatueTopRight",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
                                   animations: [],
                                   at: statue.coordinates[1].coordinate)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameApp.sceneConfigurationKey.statue, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
                                   image: "springStatueBottomLeft",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
                                   animations: [],
                                   at: statue.coordinates[2].coordinate)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameApp.sceneConfigurationKey.statue, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
                                   image: "springStatueBottomRight",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
@@ -331,8 +331,8 @@ final public class GameContent {
             
             let objectNode = PKObjectNode()
             objectNode.name = dataObject.name
-            objectNode.size = GameApp.worldConfiguration.tileSize
-            objectNode.applyPhysicsBody(size: GameApp.worldConfiguration.tileSize, collision: collision)
+            objectNode.size = GameConfiguration.worldConfiguration.tileSize
+            objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
             environment.map.addObject(objectNode,
@@ -364,7 +364,7 @@ final public class GameContent {
         ]
         
         let itemNode = environment.objectElement(name: item.name,
-                                                 physicsBodySizeTailoring: -(GameApp.worldConfiguration.tileSize.width / 2),
+                                                 physicsBodySizeTailoring: -(GameConfiguration.worldConfiguration.tileSize.width / 2),
                                                  collision: collision)
         itemNode.texture = SKTexture(imageNamed: item.sprite)
         itemNode.texture?.filteringMode = .nearest

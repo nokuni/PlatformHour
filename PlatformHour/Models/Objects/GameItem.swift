@@ -24,7 +24,7 @@ public struct GameItem: Codable {
 extension GameItem {
     
     static var all: [GameItem]? {
-        return try? Bundle.main.decodeJSON(GameApp.jsonConfigurationKey.items)
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.items)
     }
     
     static var allNames: [String]? {
