@@ -20,7 +20,7 @@ final public class GameEnvironment {
     public var scene: GameScene
     public var map = PKMapNode()
     public var backgroundContainer = SKNode()
-    public var mountainsContainer = SKNode()
+    public var mapMatrix = Matrix(row: 18, column: 52)
     
     public var allElements: [SKSpriteNode] {
         let allTiles = map.tiles
@@ -28,34 +28,27 @@ final public class GameEnvironment {
         let allElements = allTiles + allObjects
         return allElements
     }
-    
     public var collisionCoordinates: [Coordinate] {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
         return coordinates
     }
+    public var backgroundSize: CGSize {
+        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let width = tileSize.width * 13
+        let height = tileSize.height * 9
+        return CGSize(width: width, height: height)
+    }
+//    public var backgroundStartingPosition: CGPoint {
+//        let x = (CGFloat(mapMatrix.row) / 2) - 1
+//        let y =
+//        let coordinate = Coordinate(x: x, y: 0)
+//    }
     
     // MARK: - Main
     private func createEnvironment() {
         createMap()
-        backgroundContainer.name = "Background"
-        scene.addChildSafely(backgroundContainer)
-        
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
-        
-        guard let startingPosition = map.tilePosition(from: Coordinate(x: 4, y: 4)) else { return }
-        var backgrounds: [SKSpriteNode] = []
-        for _ in 0..<3 {
-            let background = SKSpriteNode(imageNamed: "springDaySky")
-            background.size = CGSize(width: tileSize.width * 13, height: tileSize.height * 9)
-            background.texture?.filteringMode = .nearest
-            backgrounds.append(background)
-        }
-        GameConfiguration.assemblyManager.createSpriteList(of: backgrounds, at: startingPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
-        
-        print(backgroundContainer.position)
-        
-        //createBackground()
+        createBackground()
     }
     
     // MARK: - Elements
@@ -103,41 +96,24 @@ final public class GameEnvironment {
     
     // MARK: - Background
     private func createBackground() {
-        createMountains()
+        backgroundContainer.name = GameConfiguration.sceneConfigurationKey.background
+        scene.addChildSafely(backgroundContainer)
+        guard let startingPosition = map.tilePosition(from: Coordinate(x: 4, y: 4)) else { return }
+        
+        var backgrounds: [SKSpriteNode] = []
+        for _ in 0..<7 {
+            let background = SKSpriteNode(imageNamed: "springDaySky")
+            background.size = backgroundSize
+            background.texture?.filteringMode = .nearest
+            backgrounds.append(background)
+        }
+        GameConfiguration.assemblyManager.createSpriteList(of: backgrounds, at: startingPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
     private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
-                        matrix: Game.mapMatrix)
+                        matrix: mapMatrix)
         scene.addChild(map)
-    }
-    
-    private func createMountains() {
-//        let array = 0..<Game.mapMatrix.column
-//        let coordinates = array.map { Coordinate(x: 13, y: $0) }
-//        let leftCoordinates = coordinates.filter { $0.y.isEven }
-//        let rightCoordinates = coordinates.filter { $0.y.isOdd }
-//
-//        map.addChildSafely(mountainsContainer)
-//
-//        guard let startingPosition = map.tilePosition(from: Coordinate(x: 13, y: 0)) else { return }
-//
-//        var mountains: [SKSpriteNode] = []
-//        for index in 0..<30 {
-//            let mountain = SKSpriteNode(imageNamed: index.isEven ? "mountainsLeft" : "mountainsRight")
-//            mountain.texture?.filteringMode = .nearest
-//            mountain.size = GameConfiguration.worldConfiguration.tileSize
-//            mountains.append(mountain)
-//        }
-//
-//        GameConfiguration.assemblyManager.createSpriteList(of: mountains, at: startingPosition, in: mountainsContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
-        
-//        map.drawTexture("mountainsLeft",
-//                        filteringMode: .nearest,
-//                        row: 13, excluding: rightCoordinates)
-//        map.drawTexture("mountainsRight",
-//                        filteringMode: .nearest,
-//                        row: 13, excluding: leftCoordinates)
     }
     
     // MARK: - Miscellaneous

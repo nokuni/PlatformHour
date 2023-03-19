@@ -24,29 +24,6 @@ final public class GameAnimation {
         case death = "death"
     }
     
-    public func effect(effect: SpecialEffect,
-                       at position: CGPoint,
-                       alpha: Double = 1) -> SKSpriteNode {
-        let effect = SKSpriteNode()
-        effect.alpha = alpha
-        effect.size = GameConfiguration.worldConfiguration.tileSize * 1.2
-        effect.position = position
-        return effect
-    }
-    
-    public func effectAnimation(effect: SpecialEffect,
-                                timePerFrame: TimeInterval = 0.1,
-                                count: Int = 1) -> SKAction {
-        let images = Array(0..<effect.frameCount).map { effect.image + "\($0)" }
-        let effectAnimation = SKAction.animate(with: images, filteringMode: .nearest, timePerFrame: timePerFrame)
-        let action = SKAction.repeat(effectAnimation, count: count)
-        let sequence = SKAction.sequence([
-            action,
-            SKAction.removeFromParent()
-        ])
-        return sequence
-    }
-    
     public func animate(node: PKObjectNode,
                         identifier: StateID,
                         filteringMode: SKTextureFilteringMode = .linear,

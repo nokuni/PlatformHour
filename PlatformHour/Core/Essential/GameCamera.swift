@@ -47,19 +47,40 @@ final public class GameCamera {
         camera.configure(configuration: .init(position: position, zoom: zoom))
     }
     
+    private func setCameraLimit() {
+        
+        let minimumCoordinate = Coordinate(x: GameConfiguration.worldConfiguration.topBoundaryLimit,
+                                           y: GameConfiguration.worldConfiguration.leftBoundaryLimit)
+        let maximumCoordinate = Coordinate(x: GameConfiguration.worldConfiguration.bottomBoundaryLimit,
+                                           y: GameConfiguration.worldConfiguration.rightBoundaryLimit)
+
+        guard let minCameraPosition = environment.map.tilePosition(from: minimumCoordinate) else { return }
+        guard let maxCameraPosition = environment.map.tilePosition(from: maximumCoordinate) else { return }
+        
+        if playerPosition.x < minCameraPosition.x {
+            camera.move(to: CGPoint(x: minCameraPosition.x, y: playerPosition.y), catchUpDelay: 0)
+        }
+        
+        if playerPosition.x > maxCameraPosition.x {
+            camera.move(to: CGPoint(x: maxCameraPosition.x, y: playerPosition.y), catchUpDelay: 0)
+        }
+        
+        if playerPosition.y > minCameraPosition.y {
+            camera.scene.camera?.run(SKAction.moveTo(y: minCameraPosition.y, duration: 0))
+        }
+        
+        if playerPosition.y < maxCameraPosition.y {
+            camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: 0))
+        }
+    }
+    
     public func followPlayer() {
         guard isFollowingPlayer else { return }
         guard scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.player) else { return }
         guard let controller = scene.game?.controller else { return }
         guard controller.action.canAct else { return }
         
-        let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8))
-        let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 41))
-        
-        if let minCameraPosition, let maxCameraPosition {
-            if (playerPosition.x > minCameraPosition.x) && (playerPosition.x < maxCameraPosition.x) {
-                camera.move(to: playerPosition, catchUpDelay: catchUpDelay)
-            }
-        }
+        camera.move(to: playerPosition, catchUpDelay: catchUpDelay)
+        setCameraLimit()
     }
 }

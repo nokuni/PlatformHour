@@ -28,8 +28,6 @@ public final class Game: ObservableObject {
     var level: GameLevel?
     
     var currentLevelIndex = 0
-    
-    static let mapMatrix = Matrix(row: 18, column: 26)
     // 656
 //    func createSave() {
 //        if saves.isEmpty {

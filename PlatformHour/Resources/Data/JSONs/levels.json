@@ -11,20 +11,20 @@
                 "springStatueBottomLeft",
                 "springStatueBottonRight"
             ],
-            "coordinates": ["1231", "1232", "1331", "1332"],
+            "coordinates": ["0731", "0732", "0831", "0832"],
             "requirement": ["Sphere"]
         },
         "exit":
         {
             "sprite": "springExit",
             "door": "springDoor",
-            "coordinate": "1339"
+            "coordinate": "0839"
         },
         "containers":
         [
             {
                 "name": "Vase",
-                "coordinate": "1321",
+                "coordinate": "0821",
                 "item": "Sphere"
             }
         ]

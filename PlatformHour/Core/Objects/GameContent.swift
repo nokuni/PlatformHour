@@ -79,10 +79,10 @@ final public class GameContent {
     
     private func createContent() {
         createGround()
-//        createTrees()
-//        createStatue()
-//        createContainers()
-//        createExit()
+        createTrees()
+        createStatue()
+        createContainers()
+        createExit()
         configurePlayer()
         createPlayer()
     }
@@ -97,7 +97,7 @@ final public class GameContent {
         guard let level = scene.game?.level else { return }
         guard let dice = scene.player else { return }
         let collision = Collision(category: .player,
-                                  collision: [.structure],
+                                  collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc])
         
         dice.node = object(name: GameConfiguration.sceneConfigurationKey.player,
@@ -145,7 +145,7 @@ final public class GameContent {
                                       logic: LogicBody(),
                                       animations: [],
                                       startingCoordinate: coordinate,
-                                      matrix: Matrix(row: 9, column: Game.mapMatrix.column))
+                                      matrix: Matrix(row: 9, column: environment.mapMatrix.column))
         }
     }
     
@@ -201,7 +201,7 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.allClear])
         
-        var startingCoordinate = Coordinate(x: 13, y: 0)
+        var startingCoordinate = Coordinate(x: 8, y: 0)
         for _ in 0..<6 {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopLeft",

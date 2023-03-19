@@ -58,13 +58,14 @@ public class ActionLogic {
         guard let environment = scene.core?.environment else { return }
         let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
         
-        guard let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
+        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
 
-        let limit = -(GameConfiguration.worldConfiguration.tileSize.width * 9)
+        let limit = -(GameConfiguration.worldConfiguration.tileSize.width * 34)
+        
         if let background = scene.childNode(withName: "Background") {
             let destinationPosition = CGPoint(x: background.position.x + (-GameConfiguration.worldConfiguration.tileSize.width), y: 0)
             let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-            if background.position.x > limit && player.node.position.x > minCameraPosition.x {
+            if background.position.x > limit && player.node.position.x > maxCameraPosition.x {
                 background.run(action)
             }
         }
@@ -76,7 +77,7 @@ public class ActionLogic {
         guard let environment = scene.core?.environment else { return }
         let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
         
-        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 18)) else { return }
+        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 44)) else { return }
 
         if let background = scene.childNode(withName: "Background") {
             let destinationPosition = CGPoint(x: background.position.x + GameConfiguration.worldConfiguration.tileSize.width, y: 0)
@@ -197,13 +198,34 @@ public class ActionLogic {
     
     func upAction() {
         guard canAct else { return }
-        scene.player?.orientation = .up
-        switchPlayerArrowDirection()
+        guard let player = scene.player else { return }
+        guard let environment = scene.core?.environment else { return }
+        let playerCoordinate = player.node.coordinate
+        
+        let destinationCoordinate = Coordinate(x: playerCoordinate.x - 1,
+                                               y: playerCoordinate.y)
+        
+        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
+        
+        let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
+        scene.player?.node.run(action)
+//        scene.player?.orientation = .up
+//        switchPlayerArrowDirection()
     }
     func downAction() {
         guard canAct else { return }
-        scene.player?.orientation = .down
-        switchPlayerArrowDirection()
+        guard let player = scene.player else { return }
+        guard let environment = scene.core?.environment else { return }
+        let playerCoordinate = player.node.coordinate
+        
+        let destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
+                                               y: playerCoordinate.y)
+        
+        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
+        let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
+        scene.player?.node.run(action)
+//        scene.player?.orientation = .down
+//        switchPlayerArrowDirection()
     }
     
     func interact() {
