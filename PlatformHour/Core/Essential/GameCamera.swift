@@ -26,7 +26,7 @@ final public class GameCamera {
     private let zoom = GameConfiguration.worldConfiguration.cameraZoom
     private let catchUpDelay: CGFloat = GameConfiguration.worldConfiguration.cameraCatchUpDelay
     
-    private var adjustement: CGFloat {
+    public var adjustement: CGFloat {
         GameConfiguration.worldConfiguration.cameraAdjustement
     }
     
@@ -48,10 +48,10 @@ final public class GameCamera {
     }
     
     public func followPlayer() {
-        guard let action = scene.game?.controller?.action else { return }
         guard isFollowingPlayer else { return }
         guard scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.player) else { return }
-        guard action.isAnimating else { return }
+        guard let controller = scene.game?.controller else { return }
+        guard controller.action.canAct else { return }
         
         let minCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8))
         let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 41))

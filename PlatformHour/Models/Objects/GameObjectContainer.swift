@@ -9,6 +9,6 @@ import Foundation
 
 struct GameObjectContainer: Codable {
     let name: String
-    let coordinate: Int
+    let coordinate: String
     var item: String? = nil
 }

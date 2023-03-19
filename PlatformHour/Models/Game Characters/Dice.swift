@@ -45,6 +45,11 @@ public class Dice {
     public var currentRoll: Roll = .one
     public var range: CGFloat = GameConfiguration.playerConfiguration.range
     public var attackSpeed: CGFloat = GameConfiguration.playerConfiguration.attackSpeed
+    public var logic: GameObjectLogic = GameObjectLogic(health: 5, damage: 1, isDestructible: true, isIntangible: false)
+    
+    public var isProjectileTurningBack: Bool = false
+    public var isJumping: Bool = false
+    public var canAct: Bool = true
     
     public var interactionStatus: PlayerInteractionStatus = .none
     public var bag: [GameItem] = []

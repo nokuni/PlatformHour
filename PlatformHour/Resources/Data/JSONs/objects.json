@@ -34,20 +34,14 @@
         ]
     },
     {
-        "name": "Portal",
-        "image": "portal0",
+        "name": "Exit",
+        "image": "springExit",
         "logic": {
             "health": 1,
             "damage": 0,
             "isDestructible": true,
             "isIntangible": false
         },
-        "animation":
-        [
-            {
-                "identifier": "idle",
-                "frames": ["portal0", "portal1", "portal2"]
-            }
-        ]
+        "animation": []
     },
 ]

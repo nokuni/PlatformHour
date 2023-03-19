@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WorldConfiguration {
     let gravity = CGVector(dx: 0, dy: -10)
-    let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25
+    let cameraZoom = UIDevice.isOnPhone ? 3 : 1.25
     let cameraCatchUpDelay: CGFloat = 0
     let cameraAdjustement: CGFloat = UIDevice.isOnPhone ?
     (CGSize.screen.height * 0.2) :

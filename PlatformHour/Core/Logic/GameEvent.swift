@@ -55,7 +55,6 @@ public final class GameEvent {
         if scene.player!.bag.isEmpty { dismissButtonPopUp() }
         if scene.game!.level!.statue.requirement.isEmpty { dismissStatueRequirementPopUp() }
         putItemOnStatue()
-        showExit()
     }
     
     func putItemOnStatue() {
@@ -72,17 +71,37 @@ public final class GameEvent {
             item.position = scene.player?.node.position ?? .zero
             environment.map.addChildSafely(item)
             
-            let moveAction = SKAction.move(to: position, duration: 0.5)
+            let sequence = SKAction.sequence([
+                SKAction.run {
+                    self.scene.isUserInteractionEnabled = false
+                },
+                SKAction.move(to: position, duration: 0.5)
+            ])
             
-            item.run(moveAction)
+            SKAction.start(animation: sequence, node: item) { self.showExit() }
         }
     }
     
     func showExit() {
-        guard let position = scene.core?.environment?.map.tilePosition(from: Coordinate(x: 13, y: 30)) else { return }
-        let showcase = CameraManager.Showcase(targetPoint: position) {
-            self.scene.core?.gameCamera?.camera.move(to: self.scene.core?.gameCamera?.playerPosition ?? .zero)
+        guard let environment = scene.core?.environment else { return }
+        guard let logic = scene.core?.logic else { return }
+        guard let coordinatePosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 39)) else { return }
+        guard let gameCamera = scene.core?.gameCamera else { return }
+        let exitPosition = CGPoint(x: coordinatePosition.x, y: coordinatePosition.y + gameCamera.adjustement)
+        let openExitDoor = SKAction.sequence([
+            SKAction.run { logic.openExitDoor() },
+            SKAction.wait(forDuration: 2)
+        ])
+        let showcase = CameraManager.Showcase(targetPoint: exitPosition, showAction: openExitDoor) {
+            gameCamera.camera.move(to: gameCamera.playerPosition)
+            self.scene.player?.node.isPaused = false
+            self.scene.isUserInteractionEnabled = true
         }
-        scene.core?.gameCamera?.camera.showcase(showcase)
+        
+        if scene.game!.level!.statue.requirement.isEmpty {
+            gameCamera.camera.showcase(showcase)
+        } else {
+            scene.isUserInteractionEnabled = true
+        }
     }
 }

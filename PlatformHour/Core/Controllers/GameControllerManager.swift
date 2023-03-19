@@ -18,40 +18,28 @@ final public class GameControllerManager {
         setupControllers()
     }
     
-    enum Button: String, CaseIterable {
-        case a
-        case b
-        
-        var image: String {
-            switch self {
-            case .a: return "buttonA"
-            case .b: return "buttonB"
-            }
-        }
-    }
-    
     var scene: GameScene
     var action: ActionLogic
     
     var manager: ControllerManager?
     
-    private func setupControllers() {
-        manager = ControllerManager(scene: scene)
-        setupVirtualController()
-        setupControls()
-        manager?.observeControllers()
-    }
-    
-    private func setupControls() {
+    private func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
         manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack)
-        manager?.action?.buttonB = ControllerManager.ButtonAction()
+        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump)
         manager?.action?.buttonX = ControllerManager.ButtonAction()
         manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interact)
         manager?.action?.dpad = ControllerManager.DPadAction(left: action.moveLeft,
                                                              right: action.moveRight,
                                                              up: action.upAction,
                                                              down: action.downAction)
+    }
+    
+    private func setupControllers() {
+        manager = ControllerManager(scene: scene)
+        setupVirtualController()
+        setupActions()
+        manager?.observeControllers()
     }
     
     private func setupVirtualController() {

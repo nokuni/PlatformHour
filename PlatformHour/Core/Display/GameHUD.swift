@@ -8,6 +8,7 @@
 import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
+import SwiftUI
 
 public class GameHUD {
     public init(scene: GameScene) {
@@ -34,7 +35,8 @@ public class GameHUD {
     public func createLayer() {
         layer.fillColor = .clear
         layer.strokeColor = .clear
-        scene.camera?.addChildSafely(layer)
+        layer.zPosition = 1
+        scene.camera?.addChild(layer)
     }
     public func createHUD() {
         createItemAmountHUD()
@@ -46,20 +48,20 @@ public class GameHUD {
         let score = SKNode()
         score.name = "Score"
         score.setScale(0.8)
-        score.position = layer.cornerPosition(corner: .topRight, node: score, padding: 40)
+        score.position = layer.cornerPosition(corner: .topLeft, node: score, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
         layer.addChildSafely(score)
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
         xLetter.texture?.filteringMode = .nearest
         xLetter.size = GameConfiguration.worldConfiguration.tileSize
-        xLetter.position = CGPoint(x: -(GameConfiguration.worldConfiguration.tileSize.width * 2), y: 0)
+        xLetter.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width / 2, y: 0)
         score.addChildSafely(xLetter)
         
         let number = SKSpriteNode(imageNamed: "indicator\(player.bag.count)")
         number.name = "Number"
         number.texture?.filteringMode = .nearest
         number.size = GameConfiguration.worldConfiguration.tileSize
-        number.position = CGPoint(x: -GameConfiguration.worldConfiguration.tileSize.width, y: 0)
+        number.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width * 1.5, y: 0)
         score.addChildSafely(number)
         
         let item = SKSpriteNode(imageNamed: "hudSphere")
@@ -101,4 +103,7 @@ public class GameHUD {
         menuNode.position = camera.position
         node.addChild(menuNode)
     }
+    
+    func pause() { layer.isPaused = true }
+    func unpause() { layer.isPaused = false }
 }

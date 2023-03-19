@@ -7,11 +7,21 @@
 
 import Foundation
 
-struct GameObjectLogic: Codable {
-    var health: Int
-    var damage: Int
-    var isDestructible: Bool
-    var isIntangible: Bool
+public struct GameObjectLogic: Codable {
+    public init(health: Int,
+                damage: Int,
+                isDestructible: Bool,
+                isIntangible: Bool) {
+        self.health = health
+        self.damage = damage
+        self.isDestructible = isDestructible
+        self.isIntangible = isIntangible
+    }
+    
+    public var health: Int
+    public var damage: Int
+    public var isDestructible: Bool
+    public var isIntangible: Bool
     
     enum CodingKeys: String, CodingKey {
         case health, damage, isDestructible, isIntangible

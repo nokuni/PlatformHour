@@ -5,7 +5,7 @@
 //  Created by Maertens Yann-Christophe on 17/03/23.
 //
 
-import Foundation
+import PlayfulKit
 
 struct GameConfiguration {
     static let soundConfigurationKey = SoundConfigurationKey()
@@ -14,4 +14,5 @@ struct GameConfiguration {
     static let jsonConfigurationKey = JSONConfigurationKey()
     static let worldConfiguration = WorldConfiguration()
     static let playerConfiguration = PlayerConfiguration()
+    static let assemblyManager = AssemblyManager()
 }

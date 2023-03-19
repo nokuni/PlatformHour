@@ -42,7 +42,7 @@ final public class GameContent {
         let currentRoll = player.currentRoll.rawValue
         
         let collision = Collision(category: .playerProjectile,
-                                  collision: [.allClear],
+                                  collision: [.object, .structure, .enemy],
                                   contact: [.object, .structure])
         
         let attackNode = object(name: GameConfiguration.sceneConfigurationKey.playerProjectile,
@@ -53,6 +53,7 @@ final public class GameContent {
         attackNode.texture = SKTexture(imageNamed: player.node.texture?.name ?? "")
         attackNode.texture?.filteringMode = .nearest
         attackNode.coordinate = player.node.coordinate
+        attackNode.zPosition = 2
         attackNode.position = player.node.position
         attackNode.alpha = 0.5
         
@@ -78,9 +79,10 @@ final public class GameContent {
     
     private func createContent() {
         createGround()
-        createTrees()
-        createStatue()
-        createContainers()
+//        createTrees()
+//        createStatue()
+//        createContainers()
+//        createExit()
         configurePlayer()
         createPlayer()
     }
@@ -88,29 +90,30 @@ final public class GameContent {
     // MARK: - Player
     private func createPlayer() {
         if let player = scene.player {
-            scene.addChild(player.node)
+            scene.addChildSafely(player.node)
         }
     }
     private func configurePlayer() {
-        guard let level = scene.game?.level else {
-            return
-        }
-        guard let dice = scene.player else {
-            return
-        }
+        guard let level = scene.game?.level else { return }
+        guard let dice = scene.player else { return }
         let collision = Collision(category: .player,
-                                  collision: [.allClear],
-                                  contact: [.enemyProjectile, .object])
+                                  collision: [.structure],
+                                  contact: [.enemyProjectile, .object, .npc])
         
-        scene.player?.node = object(name: GameConfiguration.sceneConfigurationKey.player,
-                                    physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.1,
-                                    collision: collision)
+        dice.node = object(name: GameConfiguration.sceneConfigurationKey.player,
+                           collision: collision)
+        
+        dice.node.logic = LogicBody(health: dice.logic.health, damage: dice.logic.damage, isDestructible: dice.logic.isDestructible, isIntangible: dice.logic.isIntangible)
+        
+        dice.node.zPosition = 3
         
         dice.node.physicsBody?.friction = 0
         dice.node.physicsBody?.allowsRotation = false
         dice.node.physicsBody?.affectedByGravity = false
         
-        addArrow(dice.orientation.arrow, named: GameConfiguration.sceneConfigurationKey.playerArrow, on: dice.node)
+        //        addArrow(dice.orientation.arrow, named: GameConfiguration.sceneConfigurationKey.playerArrow, on: dice.node)
+        
+        addHealthBar(on: dice.node)
         
         guard let position = environment.map.tilePosition(from: level.playerCoordinate.coordinate) else {
             return
@@ -124,7 +127,7 @@ final public class GameContent {
     
     // MARK: - Ground
     private func createGround() {
-        let coordinate = Coordinate(x: 14, y: 0)
+        let coordinate = Coordinate(x: 9, y: 0)
         
         if let ground = scene.game?.world?.ground {
             let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
@@ -142,7 +145,7 @@ final public class GameContent {
                                       logic: LogicBody(),
                                       animations: [],
                                       startingCoordinate: coordinate,
-                                      matrix: Matrix(row: 4, column: Game.mapMatrix.column))
+                                      matrix: Matrix(row: 9, column: Game.mapMatrix.column))
         }
     }
     
@@ -151,14 +154,14 @@ final public class GameContent {
         
         guard let statue = scene.game?.level?.statue else { return }
         
-        let collision = Collision(category: .object,
+        let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
         let pillarCoordinate = Coordinate(x: statue.coordinates[2].coordinate.x,
                                           y: statue.coordinates[0].coordinate.y - 1)
         
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.pillar, collision: collision),
+        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.pillar, physicsBodySizeTailoring: -(CGSize.screen.height * 0.1), collision: collision),
                                   image: "springStatuePillar",
                                   filteringMode: .nearest,
                                   logic: LogicBody(isIntangible: true),
@@ -267,38 +270,31 @@ final public class GameContent {
             }
         }
     }
-    
-    public func createPortal() {
-        let name = "Portal"
-        
-        let dataObject = GameObject.get(name)
-        
-        let collision = Collision(category: .object,
+    public func createExit() {
+        guard let level = scene.game?.level else { return }
+        let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
-        guard let idle = dataObject?.animation.first(where: { $0.identifier == "idle" }) else { return
-        }
+        let coordinate = level.exit.coordinate.coordinate
+        guard let exitPosition = environment.map.tilePosition(from: coordinate) else { return }
+        guard let exitDoorPosition = environment.map.tilePosition(from: coordinate) else { return }
         
-        print("Portal Created")
+        let exit = environment.objectElement(name: GameConfiguration.sceneConfigurationKey.exit,
+                                             collision: collision)
+        exit.texture = SKTexture(imageNamed: level.exit.sprite)
+        exit.texture?.filteringMode = .nearest
+        exit.position = exitPosition
+        exit.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(exit)
         
-        let animations = [
-            ObjectAnimation(identifier: idle.identifier, frames: idle.frames)
-        ]
-        
-        let coordinate = Coordinate(x: 13, y: 6)
-        
-        let portal = environment.objectElement(name: name, collision: collision)
-        portal.texture = SKTexture(imageNamed: "portal")
-        portal.texture?.filteringMode = .nearest
-        portal.animations = animations
-        let position = environment.map.tilePosition(from: coordinate)
-        portal.position = position!
-        portal.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(portal)
-        
-        portal.run(SKAction.fadeOutAndIn())
-        //scene.core?.animation?.idle(node: portal, filteringMode: .nearest, timeInterval: 0.1)
+        let exitDoor = environment.objectElement(name: GameConfiguration.sceneConfigurationKey.exitDoor,
+                                                 collision: collision)
+        exitDoor.texture = SKTexture(imageNamed: level.exit.door)
+        exitDoor.texture?.filteringMode = .nearest
+        exitDoor.position = exitDoorPosition
+        exitDoor.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(exitDoor)
     }
     private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
         if let dataObject = GameObject.get(container.name) {
@@ -332,6 +328,7 @@ final public class GameContent {
             let objectNode = PKObjectNode()
             objectNode.name = dataObject.name
             objectNode.size = GameConfiguration.worldConfiguration.tileSize
+            objectNode.zPosition = 2
             objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
@@ -349,7 +346,7 @@ final public class GameContent {
         
         let dataObject = GameObject.get(item.name)
         
-        let collision = Collision(category: .object,
+        let collision = Collision(category: .item,
                                   collision: [.structure],
                                   contact: [.player])
         
@@ -370,6 +367,7 @@ final public class GameContent {
         itemNode.texture?.filteringMode = .nearest
         itemNode.animations = animations
         let position = environment.map.tilePosition(from: coordinate)
+        itemNode.zPosition = 2
         itemNode.position = position ?? .zero
         scene.addChildSafely(itemNode)
         
@@ -380,7 +378,59 @@ final public class GameContent {
     func addArrow(_ image: String, named name: String, on node: SKNode) {
         let arrow = arrow(image, named: name)
         arrow.position = CGPoint(x: 0, y: node.frame.size.height / 2)
-        node.addChild(arrow)
+        node.addChildSafely(arrow)
+    }
+    func addHealthBar(on node: SKNode) {
+        
+        let bar = SKSpriteNode(imageNamed: "healthBar")
+        bar.size = GameConfiguration.worldConfiguration.tileSize
+        bar.texture?.filteringMode = .nearest
+        
+        let underBar = SKSpriteNode(imageNamed: "emptyBar")
+        underBar.size = GameConfiguration.worldConfiguration.tileSize
+        underBar.texture?.filteringMode = .nearest
+        
+        let configuration = PKProgressBarNode.ImageConfiguration(sprite: bar,
+                                                                 underSprite: underBar)
+        let progressBar = PKProgressBarNode(imageConfiguration: configuration)
+        progressBar.name = "Health Bar"
+        progressBar.position = CGPoint(x: 0, y: node.frame.size.height / 2)
+        
+        node.addChildSafely(progressBar)
+    }
+    func addJumpTimerBar(on node: SKNode) {
+        let bar = SKSpriteNode(imageNamed: "healthBar")
+        bar.size = GameConfiguration.worldConfiguration.tileSize
+        bar.texture?.filteringMode = .nearest
+        
+        let underBar = SKSpriteNode(imageNamed: "emptyBar")
+        underBar.size = GameConfiguration.worldConfiguration.tileSize
+        underBar.texture?.filteringMode = .nearest
+        
+        let configuration = PKProgressBarNode.ImageConfiguration(sprite: bar,
+                                                                 underSprite: underBar)
+        let progressBar = PKProgressBarNode(imageConfiguration: configuration)
+        progressBar.name = "Health Bar"
+        progressBar.position = CGPoint(x: 0, y: node.frame.size.height)
+        
+        node.addChildSafely(progressBar)
+        
+        let timerConfiguration = PKTimerNode.TimerConfiguration(
+            countdown: 2,
+            counter: 0.1,
+            timeInterval: 0.1,
+            actionOnGoing: {
+                progressBar.decrease(by: 0.1, duration: 0.2)
+            },
+            actionOnEnd: {
+                progressBar.removeFromParent()
+            })
+        
+        let timerNode = PKTimerNode(configuration: timerConfiguration)
+        
+        progressBar.addChildSafely(timerNode)
+        
+        timerNode.start()
     }
     
     // States

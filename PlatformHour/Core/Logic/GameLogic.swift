@@ -50,4 +50,28 @@ final public class GameLogic {
         hit(objectNode)
         destroy(objectNode)
     }
+    
+    public func openExitDoor() {
+        guard let exitDoor = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.exitDoor) else { return }
+        let sequence = SKAction.sequence([
+            SKAction.fadeOutAndIn(fadeOutDuration: 0.05, fadeInDuration: 0.05, repeating: 10),
+            SKAction.removeFromParent()
+        ])
+        exitDoor.run(sequence)
+    }
+    
+    public func updatePlayerCoordinate() {
+        guard let player = scene.player else { return }
+        guard let environment = scene.core?.environment else { return }
+        
+        let element = environment.allElements.first { $0.contains(player.node.position) }
+        
+        if let tileElement = element as? PKTileNode {
+            player.node.coordinate = tileElement.coordinate
+        }
+        
+        if let objectElement = element as? PKObjectNode {
+            player.node.coordinate = objectElement.coordinate
+        }
+    }
 }

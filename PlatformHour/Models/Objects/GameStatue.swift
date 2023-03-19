@@ -9,6 +9,6 @@ import Foundation
 
 struct GameStatue: Codable {
     let sprites: [String]
-    let coordinates: [Int]
+    let coordinates: [String]
     var requirement: [String]
 }

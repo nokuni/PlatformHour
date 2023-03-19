@@ -16,4 +16,6 @@ struct SceneConfigurationKey {
     let playerProjectile = "Player Projectile"
     let statue = "Statue"
     let pillar = "Pillar"
+    let exit = "Exit"
+    let exitDoor = "Exit Door"
 }

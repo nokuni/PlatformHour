@@ -46,16 +46,17 @@ public struct GameCore {
         event = GameEvent(scene: scene)
         logic = GameLogic(scene: scene)
         collision = GameCollision(scene: scene)
+        hud = GameHUD(scene: scene)
         environment = GameEnvironment(scene: scene)
         
         guard let environment = environment else { return }
         
         gameCamera = GameCamera(scene: scene, environment: environment)
         content = GameContent(scene: scene, environment: environment)
-        hud = GameHUD(scene: scene)
     }
     
     public func animateLaunch(game: Game?, scene: GameScene, player: Dice?) {
+        scene.isUserInteractionEnabled = false
         let smoke = SKShapeNode(rectOf: scene.size * 2)
         smoke.fillColor = .white
         smoke.strokeColor = .white
@@ -65,7 +66,7 @@ public struct GameCore {
             SKAction.fadeOut(withDuration: 2),
             SKAction.removeFromParent(),
             SKAction.run {
-                player?.node.isPaused = false
+                scene.isUserInteractionEnabled = true
                 game?.controller = GameControllerManager(scene: scene)
             }
         ])

@@ -18,6 +18,8 @@ public class CollisionLogic {
     
     public func projectileHitObject(_ projectileNode: PKObjectNode, objectNode: PKObjectNode) {
         scene.core?.logic?.damageObject(objectNode, with: projectileNode)
+        projectileNode.removeAllActions()
+        scene.player?.isProjectileTurningBack = true
     }
     
     public func pickUpItem(object: PKObjectNode, name: String) {
@@ -25,7 +27,25 @@ public class CollisionLogic {
             scene.player?.bag.append(item)
             scene.core?.hud?.updateItemAmountHUD()
             object.removeFromParent()
-            scene.core?.content?.createPortal()
         }
+    }
+    
+    public func landOnGround() {
+        guard let player = scene.player else { return }
+        guard let enviroment = scene.core?.environment else { return }
+        guard let position = enviroment.map.tilePosition(from: player.node.coordinate) else { return }
+        
+        if player.isJumping {
+            player.node.run(SKAction.move(to: position, duration: 0.1))
+            player.node.physicsBody?.velocity = .zero
+            player.isJumping = false
+        }
+    }
+    
+    public func quitLevel() {
+        //scene.game?.goToNextLevel()
+        scene.removeAllActions()
+        scene.removeAllChildren()
+        scene.startGame()
     }
 }

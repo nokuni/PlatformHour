@@ -10,8 +10,9 @@ import PlayfulKit
 
 struct GameLevel: Codable {
     let id: Int
-    let playerCoordinate: Int
+    let playerCoordinate: String
     var statue: GameStatue
+    let exit: GameExit
     let containers: [GameObjectContainer]
 }
 
