@@ -74,4 +74,14 @@ final public class GameLogic {
             player.node.coordinate = objectElement.coordinate
         }
     }
+    
+    public func disableControls() {
+        scene.game?.controller?.manager?.action = nil
+        scene.isUserInteractionEnabled = false
+    }
+    
+    public func enableControls() {
+        scene.game?.controller?.setupActions()
+        scene.isUserInteractionEnabled = true
+    }
 }

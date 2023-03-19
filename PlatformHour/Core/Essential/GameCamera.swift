@@ -77,8 +77,8 @@ final public class GameCamera {
     public func followPlayer() {
         guard isFollowingPlayer else { return }
         guard scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.player) else { return }
-        guard let controller = scene.game?.controller else { return }
-        guard controller.action.canAct else { return }
+//        guard let controller = scene.game?.controller else { return }
+//        guard controller.action.canAct else { return }
         
         camera.move(to: playerPosition, catchUpDelay: catchUpDelay)
         setCameraLimit()

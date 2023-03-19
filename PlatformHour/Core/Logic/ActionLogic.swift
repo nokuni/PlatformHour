@@ -55,7 +55,11 @@ public class ActionLogic {
     }
     func moveRight() {
         guard let player = scene.player else { return }
+        guard !player.isJumping else { return }
         guard let environment = scene.core?.environment else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+        
         let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
         
         guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
@@ -74,7 +78,11 @@ public class ActionLogic {
     }
     func moveLeft() {
         guard let player = scene.player else { return }
+        guard !player.isJumping else { return }
         guard let environment = scene.core?.environment else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+        
         let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
         
         guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 44)) else { return }
@@ -150,6 +158,7 @@ public class ActionLogic {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
         guard !isAnimating else { return }
+        
         let jumpAmount = CGFloat(player.currentRoll.rawValue)
         let moveUpValue = GameConfiguration.worldConfiguration.tileSize.height
         let moveUpDestination = CGPoint(x: player.node.position.x,
@@ -164,9 +173,14 @@ public class ActionLogic {
                 SKAction.wait(forDuration: 0.2)
             ])
         }
-        actions.append(SKAction.run { self.scene.core?.content?.addJumpTimerBar(on: player.node) })
-        player.isJumping = true
+        actions.append(SKAction.run {
+            self.scene.core?.logic?.enableControls()
+            self.scene.core?.content?.addJumpTimerBar(on: player.node)
+        })
         let jumpSequence = SKAction.sequence(actions)
+        
+        scene.core?.logic?.disableControls()
+        player.isJumping = true
         player.node.run(jumpSequence)
     }
     func attack() {

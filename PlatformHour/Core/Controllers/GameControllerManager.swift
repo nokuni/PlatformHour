@@ -23,7 +23,7 @@ final public class GameControllerManager {
     
     var manager: ControllerManager?
     
-    private func setupActions() {
+    public func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
         manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack)
         manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump)
