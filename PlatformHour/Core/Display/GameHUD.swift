@@ -20,6 +20,20 @@ public class GameHUD {
     var scene: GameScene
     
     private let layer = SKShapeNode(rectOf: .screen)
+    private let actionSequence = SKNode()
+    
+    public var diceActions: [SKSpriteNode] {
+        let actionNodes = layer.childNodes(named: "Dice Action")
+        let actions = actionNodes.compactMap { $0 as? SKSpriteNode }
+        print(actions)
+        return actions
+    }
+    
+    private var actionSequenceHUDConstraints: EdgeInsets {
+        let leading = (layer.frame.width / 2) - (GameConfiguration.worldConfiguration.tileSize.width * 3) + (GameConfiguration.worldConfiguration.tileSize.width / 2)
+        let constraints = EdgeInsets(top: 40, leading: leading, bottom: 0, trailing: 0)
+        return constraints
+    }
     
     func createBackgroundFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
         guard let camera = scene.camera else { return }
@@ -35,12 +49,33 @@ public class GameHUD {
     public func createLayer() {
         layer.fillColor = .clear
         layer.strokeColor = .clear
-        layer.zPosition = 1
+        layer.zPosition = GameConfiguration.worldConfiguration.hudZPosition
         scene.camera?.addChild(layer)
     }
     public func createHUD() {
         createItemAmountHUD()
+        createActionSequenceHUD()
     }
+    public func createActionSequenceHUD() {
+        
+        actionSequence.name = "Action Sequence"
+        layer.addChildSafely(actionSequence)
+        
+        let sequenceImages = ["sequenceSpace0", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace2"]
+        var sequenceHUD: [SKSpriteNode] = []
+        
+        for image in sequenceImages {
+            let hud = SKSpriteNode(imageNamed: image)
+            hud.texture?.filteringMode = .nearest
+            hud.size = GameConfiguration.worldConfiguration.tileSize
+            sequenceHUD.append(hud)
+        }
+        
+        let sequencePosition = layer.cornerPosition(corner: .topLeft, node: actionSequence, padding: actionSequenceHUDConstraints)
+        
+        GameConfiguration.assemblyManager.createSpriteList(of: sequenceHUD, at: sequencePosition, in: layer, axes: .horizontal, adjustement: .leading, spacing: 1)
+    }
+    
     private func createItemAmountHUD() {
         
         guard let player = scene.player else { return }
@@ -72,6 +107,37 @@ public class GameHUD {
         score.addChildSafely(item)
     }
     
+    public func addDiceActionsHUD() {
+        guard let player = scene.player else { return }
+        
+        var actions: [SKSpriteNode] = []
+        
+        for index in 0..<player.currentRoll.rawValue {
+            let action = SKSpriteNode(imageNamed: "diceAction")
+            action.name = "Dice Action \(index)"
+            action.texture?.filteringMode = .nearest
+            action.setScale(0.1)
+            action.zPosition = GameConfiguration.worldConfiguration.elementHUDZPosition
+            action.size = GameConfiguration.worldConfiguration.tileSize
+            let animation = SKAction.sequence([
+                SKAction.scale(by: 1.1, duration: 0.1),
+                SKAction.scale(by: 0.9, duration: 0.1),
+                SKAction.scale(by: 1, duration: 0.1)
+            ])
+            action.run(animation)
+            actions.append(action)
+        }
+        
+        let position = layer.cornerPosition(corner: .topLeft, node: actionSequence, padding: actionSequenceHUDConstraints)
+        
+        let parameter = AssemblyManager.Parameter(axes: .horizontal, adjustement: .leading, horizontalSpacing: 1, verticalSpacing: 1, columns: 6)
+        
+        GameConfiguration.assemblyManager.createSpriteCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
+            self.scene.core?.logic?.enableControls()
+        })
+    }
+    
+    // MARK: - Updates
     public func updateItemAmountHUD() {
         guard let player = scene.player else { return }
         guard let score = layer.childNode(withName: "Score") else { return }

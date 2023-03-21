@@ -20,7 +20,7 @@ final public class GameEnvironment {
     public var scene: GameScene
     public var map = PKMapNode()
     public var backgroundContainer = SKNode()
-    public var mapMatrix = Matrix(row: 18, column: 52)
+    public var mapMatrix = Matrix(row: 26, column: 52)
     
     public var allElements: [SKSpriteNode] {
         let allTiles = map.tiles
@@ -73,7 +73,7 @@ final public class GameEnvironment {
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
                                   contact: [.player, .object, .playerProjectile, .enemyProjectile])
         let structureElement = objectElement(collision: collision)
-        structureElement.zPosition = 2
+        structureElement.zPosition = GameConfiguration.worldConfiguration.sceneryZPosition
         structureElement.physicsBody?.friction = 0
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
@@ -88,7 +88,7 @@ final public class GameEnvironment {
                                              physicsBodySizeTailoring: physicsBodySizeTailoring,
                                              collision: collision)
         structureElement.name = name
-        structureElement.zPosition = 1
+        structureElement.zPosition = GameConfiguration.worldConfiguration.backgroundZPosition
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
         return structureElement
@@ -98,16 +98,32 @@ final public class GameEnvironment {
     private func createBackground() {
         backgroundContainer.name = GameConfiguration.sceneConfigurationKey.background
         scene.addChildSafely(backgroundContainer)
-        guard let startingPosition = map.tilePosition(from: Coordinate(x: 4, y: 4)) else { return }
+        createSky()
+    }
+    
+    private func createSky() {
+        guard let skyPosition = map.tilePosition(from: Coordinate(x: 12, y: 4)) else { return }
+        guard let highSkyPosition = map.tilePosition(from: Coordinate(x: 4, y: 4)) else { return }
         
-        var backgrounds: [SKSpriteNode] = []
+        var skyBackgrounds: [SKSpriteNode] = []
+        var highSkyBackgrounds: [SKSpriteNode] = []
+        
         for _ in 0..<7 {
             let background = SKSpriteNode(imageNamed: "springDaySky")
             background.size = backgroundSize
             background.texture?.filteringMode = .nearest
-            backgrounds.append(background)
+            skyBackgrounds.append(background)
         }
-        GameConfiguration.assemblyManager.createSpriteList(of: backgrounds, at: startingPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
+        
+        for _ in 0..<7 {
+            let background = SKSpriteNode(imageNamed: "springDayHighSky")
+            background.size = backgroundSize
+            background.texture?.filteringMode = .nearest
+            highSkyBackgrounds.append(background)
+        }
+        
+        GameConfiguration.assemblyManager.createSpriteList(of: skyBackgrounds, at: skyPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
+        GameConfiguration.assemblyManager.createSpriteList(of: highSkyBackgrounds, at: highSkyPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
     private func createMap() {

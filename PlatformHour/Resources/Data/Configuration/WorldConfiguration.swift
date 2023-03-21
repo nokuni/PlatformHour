@@ -23,4 +23,11 @@ struct WorldConfiguration {
     let topBoundaryLimit: Int = 4
     let bottomBoundaryLimit: Int = 14
     let soundSFXVolume: Float = 0.1
+    let backgroundZPosition: CGFloat = 1
+    let sceneryZPosition: CGFloat = 2
+    let NPCZPosition: CGFloat = 3
+    let objectZPosition: CGFloat = 4
+    let playerZPosition: CGFloat = 4
+    let hudZPosition: CGFloat = 5
+    let elementHUDZPosition: CGFloat = 6
 }

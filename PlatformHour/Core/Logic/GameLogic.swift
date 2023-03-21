@@ -74,6 +74,35 @@ final public class GameLogic {
             player.node.coordinate = objectElement.coordinate
         }
     }
+    
+    public func dropPlayer() {
+        guard let player = scene.player else { return }
+        guard let environment = scene.core?.environment else { return }
+        
+        let playerCoordinate = player.node.coordinate
+        
+        var destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
+                                               y: playerCoordinate.y)
+        repeat {
+            destinationCoordinate.x += 1
+        } while !environment.collisionCoordinates.contains(destinationCoordinate)
+        
+        destinationCoordinate.x -= 1
+        
+        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else {
+            return
+        }
+        
+        let sequence = SKAction.sequence([
+            SKAction.move(to: destinationPosition, duration: 0.1),
+            SKAction.run {
+                self.scene.core?.animation.circularSmoke(on: player.node)
+                self.scene.player?.state = .normal
+            }
+        ])
+        
+        scene.player?.node.run(sequence)
+    }
 
     func projectileFollowPlayer() {
         guard let player = scene.player else { return }

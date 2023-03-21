@@ -27,7 +27,7 @@ final public class GameScene: SKScene {
     
     public override func didMove(to view: SKView) {
         startGame()
-        //core?.gameCamera?.camera.gesture(view)
+        core?.gameCamera?.camera.gesture(view)
     }
     
     public override func update(_ currentTime: TimeInterval) {

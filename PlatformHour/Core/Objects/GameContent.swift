@@ -65,16 +65,6 @@ final public class GameContent {
         return attackNode
     }
     
-    // Sprites
-    func arrow(_ image: String, named name: String) -> SKSpriteNode {
-        let arrowNode = SKSpriteNode(imageNamed: image)
-        arrowNode.name = name
-        arrowNode.texture?.filteringMode = .nearest
-        arrowNode.size = GameConfiguration.worldConfiguration.tileSize
-        
-        return arrowNode
-    }
-    
     // MARK: - Main
     
     private func createContent() {
@@ -105,13 +95,11 @@ final public class GameContent {
         
         dice.node.logic = LogicBody(health: dice.logic.health, damage: dice.logic.damage, isDestructible: dice.logic.isDestructible, isIntangible: dice.logic.isIntangible)
         
-        dice.node.zPosition = 3
+        dice.node.zPosition = GameConfiguration.worldConfiguration.playerZPosition
         
         dice.node.physicsBody?.friction = 0
         dice.node.physicsBody?.allowsRotation = false
         dice.node.physicsBody?.affectedByGravity = false
-        
-        //        addArrow(dice.orientation.arrow, named: GameConfiguration.sceneConfigurationKey.playerArrow, on: dice.node)
         
         addHealthBar(on: dice.node)
         
@@ -127,7 +115,7 @@ final public class GameContent {
     
     // MARK: - Ground
     private func createGround() {
-        let coordinate = Coordinate(x: 9, y: 0)
+        let coordinate = Coordinate(x: 17, y: 0)
         
         if let ground = scene.game?.world?.ground {
             let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
@@ -201,7 +189,7 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.allClear])
         
-        var startingCoordinate = Coordinate(x: 8, y: 0)
+        var startingCoordinate = Coordinate(x: 16, y: 0)
         for _ in 0..<6 {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopLeft",
@@ -328,7 +316,7 @@ final public class GameContent {
             let objectNode = PKObjectNode()
             objectNode.name = dataObject.name
             objectNode.size = GameConfiguration.worldConfiguration.tileSize
-            objectNode.zPosition = 2
+            objectNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
             objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
@@ -367,7 +355,7 @@ final public class GameContent {
         itemNode.texture?.filteringMode = .nearest
         itemNode.animations = animations
         let position = environment.map.tilePosition(from: coordinate)
-        itemNode.zPosition = 2
+        itemNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
         itemNode.position = position ?? .zero
         scene.addChildSafely(itemNode)
         
@@ -375,11 +363,6 @@ final public class GameContent {
     }
     
     // Additions
-    func addArrow(_ image: String, named name: String, on node: SKNode) {
-        let arrow = arrow(image, named: name)
-        arrow.position = CGPoint(x: 0, y: node.frame.size.height / 2)
-        node.addChildSafely(arrow)
-    }
     func addHealthBar(on node: SKNode) {
         
         let bar = SKSpriteNode(imageNamed: "healthBar")

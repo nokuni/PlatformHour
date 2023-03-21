@@ -40,6 +40,12 @@ public class ActionLogic {
     }
     
     // MARK: - Underlying Actions/Animations
+    private func addAction(_ action: Dice.DiceAction) {
+        guard let player = scene.player else { return }
+        guard player.actions.count < player.currentRoll.rawValue else { return }
+        player.actions.append(action)
+    }
+    
     private func move(on direction: Direction, by amount: Int) {
         guard let player = scene.player else { return }
         guard !isAnimating else { return }
@@ -51,7 +57,6 @@ public class ActionLogic {
         moveAnimation(by: amount)
         scene.player?.advanceRoll()
         scene.player?.run()
-        switchPlayerArrowDirection()
     }
     private func throwProjectile(_ projectileNode: PKObjectNode) {
         guard let player = scene.player else { return }
@@ -111,16 +116,48 @@ public class ActionLogic {
         }
     }
     
-    // MARK: - Others
-    func switchPlayerArrowDirection() {
-        if let player = scene.player,
-           let arrowNode = player.node.childNode(withName: GameConfiguration.sceneConfigurationKey.playerArrow) as? SKSpriteNode {
-            arrowNode.texture = SKTexture(imageNamed: player.orientation.arrow)
-            arrowNode.texture?.filteringMode = .nearest
+    // MARK: - Actions
+    func rightPadAction() {
+        guard let player = scene.player else { return }
+        
+        switch player.state {
+        case .normal:
+            moveRight()
+        case .inAction:
+            addAction(.moveRight)
+        }
+    }
+    func leftPadAction() {
+        guard let player = scene.player else { return }
+        
+        switch player.state {
+        case .normal:
+            moveLeft()
+        case .inAction:
+            addAction(.moveLeft)
+        }
+    }
+    func upPadAction() {
+        guard let player = scene.player else { return }
+        
+        switch player.state {
+        case .normal: ()
+        case .inAction:
+            addAction(.moveUp)
+        }
+    }
+    func downPadAction() {
+        guard let player = scene.player else { return }
+        
+        switch player.state {
+        case .normal: ()
+        case .inAction:
+            //addAction(.moveDown)
+            print("drop")
+            scene.core?.logic?.dropPlayer()
         }
     }
     
-    // MARK: - Actions
     func jump() {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
@@ -206,38 +243,6 @@ public class ActionLogic {
         move(on: .left, by: movementSpeed)
     }
     
-    func upAction() {
-        guard canAct else { return }
-        guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
-        let playerCoordinate = player.node.coordinate
-        
-        let destinationCoordinate = Coordinate(x: playerCoordinate.x - 1,
-                                               y: playerCoordinate.y)
-        
-        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
-        
-        let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-        scene.player?.node.run(action)
-        //        scene.player?.orientation = .up
-        //        switchPlayerArrowDirection()
-    }
-    func downAction() {
-        guard canAct else { return }
-        guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
-        let playerCoordinate = player.node.coordinate
-        
-        let destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
-                                               y: playerCoordinate.y)
-        
-        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
-        let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-        scene.player?.node.run(action)
-        //        scene.player?.orientation = .down
-        //        switchPlayerArrowDirection()
-    }
-    
     func interact() {
         guard let player = scene.player else { return }
         guard !player.bag.isEmpty else { return }
@@ -269,8 +274,8 @@ public class ActionLogic {
             ])
         }
         actions.append(SKAction.run {
-            self.scene.core?.logic?.enableControls()
-            self.scene.core?.content?.addJumpTimerBar(on: player.node)
+            self.scene.player?.state = .inAction
+            self.scene.core?.hud?.addDiceActionsHUD()
         })
 
         let jumpSequence = SKAction.sequence(actions)

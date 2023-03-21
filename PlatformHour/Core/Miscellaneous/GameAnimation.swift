@@ -24,6 +24,23 @@ final public class GameAnimation {
         case death = "death"
     }
     
+    public func circularSmoke(on node: SKNode) {
+        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let animationNode = SKSpriteNode()
+        animationNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
+        
+        let animation = SKAction.animate(with: GameConfiguration.animationConfiguration.circularSmoke, filteringMode: .nearest, timePerFrame: 0.1)
+        
+        let sequence = SKAction.sequence([
+            animation,
+            SKAction.removeFromParent()
+        ])
+        
+        node.addChildSafely(animationNode)
+        
+        animationNode.run(sequence)
+    }
+    
     public func animate(node: PKObjectNode,
                         identifier: StateID,
                         filteringMode: SKTextureFilteringMode = .linear,

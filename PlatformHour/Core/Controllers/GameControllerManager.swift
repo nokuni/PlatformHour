@@ -29,10 +29,10 @@ final public class GameControllerManager {
         manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump)
         manager?.action?.buttonX = ControllerManager.ButtonAction()
         manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interact)
-        manager?.action?.dpad = ControllerManager.DPadAction(left: action.moveLeft,
-                                                             right: action.moveRight,
-                                                             up: action.upAction,
-                                                             down: action.downAction)
+        manager?.action?.dpad = ControllerManager.DPadAction(left: action.leftPadAction,
+                                                             right: action.rightPadAction,
+                                                             up: action.upPadAction,
+                                                             down: action.downPadAction)
     }
     
     private func setupControllers() {

@@ -21,7 +21,6 @@ public class Dice {
         case five = 5
         case six = 6
     }
-    
     public enum Orientation {
         case right
         case left
@@ -41,7 +40,19 @@ public class Dice {
             }
         }
     }
+    public enum DiceAction {
+        case none
+        case moveRight
+        case moveLeft
+        case moveUp
+        case moveDown
+    }
+    public enum DiceState {
+        case normal
+        case inAction
+    }
     
+    public var state: DiceState = .normal
     public var currentRoll: Roll = .one
     public var range: CGFloat = GameConfiguration.playerConfiguration.range
     public var attackSpeed: CGFloat = GameConfiguration.playerConfiguration.attackSpeed
@@ -52,6 +63,7 @@ public class Dice {
     public var canAct: Bool = true
     
     public var interactionStatus: PlayerInteractionStatus = .none
+    public var actions: [DiceAction] = []
     public var bag: [GameItem] = []
 }
 

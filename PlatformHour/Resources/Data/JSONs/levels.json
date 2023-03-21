@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "playerCoordinate": "0808",
+        "playerCoordinate": "1608",
         "statue":
         {
             "sprites":
@@ -11,20 +11,20 @@
                 "springStatueBottomLeft",
                 "springStatueBottonRight"
             ],
-            "coordinates": ["0731", "0732", "0831", "0832"],
+            "coordinates": ["1531", "1532", "1631", "1632"],
             "requirement": ["Sphere"]
         },
         "exit":
         {
             "sprite": "springExit",
             "door": "springDoor",
-            "coordinate": "0839"
+            "coordinate": "1639"
         },
         "containers":
         [
             {
                 "name": "Vase",
-                "coordinate": "0821",
+                "coordinate": "1621",
                 "item": "Sphere"
             }
         ]
