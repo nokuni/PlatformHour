@@ -32,7 +32,7 @@ final public class GameScene: SKScene {
     
     public override func update(_ currentTime: TimeInterval) {
         core?.gameCamera?.followPlayer()
-        game?.controller?.action.projectileFollowPlayer()
+        core?.logic?.projectileFollowPlayer()
         core?.logic?.updatePlayerCoordinate()
     }
     

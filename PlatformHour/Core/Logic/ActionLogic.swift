@@ -39,7 +39,7 @@ public class ActionLogic {
         scene.isUserInteractionEnabled
     }
     
-    // MARK: - Movements
+    // MARK: - Underlying Actions/Animations
     private func move(on direction: Direction, by amount: Int) {
         guard let player = scene.player else { return }
         guard !isAnimating else { return }
@@ -53,50 +53,32 @@ public class ActionLogic {
         scene.player?.run()
         switchPlayerArrowDirection()
     }
-    func moveRight() {
+    private func throwProjectile(_ projectileNode: PKObjectNode) {
         guard let player = scene.player else { return }
-        guard !player.isJumping else { return }
-        guard let environment = scene.core?.environment else { return }
-        guard !isAnimating else { return }
-        guard canAct else { return }
-        
-        let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
-        
-        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
+        let distanceAmount = CGFloat(player.range)
+        var xDistance: CGFloat = 0
+        var yDistance: CGFloat = 0
 
-        let limit = -(GameConfiguration.worldConfiguration.tileSize.width * 34)
-        
-        if let background = scene.childNode(withName: "Background") {
-            let destinationPosition = CGPoint(x: background.position.x + (-GameConfiguration.worldConfiguration.tileSize.width), y: 0)
-            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-            if background.position.x > limit && player.node.position.x > maxCameraPosition.x {
-                background.run(action)
-            }
+        switch player.orientation {
+        case .right: xDistance = player.node.size.width * distanceAmount
+        case .left: xDistance = -player.node.size.width * distanceAmount
+        case .up: yDistance = player.node.size.height * distanceAmount
+        case .down: yDistance = -player.node.size.height * distanceAmount
         }
-        
-        move(on: .right, by: movementSpeed)
-    }
-    func moveLeft() {
-        guard let player = scene.player else { return }
-        guard !player.isJumping else { return }
-        guard let environment = scene.core?.environment else { return }
-        guard !isAnimating else { return }
-        guard canAct else { return }
-        
-        let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
-        
-        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 44)) else { return }
 
-        if let background = scene.childNode(withName: "Background") {
-            let destinationPosition = CGPoint(x: background.position.x + GameConfiguration.worldConfiguration.tileSize.width, y: 0)
-            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-            if background.position.x < 0 && player.node.position.x < maxCameraPosition.x {
-                background.run(action)
+        let destination = CGPoint(x: player.node.position.x + xDistance,
+                                  y: player.node.position.y + yDistance)
+
+        let sequence = SKAction.sequence([
+            SKAction.move(to: destination, duration: player.attackSpeed),
+            SKAction.run {
+                player.isProjectileTurningBack = true
             }
-        }
-        
-        move(on: .left, by: movementSpeed)
+        ])
+
+        projectileNode.run(sequence)
     }
+
     func moveAnimation(by amount: Int) {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
@@ -108,25 +90,10 @@ public class ActionLogic {
         
         guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
         
-        let moveSequence = moveSequence(destinationPosition: destinationPosition,
-                                        destinationCoordinate: destinationCoordinate, amount: amount)
+        let moveSequence = moveAction(destinationPosition: destinationPosition,
+                                      destinationCoordinate: destinationCoordinate, amount: amount)
         
         scene.player?.node.run(moveSequence)
-    }
-    
-    func moveSequence(destinationPosition: CGPoint,
-                      destinationCoordinate: Coordinate,
-                      amount: Int) -> SKAction {
-        guard let player = scene.player else { return SKAction.empty() }
-        guard let environment = scene.core?.environment else { return SKAction.empty() }
-        let sequence = SKAction.sequence([
-            SKAction.move(to: destinationPosition, duration: player.runDuration),
-            SKAction.run {
-                self.scene.core?.sound.step()
-                self.scene.player?.node.removeAllActions()
-            }
-        ])
-        return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
     }
     
     func changeOrientation(direction: Direction) {
@@ -158,31 +125,14 @@ public class ActionLogic {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
         guard !isAnimating else { return }
-        
-        let jumpAmount = CGFloat(player.currentRoll.rawValue)
-        let moveUpValue = GameConfiguration.worldConfiguration.tileSize.height
-        let moveUpDestination = CGPoint(x: player.node.position.x,
-                                        y: player.node.position.y + moveUpValue)
-        let array = stride(from: 0, to: jumpAmount, by: 1)
-        let destinations = array.map {
-            CGPoint(x: moveUpDestination.x, y: moveUpDestination.y + (moveUpValue * $0))
-        }
-        var actions = destinations.map {
-            SKAction.sequence([
-                SKAction.move(to: $0, duration: 0.1),
-                SKAction.wait(forDuration: 0.2)
-            ])
-        }
-        actions.append(SKAction.run {
-            self.scene.core?.logic?.enableControls()
-            self.scene.core?.content?.addJumpTimerBar(on: player.node)
-        })
-        let jumpSequence = SKAction.sequence(actions)
-        
+
+        let action = jumpAction(player: player)
+
         scene.core?.logic?.disableControls()
         player.isJumping = true
-        player.node.run(jumpSequence)
+        player.node.run(action)
     }
+
     func attack() {
         guard !isAttacking else { return }
         guard !isAnimating else { return }
@@ -193,6 +143,7 @@ public class ActionLogic {
             throwProjectile(projectileNode)
         }
     }
+
     func pause() {
         guard canAct else { return }
         
@@ -209,6 +160,51 @@ public class ActionLogic {
             ()
         }
     }
+
+    func moveRight() {
+        guard let player = scene.player else { return }
+        guard !player.isJumping else { return }
+        guard let environment = scene.core?.environment else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+
+        let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
+
+        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
+
+        let limit = -(GameConfiguration.worldConfiguration.tileSize.width * 34)
+
+        if let background = scene.childNode(withName: "Background") {
+            let destinationPosition = CGPoint(x: background.position.x + (-GameConfiguration.worldConfiguration.tileSize.width), y: 0)
+            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
+            if background.position.x > limit && player.node.position.x > maxCameraPosition.x {
+                background.run(action)
+            }
+        }
+
+        move(on: .right, by: movementSpeed)
+    }
+    func moveLeft() {
+        guard let player = scene.player else { return }
+        guard !player.isJumping else { return }
+        guard let environment = scene.core?.environment else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+
+        let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
+
+        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 44)) else { return }
+
+        if let background = scene.childNode(withName: "Background") {
+            let destinationPosition = CGPoint(x: background.position.x + GameConfiguration.worldConfiguration.tileSize.width, y: 0)
+            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
+            if background.position.x < 0 && player.node.position.x < maxCameraPosition.x {
+                background.run(action)
+            }
+        }
+
+        move(on: .left, by: movementSpeed)
+    }
     
     func upAction() {
         guard canAct else { return }
@@ -223,8 +219,8 @@ public class ActionLogic {
         
         let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
         scene.player?.node.run(action)
-//        scene.player?.orientation = .up
-//        switchPlayerArrowDirection()
+        //        scene.player?.orientation = .up
+        //        switchPlayerArrowDirection()
     }
     func downAction() {
         guard canAct else { return }
@@ -238,8 +234,8 @@ public class ActionLogic {
         guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else { return }
         let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
         scene.player?.node.run(action)
-//        scene.player?.orientation = .down
-//        switchPlayerArrowDirection()
+        //        scene.player?.orientation = .down
+        //        switchPlayerArrowDirection()
     }
     
     func interact() {
@@ -254,45 +250,45 @@ public class ActionLogic {
             scene.core?.event?.giveItemToStatue()
         }
     }
-    
-    // MARK: - Projectiles
-    
-    func projectileFollowPlayer() {
-        if let player = scene.player,
-           let projectile = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.playerProjectile) {
-            if player.isProjectileTurningBack {
-                projectile.run(SKAction.follow(player.node, duration: player.attackSpeed))
-                if projectile.contains(player.node.position) {
-                    projectile.removeFromParent()
-                    player.isProjectileTurningBack = false
-                }
-            }
+
+    // MARK: - Animations
+
+    func jumpAction(player: Dice) -> SKAction {
+        let jumpValue = GameConfiguration.playerConfiguration.jumpValue
+        let moveUpValue = GameConfiguration.worldConfiguration.tileSize.height
+        let moveUpDestination = CGPoint(x: player.node.position.x,
+                                        y: player.node.position.y + moveUpValue)
+        let array = stride(from: 0, to: jumpValue, by: 1)
+        let destinations = array.map {
+            CGPoint(x: moveUpDestination.x, y: moveUpDestination.y + (moveUpValue * $0))
         }
+        var actions = destinations.map {
+            SKAction.sequence([
+                SKAction.move(to: $0, duration: 0.1),
+                SKAction.wait(forDuration: 0.2)
+            ])
+        }
+        actions.append(SKAction.run {
+            self.scene.core?.logic?.enableControls()
+            self.scene.core?.content?.addJumpTimerBar(on: player.node)
+        })
+
+        let jumpSequence = SKAction.sequence(actions)
+
+        return jumpSequence
     }
-    
-    func throwProjectile(_ projectileNode: PKObjectNode) {
-        guard let player = scene.player else { return }
-        let distanceAmount = CGFloat(player.range)
-        var xDistance: CGFloat = 0
-        var yDistance: CGFloat = 0
-        
-        switch player.orientation {
-        case .right: xDistance = player.node.size.width * distanceAmount
-        case .left: xDistance = -player.node.size.width * distanceAmount
-        case .up: yDistance = player.node.size.height * distanceAmount
-        case .down: yDistance = -player.node.size.height * distanceAmount
-        }
-        
-        let destination = CGPoint(x: player.node.position.x + xDistance,
-                                  y: player.node.position.y + yDistance)
-        
+    func moveAction(destinationPosition: CGPoint,
+                    destinationCoordinate: Coordinate,
+                    amount: Int) -> SKAction {
+        guard let player = scene.player else { return SKAction.empty() }
+        guard let environment = scene.core?.environment else { return SKAction.empty() }
         let sequence = SKAction.sequence([
-            SKAction.move(to: destination, duration: player.attackSpeed),
+            SKAction.move(to: destinationPosition, duration: player.runDuration),
             SKAction.run {
-                player.isProjectileTurningBack = true
+                self.scene.core?.sound.step()
+                self.scene.player?.node.removeAllActions()
             }
         ])
-        
-        projectileNode.run(sequence)
+        return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
     }
 }

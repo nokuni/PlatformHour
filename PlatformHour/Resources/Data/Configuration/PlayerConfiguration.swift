@@ -11,6 +11,7 @@ struct PlayerConfiguration {
     let range: CGFloat = 5
     let attackSpeed: CGFloat = 0.5
     let movementSpeed: Int = 1
+    let jumpValue: CGFloat = 3
     let runTimePerFrame: TimeInterval = 0.03
     let runRightAnimation = "Dice Run Right"
     let runLeftAnimation = "Dice Run Left"

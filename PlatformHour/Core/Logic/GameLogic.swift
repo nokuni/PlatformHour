@@ -74,6 +74,21 @@ final public class GameLogic {
             player.node.coordinate = objectElement.coordinate
         }
     }
+
+    func projectileFollowPlayer() {
+        guard let player = scene.player else { return }
+        guard let projectile = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.playerProjectile) else {
+            return
+        }
+
+        if player.isProjectileTurningBack {
+            projectile.run(SKAction.follow(player.node, duration: player.attackSpeed))
+            if projectile.contains(player.node.position) {
+                projectile.removeFromParent()
+                player.isProjectileTurningBack = false
+            }
+        }
+    }
     
     public func disableControls() {
         scene.game?.controller?.manager?.action = nil
