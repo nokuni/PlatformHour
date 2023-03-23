@@ -9,6 +9,5 @@ import Foundation
 
 struct GameExit: Codable {
     let sprite: String
-    let door: String
     let coordinate: String
 }

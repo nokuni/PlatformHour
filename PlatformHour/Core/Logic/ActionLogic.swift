@@ -7,6 +7,7 @@
 
 import SpriteKit
 import PlayfulKit
+import Utility_Toolbox
 
 public class ActionLogic {
     
@@ -44,6 +45,11 @@ public class ActionLogic {
         guard let player = scene.player else { return }
         guard player.actions.count < player.currentRoll.rawValue else { return }
         player.actions.append(action)
+        let actionElement = SKSpriteNode(imageNamed: action.icon)
+        actionElement.texture?.filteringMode = .nearest
+        actionElement.size = GameConfiguration.worldConfiguration.tileSize * 0.5
+        scene.core?.hud?.diceActions[safe: player.actions.count - 1]?.addChildSafely(actionElement)
+        scene.core?.logic?.resolveActionSequence()
     }
     
     private func move(on direction: Direction, by amount: Int) {
@@ -52,6 +58,7 @@ public class ActionLogic {
         guard !player.isJumping else { return }
         guard canAct else { return }
         
+        scene.core?.event?.dismissButtonPopUp()
         self.direction = direction
         changeOrientation(direction: self.direction)
         moveAnimation(by: amount)
@@ -152,15 +159,14 @@ public class ActionLogic {
         switch player.state {
         case .normal: ()
         case .inAction:
-            //addAction(.moveDown)
-            print("drop")
-            scene.core?.logic?.dropPlayer()
+            addAction(.moveDown)
         }
     }
     
     func jump() {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
+        guard player.interactionStatus == .none else { return }
         guard !isAnimating else { return }
 
         let action = jumpAction(player: player)
@@ -251,8 +257,8 @@ public class ActionLogic {
         switch player.interactionStatus {
         case .none:
             ()
-        case .onStatue:
-            scene.core?.event?.giveItemToStatue()
+        case .onExit:
+            scene.core?.event?.loadNextLevel()
         }
     }
 
@@ -269,8 +275,7 @@ public class ActionLogic {
         }
         var actions = destinations.map {
             SKAction.sequence([
-                SKAction.move(to: $0, duration: 0.1),
-                SKAction.wait(forDuration: 0.2)
+                SKAction.move(to: $0, duration: 0.2)
             ])
         }
         actions.append(SKAction.run {

@@ -48,7 +48,6 @@
 		96B7F80A29B535D6001584E3 /* PlatformHour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96B7F80829B535D6001584E3 /* PlatformHour.xcdatamodeld */; };
 		96B7F80E29B788DA001584E3 /* GameCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B7F80D29B788DA001584E3 /* GameCore.swift */; };
 		96C51EC429BD31CD00DDCBAB /* Karmatic Arcade.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC329BD31CD00DDCBAB /* Karmatic Arcade.ttf */; };
-		96C51EC629BD6A8500DDCBAB /* GameStatue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC529BD6A8500DDCBAB /* GameStatue.swift */; };
 		96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */; };
 		96C51ECA29BE2B3900DDCBAB /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC929BE2B3900DDCBAB /* items.json */; };
 		96C51ECC29BE30D800DDCBAB /* GameItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51ECB29BE30D800DDCBAB /* GameItem.swift */; };
@@ -109,7 +108,6 @@
 		96B7F80929B535D6001584E3 /* PlatformHour.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PlatformHour.xcdatamodel; sourceTree = "<group>"; };
 		96B7F80D29B788DA001584E3 /* GameCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCore.swift; sourceTree = "<group>"; };
 		96C51EC329BD31CD00DDCBAB /* Karmatic Arcade.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karmatic Arcade.ttf"; sourceTree = "<group>"; };
-		96C51EC529BD6A8500DDCBAB /* GameStatue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStatue.swift; sourceTree = "<group>"; };
 		96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObjectContainer.swift; sourceTree = "<group>"; };
 		96C51EC929BE2B3900DDCBAB /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
 		96C51ECB29BE30D800DDCBAB /* GameItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameItem.swift; sourceTree = "<group>"; };
@@ -273,7 +271,6 @@
 			isa = PBXGroup;
 			children = (
 				96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */,
-				96C51EC529BD6A8500DDCBAB /* GameStatue.swift */,
 				96540521298C21F800620E76 /* GameObject.swift */,
 				96C51ECB29BE30D800DDCBAB /* GameItem.swift */,
 				964E7E5229C26092003CE54B /* GameObjectAnimation.swift */,
@@ -516,7 +513,6 @@
 				961946622996894F000859C8 /* GameWorld.swift in Sources */,
 				964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,
-				96C51EC629BD6A8500DDCBAB /* GameStatue.swift in Sources */,
 				964E7E6429C46291003CE54B /* PlayerConfiguration.swift in Sources */,
 				96B7F80729B5358C001584E3 /* PersistenceController.swift in Sources */,
 				96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */,

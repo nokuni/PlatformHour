@@ -32,12 +32,8 @@ public class CollisionLogic {
     
     public func landOnGround() {
         guard let player = scene.player else { return }
-        guard let enviroment = scene.core?.environment else { return }
-        guard let position = enviroment.map.tilePosition(from: player.node.coordinate) else { return }
         
         if player.isJumping {
-            player.node.run(SKAction.move(to: position, duration: 0.1))
-            player.node.physicsBody?.velocity = .zero
             player.isJumping = false
         }
     }

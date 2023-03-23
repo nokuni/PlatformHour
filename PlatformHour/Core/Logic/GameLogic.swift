@@ -33,7 +33,7 @@ final public class GameLogic {
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
             scene.core?.animation.destroy(node: objectNode,
-                              filteringMode: .nearest) {
+                                          filteringMode: .nearest) {
                 if let item = objectNode.drops.first as? GameItem {
                     self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
                 }
@@ -43,21 +43,12 @@ final public class GameLogic {
     
     private func hit(_ objectNode: PKObjectNode) {
         scene.core?.animation.hit(node: objectNode,
-                      filteringMode: .nearest)
+                                  filteringMode: .nearest)
     }
     
     private func damage(_ objectNode: PKObjectNode) {
         hit(objectNode)
         destroy(objectNode)
-    }
-    
-    public func openExitDoor() {
-        guard let exitDoor = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.exitDoor) else { return }
-        let sequence = SKAction.sequence([
-            SKAction.fadeOutAndIn(fadeOutDuration: 0.05, fadeInDuration: 0.05, repeating: 10),
-            SKAction.removeFromParent()
-        ])
-        exitDoor.run(sequence)
     }
     
     public func updatePlayerCoordinate() {
@@ -75,9 +66,10 @@ final public class GameLogic {
         }
     }
     
-    public func dropPlayer() {
-        guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
+    // Drop
+    private var dropAction: SKAction {
+        guard let player = scene.player else { return SKAction.empty() }
+        guard let environment = scene.core?.environment else { return SKAction.empty() }
         
         let playerCoordinate = player.node.coordinate
         
@@ -89,27 +81,87 @@ final public class GameLogic {
         
         destinationCoordinate.x -= 1
         
-        guard let destinationPosition = environment.map.tilePosition(from: destinationCoordinate) else {
-            return
+        guard let position = environment.map.tilePosition(from: destinationCoordinate) else {
+            return SKAction.empty()
         }
         
-        let sequence = SKAction.sequence([
-            SKAction.move(to: destinationPosition, duration: 0.1),
-            SKAction.run {
-                self.scene.core?.animation.circularSmoke(on: player.node)
-                self.scene.player?.state = .normal
-            }
-        ])
+        let moveAction = SKAction.move(to: position, duration: 0.2)
         
-        scene.player?.node.run(sequence)
+        let action = !environment.collisionCoordinates.contains(destinationCoordinate) ? moveAction : SKAction.empty()
+        
+        return action
     }
-
+    private var landAction: SKAction {
+        guard let player = scene.player else { return SKAction.empty() }
+        let action = SKAction.run {
+            self.scene.core?.animation.circularSmoke(on: player.node)
+            self.scene.player?.state = .normal
+            self.enableControls()
+        }
+        return action
+    }
+    
+    public func dropPlayer() {
+        let drop = SKAction.sequence([dropAction, landAction])
+        scene.player?.node.run(drop)
+    }
+    
+    // Action Sequence
+    private var actionSequenceAction: [SKAction] {
+        guard let player = scene.player else { return [] }
+        guard let environment = scene.core?.environment else { return [] }
+        
+        var currentCoordinate = player.node.coordinate
+        var coordinates: [Coordinate] = []
+        
+        for action in player.actions {
+            currentCoordinate.x += action.value.x
+            currentCoordinate.y += action.value.y
+            guard !environment.collisionCoordinates.contains(currentCoordinate) else { break }
+            coordinates.append(currentCoordinate)
+        }
+        
+        let positions = coordinates.compactMap { environment.map.tilePosition(from: $0) }
+        
+        let moves = positions.map { SKAction.move(to: $0, duration: 0.2) }
+        
+        return moves
+    }
+    private var endActionSequenceAction: SKAction {
+        guard let player = scene.player else { return SKAction.empty() }
+        let action = SKAction.run {
+            player.actions.removeAll()
+            self.scene.core?.hud?.removeDiceActions()
+            self.dropPlayer()
+        }
+        return action
+    }
+    
+    public func resolveActionSequence() {
+        guard let player = scene.player else { return }
+        if player.actions.count == player.currentRoll.rawValue {
+            disableControls()
+            performActionSequence()
+        }
+    }
+    public func performActionSequence() {
+        guard let player = scene.player else { return }
+        
+        var actions = actionSequenceAction
+        actions.append(endActionSequenceAction)
+        
+        let sequence = SKAction.sequence(actions)
+        
+        player.node.run(sequence)
+    }
+    
+    // Projectiles
     func projectileFollowPlayer() {
         guard let player = scene.player else { return }
         guard let projectile = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.playerProjectile) else {
             return
         }
-
+        
         if player.isProjectileTurningBack {
             projectile.run(SKAction.follow(player.node, duration: player.attackSpeed))
             if projectile.contains(player.node.position) {
@@ -119,11 +171,11 @@ final public class GameLogic {
         }
     }
     
+    // Controls
     public func disableControls() {
         scene.game?.controller?.manager?.action = nil
         scene.isUserInteractionEnabled = false
     }
-    
     public func enableControls() {
         scene.game?.controller?.setupActions()
         scene.isUserInteractionEnabled = true

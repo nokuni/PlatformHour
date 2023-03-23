@@ -26,19 +26,6 @@ public class Dice {
         case left
         case up
         case down
-        
-        var arrow: String {
-            switch self {
-            case .right:
-                return GameConfiguration.imageConfigurationKey.rightArrow
-            case .left:
-                return GameConfiguration.imageConfigurationKey.leftArrow
-            case .up:
-                return GameConfiguration.imageConfigurationKey.upArrow
-            case .down:
-                return GameConfiguration.imageConfigurationKey.downArrow
-            }
-        }
     }
     public enum DiceAction {
         case none
@@ -46,6 +33,36 @@ public class Dice {
         case moveLeft
         case moveUp
         case moveDown
+        
+        var icon: String {
+            switch self {
+            case .none:
+                return ""
+            case .moveRight:
+                return GameConfiguration.imageConfigurationKey.rightArrow
+            case .moveLeft:
+                return GameConfiguration.imageConfigurationKey.leftArrow
+            case .moveUp:
+                return GameConfiguration.imageConfigurationKey.upArrow
+            case .moveDown:
+                return GameConfiguration.imageConfigurationKey.downArrow
+            }
+        }
+        
+        var value: (x: Int, y: Int) {
+            switch self {
+            case .none:
+                return (x: 0, y: 0)
+            case .moveRight:
+                return (x: 0, y: 1)
+            case .moveLeft:
+                return (x: 0, y: -1)
+            case .moveUp:
+                return (x: -1, y: 0)
+            case .moveDown:
+                return (x: 1, y: 0)
+            }
+        }
     }
     public enum DiceState {
         case normal
@@ -64,6 +81,7 @@ public class Dice {
     
     public var interactionStatus: PlayerInteractionStatus = .none
     public var actions: [DiceAction] = []
+
     public var bag: [GameItem] = []
 }
 

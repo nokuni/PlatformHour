@@ -2,23 +2,10 @@
     {
         "id": 0,
         "playerCoordinate": "1608",
-        "statue":
-        {
-            "sprites":
-            [
-                "springStatueTopLeft",
-                "springStatueTopRight",
-                "springStatueBottomLeft",
-                "springStatueBottonRight"
-            ],
-            "coordinates": ["1531", "1532", "1631", "1632"],
-            "requirement": ["Sphere"]
-        },
         "exit":
         {
             "sprite": "springExit",
-            "door": "springDoor",
-            "coordinate": "1639"
+            "coordinate": "1645"
         },
         "containers":
         [

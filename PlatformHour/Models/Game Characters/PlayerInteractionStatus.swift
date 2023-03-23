@@ -9,5 +9,5 @@ import Foundation
 
 public enum PlayerInteractionStatus {
     case none
-    case onStatue
+    case onExit
 }

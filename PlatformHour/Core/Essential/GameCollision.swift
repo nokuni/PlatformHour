@@ -51,12 +51,7 @@ final public class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.item.rawValue)
         )
         
-        playerTouchStatuePillar(
-            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
-            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
-        )
-        
-        playerTouchExit(
+        playerIsOnExit(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
@@ -93,32 +88,12 @@ final public class GameCollision {
         }
     }
     
-    func playerTouchStatuePillar(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
-        guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameConfiguration.sceneConfigurationKey.pillar else { return }
-        if manager.isColliding(first, with: second) {
-            scene.core?.environment?.showStatueInteractionPopUp()
-            scene.player?.interactionStatus = .onStatue
-        }
-    }
-    
-    func playerTouchExit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    func playerIsOnExit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
         guard object.name == GameConfiguration.sceneConfigurationKey.exit else { return }
-        guard !scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.exitDoor) else { return }
         if manager.isColliding(first, with: second) {
-            scene.isUserInteractionEnabled = false
-            let smoke = SKShapeNode(rectOf: scene.size * 2)
-            smoke.alpha = 0
-            smoke.fillColor = .white
-            smoke.strokeColor = .white
-            smoke.position = scene.player?.node.position ?? .zero
-            scene.addChild(smoke)
-            let sequence = SKAction.sequence([
-                SKAction.fadeIn(withDuration: 2),
-                SKAction.run { self.collisionLogic.quitLevel() }
-            ])
-            smoke.run(sequence)
+            scene.core?.environment?.showStatueInteractionPopUp()
+            scene.player?.interactionStatus = .onExit
         }
     }
     

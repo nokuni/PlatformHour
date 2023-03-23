@@ -23,9 +23,8 @@ public class GameHUD {
     private let actionSequence = SKNode()
     
     public var diceActions: [SKSpriteNode] {
-        let actionNodes = layer.childNodes(named: "Dice Action")
+        let actionNodes = actionSequence.childNodes(named: "Dice Action")
         let actions = actionNodes.compactMap { $0 as? SKSpriteNode }
-        print(actions)
         return actions
     }
     
@@ -116,7 +115,6 @@ public class GameHUD {
             let action = SKSpriteNode(imageNamed: "diceAction")
             action.name = "Dice Action \(index)"
             action.texture?.filteringMode = .nearest
-            action.setScale(0.1)
             action.zPosition = GameConfiguration.worldConfiguration.elementHUDZPosition
             action.size = GameConfiguration.worldConfiguration.tileSize
             let animation = SKAction.sequence([
@@ -125,6 +123,7 @@ public class GameHUD {
                 SKAction.scale(by: 1, duration: 0.1)
             ])
             action.run(animation)
+            
             actions.append(action)
         }
         
@@ -145,6 +144,11 @@ public class GameHUD {
         number.texture = SKTexture(imageNamed: "indicator\(player.bag.count)")
         number.texture?.filteringMode = .nearest
     }
+    
+    public func removeDiceActions() {
+        diceActions.forEach { $0.removeFromParent() }
+    }
+    
     
     func createPauseButton() {
         

@@ -70,7 +70,7 @@ final public class GameContent {
     private func createContent() {
         createGround()
         createTrees()
-        createStatue()
+        //createStatue()
         createContainers()
         createExit()
         configurePlayer()
@@ -138,7 +138,7 @@ final public class GameContent {
     }
     
     // MARK: - Objects
-    private func createStatue() {
+    /*private func createStatue() {
         
         guard let statue = scene.game?.level?.statue else { return }
         
@@ -183,7 +183,7 @@ final public class GameContent {
                                   logic: LogicBody(isIntangible: true),
                                   animations: [],
                                   at: statue.coordinates[3].coordinate)
-    }
+    }*/
     private func createTrees() {
         let collision = Collision(category: .allClear,
                                   collision: [.allClear],
@@ -266,23 +266,15 @@ final public class GameContent {
         
         let coordinate = level.exit.coordinate.coordinate
         guard let exitPosition = environment.map.tilePosition(from: coordinate) else { return }
-        guard let exitDoorPosition = environment.map.tilePosition(from: coordinate) else { return }
         
         let exit = environment.objectElement(name: GameConfiguration.sceneConfigurationKey.exit,
+                                             physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
                                              collision: collision)
         exit.texture = SKTexture(imageNamed: level.exit.sprite)
         exit.texture?.filteringMode = .nearest
         exit.position = exitPosition
         exit.physicsBody?.affectedByGravity = false
         scene.addChildSafely(exit)
-        
-        let exitDoor = environment.objectElement(name: GameConfiguration.sceneConfigurationKey.exitDoor,
-                                                 collision: collision)
-        exitDoor.texture = SKTexture(imageNamed: level.exit.door)
-        exitDoor.texture?.filteringMode = .nearest
-        exitDoor.position = exitDoorPosition
-        exitDoor.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(exitDoor)
     }
     private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
         if let dataObject = GameObject.get(container.name) {

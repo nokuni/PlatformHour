@@ -39,11 +39,6 @@ final public class GameEnvironment {
         let height = tileSize.height * 9
         return CGSize(width: width, height: height)
     }
-//    public var backgroundStartingPosition: CGPoint {
-//        let x = (CGFloat(mapMatrix.row) / 2) - 1
-//        let y =
-//        let coordinate = Coordinate(x: x, y: 0)
-//    }
     
     // MARK: - Main
     private func createEnvironment() {
@@ -186,16 +181,11 @@ final public class GameEnvironment {
     }
     
     public func showStatueInteractionPopUp() {
-        guard let player = scene.player else { return }
-        guard let statue = scene.game?.level?.statue else { return }
+        guard let exit = scene.game?.level?.exit else { return }
         
-        if let position = map.tilePosition(from: statue.coordinates[0].coordinate) {
-            let requirementPosition = CGPoint(x: position.x + (GameConfiguration.worldConfiguration.tileSize.width * 0.75), y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 0.5))
-            let buttonPosition = CGPoint(x: position.x + (GameConfiguration.worldConfiguration.tileSize.width * 0.5), y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 1.5))
-            createStatueRequirementPopUp(position: requirementPosition)
-            if !player.bag.isEmpty {
-                createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
-            }
+        if let position = map.tilePosition(from: exit.coordinate.coordinate) {
+            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 2))
+            createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
         }
     }
     
@@ -215,31 +205,6 @@ final public class GameEnvironment {
             let action = SKAction.animate(with: sprites, filteringMode: .nearest, timePerFrame: 0.5)
             button.run(SKAction.repeatForever(action))
         }
-    }
-    
-    private func createStatueRequirementPopUp(position: CGPoint) {
-        
-        guard let statue = scene.game?.level?.statue else { return }
-        guard !statue.requirement.isEmpty else { return }
-        
-        let requirementPopUp = SKNode()
-        requirementPopUp.name = "Requirement pop up"
-        requirementPopUp.setScale(0.6)
-        requirementPopUp.position = position
-        scene.addChildSafely(requirementPopUp)
-        
-        let number = SKSpriteNode(imageNamed: "indicator\(statue.requirement.count)")
-        number.name = "Number"
-        number.texture?.filteringMode = .nearest
-        number.size = GameConfiguration.worldConfiguration.tileSize
-        number.position = CGPoint(x: -GameConfiguration.worldConfiguration.tileSize.width, y: 0)
-        requirementPopUp.addChildSafely(number)
-        
-        let item = SKSpriteNode(imageNamed: "hudSphere")
-        item.texture?.filteringMode = .nearest
-        item.size = GameConfiguration.worldConfiguration.tileSize
-        item.position = .zero
-        requirementPopUp.addChildSafely(item)
     }
     
     public func pause() { map.isPaused = true }
