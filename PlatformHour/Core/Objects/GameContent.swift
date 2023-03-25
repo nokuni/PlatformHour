@@ -69,9 +69,9 @@ final public class GameContent {
     
     private func createContent() {
         createGround()
-        createTrees()
+        //createTrees()
         //createStatue()
-        createContainers()
+        createOrbs()
         createExit()
         configurePlayer()
         createPlayer()
@@ -115,7 +115,36 @@ final public class GameContent {
     
     // MARK: - Ground
     private func createGround() {
-        let coordinate = Coordinate(x: 17, y: 0)
+        
+        let ground = MapStructurePattern(map: environment.map,
+                                         matrix: Matrix(row: 10, column: 25),
+                                         coordinate: Coordinate(x: 30, y: 0),
+                                         object: environment.structureObjectElement,
+                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
+        ground.create()
+        
+        /*let groundCoordinate1 = Coordinate(x: 17, y: 0)
+        let groundCoordinate2 = Coordinate(x: 17, y: 29)
+        
+        if let ground = scene.game?.world?.ground {
+            let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
+                                                       topRight: ground.topRight,
+                                                       bottomLeft: ground.bottomLeft,
+                                                       bottomRight: ground.bottomRight,
+                                                       left: ground.left,
+                                                       right: ground.right,
+                                                       top: ground.top,
+                                                       bottom: ground.bottom,
+                                                       middle: ground.middle)
+            
+            environment.map.addObject(environment.structureObjectElement,
+                                      structure: structure,
+                                      filteringMode: .nearest,
+                                      logic: LogicBody(),
+                                      animations: [],
+                                      startingCoordinate: groundCoordinate1,
+                                      matrix: Matrix(row: 9, column: 25))
+        }
         
         if let ground = scene.game?.world?.ground {
             let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
@@ -132,9 +161,9 @@ final public class GameContent {
                                       filteringMode: .nearest,
                                       logic: LogicBody(),
                                       animations: [],
-                                      startingCoordinate: coordinate,
-                                      matrix: Matrix(row: 9, column: environment.mapMatrix.column))
-        }
+                                      startingCoordinate: groundCoordinate2,
+                                      matrix: Matrix(row: 9, column: 25))
+        }*/
     }
     
     // MARK: - Objects
@@ -250,11 +279,12 @@ final public class GameContent {
             startingCoordinate.y += 10
         }
     }
-    private func createContainers() {
+    private func createOrbs() {
         if let level = scene.game?.level {
-            for container in level.containers {
-                let coordinate = container.coordinate.coordinate
-                createContainer(container, at: coordinate)
+            for orb in level.orbs {
+                let coordinate = orb.coordinate
+                let orb = GameItem(name: "Orb", sprite: "orb0")
+                createItem(orb, at: coordinate)
             }
         }
     }
@@ -276,53 +306,8 @@ final public class GameContent {
         exit.physicsBody?.affectedByGravity = false
         scene.addChildSafely(exit)
     }
-    private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
-        if let dataObject = GameObject.get(container.name) {
-            
-            let collision = Collision(category: .object,
-                                      collision: [.player, .structure],
-                                      contact: [.playerProjectile, .enemyProjectile])
-            
-            let logic = LogicBody(health: dataObject.logic.health,
-                                  damage: dataObject.logic.damage,
-                                  isDestructible: dataObject.logic.isDestructible,
-                                  isIntangible: dataObject.logic.isIntangible)
-            
-            var drops: [Any] = []
-            
-            if let itemName = container.item,
-               let item = try? GameItem.get(itemName) {
-                drops.append(item)
-            }
-            
-            guard let death = dataObject.animation.first(where: {
-                $0.identifier == GameAnimation.StateID.death.rawValue
-            }) else {
-                return
-            }
-            
-            let animations = [
-                ObjectAnimation(identifier: death.identifier, frames: death.frames)
-            ]
-            
-            let objectNode = PKObjectNode()
-            objectNode.name = dataObject.name
-            objectNode.size = GameConfiguration.worldConfiguration.tileSize
-            objectNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
-            objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
-            objectNode.physicsBody?.isDynamic = false
-            
-            environment.map.addObject(objectNode,
-                                      image: dataObject.image,
-                                      filteringMode: .nearest,
-                                      logic: logic,
-                                      drops: drops,
-                                      animations: animations,
-                                      at: coordinate)
-        }
-    }
     
-    public func dropItem(_ item: GameItem, at coordinate: Coordinate) {
+    public func createItem(_ item: GameItem, at coordinate: Coordinate) {
         
         let dataObject = GameObject.get(item.name)
         
@@ -330,9 +315,8 @@ final public class GameContent {
                                   collision: [.structure],
                                   contact: [.player])
         
-        guard let idle = dataObject?.animation.first(where: {
-            $0.identifier == GameAnimation.StateID.idle.rawValue
-        }) else {
+        let idleIdentifier = GameAnimation.StateID.idle.rawValue
+        guard let idle = dataObject?.animation.first(where: { $0.identifier == idleIdentifier }) else {
             return
         }
         
@@ -349,9 +333,11 @@ final public class GameContent {
         let position = environment.map.tilePosition(from: coordinate)
         itemNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
         itemNode.position = position ?? .zero
+        itemNode.physicsBody?.isDynamic = false
+        itemNode.physicsBody?.affectedByGravity = false
         scene.addChildSafely(itemNode)
         
-        scene.core?.animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
+        //scene.core?.animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
     }
     
     // Additions

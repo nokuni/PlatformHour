@@ -21,6 +21,8 @@
 		962A0CCF29891B8B004DB446 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0CCE29891B8B004DB446 /* GameScene.swift */; };
 		962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1729892736004DB446 /* GameControllerManager.swift */; };
 		9645762529C4FD3400FD8BF0 /* GameExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9645762429C4FD3400FD8BF0 /* GameExit.swift */; };
+		964626BB29CF6F9E00A872A5 /* StructurePatternConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */; };
+		964626BD29CF6FDA00A872A5 /* MapStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
 		964E7E4A29C0FE5E003CE54B /* GameEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4929C0FE5E003CE54B /* GameEvent.swift */; };
 		964E7E4C29C1FA24003CE54B /* ControllerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4B29C1FA24003CE54B /* ControllerButton.swift */; };
@@ -80,6 +82,8 @@
 		962A0CCE29891B8B004DB446 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		962A0D1729892736004DB446 /* GameControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerManager.swift; sourceTree = "<group>"; };
 		9645762429C4FD3400FD8BF0 /* GameExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameExit.swift; sourceTree = "<group>"; };
+		964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructurePatternConfiguration.swift; sourceTree = "<group>"; };
+		964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
 		964E7E4929C0FE5E003CE54B /* GameEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEvent.swift; sourceTree = "<group>"; };
 		964E7E4B29C1FA24003CE54B /* ControllerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerButton.swift; sourceTree = "<group>"; };
@@ -263,6 +267,7 @@
 				964E7E6529C462A0003CE54B /* WorldConfiguration.swift */,
 				964E7E6729C462D3003CE54B /* GameConfiguration.swift */,
 				9626092029CA60D60014A912 /* AnimationConfiguration.swift */,
+				964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -299,6 +304,7 @@
 				96540527298C23B700620E76 /* GameLevel.swift */,
 				961946612996894F000859C8 /* GameWorld.swift */,
 				961946672996928B000859C8 /* MapStructure.swift */,
+				964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */,
 			);
 			path = World;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 				964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,
 				964E7E6429C46291003CE54B /* PlayerConfiguration.swift in Sources */,
+				964626BB29CF6F9E00A872A5 /* StructurePatternConfiguration.swift in Sources */,
 				96B7F80729B5358C001584E3 /* PersistenceController.swift in Sources */,
 				96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */,
 				962A0CCF29891B8B004DB446 /* GameScene.swift in Sources */,
@@ -531,6 +538,7 @@
 				962A0CC329891900004DB446 /* ContentView.swift in Sources */,
 				964E7E5529C260A5003CE54B /* GameObjectLogic.swift in Sources */,
 				9626092129CA60D60014A912 /* AnimationConfiguration.swift in Sources */,
+				964626BD29CF6FDA00A872A5 /* MapStructurePattern.swift in Sources */,
 				96FE6314298C1E1600B2C614 /* CollisionLogic.swift in Sources */,
 				964E7E4A29C0FE5E003CE54B /* GameEvent.swift in Sources */,
 				962A0CC129891900004DB446 /* PlatformHourApp.swift in Sources */,

@@ -18,4 +18,5 @@ struct SceneConfigurationKey {
     let pillar = "Pillar"
     let exit = "Exit"
     let background = "Background"
+    let gravityEffect = "Gravity Effect"
 }

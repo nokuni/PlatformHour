@@ -24,12 +24,59 @@ final public class GameAnimation {
         case death = "death"
     }
     
+    public func addGravityEffect(on node: SKNode) {
+        let gravityEffectNode = SKSpriteNode()
+        gravityEffectNode.name = GameConfiguration.sceneConfigurationKey.gravityEffect
+        gravityEffectNode.size = GameConfiguration.worldConfiguration.tileSize
+        node.addChildSafely(gravityEffectNode)
+        
+        let effects = GameConfiguration.animationConfiguration.gravityEffects
+        
+        let actions = effects.map {
+            SKAction.animate(with: $0, filteringMode: .nearest, timePerFrame: 0.05)
+        }
+        
+        guard !actions.isEmpty else { return }
+        guard actions.count == effects.count else { return }
+        
+        let animation = SKAction.sequence([
+            actions[0],
+            actions[1],
+            actions[2]
+        ])
+        
+        gravityEffectNode.run(SKAction.repeatForever(animation))
+    }
+    
+    public func transitionEffect(effect: SKAction,
+                                 isVisible: Bool = true,
+                                 scene: GameScene,
+                                 completion: (() -> Void)?) {
+        scene.isUserInteractionEnabled = false
+        let effectNode = SKShapeNode(rectOf: scene.size * 2)
+        effectNode.alpha = isVisible ? 1 : 0
+        effectNode.fillColor = .white
+        effectNode.strokeColor = .white
+        effectNode.zPosition = GameConfiguration.worldConfiguration.overlayZPosition
+        effectNode.position = scene.player?.node.position ?? .zero
+        scene.addChild(effectNode)
+        let sequence = SKAction.sequence([
+            effect,
+            SKAction.run {
+                effectNode.removeFromParent()
+                scene.isUserInteractionEnabled = true
+                completion?()
+            }
+        ])
+        effectNode.run(sequence)
+    }
+    
     public func circularSmoke(on node: SKNode) {
         let tileSize = GameConfiguration.worldConfiguration.tileSize
         let animationNode = SKSpriteNode()
         animationNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
         
-        let animation = SKAction.animate(with: GameConfiguration.animationConfiguration.circularSmoke, filteringMode: .nearest, timePerFrame: 0.1)
+        let animation = SKAction.animate(with: GameConfiguration.animationConfiguration.circularSmoke, filteringMode: .nearest, timePerFrame: 0.05)
         
         let sequence = SKAction.sequence([
             animation,

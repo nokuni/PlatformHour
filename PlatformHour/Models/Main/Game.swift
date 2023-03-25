@@ -48,7 +48,7 @@ public final class Game: ObservableObject {
 //        try? saveManager.save()
 //    }
     
-    func goToNextLevel() {
+    func setupNextLevel() {
         currentLevelIndex += 1
 //        save()
 //        loadSaves()

@@ -37,11 +37,4 @@ public class CollisionLogic {
             player.isJumping = false
         }
     }
-    
-    public func quitLevel() {
-        //scene.game?.goToNextLevel()
-        scene.removeAllActions()
-        scene.removeAllChildren()
-        scene.startGame()
-    }
 }

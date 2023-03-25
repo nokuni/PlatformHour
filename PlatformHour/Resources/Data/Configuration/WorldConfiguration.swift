@@ -10,7 +10,7 @@ import PlayfulKit
 
 struct WorldConfiguration {
     let gravity = CGVector(dx: 0, dy: -10)
-    let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25
+    let cameraZoom = UIDevice.isOnPhone ? 3 : 1.25
     let cameraCatchUpDelay: CGFloat = 0
     let cameraAdjustement: CGFloat = UIDevice.isOnPhone ?
     (CGSize.screen.height * 0.2) :
@@ -30,4 +30,6 @@ struct WorldConfiguration {
     let playerZPosition: CGFloat = 4
     let hudZPosition: CGFloat = 5
     let elementHUDZPosition: CGFloat = 6
+    let overlayZPosition: CGFloat = 7
+    let xDeathBoundary: Int = 20
 }

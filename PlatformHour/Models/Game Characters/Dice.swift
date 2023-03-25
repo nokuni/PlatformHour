@@ -78,6 +78,7 @@ public class Dice {
     public var isProjectileTurningBack: Bool = false
     public var isJumping: Bool = false
     public var canAct: Bool = true
+    public var isDead: Bool = false
     
     public var interactionStatus: PlayerInteractionStatus = .none
     public var actions: [DiceAction] = []

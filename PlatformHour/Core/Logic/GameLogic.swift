@@ -32,12 +32,12 @@ final public class GameLogic {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-            scene.core?.animation.destroy(node: objectNode,
-                                          filteringMode: .nearest) {
-                if let item = objectNode.drops.first as? GameItem {
-                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
-                }
-            }
+//            scene.core?.animation.destroy(node: objectNode,
+//                                          filteringMode: .nearest) {
+//                if let item = objectNode.drops.first as? GameItem {
+//                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
+//                }
+//            }
         }
     }
     
@@ -51,21 +51,6 @@ final public class GameLogic {
         destroy(objectNode)
     }
     
-    public func updatePlayerCoordinate() {
-        guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
-        
-        let element = environment.allElements.first { $0.contains(player.node.position) }
-        
-        if let tileElement = element as? PKTileNode {
-            player.node.coordinate = tileElement.coordinate
-        }
-        
-        if let objectElement = element as? PKObjectNode {
-            player.node.coordinate = objectElement.coordinate
-        }
-    }
-    
     // Drop
     private var dropAction: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
@@ -75,9 +60,13 @@ final public class GameLogic {
         
         var destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
                                                y: playerCoordinate.y)
+        
+        var safetyCount = 0
+        
         repeat {
             destinationCoordinate.x += 1
-        } while !environment.collisionCoordinates.contains(destinationCoordinate)
+            safetyCount += 1
+        } while !environment.collisionCoordinates.contains(destinationCoordinate) && safetyCount < 10
         
         destinationCoordinate.x -= 1
         
@@ -85,7 +74,7 @@ final public class GameLogic {
             return SKAction.empty()
         }
         
-        let moveAction = SKAction.move(to: position, duration: 0.2)
+        let moveAction = SKAction.move(from: player.node.position, to: position, at: 1000)
         
         let action = !environment.collisionCoordinates.contains(destinationCoordinate) ? moveAction : SKAction.empty()
         
@@ -102,6 +91,7 @@ final public class GameLogic {
     }
     
     public func dropPlayer() {
+        scene.player?.node.removeAllActions()
         let drop = SKAction.sequence([dropAction, landAction])
         scene.player?.node.run(drop)
     }
@@ -123,7 +113,9 @@ final public class GameLogic {
         
         let positions = coordinates.compactMap { environment.map.tilePosition(from: $0) }
         
-        let moves = positions.map { SKAction.move(to: $0, duration: 0.2) }
+        let moves = positions.map {
+            SKAction.move(to: $0, duration: 0.2)
+        }
         
         return moves
     }
@@ -140,6 +132,8 @@ final public class GameLogic {
     public func resolveActionSequence() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
+            let gravityEffect = player.node.childNode(withName: GameConfiguration.sceneConfigurationKey.gravityEffect)
+            gravityEffect?.removeFromParent()
             disableControls()
             performActionSequence()
         }

@@ -207,44 +207,20 @@ public class ActionLogic {
     func moveRight() {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
-        guard let environment = scene.core?.environment else { return }
         guard !isAnimating else { return }
         guard canAct else { return }
 
         let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
-
-        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 8)) else { return }
-
-        let limit = -(GameConfiguration.worldConfiguration.tileSize.width * 34)
-
-        if let background = scene.childNode(withName: "Background") {
-            let destinationPosition = CGPoint(x: background.position.x + (-GameConfiguration.worldConfiguration.tileSize.width), y: 0)
-            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-            if background.position.x > limit && player.node.position.x > maxCameraPosition.x {
-                background.run(action)
-            }
-        }
 
         move(on: .right, by: movementSpeed)
     }
     func moveLeft() {
         guard let player = scene.player else { return }
         guard !player.isJumping else { return }
-        guard let environment = scene.core?.environment else { return }
         guard !isAnimating else { return }
         guard canAct else { return }
 
         let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
-
-        guard let maxCameraPosition = environment.map.tilePosition(from: Coordinate(x: 13, y: 44)) else { return }
-
-        if let background = scene.childNode(withName: "Background") {
-            let destinationPosition = CGPoint(x: background.position.x + GameConfiguration.worldConfiguration.tileSize.width, y: 0)
-            let action = SKAction.move(to: destinationPosition, duration: player.runDuration)
-            if background.position.x < 0 && player.node.position.x < maxCameraPosition.x {
-                background.run(action)
-            }
-        }
 
         move(on: .left, by: movementSpeed)
     }
@@ -279,9 +255,16 @@ public class ActionLogic {
             ])
         }
         actions.append(SKAction.run {
+            self.scene.core?.animation.addGravityEffect(on: player.node)
             self.scene.player?.state = .inAction
             self.scene.core?.hud?.addDiceActionsHUD()
         })
+        let floatingSequence = SKAction.sequence([
+            SKAction.moveBy(x: 0, y: -5, duration: 1),
+            SKAction.moveBy(x: 0, y: 5, duration: 1)
+        ])
+        let floatingAnimation = SKAction.repeatForever(floatingSequence)
+        actions.append(floatingAnimation)
 
         let jumpSequence = SKAction.sequence(actions)
 
@@ -292,11 +275,15 @@ public class ActionLogic {
                     amount: Int) -> SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         guard let environment = scene.core?.environment else { return SKAction.empty() }
+        let groundCoordinate = Coordinate(x: destinationCoordinate.x + 1, y: destinationCoordinate.y)
         let sequence = SKAction.sequence([
             SKAction.move(to: destinationPosition, duration: player.runDuration),
             SKAction.run {
                 self.scene.core?.sound.step()
                 self.scene.player?.node.removeAllActions()
+                if !environment.collisionCoordinates.contains(groundCoordinate) {
+                    self.scene.core?.logic?.dropPlayer()
+                }
             }
         ])
         return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()

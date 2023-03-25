@@ -98,8 +98,8 @@ public class GameHUD {
         number.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width * 1.5, y: 0)
         score.addChildSafely(number)
         
-        let item = SKSpriteNode(imageNamed: "hudSphere")
-        item.name = "Sphere"
+        let item = SKSpriteNode(imageNamed: "hudOrb")
+        item.name = "Orb"
         item.texture?.filteringMode = .nearest
         item.size = GameConfiguration.worldConfiguration.tileSize
         item.position = .zero

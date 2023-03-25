@@ -16,4 +16,5 @@ struct GameConfiguration {
     static let playerConfiguration = PlayerConfiguration()
     static let animationConfiguration = AnimationConfiguration()
     static let assemblyManager = AssemblyManager()
+    static let structurePatternConfiguration = StructurePatternConfiguration()
 }

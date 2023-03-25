@@ -17,8 +17,8 @@
         ]
     },
     {
-        "name": "Sphere",
-        "image": "sphere0",
+        "name": "Orb",
+        "image": "orb0",
         "logic": {
             "health": 1,
             "damage": 0,
@@ -29,7 +29,7 @@
         [
             {
                 "identifier": "idle",
-                "frames": ["sphere0", "sphere1"]
+                "frames": ["orb0", "orb1"]
             }
         ]
     },

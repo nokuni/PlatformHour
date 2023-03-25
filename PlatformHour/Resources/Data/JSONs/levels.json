@@ -1,19 +1,12 @@
 [
     {
         "id": 0,
-        "playerCoordinate": "1608",
+        "playerCoordinate": "2908",
         "exit":
         {
             "sprite": "springExit",
-            "coordinate": "1645"
+            "coordinate": "2945"
         },
-        "containers":
-        [
-            {
-                "name": "Vase",
-                "coordinate": "1621",
-                "item": "Sphere"
-            }
-        ]
+        "orbs": ["2825", "2826", "2827", "2828"]
     },
 ]

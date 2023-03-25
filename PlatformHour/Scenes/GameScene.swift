@@ -22,7 +22,11 @@ final public class GameScene: SKScene {
         game = Game()
         core = GameCore()
         core?.start(game: game, scene: self)
-        core?.animateLaunch(game: game, scene: self, player: player)
+        core?.animation.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
+                                         isVisible: true,
+                                         scene: self) {
+            self.game?.controller = GameControllerManager(scene: self)
+        }
     }
     
     public override func didMove(to view: SKView) {
@@ -31,9 +35,10 @@ final public class GameScene: SKScene {
     }
     
     public override func update(_ currentTime: TimeInterval) {
-        core?.gameCamera?.followPlayer()
+        //core?.gameCamera?.followPlayer()
         core?.logic?.projectileFollowPlayer()
-        core?.logic?.updatePlayerCoordinate()
+        core?.event?.updatePlayerCoordinate()
+        //core?.event?.triggerPlayerDeathFall()
     }
     
     public func didBegin(_ contact: SKPhysicsContact) {
