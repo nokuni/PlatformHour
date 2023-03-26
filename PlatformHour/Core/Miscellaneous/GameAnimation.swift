@@ -88,6 +88,31 @@ final public class GameAnimation {
         animationNode.run(sequence)
     }
     
+    public func destroyThenAnimate(scene: GameScene,
+                                   node: PKObjectNode,
+                                   timeInterval: TimeInterval = 0.05,
+                                   actionAfter: (() -> Void)? = nil) {
+        let animatedNode = PKObjectNode()
+        animatedNode.size = node.size
+        animatedNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
+        animatedNode.position = node.position
+        animatedNode.animations = node.animations
+        
+        scene.addChildSafely(animatedNode)
+        
+        let sequence = SKAction.sequence([
+            animate(node: animatedNode,
+                    identifier: .death,
+                    filteringMode: .nearest,
+                    hitTimeInterval: timeInterval),
+            SKAction.removeFromParent(),
+        ])
+        
+        SKAction.start(actionOnLaunch: nil, animation: sequence, node: animatedNode, actionOnEnd: actionAfter)
+        
+        node.removeFromParent()
+    }
+    
     public func animate(node: PKObjectNode,
                         identifier: StateID,
                         filteringMode: SKTextureFilteringMode = .linear,
@@ -121,7 +146,8 @@ final public class GameAnimation {
     
     public func destroy(node: PKObjectNode,
                         filteringMode: SKTextureFilteringMode = .linear,
-                        timeInterval: TimeInterval = 0.05, actionAfter: (() -> Void)?) {
+                        timeInterval: TimeInterval = 0.05,
+                        actionAfter: (() -> Void)? = nil) {
         guard node.animation(from: StateID.death.rawValue) != nil else { return }
         
         let sequence = SKAction.sequence([

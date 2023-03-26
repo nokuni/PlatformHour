@@ -12,6 +12,7 @@ struct GameLevel: Codable {
     let id: Int
     let playerCoordinate: String
     let exit: GameExit
+    let containers: [GameObjectContainer]
     let orbs: [String]
 }
 

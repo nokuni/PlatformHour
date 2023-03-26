@@ -72,6 +72,7 @@ final public class GameContent {
         //createTrees()
         //createStatue()
         createOrbs()
+        createContainers()
         createExit()
         configurePlayer()
         createPlayer()
@@ -319,6 +320,60 @@ final public class GameContent {
         exit.position = exitPosition
         exit.physicsBody?.affectedByGravity = false
         scene.addChildSafely(exit)
+    }
+    private func createContainers() {
+        if let level = scene.game?.level {
+            for container in level.containers {
+                let coordinate = container.coordinate.coordinate
+                createContainer(container, at: coordinate)
+            }
+        }
+    }
+    
+    private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
+        if let dataObject = GameObject.get(container.name) {
+            
+            let collision = Collision(category: .object,
+                                      collision: [.player, .structure],
+                                      contact: [.playerProjectile, .enemyProjectile])
+            
+            let logic = LogicBody(health: dataObject.logic.health,
+                                  damage: dataObject.logic.damage,
+                                  isDestructible: dataObject.logic.isDestructible,
+                                  isIntangible: dataObject.logic.isIntangible)
+            
+            var drops: [Any] = []
+            
+            if let itemName = container.item,
+               let item = try? GameItem.get(itemName) {
+                drops.append(item)
+            }
+            
+            guard let death = dataObject.animation.first(where: {
+                $0.identifier == GameAnimation.StateID.death.rawValue
+            }) else {
+                return
+            }
+            
+            let animations = [
+                ObjectAnimation(identifier: death.identifier, frames: death.frames)
+            ]
+            
+            let objectNode = PKObjectNode()
+            objectNode.name = dataObject.name
+            objectNode.size = GameConfiguration.worldConfiguration.tileSize
+            objectNode.zPosition = 2
+            objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
+            objectNode.physicsBody?.isDynamic = false
+            
+            environment.map.addObject(objectNode,
+                                      image: dataObject.image,
+                                      filteringMode: .nearest,
+                                      logic: logic,
+                                      drops: drops,
+                                      animations: animations,
+                                      at: coordinate)
+        }
     }
     
     public func createItem(_ item: GameItem, at coordinate: Coordinate) {

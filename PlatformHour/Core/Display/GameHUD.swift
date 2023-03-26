@@ -91,12 +91,13 @@ public class GameHUD {
         xLetter.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width / 2, y: 0)
         score.addChildSafely(xLetter)
         
-        let number = SKSpriteNode(imageNamed: "indicator\(player.bag.count)")
-        number.name = "Number"
-        number.texture?.filteringMode = .nearest
-        number.size = GameConfiguration.worldConfiguration.tileSize
-        number.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width * 1.5, y: 0)
-        score.addChildSafely(number)
+        player.bag.count.intoSprites(with: "indicator",
+                                     filteringMode: .nearest,
+                                     spacing: 0.5,
+                                     of: GameConfiguration.worldConfiguration.tileSize,
+                                     at: CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width * 1.5,
+                                                 y: 0),
+                                     on: score)
         
         let item = SKSpriteNode(imageNamed: "hudOrb")
         item.name = "Orb"
@@ -137,18 +138,15 @@ public class GameHUD {
     }
     
     // MARK: - Updates
-    public func updateItemAmountHUD() {
-        guard let player = scene.player else { return }
-        guard let score = layer.childNode(withName: "Score") else { return }
-        guard let number = score.childNode(withName: "Number") as? SKSpriteNode else { return }
-        number.texture = SKTexture(imageNamed: "indicator\(player.bag.count)")
-        number.texture?.filteringMode = .nearest
+    public func updateScore() {
+        let score = layer.childNode(withName: "Score")
+        score?.removeFromParent()
+        createItemAmountHUD()
     }
     
     public func removeDiceActions() {
         diceActions.forEach { $0.removeFromParent() }
     }
-    
     
     func createPauseButton() {
         

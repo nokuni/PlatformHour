@@ -41,6 +41,10 @@ final public class GameEnvironment {
         return CGSize(width: width, height: height)
     }
     
+    public func isCollidingWithObject(at coordinate: Coordinate) -> Bool {
+        collisionCoordinates.contains(coordinate)
+    }
+    
     // MARK: - Main
     private func createEnvironment() {
         createMap()

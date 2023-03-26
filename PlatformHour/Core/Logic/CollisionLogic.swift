@@ -25,7 +25,7 @@ public class CollisionLogic {
     public func pickUpItem(object: PKObjectNode, name: String) {
         if let item = try? GameItem.get(name) {
             scene.player?.bag.append(item)
-            scene.core?.hud?.updateItemAmountHUD()
+            scene.core?.hud?.updateScore()
             object.removeFromParent()
         }
     }

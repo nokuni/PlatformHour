@@ -27,17 +27,29 @@ final public class GameLogic {
         objectNode.logic.healthLost >= objectNode.logic.health
     }
     
+    private func instantDestroy(_ objectNode: PKObjectNode) {
+        objectNode.logic.healthLost = objectNode.logic.health
+        if isDestroyed(objectNode) {
+            objectNode.physicsBody?.categoryBitMask = .zero
+            objectNode.physicsBody?.contactTestBitMask = .zero
+            objectNode.physicsBody?.collisionBitMask = .zero
+            scene.core?.animation.destroyThenAnimate(scene: scene,
+                                                     node: objectNode,
+                                                     timeInterval: 0.1)
+        }
+    }
+    
     private func destroy(_ objectNode: PKObjectNode) {
         if isDestroyed(objectNode) {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-//            scene.core?.animation.destroy(node: objectNode,
-//                                          filteringMode: .nearest) {
-//                if let item = objectNode.drops.first as? GameItem {
-//                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
-//                }
-//            }
+            scene.core?.animation.destroy(node: objectNode,
+                                          filteringMode: .nearest) {
+                //                if let item = objectNode.drops.first as? GameItem {
+                //                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
+                //                }
+            }
         }
     }
     
@@ -51,10 +63,21 @@ final public class GameLogic {
         destroy(objectNode)
     }
     
+    private func dropDestroyCube(coordinate: Coordinate) {
+        guard let environment = scene.core?.environment else { return }
+        if let cube = environment.map.objects.first(where: {
+            guard let name = $0.name else { return false }
+            return name.contains("Cube") && $0.coordinate == coordinate
+        }) {
+            print("Destroy Cube")
+            instantDestroy(cube)
+        }
+    }
+    
     // Drop
-    private var dropAction: SKAction {
-        guard let player = scene.player else { return SKAction.empty() }
-        guard let environment = scene.core?.environment else { return SKAction.empty() }
+    private var dropCoordinate: Coordinate {
+        guard let player = scene.player else { return .zero }
+        guard let environment = scene.core?.environment else { return .zero }
         
         let playerCoordinate = player.node.coordinate
         
@@ -62,18 +85,27 @@ final public class GameLogic {
                                                y: playerCoordinate.y)
         
         repeat {
+            dropDestroyCube(coordinate: destinationCoordinate)
             destinationCoordinate.x += 1
+            dropDestroyCube(coordinate: destinationCoordinate)
         } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
         
         destinationCoordinate.x -= 1
         
-        guard let position = environment.map.tilePosition(from: destinationCoordinate) else {
-            return SKAction.empty()
-        }
+        return destinationCoordinate
+    }
+    private var dropPosition: CGPoint {
+        guard let environment = scene.core?.environment else { return .zero }
+        guard let position = environment.map.tilePosition(from: dropCoordinate) else { return .zero }
         
-        let moveAction = SKAction.move(from: player.node.position, to: position, at: 1000)
+        return position
+    }
+    private var dropAction: SKAction {
+        guard let player = scene.player else { return SKAction.empty() }
+        guard let environment = scene.core?.environment else { return SKAction.empty() }
         
-        let action = !environment.collisionCoordinates.contains(destinationCoordinate) ? moveAction : SKAction.empty()
+        let moveAction = SKAction.move(from: player.node.position, to: dropPosition, at: 1000)
+        let action = !environment.isCollidingWithObject(at: dropCoordinate) ? moveAction : SKAction.empty()
         
         return action
     }

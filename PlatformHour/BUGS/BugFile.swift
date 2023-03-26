@@ -9,12 +9,8 @@ import SwiftUI
 
 // MARK: - IMPORTANT
 
-// Hardware Game Controller does not work after completing a level
-
-// The player can't move at least 1 when he can't move 2.
+// the game controller inputs are too much faster than the action sequence.
 
 // MARK: - NOT IMPORTANT
-
-// Make the vase death animation more faster to not block the player when he moves.
 
 #warning("Create the second level with the jump mechanic")
