@@ -61,12 +61,9 @@ final public class GameLogic {
         var destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
                                                y: playerCoordinate.y)
         
-        var safetyCount = 0
-        
         repeat {
             destinationCoordinate.x += 1
-            safetyCount += 1
-        } while !environment.collisionCoordinates.contains(destinationCoordinate) && safetyCount < 10
+        } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
         
         destinationCoordinate.x -= 1
         

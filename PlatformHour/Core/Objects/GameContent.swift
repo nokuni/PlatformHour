@@ -116,12 +116,26 @@ final public class GameContent {
     // MARK: - Ground
     private func createGround() {
         
-        let ground = MapStructurePattern(map: environment.map,
-                                         matrix: Matrix(row: 10, column: 25),
+        let ground1 = MapStructurePattern(map: environment.map,
+                                         matrix: Matrix(row: 10, column: 20),
                                          coordinate: Coordinate(x: 30, y: 0),
                                          object: environment.structureObjectElement,
                                          simple: StructurePatternConfiguration.GroundSimplePattern.cave)
-        ground.create()
+        ground1.create()
+        
+        let ground2 = MapStructurePattern(map: environment.map,
+                                         matrix: Matrix(row: 10, column: 20),
+                                         coordinate: Coordinate(x: 30, y: 22),
+                                         object: environment.structureObjectElement,
+                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
+        ground2.create()
+        
+        let ground3 = MapStructurePattern(map: environment.map,
+                                         matrix: Matrix(row: 10, column: 14),
+                                         coordinate: Coordinate(x: 30, y: 46),
+                                         object: environment.structureObjectElement,
+                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
+        ground3.create()
         
         /*let groundCoordinate1 = Coordinate(x: 17, y: 0)
         let groundCoordinate2 = Coordinate(x: 17, y: 29)

@@ -5,7 +5,7 @@
         "exit":
         {
             "sprite": "springExit",
-            "coordinate": "2945"
+            "coordinate": "2949"
         },
         "orbs": ["2825", "2826", "2827", "2828"]
     },

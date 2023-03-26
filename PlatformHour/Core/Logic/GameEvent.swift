@@ -28,22 +28,14 @@ public final class GameEvent {
     
     // Level
     public func loadNextLevel() {
-        scene.isUserInteractionEnabled = false
-        let smoke = SKShapeNode(rectOf: scene.size * 2)
-        smoke.alpha = 0
-        smoke.fillColor = .white
-        smoke.strokeColor = .white
-        smoke.position = scene.player?.node.position ?? .zero
-        scene.addChild(smoke)
-        let sequence = SKAction.sequence([
-            SKAction.fadeIn(withDuration: 2),
-            SKAction.run {
-                self.scene.game?.setupNextLevel()
-                self.restartLevel()
-            }
-        ])
-        smoke.run(sequence)
+        scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
+                                               isVisible: false,
+                                               scene: scene) {
+            self.scene.game?.setupNextLevel()
+            self.restartLevel()
+        }
     }
+    
     public func restartLevel() {
         scene.removeAllActions()
         scene.removeAllChildren()
@@ -53,13 +45,13 @@ public final class GameEvent {
     // Updates
     public func triggerPlayerDeathFall() {
         guard let player = scene.player else { return }
-        guard player.node.coordinate.x > GameConfiguration.worldConfiguration.xDeathBoundary else {
+        guard player.node.coordinate.x >= GameConfiguration.worldConfiguration.xDeathBoundary else {
             return
         }
         player.isDead = true
         if player.isDead {
             player.isDead = false
-            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
+            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 1),
                                                    isVisible: false,
                                                    scene: scene) {
                 self.restartLevel()

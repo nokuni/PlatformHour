@@ -111,7 +111,7 @@ public class MapStructurePattern {
     }
     
     private var patternCoordinates: [[Coordinate]] {
-        let columnIndices = coordinate.y ..< matrix.column
+        let columnIndices = coordinate.y ..< coordinate.y + (matrix.column)
         var coordinateArrays: [[Coordinate]] = []
         for row in coordinate.x ..< (matrix.row + coordinate.x) {
             let coordinates = columnIndices.map {
@@ -127,13 +127,21 @@ public class MapStructurePattern {
         let pattern = Pattern(images: simple.repeatedRow.pattern,
                               exceptions: [
                                 ExceptionImage(image: simple.repeatedRow.extremities.left,
-                                               coordinate: Coordinate(x: coordinate.x + 2, y: coordinate.y)),
+                                               coordinate: Coordinate(x: coordinate.x + 2,
+                                                                      y: coordinate.y)
+                                              ),
                                 ExceptionImage(image: simple.repeatedRow.periphery.left,
-                                               coordinate: Coordinate(x: coordinate.x + 2, y: coordinate.y + 1)),
+                                               coordinate: Coordinate(x: coordinate.x + 2,
+                                                                      y: coordinate.y + 1)
+                                              ),
                                 ExceptionImage(image: simple.repeatedRow.extremities.right,
-                                               coordinate: Coordinate(x: coordinate.x + 2, y: matrix.column - 1)),
+                                               coordinate: Coordinate(x: coordinate.x + 2,
+                                                                      y: coordinate.y + (matrix.column - 1))
+                                              ),
                                 ExceptionImage(image: simple.repeatedRow.periphery.right,
-                                               coordinate: Coordinate(x: coordinate.x + 2, y: matrix.column - 2)),
+                                               coordinate: Coordinate(x: coordinate.x + 2,
+                                                                      y: coordinate.y + (matrix.column - 2))
+                                              ),
                               ])
         var repeatedPatterns: [Pattern] = []
         
@@ -161,14 +169,17 @@ public class MapStructurePattern {
                         ExceptionImage(image: simple.firstRow.extremities.left,
                                        coordinate: coordinate),
                         ExceptionImage(image: simple.firstRow.extremities.right,
-                                       coordinate: Coordinate(x: coordinate.x, y: matrix.column - 1))
+                                       coordinate: Coordinate(x: coordinate.x,
+                                                              y: matrix.column - 1))
                     ]),
             Pattern(images: simple.secondRow.pattern,
                     exceptions: [
                         ExceptionImage(image: simple.secondRow.extremities.left,
-                                       coordinate: Coordinate(x: coordinate.x + 1, y: coordinate.y)),
+                                       coordinate: Coordinate(x: coordinate.x + 1,
+                                                              y: coordinate.y)),
                         ExceptionImage(image: simple.secondRow.extremities.right,
-                                       coordinate: Coordinate(x: coordinate.x + 1, y: matrix.column - 1))
+                                       coordinate: Coordinate(x: coordinate.x + 1,
+                                                              y: coordinate.y + (matrix.column - 1)))
                     ]),
         ])
         
