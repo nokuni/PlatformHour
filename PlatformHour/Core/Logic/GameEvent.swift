@@ -51,7 +51,7 @@ public final class GameEvent {
         player.isDead = true
         if player.isDead {
             player.isDead = false
-            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 1),
+            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
                                                    isVisible: false,
                                                    scene: scene) {
                 self.restartLevel()
@@ -72,4 +72,22 @@ public final class GameEvent {
             player.node.coordinate = objectElement.coordinate
         }
     }
+    
+//    public func updatePlatformCoordinates() {
+//        guard let environment = scene.core?.environment else { return }
+//        let platform = environment.map.objects.first { $0.name == "Platform" }
+//        guard let platform = platform else { return }
+//        
+//        let element = environment.allElements.first {
+//            $0.contains(platform.position)
+//        }
+//        
+//        if let tileElement = element as? PKTileNode {
+//            platform.coordinate = tileElement.coordinate
+//        }
+//        
+//        if let objectElement = element as? PKObjectNode {
+//            platform.coordinate = objectElement.coordinate
+//        }
+//    }
 }

@@ -30,6 +30,12 @@ public class CollisionLogic {
         }
     }
     
+    public func enemyHitPlayer(_ enemyNode: PKObjectNode) {
+        guard let player = scene.player else { return }
+        scene.core?.logic?.damageObject(player.node, with: enemyNode)
+        print("Enemy touch player")
+    }
+    
     public func landOnGround() {
         guard let player = scene.player else { return }
         

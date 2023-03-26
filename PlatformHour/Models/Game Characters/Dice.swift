@@ -123,9 +123,14 @@ extension Dice {
         guard let lastRoll = Roll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {
             currentRoll.next()
-            print("Advance")
         } else {
             currentRoll = .one
         }
+    }
+    
+    func resetToOne() {
+        currentRoll = .one
+        node.texture = SKTexture(imageNamed: "dice1Idle")
+        node.texture?.filteringMode = .nearest
     }
 }

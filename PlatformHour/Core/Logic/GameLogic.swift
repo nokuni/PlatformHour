@@ -64,12 +64,15 @@ final public class GameLogic {
     }
     
     private func dropDestroyCube(coordinate: Coordinate) {
+        guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
         if let cube = environment.map.objects.first(where: {
             guard let name = $0.name else { return false }
-            return name.contains("Cube") && $0.coordinate == coordinate
+            let isCube = name.contains("Cube")
+            let isRightCube = name.extractedNumber == player.currentRoll.rawValue
+            let isRightCoordinate = $0.coordinate == coordinate
+            return isCube && isRightCube && isRightCoordinate
         }) {
-            print("Destroy Cube")
             instantDestroy(cube)
         }
     }
@@ -112,6 +115,9 @@ final public class GameLogic {
     private var landAction: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         let action = SKAction.run {
+            self.scene.player?.currentRoll = .one
+            self.scene.player?.resetToOne()
+            self.scene.player?.isJumping = false
             self.scene.core?.animation.circularSmoke(on: player.node)
             self.scene.player?.state = .normal
             self.enableControls()

@@ -71,11 +71,14 @@ final public class GameContent {
         createGround()
         //createTrees()
         //createStatue()
+        //createPlatform()
+        createObstacles()
         createOrbs()
         createContainers()
         createExit()
         configurePlayer()
         createPlayer()
+        createEnemy()
     }
     
     // MARK: - Player
@@ -89,7 +92,7 @@ final public class GameContent {
         guard let dice = scene.player else { return }
         let collision = Collision(category: .player,
                                   collision: [.allClear],
-                                  contact: [.enemyProjectile, .object, .npc])
+                                  contact: [.enemyProjectile, .object, .npc, .enemy])
         
         dice.node = object(name: GameConfiguration.sceneConfigurationKey.player,
                            collision: collision)
@@ -114,120 +117,139 @@ final public class GameContent {
         dice.node.texture?.filteringMode = .nearest
     }
     
-    // MARK: - Ground
-    private func createGround() {
+    // MARK: - Enemies
+    
+    private func createEnemy() {
+        let collision = Collision(category: .enemy,
+                                  collision: [.allClear],
+                                  contact: [.player, .playerProjectile])
         
-        let ground1 = MapStructurePattern(map: environment.map,
-                                         matrix: Matrix(row: 10, column: 20),
-                                         coordinate: Coordinate(x: 30, y: 0),
-                                         object: environment.structureObjectElement,
-                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
-        ground1.create()
+        let enemyNode = object(name: "Enemy",
+                               collision: collision)
         
-        let ground2 = MapStructurePattern(map: environment.map,
-                                         matrix: Matrix(row: 10, column: 20),
-                                         coordinate: Coordinate(x: 30, y: 22),
-                                         object: environment.structureObjectElement,
-                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
-        ground2.create()
+        enemyNode.logic = LogicBody(health: 1,
+                                    damage: 1,
+                                    isDestructible: true,
+                                    isIntangible: false)
         
-        let ground3 = MapStructurePattern(map: environment.map,
-                                         matrix: Matrix(row: 10, column: 14),
-                                         coordinate: Coordinate(x: 30, y: 46),
-                                         object: environment.structureObjectElement,
-                                         simple: StructurePatternConfiguration.GroundSimplePattern.cave)
-        ground3.create()
+        enemyNode.zPosition = GameConfiguration.worldConfiguration.playerZPosition
         
-        /*let groundCoordinate1 = Coordinate(x: 17, y: 0)
-        let groundCoordinate2 = Coordinate(x: 17, y: 29)
+        enemyNode.physicsBody?.friction = 0
+        enemyNode.physicsBody?.allowsRotation = false
+        enemyNode.physicsBody?.affectedByGravity = false
         
-        if let ground = scene.game?.world?.ground {
-            let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
-                                                       topRight: ground.topRight,
-                                                       bottomLeft: ground.bottomLeft,
-                                                       bottomRight: ground.bottomRight,
-                                                       left: ground.left,
-                                                       right: ground.right,
-                                                       top: ground.top,
-                                                       bottom: ground.bottom,
-                                                       middle: ground.middle)
-            
-            environment.map.addObject(environment.structureObjectElement,
-                                      structure: structure,
-                                      filteringMode: .nearest,
-                                      logic: LogicBody(),
-                                      animations: [],
-                                      startingCoordinate: groundCoordinate1,
-                                      matrix: Matrix(row: 9, column: 25))
+        guard let position = environment.map.tilePosition(from: Coordinate(x: 29, y: 13)) else {
+            return
         }
         
-        if let ground = scene.game?.world?.ground {
-            let structure: MapStructure = MapStructure(topLeft: ground.topLeft,
-                                                       topRight: ground.topRight,
-                                                       bottomLeft: ground.bottomLeft,
-                                                       bottomRight: ground.bottomRight,
-                                                       left: ground.left,
-                                                       right: ground.right,
-                                                       top: ground.top,
-                                                       bottom: ground.bottom,
-                                                       middle: ground.middle)
-            environment.map.addObject(environment.structureObjectElement,
-                                      structure: structure,
-                                      filteringMode: .nearest,
-                                      logic: LogicBody(),
-                                      animations: [],
-                                      startingCoordinate: groundCoordinate2,
-                                      matrix: Matrix(row: 9, column: 25))
-        }*/
+        enemyNode.coordinate = Coordinate(x: 29, y: 13)
+        enemyNode.position = position
+        enemyNode.texture = SKTexture(imageNamed: "slimeRunLeft0")
+        enemyNode.texture?.filteringMode = .nearest
+        
+        scene.addChildSafely(enemyNode)
+        
+        let leftAnimation = SKAction.animate(with: ["slimeRun0", "slimeRun1", "slimeRun2", "slimeRun3"], filteringMode: .nearest, timePerFrame: 0.2)
+        
+        let startPosition = enemyNode.position
+        let endPosition = CGPoint(x: enemyNode.position.x + (environment.map.squareSize.width * 6),
+                                  y: enemyNode.position.y)
+        
+        let movement = SKAction.moveForthAndBack(startPoint: startPosition,
+                                                 startAction: enemyNode.flipHorizontally,
+                                                 endPoint: endPosition,
+                                                 endAction: enemyNode.flipHorizontally,
+                                                 startDuration: 3,
+                                                 endDuration: 3)
+        
+        let repeatedAnimation = SKAction.repeatForever(leftAnimation)
+        let repeatedMovement = SKAction.repeatForever(movement)
+        
+        let groupedAnimations = SKAction.group([repeatedAnimation, repeatedMovement])
+        
+        enemyNode.run(groupedAnimations)
+        //enemyNode.run(sequence)
+    }
+    
+    // MARK: - Ground
+    private func createGround() {
+        if let level = scene.game?.level {
+            
+            for structure in level.structures {
+                let pattern = MapStructurePattern(map: environment.map,
+                                                  matrix: structure.matrix.matrix,
+                                                  coordinate: structure.coordinate.coordinate,
+                                                  object: environment.structureObjectElement,
+                                                  simple: StructurePatternConfiguration.GroundSimplePattern.cave)
+                pattern.create()
+            }
+        }
+    }
+    
+    // MARK: - Obstacles
+    
+    private func createObstacles() {
+        if let level = scene.game?.level {
+            for obstacle in level.obstacles {
+                environment.map.addObject(environment.structureObjectElement,
+                                          image: obstacle.image,
+                                          filteringMode: .nearest,
+                                          size: environment.map.squareSize,
+                                          logic: LogicBody(),
+                                          animations: [],
+                                          matrix: obstacle.matrix.matrix,
+                                          startingCoordinate: obstacle.coordinate.coordinate)
+            }
+        }
     }
     
     // MARK: - Objects
     /*private func createStatue() {
-        
-        guard let statue = scene.game?.level?.statue else { return }
-        
-        let collision = Collision(category: .npc,
-                                  collision: [.allClear],
-                                  contact: [.player])
-        
-        let pillarCoordinate = Coordinate(x: statue.coordinates[2].coordinate.x,
-                                          y: statue.coordinates[0].coordinate.y - 1)
-        
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.pillar, physicsBodySizeTailoring: -(CGSize.screen.height * 0.1), collision: collision),
-                                  image: "springStatuePillar",
-                                  filteringMode: .nearest,
-                                  logic: LogicBody(isIntangible: true),
-                                  animations: [],
-                                  at: pillarCoordinate)
-        
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
-                                  image: "springStatueTopLeft",
-                                  filteringMode: .nearest,
-                                  logic: LogicBody(isIntangible: true),
-                                  animations: [],
-                                  at: statue.coordinates[0].coordinate)
-        
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
-                                  image: "springStatueTopRight",
-                                  filteringMode: .nearest,
-                                  logic: LogicBody(isIntangible: true),
-                                  animations: [],
-                                  at: statue.coordinates[1].coordinate)
-        
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
-                                  image: "springStatueBottomLeft",
-                                  filteringMode: .nearest,
-                                  logic: LogicBody(isIntangible: true),
-                                  animations: [],
-                                  at: statue.coordinates[2].coordinate)
-        
-        environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
-                                  image: "springStatueBottomRight",
-                                  filteringMode: .nearest,
-                                  logic: LogicBody(isIntangible: true),
-                                  animations: [],
-                                  at: statue.coordinates[3].coordinate)
-    }*/
+     
+     guard let statue = scene.game?.level?.statue else { return }
+     
+     let collision = Collision(category: .npc,
+     collision: [.allClear],
+     contact: [.player])
+     
+     let pillarCoordinate = Coordinate(x: statue.coordinates[2].coordinate.x,
+     y: statue.coordinates[0].coordinate.y - 1)
+     
+     environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.pillar, physicsBodySizeTailoring: -(CGSize.screen.height * 0.1), collision: collision),
+     image: "springStatuePillar",
+     filteringMode: .nearest,
+     logic: LogicBody(isIntangible: true),
+     animations: [],
+     at: pillarCoordinate)
+     
+     environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
+     image: "springStatueTopLeft",
+     filteringMode: .nearest,
+     logic: LogicBody(isIntangible: true),
+     animations: [],
+     at: statue.coordinates[0].coordinate)
+     
+     environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
+     image: "springStatueTopRight",
+     filteringMode: .nearest,
+     logic: LogicBody(isIntangible: true),
+     animations: [],
+     at: statue.coordinates[1].coordinate)
+     
+     environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
+     image: "springStatueBottomLeft",
+     filteringMode: .nearest,
+     logic: LogicBody(isIntangible: true),
+     animations: [],
+     at: statue.coordinates[2].coordinate)
+     
+     environment.map.addObject(environment.backgroundObjectElement(name: GameConfiguration.sceneConfigurationKey.statue, collision: collision),
+     image: "springStatueBottomRight",
+     filteringMode: .nearest,
+     logic: LogicBody(isIntangible: true),
+     animations: [],
+     at: statue.coordinates[3].coordinate)
+     }*/
     private func createTrees() {
         let collision = Collision(category: .allClear,
                                   collision: [.allClear],
@@ -238,6 +260,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopLeft",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 1))
@@ -245,6 +268,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopRight",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x - 1, y: startingCoordinate.y + 2))
@@ -252,6 +276,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeBottomRight",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 1))
@@ -259,6 +284,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeBottomLeft",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 2))
@@ -266,6 +292,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopLeft",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y))
@@ -273,6 +300,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopRight",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 3))
@@ -280,6 +308,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopLeft",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 6))
@@ -287,6 +316,7 @@ final public class GameContent {
             environment.map.addObject(environment.backgroundObjectElement(collision: collision),
                                       image: "springTreeTopRight",
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: LogicBody(isIntangible: true),
                                       animations: [],
                                       at: .init(x: startingCoordinate.x, y: startingCoordinate.y + 7))
@@ -369,6 +399,7 @@ final public class GameContent {
             environment.map.addObject(objectNode,
                                       image: dataObject.image,
                                       filteringMode: .nearest,
+                                      size: environment.map.squareSize,
                                       logic: logic,
                                       drops: drops,
                                       animations: animations,

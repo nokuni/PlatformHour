@@ -1,7 +1,7 @@
 [
     {
-        "name": "Cube Five",
-        "image": "cube5",
+        "name": "Cube 6",
+        "image": "cube6",
         "logic": {
             "health": 1,
             "damage": 0,
@@ -12,7 +12,7 @@
         [
             {
                 "identifier": "death",
-                "frames": ["cube5Death0", "cube5Death1", "cube5Death2", "cube5Death3"]
+                "frames": ["cube6Death0", "cube6Death1", "cube6Death2", "cube6Death3"]
             }
         ]
     },

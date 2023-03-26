@@ -7,13 +7,36 @@
             "sprite": "springExit",
             "coordinate": "2949"
         },
+        "structures":
+        [
+            {
+                "matrix": "1020",
+                "coordinate": "3000"
+            },
+            {
+                "matrix": "1002",
+                "coordinate": "3023"
+            },
+            {
+                "matrix": "1034",
+                "coordinate": "3028"
+            }
+        ],
+        "obstacles":
+        [
+            {
+                "image": "caveGround00",
+                "matrix": "0402",
+                "coordinate": "2644"
+            }
+        ],
         "containers":
         [
             {
-                "name": "Cube Five",
+                "name": "Cube 6",
                 "coordinate": "2946"
             }
         ],
-        "orbs": ["2820", "2821", "2842", "2843", "2844", "2845"]
+        "orbs": ["2820", "2821", "2822", "2825", "2826", "2827", "2544", "2545"]
     },
 ]

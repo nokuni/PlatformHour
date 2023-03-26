@@ -55,8 +55,8 @@ final public class GameAnimation {
         scene.isUserInteractionEnabled = false
         let effectNode = SKShapeNode(rectOf: scene.size * 2)
         effectNode.alpha = isVisible ? 1 : 0
-        effectNode.fillColor = .white
-        effectNode.strokeColor = .white
+        effectNode.fillColor = .black
+        effectNode.strokeColor = .black
         effectNode.zPosition = GameConfiguration.worldConfiguration.overlayZPosition
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)

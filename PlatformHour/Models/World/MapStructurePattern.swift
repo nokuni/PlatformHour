@@ -94,6 +94,7 @@ public class MapStructurePattern {
                 map.addObject(object,
                               image: exception.image,
                               filteringMode: .nearest,
+                              size: map.squareSize,
                               logic: LogicBody(),
                               drops: [],
                               animations: [],
@@ -102,6 +103,7 @@ public class MapStructurePattern {
                 map.addObject(object,
                               image: pattern.images[pattern.currentIndex],
                               filteringMode: .nearest,
+                              size: map.squareSize,
                               logic: LogicBody(),
                               drops: [],
                               animations: [], at: coordinate)

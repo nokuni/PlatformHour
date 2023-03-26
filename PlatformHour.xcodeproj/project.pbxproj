@@ -20,6 +20,8 @@
 		962A0CC829891901004DB446 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 962A0CC729891901004DB446 /* Preview Assets.xcassets */; };
 		962A0CCF29891B8B004DB446 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0CCE29891B8B004DB446 /* GameScene.swift */; };
 		962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1729892736004DB446 /* GameControllerManager.swift */; };
+		962F255229D0B618007D46B7 /* LevelStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255129D0B618007D46B7 /* LevelStructure.swift */; };
+		962F255429D0C270007D46B7 /* LevelObstacles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255329D0C270007D46B7 /* LevelObstacles.swift */; };
 		9645762529C4FD3400FD8BF0 /* GameExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9645762429C4FD3400FD8BF0 /* GameExit.swift */; };
 		964626BB29CF6F9E00A872A5 /* StructurePatternConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */; };
 		964626BD29CF6FDA00A872A5 /* MapStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */; };
@@ -81,6 +83,8 @@
 		962A0CC729891901004DB446 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		962A0CCE29891B8B004DB446 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		962A0D1729892736004DB446 /* GameControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerManager.swift; sourceTree = "<group>"; };
+		962F255129D0B618007D46B7 /* LevelStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelStructure.swift; sourceTree = "<group>"; };
+		962F255329D0C270007D46B7 /* LevelObstacles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelObstacles.swift; sourceTree = "<group>"; };
 		9645762429C4FD3400FD8BF0 /* GameExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameExit.swift; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructurePatternConfiguration.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStructurePattern.swift; sourceTree = "<group>"; };
@@ -305,6 +309,8 @@
 				961946612996894F000859C8 /* GameWorld.swift */,
 				961946672996928B000859C8 /* MapStructure.swift */,
 				964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */,
+				962F255129D0B618007D46B7 /* LevelStructure.swift */,
+				962F255329D0C270007D46B7 /* LevelObstacles.swift */,
 			);
 			path = World;
 			sourceTree = "<group>";
@@ -528,8 +534,10 @@
 				9619465F29968760000859C8 /* Game.swift in Sources */,
 				96FE62B5298BCF0B00B2C614 /* GameAnimation.swift in Sources */,
 				96EE96BC2990143F00273A9D /* BugFile.swift in Sources */,
+				962F255429D0C270007D46B7 /* LevelObstacles.swift in Sources */,
 				962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */,
 				961946682996928B000859C8 /* MapStructure.swift in Sources */,
+				962F255229D0B618007D46B7 /* LevelStructure.swift in Sources */,
 				9654052C298C249600620E76 /* GameCamera.swift in Sources */,
 				96FE62B0298BAFAD00B2C614 /* GameCollision.swift in Sources */,
 				964E7E6629C462A0003CE54B /* WorldConfiguration.swift in Sources */,
