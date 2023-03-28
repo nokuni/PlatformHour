@@ -20,6 +20,7 @@ final public class GameAnimation {
     }
     public enum StateID: String {
         case idle = "idle"
+        case run = "run"
         case hit = "hit"
         case death = "death"
     }
@@ -63,7 +64,6 @@ final public class GameAnimation {
         let sequence = SKAction.sequence([
             effect,
             SKAction.run {
-                effectNode.removeFromParent()
                 scene.isUserInteractionEnabled = true
                 completion?()
             }
@@ -86,6 +86,45 @@ final public class GameAnimation {
         node.addChildSafely(animationNode)
         
         animationNode.run(sequence)
+    }
+    
+    public func orbSplitEffect(scene: GameScene, on position: CGPoint) {
+        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let positions = [
+            CGPoint(x: position.x, y: position.y + tileSize.height),
+            CGPoint(x: position.x + tileSize.width, y: position.y + tileSize.height),
+            CGPoint(x: position.x + tileSize.width, y: position.y),
+            CGPoint(x: position.x + tileSize.width, y: position.y - tileSize.height),
+            CGPoint(x: position.x, y: position.y - tileSize.height),
+            CGPoint(x: position.x - tileSize.width, y: position.y - tileSize.height),
+            CGPoint(x: position.x - tileSize.width, y: position.y),
+            CGPoint(x: position.x - tileSize.width, y: position.y + tileSize.height),
+        ]
+        for pos in positions {
+            let orb = SKSpriteNode(imageNamed: "orb0")
+            orb.size = tileSize
+            orb.texture?.filteringMode = .nearest
+            orb.zPosition = GameConfiguration.worldConfiguration.hudZPosition
+            orb.position = position
+            scene.addChildSafely(orb)
+            
+            let scale = SKAction.scaleUpAndDown(from: 0.1,
+                                                with: 0.05,
+                                                to: 1,
+                                                with: 0.05,
+                                                during: 0,
+                                                repeating: 10)
+            let fade = SKAction.fadeOut(withDuration: 0.5)
+            let move = SKAction.move(to: pos, duration: 0.5)
+            let groupAnimation = SKAction.group([scale, fade, move])
+            
+            let sequenceAnimation = SKAction.sequence([
+                groupAnimation,
+                SKAction.removeFromParent()
+            ])
+            
+            orb.run(sequenceAnimation)
+        }
     }
     
     public func destroyThenAnimate(scene: GameScene,

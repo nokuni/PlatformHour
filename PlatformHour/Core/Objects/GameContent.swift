@@ -78,7 +78,7 @@ final public class GameContent {
         createExit()
         configurePlayer()
         createPlayer()
-        createEnemy()
+        createEnemies()
     }
     
     // MARK: - Player
@@ -105,7 +105,7 @@ final public class GameContent {
         dice.node.physicsBody?.allowsRotation = false
         dice.node.physicsBody?.affectedByGravity = false
         
-        addHealthBar(on: dice.node)
+        addHealthBar(amount: dice.currentBarHealth, node: dice.node, widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
         
         guard let position = environment.map.tilePosition(from: level.playerCoordinate.coordinate) else {
             return
@@ -118,47 +118,70 @@ final public class GameContent {
     }
     
     // MARK: - Enemies
-    
-    private func createEnemy() {
-        let collision = Collision(category: .enemy,
-                                  collision: [.allClear],
-                                  contact: [.player, .playerProjectile])
-        
-        let enemyNode = object(name: "Enemy",
-                               collision: collision)
-        
-        enemyNode.logic = LogicBody(health: 1,
-                                    damage: 1,
-                                    isDestructible: true,
-                                    isIntangible: false)
-        
-        enemyNode.zPosition = GameConfiguration.worldConfiguration.playerZPosition
-        
-        enemyNode.physicsBody?.friction = 0
-        enemyNode.physicsBody?.allowsRotation = false
-        enemyNode.physicsBody?.affectedByGravity = false
-        
-        guard let position = environment.map.tilePosition(from: Coordinate(x: 29, y: 13)) else {
-            return
+    private func createEnemies() {
+        if let level = scene.game?.level {
+            for enemy in level.enemies {
+                createEnemy(enemy)
+            }
         }
+    }
+    private func createEnemy(_ levelEnemy: LevelEnemy) {
+        if let enemy = GameObject.getEnemy(levelEnemy.name) {
+            let collision = Collision(category: .enemy,
+                                      collision: [.allClear],
+                                      contact: [.player, .playerProjectile])
+            
+            let runIdentifier = GameAnimation.StateID.run.rawValue
+            
+            guard let run = enemy.animation.first(where: { $0.identifier == runIdentifier }) else {
+                return
+            }
+            
+            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
+            
+            let animations = [runObjectAnimation]
+            
+            let enemyNode = object(name: enemy.name,
+                                   physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
+                                   collision: collision)
+            
+            enemyNode.logic = LogicBody(health: enemy.logic.health,
+                                        damage: enemy.logic.damage,
+                                        isDestructible: enemy.logic.isDestructible,
+                                        isIntangible: enemy.logic.isIntangible)
+            
+            enemyNode.animations = animations
+            
+            guard let position = environment.map.tilePosition(from: levelEnemy.coordinate.coordinate) else { return }
+            
+            enemyNode.coordinate = levelEnemy.coordinate.coordinate
+            enemyNode.zPosition = GameConfiguration.worldConfiguration.playerZPosition
+            enemyNode.position = position
+            enemyNode.texture = SKTexture(imageNamed: enemy.image)
+            enemyNode.texture?.filteringMode = .nearest
+            
+            enemyNode.physicsBody?.friction = 0
+            enemyNode.physicsBody?.allowsRotation = false
+            enemyNode.physicsBody?.affectedByGravity = false
+            
+            print("Enemy added")
+            scene.addChildSafely(enemyNode)
+            
+            addEnemyItinerary(enemy: enemyNode, itinerary: levelEnemy.itinerary, frames: runObjectAnimation.frames)
+        }
+    }
+    
+    private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
+        let leftAnimation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: 0.2)
         
-        enemyNode.coordinate = Coordinate(x: 29, y: 13)
-        enemyNode.position = position
-        enemyNode.texture = SKTexture(imageNamed: "slimeRunLeft0")
-        enemyNode.texture?.filteringMode = .nearest
-        
-        scene.addChildSafely(enemyNode)
-        
-        let leftAnimation = SKAction.animate(with: ["slimeRun0", "slimeRun1", "slimeRun2", "slimeRun3"], filteringMode: .nearest, timePerFrame: 0.2)
-        
-        let startPosition = enemyNode.position
-        let endPosition = CGPoint(x: enemyNode.position.x + (environment.map.squareSize.width * 6),
-                                  y: enemyNode.position.y)
+        let startPosition = enemy.position
+        let endPosition = CGPoint(x: enemy.position.x + (environment.map.squareSize.width * CGFloat(itinerary)),
+                                  y: enemy.position.y)
         
         let movement = SKAction.moveForthAndBack(startPoint: startPosition,
-                                                 startAction: enemyNode.flipHorizontally,
+                                                 startAction: enemy.flipHorizontally,
                                                  endPoint: endPosition,
-                                                 endAction: enemyNode.flipHorizontally,
+                                                 endAction: enemy.flipHorizontally,
                                                  startDuration: 3,
                                                  endDuration: 3)
         
@@ -167,8 +190,7 @@ final public class GameContent {
         
         let groupedAnimations = SKAction.group([repeatedAnimation, repeatedMovement])
         
-        enemyNode.run(groupedAnimations)
-        //enemyNode.run(sequence)
+        enemy.run(groupedAnimations)
     }
     
     // MARK: - Ground
@@ -441,57 +463,27 @@ final public class GameContent {
     }
     
     // Additions
-    func addHealthBar(on node: SKNode) {
+    func addHealthBar(amount: CGFloat,
+                      node: PKObjectNode,
+                      widthTailoring: CGFloat = 0) {
+        let tileSize = GameConfiguration.worldConfiguration.tileSize
         
         let bar = SKSpriteNode(imageNamed: "healthBar")
-        bar.size = GameConfiguration.worldConfiguration.tileSize
+        bar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
         bar.texture?.filteringMode = .nearest
         
         let underBar = SKSpriteNode(imageNamed: "emptyBar")
-        underBar.size = GameConfiguration.worldConfiguration.tileSize
+        underBar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
         underBar.texture?.filteringMode = .nearest
         
-        let configuration = PKProgressBarNode.ImageConfiguration(sprite: bar,
+        let configuration = PKProgressBarNode.ImageConfiguration(amount: amount,
+                                                                 sprite: bar,
                                                                  underSprite: underBar)
         let progressBar = PKProgressBarNode(imageConfiguration: configuration)
         progressBar.name = "Health Bar"
         progressBar.position = CGPoint(x: 0, y: node.frame.size.height / 2)
         
         node.addChildSafely(progressBar)
-    }
-    func addJumpTimerBar(on node: SKNode) {
-        let bar = SKSpriteNode(imageNamed: "healthBar")
-        bar.size = GameConfiguration.worldConfiguration.tileSize
-        bar.texture?.filteringMode = .nearest
-        
-        let underBar = SKSpriteNode(imageNamed: "emptyBar")
-        underBar.size = GameConfiguration.worldConfiguration.tileSize
-        underBar.texture?.filteringMode = .nearest
-        
-        let configuration = PKProgressBarNode.ImageConfiguration(sprite: bar,
-                                                                 underSprite: underBar)
-        let progressBar = PKProgressBarNode(imageConfiguration: configuration)
-        progressBar.name = "Health Bar"
-        progressBar.position = CGPoint(x: 0, y: node.frame.size.height)
-        
-        node.addChildSafely(progressBar)
-        
-        let timerConfiguration = PKTimerNode.TimerConfiguration(
-            countdown: 2,
-            counter: 0.1,
-            timeInterval: 0.1,
-            actionOnGoing: {
-                progressBar.decrease(by: 0.1, duration: 0.2)
-            },
-            actionOnEnd: {
-                progressBar.removeFromParent()
-            })
-        
-        let timerNode = PKTimerNode(configuration: timerConfiguration)
-        
-        progressBar.addChildSafely(timerNode)
-        
-        timerNode.start()
     }
     
     // States

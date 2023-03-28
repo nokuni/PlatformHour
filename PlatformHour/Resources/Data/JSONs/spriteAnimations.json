@@ -25,4 +25,14 @@
             "dice#Idle"
         ]
     },
+    {
+        "id": "Dice Hit",
+        "frames": [
+            "diceHit0",
+            "diceHit1",
+            "diceHit0",
+            "diceHit1",
+            "dice#Idle"
+        ]
+    },
 ]

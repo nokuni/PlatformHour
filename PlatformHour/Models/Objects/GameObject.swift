@@ -30,10 +30,21 @@ extension GameObject {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.objects)
     }
     
+    static var enemies: [GameObject]? {
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.enemies)
+    }
+    
     static func get(_ name: String) -> GameObject? {
         let object = GameObject.all?.first(where: {
             $0.name == name
         })
         return object
+    }
+    
+    static func getEnemy(_ name: String) -> GameObject? {
+        let enemy = GameObject.enemies?.first(where: {
+            $0.name == name
+        })
+        return enemy
     }
 }

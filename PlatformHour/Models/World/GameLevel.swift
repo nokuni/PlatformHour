@@ -15,6 +15,7 @@ struct GameLevel: Codable {
     let structures: [LevelStructure]
     let obstacles: [LevelObstacles]
     let containers: [GameObjectContainer]
+    let enemies: [LevelEnemy]
     let orbs: [String]
 }
 

@@ -61,10 +61,10 @@ final public class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
-        enemyTouchPlayer(
-            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
-            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
-        )
+//        enemyTouchPlayer(
+//            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+//            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
+//        )
     }
     
     func projectileHit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
@@ -109,8 +109,9 @@ final public class GameCollision {
     }
     
     func enemyTouchPlayer(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+        guard let player = scene.player else { return }
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
-        if manager.isColliding(first, with: second) {
+        if !player.logic.isIntangible && manager.isColliding(first, with: second) {
             collisionLogic.enemyHitPlayer(enemyNode)
         }
     }

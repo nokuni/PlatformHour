@@ -23,6 +23,21 @@ final public class GameLogic {
         damage(objectNode)
     }
     
+    public func damagePlayer(with enemyNode: PKObjectNode) {
+        guard let player = scene.player else { return }
+        player.node.logic.healthLost += enemyNode.logic.damage
+        playerDestroy()
+    }
+    
+    public func updatePlayerHealth() {
+        guard let dice = scene.player else { return }
+        guard let healthBar = dice.node.childNode(withName: "Health Bar") else { return }
+        healthBar.removeFromParent()
+        scene.core?.content?.addHealthBar(amount: dice.currentBarHealth,
+                                          node: dice.node,
+                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
+    }
+    
     private func isDestroyed(_ objectNode: PKObjectNode) -> Bool {
         objectNode.logic.healthLost >= objectNode.logic.health
     }
@@ -36,6 +51,19 @@ final public class GameLogic {
             scene.core?.animation.destroyThenAnimate(scene: scene,
                                                      node: objectNode,
                                                      timeInterval: 0.1)
+        }
+    }
+    
+    private func playerDestroy() {
+        guard let player = scene.player else { return }
+        if isDestroyed(player.node) {
+            scene.core?.animation.orbSplitEffect(scene: scene, on: player.node.position)
+            player.node.removeFromParent()
+            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
+                                                   isVisible: false,
+                                                   scene: scene) {
+                self.scene.core?.event?.restartLevel()
+            }
         }
     }
     
@@ -77,6 +105,19 @@ final public class GameLogic {
         }
     }
     
+    private func dropDestroyEnemy(coordinate: Coordinate) {
+        guard let environment = scene.core?.environment else { return }
+        if let enemy = environment.map.objects.first(where: {
+            guard let name = $0.name else { return false }
+            let isEnemy = name.contains("Enemy")
+            //let isRightCube = name.extractedNumber == player.currentRoll.rawValue
+            let isRightCoordinate = $0.coordinate == coordinate
+            return isEnemy && isRightCoordinate
+        }) {
+            instantDestroy(enemy)
+        }
+    }
+    
     // Drop
     private var dropCoordinate: Coordinate {
         guard let player = scene.player else { return .zero }
@@ -88,8 +129,10 @@ final public class GameLogic {
                                                y: playerCoordinate.y)
         
         repeat {
+            dropDestroyEnemy(coordinate: destinationCoordinate)
             dropDestroyCube(coordinate: destinationCoordinate)
             destinationCoordinate.x += 1
+            dropDestroyEnemy(coordinate: destinationCoordinate)
             dropDestroyCube(coordinate: destinationCoordinate)
         } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
         

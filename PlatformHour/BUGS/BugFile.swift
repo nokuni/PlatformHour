@@ -13,10 +13,5 @@ import SwiftUI
 
 // MARK: - NOT IMPORTANT
 
-#warning("Create the second level with the jump mechanic")
-#warning("Refactor enemy node")
-#warning("Create dice hit sprites")
-#warning("Knock back player when touched")
-#warning("Add immune frame when touched")
-#warning("Update health")
-#warning("Setup player death")
+#warning("After being hit, if the player stay in collision with enemy, he is not hitted anymore")
+#warning("The")

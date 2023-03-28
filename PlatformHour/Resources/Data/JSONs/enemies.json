@@ -1,0 +1,19 @@
+[
+    {
+        "name": "Enemy Slime",
+        "image": "slimeRun0",
+        "logic": {
+            "health": 1,
+            "damage": 1,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "run",
+                "frames": ["slimeRun0", "slimeRun1", "slimeRun2", "slimeRun3"]
+            }
+        ]
+    }
+]

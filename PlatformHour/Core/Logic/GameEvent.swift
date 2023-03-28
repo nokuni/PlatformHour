@@ -36,10 +36,21 @@ public final class GameEvent {
         }
     }
     
-    public func restartLevel() {
-        scene.removeAllActions()
-        scene.removeAllChildren()
-        scene.startGame()
+    public func restartLevel(delayedBy seconds: Double = 0) {
+        let configuration = PKTimerNode.TimerConfiguration(countdown: seconds,
+                                                           counter: 1,
+                                                           timeInterval: 1,
+                                                           actionOnLaunch: nil,
+                                                           actionOnGoing: nil,
+                                                           actionOnEnd: {
+            self.scene.removeAllActions()
+            self.scene.removeAllChildren()
+            self.scene.startGame()
+        },
+                                                           isRepeating: true)
+        let timerNode = PKTimerNode(configuration: configuration)
+        scene.addChildSafely(timerNode)
+        timerNode.start()
     }
     
     // Updates

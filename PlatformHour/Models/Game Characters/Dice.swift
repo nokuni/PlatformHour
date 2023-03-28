@@ -73,7 +73,10 @@ public class Dice {
     public var currentRoll: Roll = .one
     public var range: CGFloat = GameConfiguration.playerConfiguration.range
     public var attackSpeed: CGFloat = GameConfiguration.playerConfiguration.attackSpeed
-    public var logic: GameObjectLogic = GameObjectLogic(health: 5, damage: 1, isDestructible: true, isIntangible: false)
+    public var logic: GameObjectLogic = GameObjectLogic(health: 5,
+                                                        damage: 1,
+                                                        isDestructible: true,
+                                                        isIntangible: false)
     
     public var isProjectileTurningBack: Bool = false
     public var isJumping: Bool = false
@@ -88,17 +91,9 @@ public class Dice {
 
 extension Dice {
     
-    var rightRunFrames: [String]? {
+    func frames(id: String) -> [String]? {
         let currentRollValue = currentRoll.rawValue
-        let animation = GameSpriteAnimation.get(GameConfiguration.playerConfiguration.runRightAnimation)
-        let frames = animation?.frames.compactMap {
-            $0.replacingOccurrences(of: "#", with: "\(currentRollValue)")
-        }
-        return frames
-    }
-    var leftRunFrames: [String]? {
-        let currentRollValue = currentRoll.rawValue
-        let animation = GameSpriteAnimation.get(GameConfiguration.playerConfiguration.runLeftAnimation)
+        let animation = GameSpriteAnimation.get(id)
         let frames = animation?.frames.compactMap {
             $0.replacingOccurrences(of: "#", with: "\(currentRollValue)")
         }
@@ -106,19 +101,50 @@ extension Dice {
     }
     
     var runDuration: Double {
+        let rightRunFrames = frames(id: GameConfiguration.playerConfiguration.runRightAnimation)
         guard let framesCount = rightRunFrames?.count else { return 0 }
         let duration = Double(framesCount) * GameConfiguration.playerConfiguration.runTimePerFrame
         return duration
     }
     
+    var currentHealth: Int {
+        logic.health - node.logic.healthLost
+    }
+    
+    var currentBarHealth: CGFloat {
+        CGFloat(currentHealth) / CGFloat(logic.health)
+    }
+    
+    // MARK: - Actions
+    private func knockedBack(by enemy: PKObjectNode) -> SKAction {
+        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let knockBack = enemy.xScale > 0 ?
+        SKAction.move(to: CGPoint(x: node.position.x + (tileSize.width * 2), y: node.position.y), duration: 0.1) :
+        SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
+        return knockBack
+    }
+    
+    // MARK: - Animations
     func run() {
-        guard let rightRunFrames = rightRunFrames else { return }
-        guard let leftRunFrames = leftRunFrames else { return }
+        guard let rightRunFrames = frames(id: GameConfiguration.playerConfiguration.runRightAnimation) else { return }
+        guard let leftRunFrames = frames(id: GameConfiguration.playerConfiguration.runLeftAnimation) else { return }
         let frames = orientation == .right ? rightRunFrames : leftRunFrames
         let action = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
         SKAction.start(actionOnLaunch: nil, animation: action, node: node, actionOnEnd: nil)
     }
     
+    func hitted(scene: GameScene, by enemy: PKObjectNode, completion: (() -> Void)?) {
+        guard let hitFrames = frames(id: GameConfiguration.playerConfiguration.hitAnimation) else { return }
+        let hitAnimation = SKAction.animate(with: hitFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.hitTimePerFrame)
+        let knockBackAnimation = knockedBack(by: enemy)
+        let groupedAnimation = SKAction.group([hitAnimation, knockBackAnimation])
+        node.removeAllActions()
+        SKAction.start(actionOnLaunch: nil, animation: groupedAnimation, node: node) {
+            completion?()
+        }
+    }
+    
+    // MARK: - Logic
     func advanceRoll() {
         guard let lastRoll = Roll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {
@@ -127,7 +153,6 @@ extension Dice {
             currentRoll = .one
         }
     }
-    
     func resetToOne() {
         currentRoll = .one
         node.texture = SKTexture(imageNamed: "dice1Idle")
