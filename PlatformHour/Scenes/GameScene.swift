@@ -22,7 +22,7 @@ final public class GameScene: SKScene {
         game = Game()
         core = GameCore()
         core?.start(game: game, scene: self)
-        core?.animation.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
+        core?.animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
                                          isVisible: true,
                                          scene: self) {
             self.game?.controller = GameControllerManager(scene: self)

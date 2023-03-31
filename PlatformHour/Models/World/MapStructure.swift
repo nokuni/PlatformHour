@@ -8,16 +8,16 @@
 import Foundation
 import PlayfulKit
 
-extension MapStructure {
-    
-    static var all: [MapStructure]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.structures)
-    }
-    
-    static func get(_ name: String) throws -> MapStructure? {
-        let structure = MapStructure.all?.first(where: {
-            $0.name == name
-        })
-        return structure
-    }
-}
+//extension MapStructure {
+//    
+//    static var all: [MapStructure]? {
+//        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.structures)
+//    }
+//    
+//    static func get(_ name: String) throws -> MapStructure? {
+//        let structure = MapStructure.all?.first(where: {
+//            $0.name == name
+//        })
+//        return structure
+//    }
+//}

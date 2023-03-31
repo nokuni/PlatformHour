@@ -5,6 +5,7 @@
 //  Created by Maertens Yann-Christophe on 25/03/23.
 //
 
+import SpriteKit
 import PlayfulKit
 
 public class MapStructurePattern {
@@ -91,18 +92,20 @@ public class MapStructurePattern {
             if let exception = pattern.exceptions.first(where: {
                 $0.coordinate == coordinate
             }) {
+                let texture = SKTexture(imageNamed: exception.image)
+                texture.filteringMode = .nearest
                 map.addObject(object,
-                              image: exception.image,
-                              filteringMode: .nearest,
+                              texture: texture,
                               size: map.squareSize,
                               logic: LogicBody(),
                               drops: [],
                               animations: [],
                               at: coordinate)
             } else {
+                let texture = SKTexture(imageNamed: pattern.images[pattern.currentIndex])
+                texture.filteringMode = .nearest
                 map.addObject(object,
-                              image: pattern.images[pattern.currentIndex],
-                              filteringMode: .nearest,
+                              texture: texture,
                               size: map.squareSize,
                               logic: LogicBody(),
                               drops: [],

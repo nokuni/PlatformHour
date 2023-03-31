@@ -12,14 +12,17 @@ import Utility_Toolbox
 final public class GameContent {
     
     init(scene: GameScene,
-         environment: GameEnvironment) {
+         environment: GameEnvironment,
+         animation: GameAnimation) {
         self.scene = scene
         self.environment = environment
+        self.animation = animation
         createContent()
     }
     
     var scene: GameScene
     var environment: GameEnvironment
+    var animation: GameAnimation
     
     // Objects
     public func object(name: String? = nil,
@@ -132,14 +135,20 @@ final public class GameContent {
                                       contact: [.player, .playerProjectile])
             
             let runIdentifier = GameAnimation.StateID.run.rawValue
+            let deathIdentifier = GameAnimation.StateID.death.rawValue
             
             guard let run = enemy.animation.first(where: { $0.identifier == runIdentifier }) else {
                 return
             }
             
-            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
+            guard let death = enemy.animation.first(where: { $0.identifier == deathIdentifier }) else {
+                return
+            }
             
-            let animations = [runObjectAnimation]
+            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
+            let deathObjectAnimation = ObjectAnimation(identifier: death.identifier, frames: death.frames)
+            
+            let animations = [runObjectAnimation, deathObjectAnimation]
             
             let enemyNode = object(name: enemy.name,
                                    physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
@@ -213,9 +222,10 @@ final public class GameContent {
     private func createObstacles() {
         if let level = scene.game?.level {
             for obstacle in level.obstacles {
+                let texture = SKTexture(imageNamed: obstacle.image)
+                texture.filteringMode = .nearest
                 environment.map.addObject(environment.structureObjectElement,
-                                          image: obstacle.image,
-                                          filteringMode: .nearest,
+                                          texture: texture,
                                           size: environment.map.squareSize,
                                           logic: LogicBody(),
                                           animations: [],
@@ -272,7 +282,7 @@ final public class GameContent {
      animations: [],
      at: statue.coordinates[3].coordinate)
      }*/
-    private func createTrees() {
+    /*private func createTrees() {
         let collision = Collision(category: .allClear,
                                   collision: [.allClear],
                                   contact: [.allClear])
@@ -345,7 +355,7 @@ final public class GameContent {
             
             startingCoordinate.y += 10
         }
-    }
+    }*/
     private func createOrbs() {
         if let level = scene.game?.level {
             for orb in level.orbs {
@@ -418,9 +428,11 @@ final public class GameContent {
             objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
+            let texture = SKTexture(imageNamed: dataObject.image)
+            texture.filteringMode = .nearest
+            
             environment.map.addObject(objectNode,
-                                      image: dataObject.image,
-                                      filteringMode: .nearest,
+                                      texture: texture,
                                       size: environment.map.squareSize,
                                       logic: logic,
                                       drops: drops,
@@ -438,12 +450,18 @@ final public class GameContent {
                                   contact: [.player])
         
         let idleIdentifier = GameAnimation.StateID.idle.rawValue
+        let deathIdentifier = GameAnimation.StateID.death.rawValue
+        
         guard let idle = dataObject?.animation.first(where: { $0.identifier == idleIdentifier }) else {
+            return
+        }
+        guard let death = dataObject?.animation.first(where: { $0.identifier == deathIdentifier }) else {
             return
         }
         
         let animations = [
-            ObjectAnimation(identifier: idle.identifier, frames: idle.frames)
+            ObjectAnimation(identifier: idle.identifier, frames: idle.frames),
+            ObjectAnimation(identifier: death.identifier, frames: death.frames)
         ]
         
         let itemNode = environment.objectElement(name: item.name,
@@ -459,7 +477,7 @@ final public class GameContent {
         itemNode.physicsBody?.affectedByGravity = false
         scene.addChildSafely(itemNode)
         
-        //scene.core?.animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
+        animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
     }
     
     // Additions

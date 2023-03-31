@@ -11,6 +11,7 @@ import PlayfulKit
 struct GameLevel: Codable {
     let id: Int
     let playerCoordinate: String
+    let background: String
     let exit: GameExit
     let structures: [LevelStructure]
     let obstacles: [LevelObstacles]

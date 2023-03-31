@@ -42,13 +42,13 @@ final public class GameLogic {
         objectNode.logic.healthLost >= objectNode.logic.health
     }
     
-    private func instantDestroy(_ objectNode: PKObjectNode) {
+    public func instantDestroy(_ objectNode: PKObjectNode) {
         objectNode.logic.healthLost = objectNode.logic.health
         if isDestroyed(objectNode) {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-            scene.core?.animation.destroyThenAnimate(scene: scene,
+            scene.core?.animation?.destroyThenAnimate(scene: scene,
                                                      node: objectNode,
                                                      timeInterval: 0.1)
         }
@@ -57,9 +57,9 @@ final public class GameLogic {
     private func playerDestroy() {
         guard let player = scene.player else { return }
         if isDestroyed(player.node) {
-            scene.core?.animation.orbSplitEffect(scene: scene, on: player.node.position)
+            scene.core?.animation?.orbSplitEffect(scene: scene, on: player.node.position)
             player.node.removeFromParent()
-            scene.core?.animation.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
+            scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
                                                    isVisible: false,
                                                    scene: scene) {
                 self.scene.core?.event?.restartLevel()
@@ -72,7 +72,7 @@ final public class GameLogic {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-            scene.core?.animation.destroy(node: objectNode,
+            scene.core?.animation?.destroy(node: objectNode,
                                           filteringMode: .nearest) {
                 //                if let item = objectNode.drops.first as? GameItem {
                 //                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
@@ -82,7 +82,7 @@ final public class GameLogic {
     }
     
     private func hit(_ objectNode: PKObjectNode) {
-        scene.core?.animation.hit(node: objectNode,
+        scene.core?.animation?.hit(node: objectNode,
                                   filteringMode: .nearest)
     }
     
@@ -105,19 +105,6 @@ final public class GameLogic {
         }
     }
     
-    private func dropDestroyEnemy(coordinate: Coordinate) {
-        guard let environment = scene.core?.environment else { return }
-        if let enemy = environment.map.objects.first(where: {
-            guard let name = $0.name else { return false }
-            let isEnemy = name.contains("Enemy")
-            //let isRightCube = name.extractedNumber == player.currentRoll.rawValue
-            let isRightCoordinate = $0.coordinate == coordinate
-            return isEnemy && isRightCoordinate
-        }) {
-            instantDestroy(enemy)
-        }
-    }
-    
     // Drop
     private var dropCoordinate: Coordinate {
         guard let player = scene.player else { return .zero }
@@ -129,10 +116,8 @@ final public class GameLogic {
                                                y: playerCoordinate.y)
         
         repeat {
-            dropDestroyEnemy(coordinate: destinationCoordinate)
             dropDestroyCube(coordinate: destinationCoordinate)
             destinationCoordinate.x += 1
-            dropDestroyEnemy(coordinate: destinationCoordinate)
             dropDestroyCube(coordinate: destinationCoordinate)
         } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
         
@@ -161,9 +146,10 @@ final public class GameLogic {
             self.scene.player?.currentRoll = .one
             self.scene.player?.resetToOne()
             self.scene.player?.isJumping = false
-            self.scene.core?.animation.circularSmoke(on: player.node)
+            self.scene.core?.animation?.circularSmoke(on: player.node)
             self.scene.player?.state = .normal
             self.enableControls()
+            self.scene.core?.animation?.shakeScreen(scene: self.scene)
         }
         return action
     }
@@ -197,14 +183,10 @@ final public class GameLogic {
         
         return moves
     }
-    private var endActionSequenceAction: SKAction {
-        guard let player = scene.player else { return SKAction.empty() }
-        let action = SKAction.run {
-            player.actions.removeAll()
-            self.scene.core?.hud?.removeDiceActions()
-            self.dropPlayer()
-        }
-        return action
+    public func endSequenceAction() {
+        guard let player = scene.player else { return }
+        player.actions.removeAll()
+        self.scene.core?.hud?.removeDiceActions()
     }
     
     public func resolveActionSequence() {
@@ -220,7 +202,10 @@ final public class GameLogic {
         guard let player = scene.player else { return }
         
         var actions = actionSequenceAction
-        actions.append(endActionSequenceAction)
+        actions.append(SKAction.run {
+            self.endSequenceAction()
+            self.dropPlayer()
+        })
         
         let sequence = SKAction.sequence(actions)
         

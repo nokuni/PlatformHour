@@ -13,7 +13,11 @@
             {
                 "identifier": "run",
                 "frames": ["slimeRun0", "slimeRun1", "slimeRun2", "slimeRun3"]
-            }
+            },
+            {
+                "identifier": "death",
+                "frames": ["slimeDeath0", "slimeDeath1", "slimeDeath2", "slimeDeath3"]
+            },
         ]
     }
 ]

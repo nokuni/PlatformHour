@@ -27,6 +27,7 @@ public class ActionLogic {
     
     public var timer: Timer?
     public var direction: Direction = .none
+    public var movementSpeed: Int = 0
     
     var isAnimating: Bool {
         guard let player = scene.player else { return false }
@@ -52,16 +53,18 @@ public class ActionLogic {
         scene.core?.logic?.resolveActionSequence()
     }
     
-    private func move(on direction: Direction, by amount: Int) {
+    private func move(on direction: Direction, by movementSpeed: Int) {
         guard let player = scene.player else { return }
         guard !isAnimating else { return }
         guard !player.isJumping else { return }
         guard canAct else { return }
         
+        scene.game?.controller?.isLongPressingDPad = true
         scene.core?.event?.dismissButtonPopUp()
         self.direction = direction
         changeOrientation(direction: self.direction)
-        moveAnimation(by: amount)
+        self.movementSpeed = movementSpeed
+        moveAnimation(by: self.movementSpeed)
         scene.player?.advanceRoll()
         scene.player?.run()
     }
@@ -255,7 +258,7 @@ public class ActionLogic {
             ])
         }
         actions.append(SKAction.run {
-            self.scene.core?.animation.addGravityEffect(on: player.node)
+            self.scene.core?.animation?.addGravityEffect(on: player.node)
             self.scene.player?.state = .inAction
             self.scene.core?.hud?.addDiceActionsHUD()
         })
@@ -283,6 +286,9 @@ public class ActionLogic {
                 self.scene.player?.node.removeAllActions()
                 if !environment.collisionCoordinates.contains(groundCoordinate) {
                     self.scene.core?.logic?.dropPlayer()
+                }
+                if self.scene.game!.controller!.isLongPressingDPad {
+                    self.move(on: self.direction, by: self.movementSpeed)
                 }
             }
         ])

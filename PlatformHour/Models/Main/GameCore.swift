@@ -10,7 +10,7 @@ import Utility_Toolbox
 
 public struct GameCore {
     public init(state: GameState = GameState(),
-                animation: GameAnimation = GameAnimation(),
+                animation: GameAnimation? = nil,
                 sound: GameSound = GameSound(),
                 event: GameEvent? = nil,
                 hud: GameHUD? = nil,
@@ -32,7 +32,7 @@ public struct GameCore {
     }
     
     public var state: GameState
-    public var animation: GameAnimation
+    public var animation: GameAnimation?
     public var sound: GameSound
     public var event: GameEvent?
     public var hud: GameHUD?
@@ -48,11 +48,13 @@ public struct GameCore {
         collision = GameCollision(scene: scene)
         hud = GameHUD(scene: scene)
         environment = GameEnvironment(scene: scene)
+        animation = GameAnimation()
         
         guard let environment = environment else { return }
+        guard let animation = animation else { return }
         
         gameCamera = GameCamera(scene: scene, environment: environment)
-        content = GameContent(scene: scene, environment: environment)
+        content = GameContent(scene: scene, environment: environment, animation: animation)
     }
     
     public func animateLaunch(game: Game?, scene: GameScene, player: Dice?) {

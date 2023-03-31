@@ -97,64 +97,27 @@ final public class GameEnvironment {
     
     // MARK: - Background
     private func createBackground() {
-        backgroundContainer.name = GameConfiguration.sceneConfigurationKey.background
-        scene.addChildSafely(backgroundContainer)
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
-        let centerPosition = map.centerPosition()
-        let adjustement = GameConfiguration.worldConfiguration.tileSize.height * 5
-        let background = SKSpriteNode(imageNamed: "caveBackground")
-        background.texture?.filteringMode = .nearest
-        background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
-                                 height: tileSize.width * CGFloat(map.matrix.row - 10))
-        background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
-        backgroundContainer.addChildSafely(background)
-//        createSky()
-    }
-    
-    private func createSky() {
-        guard let skyPosition = map.tilePosition(from: Coordinate(x: 12, y: 6)) else { return }
-        guard let highSkyPosition = map.tilePosition(from: Coordinate(x: 4, y: 6)) else { return }
-        guard let lowSkyPosition = map.tilePosition(from: Coordinate(x: 23, y: 6)) else { return }
-        
-        var skyBackgrounds: [SKSpriteNode] = []
-        var highSkyBackgrounds: [SKSpriteNode] = []
-        var lowSkyBackgrounds: [SKSpriteNode] = []
-        
-        for _ in 0..<7 {
-            let background = SKSpriteNode(imageNamed: "caveBackground")
-            background.size = backgroundSize
-            background.texture?.filteringMode = .nearest
-            skyBackgrounds.append(background)
-        }
-        
-        for _ in 0..<7 {
-            let background = SKSpriteNode(imageNamed: "springDayHighSky")
-            background.size = backgroundSize
-            background.texture?.filteringMode = .nearest
-            highSkyBackgrounds.append(background)
-        }
-        
-        for _ in 0..<13 {
-            let background = SKSpriteNode(imageNamed: "springDayLowSky")
+        if let level = scene.game?.level {
+            backgroundContainer.name = GameConfiguration.sceneConfigurationKey.background
+            scene.addChildSafely(backgroundContainer)
             let tileSize = GameConfiguration.worldConfiguration.tileSize
-            let width = tileSize.width * 13
-            let height = tileSize.height * 13
-            background.size = CGSize(width: width, height: height)
+            let centerPosition = map.centerPosition
+            let adjustement = GameConfiguration.worldConfiguration.tileSize.height * 5
+            let background = SKSpriteNode(imageNamed: level.background)
             background.texture?.filteringMode = .nearest
-            lowSkyBackgrounds.append(background)
+            background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
+                                     height: tileSize.width * CGFloat(map.matrix.row - 10))
+            background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
+            backgroundContainer.addChildSafely(background)
         }
-        
-        GameConfiguration.assemblyManager.createSpriteList(of: skyBackgrounds, at: skyPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
-        
-        GameConfiguration.assemblyManager.createSpriteList(of: highSkyBackgrounds, at: highSkyPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
-        
-        GameConfiguration.assemblyManager.createSpriteList(of: lowSkyBackgrounds, at: lowSkyPosition, in: backgroundContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
     private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
                         matrix: mapMatrix)
-        map.drawTexture("leadSquare")
+        let texture = SKTexture(imageNamed: "leadSquare")
+        texture.filteringMode = .nearest
+        map.drawTexture(texture)
         scene.addChild(map)
     }
     

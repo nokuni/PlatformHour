@@ -31,7 +31,7 @@ final public class GameCollision {
                                             bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
-        // Projectile collision with objects
+        // Player projectile collision with objects
         projectileHit(
             CollisionManager.NodeBody(body: firstBody,
                                       bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
@@ -39,6 +39,7 @@ final public class GameCollision {
                                             bitmaskCategory: CollisionCategory.object.rawValue)
         )
         
+        // Player projectile collision structure
         projectileStructure(
             CollisionManager.NodeBody(body: firstBody,
                                       bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
@@ -46,25 +47,35 @@ final public class GameCollision {
                                             bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
+        // Player collision with object item
         playerTouchItem(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.item.rawValue)
         )
         
+        // Player collision with object exit
         playerIsOnExit(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
         
+        // Player collision with structure
         playerTouchGround(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
-//        enemyTouchPlayer(
-//            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
-//            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
-//        )
+        // Enemy collision with player
+        enemyTouchPlayer(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
+        )
+        
+        // Player collision with enemy
+        playerTouchEnemy(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
+        )
     }
     
     func projectileHit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
@@ -113,6 +124,13 @@ final public class GameCollision {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
         if !player.logic.isIntangible && manager.isColliding(first, with: second) {
             collisionLogic.enemyHitPlayer(enemyNode)
+        }
+    }
+    
+    func playerTouchEnemy(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+        guard let enemyNode = second.body.node as? PKObjectNode else { return }
+        if manager.isColliding(first, with: second) {
+            collisionLogic.playerDropOnEnemy(enemyNode)
         }
     }
 }

@@ -25,6 +25,22 @@ final public class GameAnimation {
         case death = "death"
     }
     
+    public func addParticleEffect(name: String, scene: SKScene, node: SKNode) {
+        guard let particleEffect = SKEffectNode(fileNamed: name) else { return }
+        particleEffect.position = node.position
+        scene.addChild(particleEffect)
+    }
+    
+    public func shakeScreen(scene: GameScene) {
+        guard let camera = scene.camera else { return }
+        let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
+        SKAction.start(actionOnLaunch: {
+            scene.core?.gameCamera?.isFollowingPlayer = false
+        }, animation: shake, node: camera) {
+            scene.core?.gameCamera?.isFollowingPlayer = true
+        }
+    }
+    
     public func addGravityEffect(on node: SKNode) {
         let gravityEffectNode = SKSpriteNode()
         gravityEffectNode.name = GameConfiguration.sceneConfigurationKey.gravityEffect

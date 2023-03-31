@@ -22,17 +22,48 @@ final public class GameControllerManager {
     var action: ActionLogic
     
     var manager: ControllerManager?
+    var isLongPressingDPad: Bool = false
+    var isLongPressingButtonA: Bool = false
+    var isLongPressingButtonB: Bool = false
+    var isLongPressingButtonX: Bool = false
+    var isLongPressingButtonY: Bool = false
+    
+    private func releaseDPad() {
+        isLongPressingDPad = false
+    }
+    private func releaseButtonA() {
+        isLongPressingButtonA = false
+    }
+    private func releaseButtonB() {
+        isLongPressingButtonB = false
+    }
+    private func releaseButtonX() {
+        isLongPressingButtonX = false
+    }
+    private func releaseButtonY() {
+        isLongPressingButtonY = false
+    }
     
     public func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
-        manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack)
-        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump)
-        manager?.action?.buttonX = ControllerManager.ButtonAction()
-        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interact)
-        manager?.action?.dpad = ControllerManager.DPadAction(left: action.leftPadAction,
-                                                             right: action.rightPadAction,
-                                                             up: action.upPadAction,
-                                                             down: action.downPadAction)
+        
+        manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack,
+                                                                  release: releaseButtonA)
+        
+        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump,
+                                                                  release: releaseButtonB)
+        
+        manager?.action?.buttonX = ControllerManager.ButtonAction(press: nil,
+                                                                  release: releaseButtonX)
+        
+        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interact,
+                                                                  release: releaseButtonY)
+        
+        manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadAction,
+                                                             rightPress: action.rightPadAction,
+                                                             upPress: action.upPadAction,
+                                                             downPress: action.downPadAction,
+                                                             release: releaseDPad)
     }
     
     private func setupControllers() {

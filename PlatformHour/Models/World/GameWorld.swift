@@ -30,10 +30,6 @@ extension GameWorld {
         return world
     }
     
-    var ground: MapStructure? {
-        try? MapStructure.get(groundName)
-    }
-    
     var levels: [GameLevel] {
         levelIDs.compactMap {
             GameLevel.get($0)

@@ -57,6 +57,8 @@
 		96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */; };
 		96C51ECA29BE2B3900DDCBAB /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC929BE2B3900DDCBAB /* items.json */; };
 		96C51ECC29BE30D800DDCBAB /* GameItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51ECB29BE30D800DDCBAB /* GameItem.swift */; };
+		96D60ECD29D77E7900D2C1C3 /* cavernAmbient0.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */; };
+		96D60ECF29D77EA300D2C1C3 /* cavernAmbient1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */; };
 		96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE969A298FB1A000273A9D /* GameLogic.swift */; };
 		96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96A5298FCE9E00273A9D /* GameSound.swift */; };
 		96EE96AC298FD28300273A9D /* diceRoll.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96EE96AB298FD28300273A9D /* diceRoll.wav */; };
@@ -123,6 +125,8 @@
 		96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObjectContainer.swift; sourceTree = "<group>"; };
 		96C51EC929BE2B3900DDCBAB /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
 		96C51ECB29BE30D800DDCBAB /* GameItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameItem.swift; sourceTree = "<group>"; };
+		96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cavernAmbient0.wav; sourceTree = "<group>"; };
+		96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cavernAmbient1.wav; sourceTree = "<group>"; };
 		96EE969A298FB1A000273A9D /* GameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogic.swift; sourceTree = "<group>"; };
 		96EE96A5298FCE9E00273A9D /* GameSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSound.swift; sourceTree = "<group>"; };
 		96EE96AB298FD28300273A9D /* diceRoll.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceRoll.wav; sourceTree = "<group>"; };
@@ -371,6 +375,8 @@
 		96EE96A0298FCE0C00273A9D /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */,
+				96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */,
 				96EE96AB298FD28300273A9D /* diceRoll.wav */,
 			);
 			path = Sounds;
@@ -514,7 +520,9 @@
 				964E7E5929C26E43003CE54B /* spriteAnimations.json in Resources */,
 				962F255829D17C51007D46B7 /* enemies.json in Resources */,
 				9654053B298C340900620E76 /* 8-bit Arcade In.ttf in Resources */,
+				96D60ECD29D77E7900D2C1C3 /* cavernAmbient0.wav in Resources */,
 				9619466429968F0C000859C8 /* worlds.json in Resources */,
+				96D60ECF29D77EA300D2C1C3 /* cavernAmbient1.wav in Resources */,
 				964E7E5029C1FE3B003CE54B /* controllerButtons.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

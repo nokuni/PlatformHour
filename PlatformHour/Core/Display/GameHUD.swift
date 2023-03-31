@@ -70,9 +70,9 @@ public class GameHUD {
             sequenceHUD.append(hud)
         }
         
-        let sequencePosition = layer.cornerPosition(corner: .topLeft, node: actionSequence, padding: actionSequenceHUDConstraints)
+        let sequencePosition = layer.cornerPosition(corner: .topLeft, padding: actionSequenceHUDConstraints)
         
-        GameConfiguration.assemblyManager.createSpriteList(of: sequenceHUD, at: sequencePosition, in: layer, axes: .horizontal, adjustement: .leading, spacing: 1)
+        GameConfiguration.assemblyManager.createNodeList(of: sequenceHUD, at: sequencePosition, in: layer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
     private func createItemAmountHUD() {
@@ -82,7 +82,7 @@ public class GameHUD {
         let score = SKNode()
         score.name = "Score"
         score.setScale(0.8)
-        score.position = layer.cornerPosition(corner: .topLeft, node: score, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
+        score.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
         layer.addChildSafely(score)
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
@@ -128,11 +128,11 @@ public class GameHUD {
             actions.append(action)
         }
         
-        let position = layer.cornerPosition(corner: .topLeft, node: actionSequence, padding: actionSequenceHUDConstraints)
+        let position = layer.cornerPosition(corner: .topLeft, padding: actionSequenceHUDConstraints)
         
         let parameter = AssemblyManager.Parameter(axes: .horizontal, adjustement: .leading, horizontalSpacing: 1, verticalSpacing: 1, columns: 6)
         
-        GameConfiguration.assemblyManager.createSpriteCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
+        GameConfiguration.assemblyManager.createNodeCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
             self.scene.core?.logic?.enableControls()
         })
     }

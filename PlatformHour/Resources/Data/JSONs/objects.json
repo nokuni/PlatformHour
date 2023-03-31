@@ -29,7 +29,11 @@
         [
             {
                 "identifier": "idle",
-                "frames": ["orb0", "orb1"]
+                "frames": ["orbCube0", "orbCube1", "orbCube2", "orbCube3", "orbCube4", "orbCube5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["orbCubeDeath0", "orbCubeDeath1", "orbCubeDeath2", "orbCubeDeath3", "orbCubeDeath4", "orbCubeDeath5"]
             }
         ]
     },
