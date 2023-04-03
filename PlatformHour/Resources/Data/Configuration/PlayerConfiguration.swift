@@ -14,7 +14,9 @@ struct PlayerConfiguration {
     let jumpValue: CGFloat = 1
     let runTimePerFrame: TimeInterval = 0.03
     let hitTimePerFrame: TimeInterval = 0.05
+    let deathTimePerFrame: TimeInterval = 0.05
     let runRightAnimation = "Dice Run Right"
     let runLeftAnimation = "Dice Run Left"
     let hitAnimation = "Dice Hit"
+    let deathAnimation = "Dice Death"
 }

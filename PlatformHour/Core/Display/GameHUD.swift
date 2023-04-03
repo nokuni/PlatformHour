@@ -99,7 +99,7 @@ public class GameHUD {
                                                  y: 0),
                                      on: score)
         
-        let item = SKSpriteNode(imageNamed: "hudOrb")
+        let item = SKSpriteNode(imageNamed: "hudGem")
         item.name = "Orb"
         item.texture?.filteringMode = .nearest
         item.size = GameConfiguration.worldConfiguration.tileSize

@@ -14,6 +14,7 @@ struct GameWorld: Codable {
     let skyName: String
     let groundName: String
     let cloudName: String
+    let musics: [String]
     let levelIDs: [Int]
 }
 

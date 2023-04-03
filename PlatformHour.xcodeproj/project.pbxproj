@@ -24,7 +24,7 @@
 		962F255429D0C270007D46B7 /* LevelObstacles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255329D0C270007D46B7 /* LevelObstacles.swift */; };
 		962F255829D17C51007D46B7 /* enemies.json in Resources */ = {isa = PBXBuildFile; fileRef = 962F255729D17C51007D46B7 /* enemies.json */; };
 		962F255A29D180D9007D46B7 /* LevelEnemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255929D180D9007D46B7 /* LevelEnemy.swift */; };
-		9645762529C4FD3400FD8BF0 /* GameExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9645762429C4FD3400FD8BF0 /* GameExit.swift */; };
+		9645762529C4FD3400FD8BF0 /* LevelExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9645762429C4FD3400FD8BF0 /* LevelExit.swift */; };
 		964626BB29CF6F9E00A872A5 /* StructurePatternConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */; };
 		964626BD29CF6FDA00A872A5 /* MapStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
@@ -57,11 +57,27 @@
 		96C51EC829BD6A9B00DDCBAB /* GameObjectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */; };
 		96C51ECA29BE2B3900DDCBAB /* items.json in Resources */ = {isa = PBXBuildFile; fileRef = 96C51EC929BE2B3900DDCBAB /* items.json */; };
 		96C51ECC29BE30D800DDCBAB /* GameItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C51ECB29BE30D800DDCBAB /* GameItem.swift */; };
-		96D60ECD29D77E7900D2C1C3 /* cavernAmbient0.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */; };
 		96D60ECF29D77EA300D2C1C3 /* cavernAmbient1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */; };
+		96D60EDB29D85EE000D2C1C3 /* cavernAmbient2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EDA29D85EE000D2C1C3 /* cavernAmbient2.wav */; };
+		96D60EDF29D87D0A00D2C1C3 /* diceFallCavern.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EDE29D87D0A00D2C1C3 /* diceFallCavern.wav */; };
+		96D60EE129D87FD800D2C1C3 /* diceRoll.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE029D87FD800D2C1C3 /* diceRoll.wav */; };
+		96D60EEE29D8A88F00D2C1C3 /* ChimeraBellsÀ.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE329D8A88F00D2C1C3 /* ChimeraBellsÀ.wav */; };
+		96D60EEF29D8A88F00D2C1C3 /* ChimeraBellsK.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE429D8A88F00D2C1C3 /* ChimeraBellsK.wav */; };
+		96D60EF029D8A88F00D2C1C3 /* ChimeraBellsF.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE529D8A88F00D2C1C3 /* ChimeraBellsF.wav */; };
+		96D60EF129D8A88F00D2C1C3 /* ChimeraBellsD.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE629D8A88F00D2C1C3 /* ChimeraBellsD.wav */; };
+		96D60EF229D8A88F00D2C1C3 /* ChimeraBellsS.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE729D8A88F00D2C1C3 /* ChimeraBellsS.wav */; };
+		96D60EF329D8A88F00D2C1C3 /* ChimeraBellsL.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE829D8A88F00D2C1C3 /* ChimeraBellsL.wav */; };
+		96D60EF429D8A88F00D2C1C3 /* ChimeraBellsÒ.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EE929D8A88F00D2C1C3 /* ChimeraBellsÒ.wav */; };
+		96D60EF529D8A88F00D2C1C3 /* ChimeraBellsJ.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EEA29D8A88F00D2C1C3 /* ChimeraBellsJ.wav */; };
+		96D60EF629D8A88F00D2C1C3 /* ChimeraBellsG.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EEB29D8A88F00D2C1C3 /* ChimeraBellsG.wav */; };
+		96D60EF729D8A88F00D2C1C3 /* ChimeraBellsA.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EEC29D8A88F00D2C1C3 /* ChimeraBellsA.wav */; };
+		96D60EF829D8A88F00D2C1C3 /* ChimeraBellsH.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60EED29D8A88F00D2C1C3 /* ChimeraBellsH.wav */; };
+		96D60EFA29D8A99A00D2C1C3 /* LevelGem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60EF929D8A99A00D2C1C3 /* LevelGem.swift */; };
+		96D60EFC29D97B9100D2C1C3 /* LevelNPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60EFB29D97B9100D2C1C3 /* LevelNPC.swift */; };
+		96D60F0429D9988F00D2C1C3 /* LevelTrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60F0329D9988F00D2C1C3 /* LevelTrap.swift */; };
+		96D60F0629D99B6500D2C1C3 /* traps.json in Resources */ = {isa = PBXBuildFile; fileRef = 96D60F0529D99B6500D2C1C3 /* traps.json */; };
 		96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE969A298FB1A000273A9D /* GameLogic.swift */; };
 		96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96A5298FCE9E00273A9D /* GameSound.swift */; };
-		96EE96AC298FD28300273A9D /* diceRoll.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96EE96AB298FD28300273A9D /* diceRoll.wav */; };
 		96EE96B5298FF9BB00273A9D /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96B4298FF9BB00273A9D /* GameState.swift */; };
 		96EE96B929900E2B00273A9D /* GameHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96B829900E2B00273A9D /* GameHUD.swift */; };
 		96EE96BC2990143F00273A9D /* BugFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE96BB2990143F00273A9D /* BugFile.swift */; };
@@ -91,7 +107,7 @@
 		962F255329D0C270007D46B7 /* LevelObstacles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelObstacles.swift; sourceTree = "<group>"; };
 		962F255729D17C51007D46B7 /* enemies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = enemies.json; sourceTree = "<group>"; };
 		962F255929D180D9007D46B7 /* LevelEnemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelEnemy.swift; sourceTree = "<group>"; };
-		9645762429C4FD3400FD8BF0 /* GameExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameExit.swift; sourceTree = "<group>"; };
+		9645762429C4FD3400FD8BF0 /* LevelExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelExit.swift; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* StructurePatternConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructurePatternConfiguration.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
@@ -125,11 +141,27 @@
 		96C51EC729BD6A9B00DDCBAB /* GameObjectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObjectContainer.swift; sourceTree = "<group>"; };
 		96C51EC929BE2B3900DDCBAB /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
 		96C51ECB29BE30D800DDCBAB /* GameItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameItem.swift; sourceTree = "<group>"; };
-		96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cavernAmbient0.wav; sourceTree = "<group>"; };
 		96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cavernAmbient1.wav; sourceTree = "<group>"; };
+		96D60EDA29D85EE000D2C1C3 /* cavernAmbient2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cavernAmbient2.wav; sourceTree = "<group>"; };
+		96D60EDE29D87D0A00D2C1C3 /* diceFallCavern.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceFallCavern.wav; sourceTree = "<group>"; };
+		96D60EE029D87FD800D2C1C3 /* diceRoll.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceRoll.wav; sourceTree = "<group>"; };
+		96D60EE329D8A88F00D2C1C3 /* ChimeraBellsÀ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "ChimeraBellsÀ.wav"; sourceTree = "<group>"; };
+		96D60EE429D8A88F00D2C1C3 /* ChimeraBellsK.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsK.wav; sourceTree = "<group>"; };
+		96D60EE529D8A88F00D2C1C3 /* ChimeraBellsF.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsF.wav; sourceTree = "<group>"; };
+		96D60EE629D8A88F00D2C1C3 /* ChimeraBellsD.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsD.wav; sourceTree = "<group>"; };
+		96D60EE729D8A88F00D2C1C3 /* ChimeraBellsS.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsS.wav; sourceTree = "<group>"; };
+		96D60EE829D8A88F00D2C1C3 /* ChimeraBellsL.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsL.wav; sourceTree = "<group>"; };
+		96D60EE929D8A88F00D2C1C3 /* ChimeraBellsÒ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "ChimeraBellsÒ.wav"; sourceTree = "<group>"; };
+		96D60EEA29D8A88F00D2C1C3 /* ChimeraBellsJ.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsJ.wav; sourceTree = "<group>"; };
+		96D60EEB29D8A88F00D2C1C3 /* ChimeraBellsG.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsG.wav; sourceTree = "<group>"; };
+		96D60EEC29D8A88F00D2C1C3 /* ChimeraBellsA.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsA.wav; sourceTree = "<group>"; };
+		96D60EED29D8A88F00D2C1C3 /* ChimeraBellsH.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ChimeraBellsH.wav; sourceTree = "<group>"; };
+		96D60EF929D8A99A00D2C1C3 /* LevelGem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelGem.swift; sourceTree = "<group>"; };
+		96D60EFB29D97B9100D2C1C3 /* LevelNPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelNPC.swift; sourceTree = "<group>"; };
+		96D60F0329D9988F00D2C1C3 /* LevelTrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTrap.swift; sourceTree = "<group>"; };
+		96D60F0529D99B6500D2C1C3 /* traps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = traps.json; sourceTree = "<group>"; };
 		96EE969A298FB1A000273A9D /* GameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogic.swift; sourceTree = "<group>"; };
 		96EE96A5298FCE9E00273A9D /* GameSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSound.swift; sourceTree = "<group>"; };
-		96EE96AB298FD28300273A9D /* diceRoll.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = diceRoll.wav; sourceTree = "<group>"; };
 		96EE96B4298FF9BB00273A9D /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		96EE96B829900E2B00273A9D /* GameHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHUD.swift; sourceTree = "<group>"; };
 		96EE96BB2990143F00273A9D /* BugFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BugFile.swift; sourceTree = "<group>"; };
@@ -256,6 +288,7 @@
 				964E7E4F29C1FE3B003CE54B /* controllerButtons.json */,
 				964E7E5829C26E43003CE54B /* spriteAnimations.json */,
 				962F255729D17C51007D46B7 /* enemies.json */,
+				96D60F0529D99B6500D2C1C3 /* traps.json */,
 			);
 			path = JSONs;
 			sourceTree = "<group>";
@@ -293,7 +326,6 @@
 				96C51ECB29BE30D800DDCBAB /* GameItem.swift */,
 				964E7E5229C26092003CE54B /* GameObjectAnimation.swift */,
 				964E7E5429C260A5003CE54B /* GameObjectLogic.swift */,
-				9645762429C4FD3400FD8BF0 /* GameExit.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -320,7 +352,11 @@
 				964626BC29CF6FDA00A872A5 /* MapStructurePattern.swift */,
 				962F255129D0B618007D46B7 /* LevelStructure.swift */,
 				962F255329D0C270007D46B7 /* LevelObstacles.swift */,
+				9645762429C4FD3400FD8BF0 /* LevelExit.swift */,
 				962F255929D180D9007D46B7 /* LevelEnemy.swift */,
+				96D60EF929D8A99A00D2C1C3 /* LevelGem.swift */,
+				96D60EFB29D97B9100D2C1C3 /* LevelNPC.swift */,
+				96D60F0329D9988F00D2C1C3 /* LevelTrap.swift */,
 			);
 			path = World;
 			sourceTree = "<group>";
@@ -341,6 +377,24 @@
 				96B7F80D29B788DA001584E3 /* GameCore.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		96D60EE229D8A86200D2C1C3 /* GemSounds */ = {
+			isa = PBXGroup;
+			children = (
+				96D60EEC29D8A88F00D2C1C3 /* ChimeraBellsA.wav */,
+				96D60EE329D8A88F00D2C1C3 /* ChimeraBellsÀ.wav */,
+				96D60EE629D8A88F00D2C1C3 /* ChimeraBellsD.wav */,
+				96D60EE529D8A88F00D2C1C3 /* ChimeraBellsF.wav */,
+				96D60EEB29D8A88F00D2C1C3 /* ChimeraBellsG.wav */,
+				96D60EED29D8A88F00D2C1C3 /* ChimeraBellsH.wav */,
+				96D60EEA29D8A88F00D2C1C3 /* ChimeraBellsJ.wav */,
+				96D60EE429D8A88F00D2C1C3 /* ChimeraBellsK.wav */,
+				96D60EE829D8A88F00D2C1C3 /* ChimeraBellsL.wav */,
+				96D60EE929D8A88F00D2C1C3 /* ChimeraBellsÒ.wav */,
+				96D60EE729D8A88F00D2C1C3 /* ChimeraBellsS.wav */,
+			);
+			path = GemSounds;
 			sourceTree = "<group>";
 		};
 		96EE967A298D8DDB00273A9D /* Resources */ = {
@@ -375,9 +429,11 @@
 		96EE96A0298FCE0C00273A9D /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				96D60ECC29D77E7900D2C1C3 /* cavernAmbient0.wav */,
+				96D60EE229D8A86200D2C1C3 /* GemSounds */,
+				96D60EE029D87FD800D2C1C3 /* diceRoll.wav */,
+				96D60EDE29D87D0A00D2C1C3 /* diceFallCavern.wav */,
+				96D60EDA29D85EE000D2C1C3 /* cavernAmbient2.wav */,
 				96D60ECE29D77EA300D2C1C3 /* cavernAmbient1.wav */,
-				96EE96AB298FD28300273A9D /* diceRoll.wav */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -509,18 +565,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96EE96AC298FD28300273A9D /* diceRoll.wav in Resources */,
+				96D60EDF29D87D0A00D2C1C3 /* diceFallCavern.wav in Resources */,
+				96D60EF029D8A88F00D2C1C3 /* ChimeraBellsF.wav in Resources */,
 				962A0CC829891901004DB446 /* Preview Assets.xcassets in Resources */,
+				96D60EF229D8A88F00D2C1C3 /* ChimeraBellsS.wav in Resources */,
+				96D60F0629D99B6500D2C1C3 /* traps.json in Resources */,
 				96540526298C22EF00620E76 /* objects.json in Resources */,
+				96D60EEE29D8A88F00D2C1C3 /* ChimeraBellsÀ.wav in Resources */,
+				96D60EDB29D85EE000D2C1C3 /* cavernAmbient2.wav in Resources */,
 				9619466A29969407000859C8 /* levels.json in Resources */,
 				962A0CC529891901004DB446 /* Assets.xcassets in Resources */,
+				96D60EE129D87FD800D2C1C3 /* diceRoll.wav in Resources */,
+				96D60EF629D8A88F00D2C1C3 /* ChimeraBellsG.wav in Resources */,
 				9619466C2996941E000859C8 /* structures.json in Resources */,
+				96D60EEF29D8A88F00D2C1C3 /* ChimeraBellsK.wav in Resources */,
 				96C51EC429BD31CD00DDCBAB /* Karmatic Arcade.ttf in Resources */,
 				96C51ECA29BE2B3900DDCBAB /* items.json in Resources */,
+				96D60EF729D8A88F00D2C1C3 /* ChimeraBellsA.wav in Resources */,
 				964E7E5929C26E43003CE54B /* spriteAnimations.json in Resources */,
 				962F255829D17C51007D46B7 /* enemies.json in Resources */,
+				96D60EF829D8A88F00D2C1C3 /* ChimeraBellsH.wav in Resources */,
 				9654053B298C340900620E76 /* 8-bit Arcade In.ttf in Resources */,
-				96D60ECD29D77E7900D2C1C3 /* cavernAmbient0.wav in Resources */,
+				96D60EF429D8A88F00D2C1C3 /* ChimeraBellsÒ.wav in Resources */,
+				96D60EF529D8A88F00D2C1C3 /* ChimeraBellsJ.wav in Resources */,
+				96D60EF129D8A88F00D2C1C3 /* ChimeraBellsD.wav in Resources */,
+				96D60EF329D8A88F00D2C1C3 /* ChimeraBellsL.wav in Resources */,
 				9619466429968F0C000859C8 /* worlds.json in Resources */,
 				96D60ECF29D77EA300D2C1C3 /* cavernAmbient1.wav in Resources */,
 				964E7E5029C1FE3B003CE54B /* controllerButtons.json in Resources */,
@@ -558,7 +627,7 @@
 				96FE62B0298BAFAD00B2C614 /* GameCollision.swift in Sources */,
 				964E7E6629C462A0003CE54B /* WorldConfiguration.swift in Sources */,
 				964E7E6229C46278003CE54B /* JSONConfigurationKey.swift in Sources */,
-				9645762529C4FD3400FD8BF0 /* GameExit.swift in Sources */,
+				9645762529C4FD3400FD8BF0 /* LevelExit.swift in Sources */,
 				962A0CC329891900004DB446 /* ContentView.swift in Sources */,
 				964E7E5529C260A5003CE54B /* GameObjectLogic.swift in Sources */,
 				9626092129CA60D60014A912 /* AnimationConfiguration.swift in Sources */,
@@ -573,9 +642,12 @@
 				964E7E6829C462D3003CE54B /* GameConfiguration.swift in Sources */,
 				964E7E5329C26092003CE54B /* GameObjectAnimation.swift in Sources */,
 				96540522298C21F800620E76 /* GameObject.swift in Sources */,
+				96D60F0429D9988F00D2C1C3 /* LevelTrap.swift in Sources */,
 				964E7E5C29C46240003CE54B /* SoundConfigurationKey.swift in Sources */,
 				96EE96B5298FF9BB00273A9D /* GameState.swift in Sources */,
 				964E7E5729C26D79003CE54B /* GameSprite.swift in Sources */,
+				96D60EFA29D8A99A00D2C1C3 /* LevelGem.swift in Sources */,
+				96D60EFC29D97B9100D2C1C3 /* LevelNPC.swift in Sources */,
 				96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */,
 				964E7E5E29C4624E003CE54B /* SceneConfigurationKey.swift in Sources */,
 				96B7F80A29B535D6001584E3 /* PlatformHour.xcdatamodeld in Sources */,

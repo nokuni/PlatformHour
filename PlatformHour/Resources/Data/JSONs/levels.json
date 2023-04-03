@@ -2,50 +2,138 @@
     {
         "id": 0,
         "playerCoordinate": "2908",
-        "background": "caveBackground",
-        "exit":
-        {
+        "background": "cavernBackground",
+        "exit": {
             "sprite": "springExit",
-            "coordinate": "2949"
+            "coordinate": "2957"
         },
-        "structures":
-        [
+        "structures": [
             {
-                "matrix": "1020",
+                "matrix": "1060",
                 "coordinate": "3000"
             },
+        ],
+        "obstacles": [],
+        "containers": [],
+        "traps": [
             {
-                "matrix": "1002",
-                "coordinate": "3023"
+                "id": "0",
+                "name": "Rock",
+                "coordinate": "1010"
             },
             {
-                "matrix": "1034",
-                "coordinate": "3028"
-            }
-        ],
-        "obstacles":
-        [
+                "id": "1",
+                "name": "Rock",
+                "coordinate": "1515"
+            },
             {
-                "image": "caveGround00",
-                "matrix": "0402",
-                "coordinate": "2644"
-            }
-        ],
-        "containers":
-        [
+                "id": "2",
+                "name": "Rock",
+                "coordinate": "1120"
+            },
             {
-                "name": "Cube 6",
-                "coordinate": "2946"
-            }
-        ],
-        "enemies":
-        [
+                "id": "3",
+                "name": "Rock",
+                "coordinate": "1825"
+            },
             {
-                "name": "Enemy Slime",
-                "coordinate": "2913",
-                "itinerary": 6
+                "id": "4",
+                "name": "Rock",
+                "coordinate": "1330"
+            },
+            {
+                "id": "5",
+                "name": "Rock",
+                "coordinate": "1735"
+            },
+            {
+                "id": "6",
+                "name": "Rock",
+                "coordinate": "2040"
+            },
+            {
+                "id": "7",
+                "name": "Rock",
+                "coordinate": "1445"
+            },
+            {
+                "id": "8",
+                "name": "Rock",
+                "coordinate": "1650"
+            },
+        ],
+        "npcs": [],
+        "enemies": [],
+        "gems": [
+            {
+                "item": "Blue Gem A",
+                "coordinate": "2917"
+            },
+            {
+                "item": "Blue Gem S",
+                "coordinate": "2918"
+            },
+            {
+                "item": "Blue Gem D",
+                "coordinate": "2927"
+            },
+            {
+                "item": "Blue Gem F",
+                "coordinate": "2928"
+            },
+            {
+                "item": "Blue Gem G",
+                "coordinate": "2937"
+            },
+            {
+                "item": "Blue Gem H",
+                "coordinate": "2938"
+            },
+            {
+                "item": "Blue Gem J",
+                "coordinate": "2947"
+            },
+            {
+                "item": "Blue Gem K",
+                "coordinate": "2948"
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "playerCoordinate": "2908",
+        "background": "cavernBackground2",
+        "exit": {
+            "sprite": "springExit",
+            "coordinate": "1957"
+        },
+        "structures": [
+            {
+                "matrix": "1060",
+                "coordinate": "3000"
             }
         ],
-        "orbs": ["2820", "2821", "2822", "2825", "2826", "2827", "2544", "2545"]
+        "obstacles": [
+            {
+                "image": "caveGround11",
+                "matrix": "1010",
+                "coordinate": "2050"
+            },
+            {
+                "image": "caveGround11",
+                "matrix": "0510",
+                "coordinate": "2540"
+            },
+            {
+                "image": "caveGround11",
+                "matrix": "0210",
+                "coordinate": "2830"
+            }
+        ],
+        "containers": [],
+        "traps": [],
+        "npcs": [],
+        "enemies": [],
+        "gems": []
     },
 ]

@@ -1,24 +1,7 @@
 [
     {
-        "name": "Cube 6",
-        "image": "cube6",
-        "logic": {
-            "health": 1,
-            "damage": 0,
-            "isDestructible": true,
-            "isIntangible": false
-        },
-        "animation":
-        [
-            {
-                "identifier": "death",
-                "frames": ["cube6Death0", "cube6Death1", "cube6Death2", "cube6Death3"]
-            }
-        ]
-    },
-    {
-        "name": "Orb",
-        "image": "orb0",
+        "name": "Blue Gem",
+        "image": "blueGem0",
         "logic": {
             "health": 1,
             "damage": 0,
@@ -29,11 +12,11 @@
         [
             {
                 "identifier": "idle",
-                "frames": ["orbCube0", "orbCube1", "orbCube2", "orbCube3", "orbCube4", "orbCube5"]
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
             },
             {
                 "identifier": "death",
-                "frames": ["orbCubeDeath0", "orbCubeDeath1", "orbCubeDeath2", "orbCubeDeath3", "orbCubeDeath4", "orbCubeDeath5"]
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
             }
         ]
     },
@@ -44,6 +27,17 @@
             "health": 1,
             "damage": 0,
             "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation": []
+    },
+    {
+        "name": "Feather",
+        "image": "feather",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
             "isIntangible": false
         },
         "animation": []

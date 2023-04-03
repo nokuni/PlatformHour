@@ -9,13 +9,15 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameLogic {
+public final class GameLogic {
     
-    public init(scene: GameScene) {
+    public init(scene: GameScene, environment: GameEnvironment) {
         self.scene = scene
+        self.environment = environment
     }
     
     public var scene: GameScene
+    public var environment: GameEnvironment
     
     public func damageObject(_ objectNode: PKObjectNode, with projectileNode: PKObjectNode) {
         guard objectNode.logic.isDestructible else { return }
@@ -29,14 +31,14 @@ final public class GameLogic {
         playerDestroy()
     }
     
-    public func updatePlayerHealth() {
-        guard let dice = scene.player else { return }
-        guard let healthBar = dice.node.childNode(withName: "Health Bar") else { return }
-        healthBar.removeFromParent()
-        scene.core?.content?.addHealthBar(amount: dice.currentBarHealth,
-                                          node: dice.node,
-                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
-    }
+//    public func updatePlayerHealth() {
+//        guard let dice = scene.player else { return }
+//        guard let healthBar = dice.node.childNode(withName: "Health Bar") else { return }
+//        healthBar.removeFromParent()
+//        scene.core?.content?.addHealthBar(amount: dice.currentBarHealth,
+//                                          node: dice.node,
+//                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
+//    }
     
     private func isDestroyed(_ objectNode: PKObjectNode) -> Bool {
         objectNode.logic.healthLost >= objectNode.logic.health
@@ -49,19 +51,18 @@ final public class GameLogic {
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
             scene.core?.animation?.destroyThenAnimate(scene: scene,
-                                                     node: objectNode,
-                                                     timeInterval: 0.1)
+                                                      node: objectNode,
+                                                      timeInterval: 0.1)
         }
     }
     
     private func playerDestroy() {
         guard let player = scene.player else { return }
         if isDestroyed(player.node) {
-            scene.core?.animation?.orbSplitEffect(scene: scene, on: player.node.position)
-            player.node.removeFromParent()
+            player.death(scene: scene)
             scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
-                                                   isVisible: false,
-                                                   scene: scene) {
+                                                    isVisible: false,
+                                                    scene: scene) {
                 self.scene.core?.event?.restartLevel()
             }
         }
@@ -73,7 +74,7 @@ final public class GameLogic {
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
             scene.core?.animation?.destroy(node: objectNode,
-                                          filteringMode: .nearest) {
+                                           filteringMode: .nearest) {
                 //                if let item = objectNode.drops.first as? GameItem {
                 //                    self.scene.core?.content?.dropItem(item, at: objectNode.coordinate)
                 //                }
@@ -83,7 +84,7 @@ final public class GameLogic {
     
     private func hit(_ objectNode: PKObjectNode) {
         scene.core?.animation?.hit(node: objectNode,
-                                  filteringMode: .nearest)
+                                   filteringMode: .nearest)
     }
     
     private func damage(_ objectNode: PKObjectNode) {
@@ -93,7 +94,6 @@ final public class GameLogic {
     
     private func dropDestroyCube(coordinate: Coordinate) {
         guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
         if let cube = environment.map.objects.first(where: {
             guard let name = $0.name else { return false }
             let isCube = name.contains("Cube")
@@ -106,64 +106,89 @@ final public class GameLogic {
     }
     
     // Drop
-    private var dropCoordinate: Coordinate {
-        guard let player = scene.player else { return .zero }
-        guard let environment = scene.core?.environment else { return .zero }
+    private func dropCoordinate(object: PKObjectNode) -> Coordinate {
         
-        let playerCoordinate = player.node.coordinate
+        let objectCoordinate = object.coordinate
         
-        var destinationCoordinate = Coordinate(x: playerCoordinate.x + 1,
-                                               y: playerCoordinate.y)
+        var destinationCoordinate = Coordinate(x: objectCoordinate.x + 1,
+                                               y: objectCoordinate.y)
         
         repeat {
-            dropDestroyCube(coordinate: destinationCoordinate)
             destinationCoordinate.x += 1
-            dropDestroyCube(coordinate: destinationCoordinate)
         } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
         
         destinationCoordinate.x -= 1
         
         return destinationCoordinate
     }
-    private var dropPosition: CGPoint {
-        guard let environment = scene.core?.environment else { return .zero }
-        guard let position = environment.map.tilePosition(from: dropCoordinate) else { return .zero }
+    
+    private func dropPosition(object: PKObjectNode) -> CGPoint {
+        let coordinate = dropCoordinate(object: object)
+        guard let position = environment.map.tilePosition(from: coordinate) else { return .zero }
         
         return position
     }
-    private var dropAction: SKAction {
-        guard let player = scene.player else { return SKAction.empty() }
-        guard let environment = scene.core?.environment else { return SKAction.empty() }
-        
-        let moveAction = SKAction.move(from: player.node.position, to: dropPosition, at: 1000)
-        let action = !environment.isCollidingWithObject(at: dropCoordinate) ? moveAction : SKAction.empty()
+    private func dropAction(object: PKObjectNode, speed: CGFloat) -> SKAction {
+        let coordinate = dropCoordinate(object: object)
+        let position = dropPosition(object: object)
+        let moveAction = SKAction.move(from: object.position, to: position, at: speed)
+        let action = !environment.isCollidingWithObject(at: coordinate) ? moveAction : SKAction.empty()
         
         return action
     }
-    private var landAction: SKAction {
+    
+    private var playerLandAnimation: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         let action = SKAction.run {
             self.scene.player?.currentRoll = .one
             self.scene.player?.resetToOne()
-            self.scene.player?.isJumping = false
             self.scene.core?.animation?.circularSmoke(on: player.node)
+            self.scene.core?.animation?.shakeScreen(scene: self.scene)
+            self.scene.core?.sound.land()
+        }
+        return action
+    }
+    private var playerLandCompletionAction: SKAction {
+        let action = SKAction.run {
+            self.scene.player?.isJumping = false
             self.scene.player?.state = .normal
             self.enableControls()
-            self.scene.core?.animation?.shakeScreen(scene: self.scene)
         }
         return action
     }
     
     public func dropPlayer() {
-        scene.player?.node.removeAllActions()
-        let drop = SKAction.sequence([dropAction, landAction])
+        guard let player = scene.player else { return }
+        player.node.removeAllActions()
+        let drop = SKAction.sequence([
+            dropAction(object: player.node, speed: 1000),
+            playerLandAnimation,
+            SKAction.wait(forDuration: 0.5),
+            playerLandCompletionAction
+        ])
         scene.player?.node.run(drop)
+    }
+    public func dropTrap(trapObject: PKObjectNode) {
+        guard let game = scene.game else { return }
+        guard let trapName = trapObject.name else { return }
+        guard let id = trapName.extractedNumber else { return }
+        guard let leveltrap = GameLevel.get(game.levelIndex)?.traps.first(where: {
+            $0.id == String(id)
+        }) else { return }
+        let drop = SKAction.sequence([
+            dropAction(object: trapObject, speed: 500),
+            SKAction.run {
+                self.scene.core?.animation?.destroyThenAnimate(scene: self.scene, node: trapObject, timeInterval: 0.1) {
+                    self.scene.core?.content?.createTrap(leveltrap)
+                }
+            }
+        ])
+        trapObject.run(drop)
     }
     
     // Action Sequence
     private var actionSequenceAction: [SKAction] {
         guard let player = scene.player else { return [] }
-        guard let environment = scene.core?.environment else { return [] }
         
         var currentCoordinate = player.node.coordinate
         var coordinates: [Coordinate] = []

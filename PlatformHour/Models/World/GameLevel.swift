@@ -12,12 +12,14 @@ struct GameLevel: Codable {
     let id: Int
     let playerCoordinate: String
     let background: String
-    let exit: GameExit
+    let exit: LevelExit
     let structures: [LevelStructure]
     let obstacles: [LevelObstacles]
     let containers: [GameObjectContainer]
+    let traps: [LevelTrap]
+    let npcs: [LevelNPC]
     let enemies: [LevelEnemy]
-    let orbs: [String]
+    let gems: [LevelGem]
 }
 
 extension GameLevel {

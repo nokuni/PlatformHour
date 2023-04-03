@@ -15,10 +15,16 @@ final public class GameSound {
     let manager = SoundManager()
     
     public func step() {
-        manager.playSFX(name: GameConfiguration.soundConfigurationKey.diceRoll, loops: 1, volume: GameConfiguration.worldConfiguration.soundSFXVolume)
+        try? manager.playSFX(name: GameConfiguration.soundConfigurationKey.diceRoll, volume: 0.1)
+    }
+    
+    public func land() {
+        try? manager.playSFX(name: "diceFallCavern.wav", volume: 0.1)
     }
     
     public func playBackgroundMusic() {
-        manager.playMusic(name: "cavernAmbient0", volume: GameConfiguration.worldConfiguration.soundSFXVolume, loops: 1)
+        try? manager.playMusicSequence(names: ["cavernAmbient1.wav",
+                                               "cavernAmbient2.wav"],
+                                       volume: 1)
     }
 }

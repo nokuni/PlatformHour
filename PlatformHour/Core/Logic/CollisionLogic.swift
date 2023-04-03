@@ -8,7 +8,7 @@
 import SpriteKit
 import PlayfulKit
 
-public class CollisionLogic {
+public final class CollisionLogic {
     
     public init(scene: GameScene) {
         self.scene = scene
@@ -24,12 +24,12 @@ public class CollisionLogic {
     
     public func pickUpItem(object: PKObjectNode, name: String) {
         if let item = try? GameItem.get(name) {
-            scene.core?.animation?.addParticleEffect(name: "Magic", scene: scene, node: object)
+            try? scene.core?.sound.manager.playSFX(name: item.sound, volume: 0.1)
             scene.player?.bag.append(item)
             scene.core?.hud?.updateScore()
             scene.core?.animation?.destroyThenAnimate(scene: scene,
-                                                     node: object,
-                                                     timeInterval: 0.1)
+                                                      node: object,
+                                                      timeInterval: 0.1)
         }
     }
     
@@ -43,21 +43,19 @@ public class CollisionLogic {
     public func enemyHitPlayer(_ enemyNode: PKObjectNode) {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
-        if !player.isJumping {
-            player.hitted(scene: scene, by: enemyNode) {
-                if let playerCoordinate = self.scene.player?.node.coordinate {
-                    let groundCoordinate = Coordinate(x: playerCoordinate.x + 1, y: playerCoordinate.y)
-                    if !environment.isCollidingWithObject(at: groundCoordinate) {
-                        self.scene.core?.logic?.dropPlayer()
-                    }
-                    self.scene.core?.logic?.endSequenceAction()
-                    self.scene.core?.logic?.damagePlayer(with: enemyNode)
-                    self.scene.core?.logic?.updatePlayerHealth()
-                    self.scene.player?.state = .normal
-                    self.scene.core?.logic?.enableControls()
-                }
-            }
-        }
+        self.scene.core?.logic?.damagePlayer(with: enemyNode)
+//        player.hitted(scene: scene, by: enemyNode) {
+//            if let playerCoordinate = self.scene.player?.node.coordinate {
+//                let groundCoordinate = Coordinate(x: playerCoordinate.x + 1, y: playerCoordinate.y)
+//                if !environment.isCollidingWithObject(at: groundCoordinate) {
+//                    self.scene.core?.logic?.dropPlayer()
+//                }
+//                self.scene.core?.logic?.endSequenceAction()
+//                self.scene.core?.logic?.damagePlayer(with: enemyNode)
+//                self.scene.player?.state = .normal
+//                self.scene.core?.logic?.enableControls()
+//            }
+//        }
     }
     
     public func landOnGround() {

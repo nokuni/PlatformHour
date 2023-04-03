@@ -1,6 +1,57 @@
 [
     {
-        "name": "Orb",
-        "sprite": "orb0"
-    }
+        "name": "Blue Gem A",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsA.wav"
+    },
+    {
+        "name": "Blue Gem S",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsS.wav"
+    },
+    {
+        "name": "Blue Gem D",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsD.wav"
+    },
+    {
+        "name": "Blue Gem F",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsF.wav"
+    },
+    {
+        "name": "Blue Gem G",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsG.wav"
+    },
+    {
+        "name": "Blue Gem H",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsH.wav"
+    },
+    {
+        "name": "Blue Gem J",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsJ.wav"
+    },
+    {
+        "name": "Blue Gem K",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsK.wav"
+    },
+    {
+        "name": "Blue Gem L",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsL.wav"
+    },
+    {
+        "name": "Blue Gem Ò",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsÒ.wav"
+    },
+    {
+        "name": "Blue Gem À",
+        "sprite": "blueGem0",
+        "sound": "ChimeraBellsÀ.wav"
+    },
 ]

@@ -34,6 +34,10 @@ extension GameObject {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.enemies)
     }
     
+    static var traps: [GameObject]? {
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.traps)
+    }
+    
     static func get(_ name: String) -> GameObject? {
         let object = GameObject.all?.first(where: {
             $0.name == name
@@ -46,5 +50,12 @@ extension GameObject {
             $0.name == name
         })
         return enemy
+    }
+    
+    static func getTrap(_ name: String) -> GameObject? {
+        let trap = GameObject.traps?.first(where: {
+            $0.name == name
+        })
+        return trap
     }
 }

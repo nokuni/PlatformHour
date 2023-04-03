@@ -73,7 +73,7 @@ public class Dice {
     public var currentRoll: Roll = .one
     public var range: CGFloat = GameConfiguration.playerConfiguration.range
     public var attackSpeed: CGFloat = GameConfiguration.playerConfiguration.attackSpeed
-    public var logic: GameObjectLogic = GameObjectLogic(health: 5,
+    public var logic: GameObjectLogic = GameObjectLogic(health: 1,
                                                         damage: 1,
                                                         isDestructible: true,
                                                         isIntangible: false)
@@ -131,6 +131,27 @@ extension Dice {
         let frames = orientation == .right ? rightRunFrames : leftRunFrames
         let action = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
         SKAction.start(actionOnLaunch: nil, animation: action, node: node, actionOnEnd: nil)
+    }
+    
+    func death(scene: GameScene) {
+        guard let deathFrames = frames(id: GameConfiguration.playerConfiguration.deathAnimation) else { return }
+        let animationNode = SKSpriteNode()
+        animationNode.size = GameConfiguration.worldConfiguration.tileSize
+        animationNode.position = node.position
+        scene.addChild(animationNode)
+        
+        let animation = SKAction.animate(with: deathFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.deathTimePerFrame)
+        
+        let sequence = SKAction.sequence([
+            animation,
+            SKAction.fadeOutAndIn(fadeOutDuration: 0.05, fadeInDuration: 0.05, repeating: 5),
+            SKAction.removeFromParent()
+        ])
+        
+        SKAction.start(actionOnLaunch: node.removeFromParent,
+                       animation: sequence,
+                       node: animationNode,
+                       actionOnEnd: nil)
     }
     
     func hitted(scene: GameScene, by enemy: PKObjectNode, completion: (() -> Void)?) {

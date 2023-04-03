@@ -9,7 +9,7 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-public class ActionLogic {
+public final class ActionLogic {
     
     public init(scene: GameScene) {
         self.scene = scene

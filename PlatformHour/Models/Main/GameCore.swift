@@ -44,17 +44,21 @@ public struct GameCore {
     
     mutating public func start(game: Game?, scene: GameScene) {
         event = GameEvent(scene: scene)
-        logic = GameLogic(scene: scene)
+        environment = GameEnvironment(scene: scene)
         collision = GameCollision(scene: scene)
         hud = GameHUD(scene: scene)
-        environment = GameEnvironment(scene: scene)
         animation = GameAnimation()
         
         guard let environment = environment else { return }
+        
+        logic = GameLogic(scene: scene, environment: environment)
+        
         guard let animation = animation else { return }
         
+        guard let logic = logic else { return }
+        
         gameCamera = GameCamera(scene: scene, environment: environment)
-        content = GameContent(scene: scene, environment: environment, animation: animation)
+        content = GameContent(scene: scene, environment: environment, animation: animation, logic: logic)
     }
     
     public func animateLaunch(game: Game?, scene: GameScene, player: Dice?) {

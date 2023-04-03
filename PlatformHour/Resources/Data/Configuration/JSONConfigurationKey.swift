@@ -10,6 +10,7 @@ import Foundation
 struct JSONConfigurationKey {
     let objects = "objects.json"
     let enemies = "enemies.json"
+    let traps = "traps.json"
     let items = "items.json"
     let levels = "levels.json"
     let worlds = "worlds.json"

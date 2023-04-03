@@ -9,15 +9,18 @@ import Foundation
 
 public struct GameItem: Codable {
     public init(name: String,
-                sprite: String) {
+                sprite: String,
+                sound: String) {
         self.name = name
         self.sprite = sprite
+        self.sound = sound
     }
     public var name: String
     public var sprite: String
+    public var sound: String
     
     enum CodingKeys: String, CodingKey {
-        case name, sprite
+        case name, sprite, sound
     }
 }
 
