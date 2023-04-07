@@ -49,28 +49,31 @@ final public class GameCamera {
     
     private func setCameraLimit() {
         
-        let minimumCoordinate = Coordinate(x: GameConfiguration.worldConfiguration.topBoundaryLimit,
-                                           y: GameConfiguration.worldConfiguration.leftBoundaryLimit)
-        let maximumCoordinate = Coordinate(x: GameConfiguration.worldConfiguration.bottomBoundaryLimit,
-                                           y: GameConfiguration.worldConfiguration.rightBoundaryLimit)
+        guard let topLimit = environment.mapLimits.top else { return }
+        guard let rightLimit = environment.mapLimits.right else { return }
+        guard let bottomLimit = environment.mapLimits.bottom else { return }
+        guard let leftLimit = environment.mapLimits.left else { return }
+        
+        let minimumCoordinate = Coordinate(x: topLimit, y: leftLimit)
+        let maximumCoordinate = Coordinate(x: bottomLimit, y: rightLimit)
 
         guard let minCameraPosition = environment.map.tilePosition(from: minimumCoordinate) else { return }
         guard let maxCameraPosition = environment.map.tilePosition(from: maximumCoordinate) else { return }
         
         if playerPosition.x < minCameraPosition.x {
-            camera.move(to: CGPoint(x: minCameraPosition.x, y: playerPosition.y), catchUpDelay: 0)
+            camera.move(to: CGPoint(x: minCameraPosition.x, y: playerPosition.y), catchUpDelay: GameConfiguration.worldConfiguration.cameraCatchUpDelay)
         }
         
         if playerPosition.x > maxCameraPosition.x {
-            camera.move(to: CGPoint(x: maxCameraPosition.x, y: playerPosition.y), catchUpDelay: 0)
+            camera.move(to: CGPoint(x: maxCameraPosition.x, y: playerPosition.y), catchUpDelay: GameConfiguration.worldConfiguration.cameraCatchUpDelay)
         }
         
         if playerPosition.y > minCameraPosition.y {
-            camera.scene.camera?.run(SKAction.moveTo(y: minCameraPosition.y, duration: 0))
+            camera.scene.camera?.run(SKAction.moveTo(y: minCameraPosition.y, duration: GameConfiguration.worldConfiguration.cameraCatchUpDelay))
         }
         
         if playerPosition.y < maxCameraPosition.y {
-            camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: 0))
+            camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: GameConfiguration.worldConfiguration.cameraCatchUpDelay))
         }
     }
     

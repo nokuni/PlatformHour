@@ -1,0 +1,55 @@
+[
+    {
+        "name": "Cavern Outline",
+        "corners": [
+            "caveGround00",
+            "caveGround04",
+            "caveGround44",
+            "caveGround40"
+        ],
+        "borders": [
+            "caveGround01",
+            "caveGround02",
+            "caveGround03",
+            "caveGround04",
+            "caveGround41",
+            "caveGround42",
+            "caveGround43",
+            "caveGround00"
+        ]
+    },
+    {
+        "name": "Cavern First Layer",
+        "corners": [
+            "caveGround13",
+            "caveGround13",
+            "caveGround13",
+            "caveGround13"
+        ],
+        "borders": [
+            "caveGround11",
+            "caveGround12",
+            "caveGround13",
+            "caveGround13",
+            "caveGround11",
+            "caveGround12",
+            "caveGround13",
+            "caveGround11"
+        ]
+    },
+    {
+        "name": "Cavern Inner Layer",
+        "corners": [
+            "caveGround21",
+            "caveGround21",
+            "caveGround21",
+            "caveGround21"
+        ],
+        "borders": [
+            "caveGround21",
+            "caveGround21",
+            "caveGround21",
+            "caveGround21"
+        ]
+    }
+]

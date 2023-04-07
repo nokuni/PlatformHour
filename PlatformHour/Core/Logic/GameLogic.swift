@@ -115,7 +115,7 @@ public final class GameLogic {
         
         repeat {
             destinationCoordinate.x += 1
-        } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= GameConfiguration.worldConfiguration.xDeathBoundary
+        } while !environment.collisionCoordinates.contains(destinationCoordinate) && destinationCoordinate.x <= environment.deathLimit
         
         destinationCoordinate.x -= 1
         
@@ -144,14 +144,14 @@ public final class GameLogic {
             self.scene.player?.resetToOne()
             self.scene.core?.animation?.circularSmoke(on: player.node)
             self.scene.core?.animation?.shakeScreen(scene: self.scene)
-            self.scene.core?.sound.land()
+            self.scene.core?.sound.land(scene: self.scene)
         }
         return action
     }
     private var playerLandCompletionAction: SKAction {
         let action = SKAction.run {
-            self.scene.player?.isJumping = false
-            self.scene.player?.state = .normal
+            self.scene.player?.state.isJumping = false
+            self.scene.player?.controllerState = .normal
             self.enableControls()
         }
         return action
@@ -161,7 +161,7 @@ public final class GameLogic {
         guard let player = scene.player else { return }
         player.node.removeAllActions()
         let drop = SKAction.sequence([
-            dropAction(object: player.node, speed: 1000),
+            dropAction(object: player.node, speed: GameConfiguration.playerConfiguration.fallSpeed),
             playerLandAnimation,
             SKAction.wait(forDuration: 0.5),
             playerLandCompletionAction
@@ -208,13 +208,13 @@ public final class GameLogic {
         
         return moves
     }
-    public func endSequenceAction() {
+    public func endSequenceOfActions() {
         guard let player = scene.player else { return }
         player.actions.removeAll()
-        self.scene.core?.hud?.removeDiceActions()
+        self.scene.core?.hud?.removeSequenceOfActions()
     }
     
-    public func resolveActionSequence() {
+    public func resolveSequenceOfActions() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
             let gravityEffect = player.node.childNode(withName: GameConfiguration.sceneConfigurationKey.gravityEffect)
@@ -228,7 +228,7 @@ public final class GameLogic {
         
         var actions = actionSequenceAction
         actions.append(SKAction.run {
-            self.endSequenceAction()
+            self.endSequenceOfActions()
             self.dropPlayer()
         })
         
@@ -244,11 +244,11 @@ public final class GameLogic {
             return
         }
         
-        if player.isProjectileTurningBack {
-            projectile.run(SKAction.follow(player.node, duration: player.attackSpeed))
+        if player.state.hasProjectileTurningBack {
+            projectile.run(SKAction.follow(player.node, duration: player.stats.attackSpeed))
             if projectile.contains(player.node.position) {
                 projectile.removeFromParent()
-                player.isProjectileTurningBack = false
+                player.state.hasProjectileTurningBack = false
             }
         }
     }

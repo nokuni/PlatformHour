@@ -12,18 +12,18 @@ import Utility_Toolbox
 
 public final class GameScene: SKScene {
     
-    var player: Dice?
+    var player: Player?
     var game: Game?
     var core: GameCore?
     
     func startGame() {
-        setup(configuration: .init(gravity: GameConfiguration.worldConfiguration.gravity))
-        player = Dice()
+        setup()
+        player = Player()
         game?.loadGame()
         game = Game.shared
         core = GameCore()
         core?.start(game: game, scene: self)
-        core?.sound.playBackgroundMusic()
+        //core?.sound.playBackgroundMusic(scene: self)
         core?.animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
                                          isVisible: true,
                                          scene: self) {
@@ -37,7 +37,7 @@ public final class GameScene: SKScene {
     }
     
     public override func update(_ currentTime: TimeInterval) {
-        //core?.gameCamera?.followPlayer()
+        core?.gameCamera?.followPlayer()
         core?.logic?.projectileFollowPlayer()
         core?.event?.updatePlayerCoordinate()
         //core?.event?.updatePlatformCoordinates()

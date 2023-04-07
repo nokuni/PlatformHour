@@ -20,8 +20,31 @@ final public class GameEnvironment {
     public var scene: GameScene
     public var map = PKMapNode()
     public var backgroundContainer = SKNode()
-    public var mapMatrix = Matrix(row: 40, column: 60)
     
+    public var mapMatrix: Matrix {
+        guard let matrix = scene.game?.level?.mapMatrix.matrix else { return .zero }
+        return Matrix(row: matrix.row, column: matrix.column)
+    }
+    
+    public var mapLimits: (top: Int?, right: Int?, bottom: Int?, left: Int?) {
+        let playerCoordinate = scene.game?.level?.playerCoordinate.coordinate
+        
+        let top = 4
+        let right = mapMatrix.column - 9
+        let bottom = mapMatrix.row - 6
+        let left = playerCoordinate?.y
+        
+//        let leftBoundaryLimit: Int = 8
+//        let rightBoundaryLimit: Int = 51
+//        let topBoundaryLimit: Int = 4
+//        let bottomBoundaryLimit: Int = 34
+        
+        return (top, right, bottom, left)
+    }
+    
+    public var deathLimit: Int {
+        mapMatrix.row - 1
+    }
     
     public var allElements: [SKSpriteNode] {
         let allTiles = map.tiles
@@ -73,7 +96,7 @@ final public class GameEnvironment {
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
                                   contact: [.player, .object, .playerProjectile, .enemyProjectile])
         let structureElement = objectElement(collision: collision)
-        structureElement.zPosition = GameConfiguration.worldConfiguration.sceneryZPosition
+        structureElement.zPosition = GameConfiguration.sceneConfiguration.sceneryZPosition
         structureElement.physicsBody?.friction = 0
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
@@ -89,7 +112,7 @@ final public class GameEnvironment {
                                              collision: collision)
         structureElement.blendMode = .alpha
         structureElement.name = name
-        structureElement.zPosition = GameConfiguration.worldConfiguration.backgroundZPosition
+        structureElement.zPosition = GameConfiguration.sceneConfiguration.backgroundZPosition
         structureElement.physicsBody?.isDynamic = false
         structureElement.physicsBody?.affectedByGravity = false
         return structureElement

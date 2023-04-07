@@ -14,17 +14,22 @@ final public class GameSound {
     
     let manager = SoundManager()
     
+    /// Play a step sound.
     public func step() {
-        try? manager.playSFX(name: GameConfiguration.soundConfigurationKey.diceRoll, volume: 0.1)
+        try? manager.playSFX(name: GameConfiguration.soundConfigurationKey.playerStep, volume: 0.1)
     }
     
-    public func land() {
-        try? manager.playSFX(name: "diceFallCavern.wav", volume: 0.1)
+    /// Play a landing sound.
+    public func land(scene: GameScene) {
+        if let landSound = scene.game?.world?.playerLandSound {
+            try? manager.playSFX(name: landSound, volume: 0.1)
+        }
     }
     
-    public func playBackgroundMusic() {
-        try? manager.playMusicSequence(names: ["cavernAmbient1.wav",
-                                               "cavernAmbient2.wav"],
-                                       volume: 1)
+    /// Play background musics..
+    public func playBackgroundMusics(scene: GameScene) {
+        if let musics = scene.game?.level?.musics {
+            try? manager.playMusicSequence(names: musics, volume: 1)
+        }
     }
 }

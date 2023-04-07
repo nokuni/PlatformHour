@@ -25,12 +25,7 @@ final public class GameAnimation {
         case death = "death"
     }
     
-    public func addParticleEffect(name: String, scene: SKScene, node: SKNode) {
-        guard let particleEffect = SKEffectNode(fileNamed: name) else { return }
-        particleEffect.position = node.position
-        scene.addChild(particleEffect)
-    }
-    
+    /// Shake the screen.
     public func shakeScreen(scene: GameScene) {
         guard let camera = scene.camera else { return }
         let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
@@ -41,6 +36,7 @@ final public class GameAnimation {
         }
     }
     
+    /// Add a gravityt effect on a node.
     public func addGravityEffect(on node: SKNode) {
         let gravityEffectNode = SKSpriteNode()
         gravityEffectNode.name = GameConfiguration.sceneConfigurationKey.gravityEffect
@@ -65,6 +61,7 @@ final public class GameAnimation {
         gravityEffectNode.run(SKAction.repeatForever(animation))
     }
     
+    /// Scene transition effect.
     public func transitionEffect(effect: SKAction,
                                  isVisible: Bool = true,
                                  scene: GameScene,
@@ -74,7 +71,7 @@ final public class GameAnimation {
         effectNode.alpha = isVisible ? 1 : 0
         effectNode.fillColor = .black
         effectNode.strokeColor = .black
-        effectNode.zPosition = GameConfiguration.worldConfiguration.overlayZPosition
+        effectNode.zPosition = GameConfiguration.sceneConfiguration.overlayZPosition
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)
         let sequence = SKAction.sequence([
@@ -87,6 +84,7 @@ final public class GameAnimation {
         effectNode.run(sequence)
     }
     
+    /// Circular smoke animation.
     public func circularSmoke(on node: SKNode) {
         let tileSize = GameConfiguration.worldConfiguration.tileSize
         let animationNode = SKSpriteNode()
@@ -120,7 +118,7 @@ final public class GameAnimation {
             let orb = SKSpriteNode(imageNamed: "orb0")
             orb.size = tileSize
             orb.texture?.filteringMode = .nearest
-            orb.zPosition = GameConfiguration.worldConfiguration.hudZPosition
+            orb.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
             orb.position = position
             scene.addChildSafely(orb)
             
@@ -143,13 +141,14 @@ final public class GameAnimation {
         }
     }
     
+    /// Remove a node then animate the removal.
     public func destroyThenAnimate(scene: GameScene,
                                    node: PKObjectNode,
                                    timeInterval: TimeInterval = 0.05,
                                    actionAfter: (() -> Void)? = nil) {
         let animatedNode = PKObjectNode()
         animatedNode.size = node.size
-        animatedNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
+        animatedNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
         animatedNode.position = node.position
         animatedNode.animations = node.animations
         
@@ -168,6 +167,7 @@ final public class GameAnimation {
         node.removeFromParent()
     }
     
+    /// Animate a node with a state identifier.
     public func animate(node: PKObjectNode,
                         identifier: StateID,
                         filteringMode: SKTextureFilteringMode = .linear,
@@ -179,6 +179,7 @@ final public class GameAnimation {
         return animation
     }
     
+    /// Animate a node with an idle state identifier.
     public func idle(node: PKObjectNode,
                      filteringMode: SKTextureFilteringMode = .linear,
                      timeInterval: TimeInterval = 0.05) {
@@ -190,6 +191,7 @@ final public class GameAnimation {
         node.run(SKAction.repeatForever(action))
     }
     
+    /// Animate a node with a hit state identifier.
     public func hit(node: PKObjectNode,
                     filteringMode: SKTextureFilteringMode = .linear,
                     timeInterval: TimeInterval = 0.05) {
@@ -199,6 +201,7 @@ final public class GameAnimation {
                          hitTimeInterval: timeInterval))
     }
     
+    /// Animate a node with an death state identifier.
     public func destroy(node: PKObjectNode,
                         filteringMode: SKTextureFilteringMode = .linear,
                         timeInterval: TimeInterval = 0.05,

@@ -19,7 +19,7 @@ final public class GameContent {
         self.environment = environment
         self.animation = animation
         self.logic = logic
-        createContent()
+        generateContent()
     }
     
     var scene: GameScene
@@ -27,7 +27,7 @@ final public class GameContent {
     var animation: GameAnimation
     var logic: GameLogic
     
-    // Objects
+    // MARK: - Objects
     public func object(name: String? = nil,
                        physicsBodySizeTailoring: CGFloat = 0,
                        collision: Collision) -> PKObjectNode {
@@ -73,45 +73,38 @@ final public class GameContent {
     
     // MARK: - Main
     
-    private func createContent() {
-        createGround()
-        //createTrees()
-        //createStatue()
-        //createPlatform()
-        createObstacles()
-        createGems()
-        createTraps()
-        createContainers()
-        createExit()
-        createNPCs()
-        configurePlayer()
-        createPlayer()
-        createEnemies()
+    private func generateContent() {
+        generateStructures()
+        generateGems()
+        generateTraps()
+        generateContainers()
+        generateExit()
+        generateNPCs()
+        generateEnemies()
+        generatePlayer()
     }
     
-    // MARK: - Player
-    private func createPlayer() {
-        if let player = scene.player {
-            scene.addChildSafely(player.node)
-        }
-    }
+    // MARK: - Configurations
     private func configurePlayer() {
         guard let level = scene.game?.level else { return }
-        guard let dice = scene.player else { return }
+        guard let player = scene.player else { return }
         let collision = Collision(category: .player,
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
         
-        dice.node = object(name: GameConfiguration.sceneConfigurationKey.player,
-                           collision: collision)
+        player.node = object(name: GameConfiguration.sceneConfigurationKey.player,
+                             collision: collision)
         
-        dice.node.logic = LogicBody(health: dice.logic.health, damage: dice.logic.damage, isDestructible: dice.logic.isDestructible, isIntangible: dice.logic.isIntangible)
+        player.node.logic = LogicBody(health: player.logic.health,
+                                      damage: player.logic.damage,
+                                      isDestructible: player.logic.isDestructible,
+                                      isIntangible: player.logic.isIntangible)
         
-        dice.node.zPosition = GameConfiguration.worldConfiguration.playerZPosition
+        player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         
-        dice.node.physicsBody?.friction = 0
-        dice.node.physicsBody?.allowsRotation = false
-        dice.node.physicsBody?.affectedByGravity = false
+        player.node.physicsBody?.friction = 0
+        player.node.physicsBody?.allowsRotation = false
+        player.node.physicsBody?.affectedByGravity = false
         
         //addHealthBar(amount: dice.currentBarHealth, node: dice.node, widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
         
@@ -119,142 +112,63 @@ final public class GameContent {
             return
         }
         
-        dice.node.coordinate = level.playerCoordinate.coordinate
-        dice.node.position = position
-        dice.node.texture = SKTexture(imageNamed: "dice\(dice.currentRoll.rawValue)Idle")
-        dice.node.texture?.filteringMode = .nearest
+        player.node.coordinate = level.playerCoordinate.coordinate
+        player.node.position = position
+        player.node.texture = SKTexture(imageNamed: "player\(player.currentRoll.rawValue)Idle")
+        player.node.texture?.filteringMode = .nearest
     }
     
-    // MARK: - Enemies
-    private func createEnemies() {
+    // MARK: - Level Generations
+    
+    /// Generate the player on the current level.
+    private func generatePlayer() {
+        configurePlayer()
+        if let player = scene.player {
+            scene.addChildSafely(player.node)
+        }
+    }
+    
+    /// Generate the enemies on the current level.
+    private func generateEnemies() {
         if let level = scene.game?.level {
             for enemy in level.enemies {
                 createEnemy(enemy)
             }
         }
     }
-    private func createEnemy(_ levelEnemy: LevelEnemy) {
-        if let enemy = GameObject.getEnemy(levelEnemy.name) {
-            let collision = Collision(category: .enemy,
-                                      collision: [.allClear],
-                                      contact: [.player, .playerProjectile])
+    
+    /// Generate the structures on the current level.
+    private func generateStructures() {
+        guard let level = scene.game?.level else { return }
+        
+        for structure in level.structures {
             
-            let runIdentifier = GameAnimation.StateID.run.rawValue
-            let deathIdentifier = GameAnimation.StateID.death.rawValue
+            let configuration = SpiralStructureConfiguration(outline: structure.outline,
+                                                             firstLayer: structure.firstLayer,
+                                                             innerLayer: structure.innerLayer)
             
-            guard let run = enemy.animation.first(where: { $0.identifier == runIdentifier }) else {
-                return
-            }
+            let outlinePattern = configuration.outlinePattern(configuration: configuration)
+            let firstLayerPattern = configuration.firstLayerPattern(configuration: configuration)
+            let innerPatterns = configuration.innerPatterns(structure: structure, configuration: configuration)
             
-            guard let death = enemy.animation.first(where: { $0.identifier == deathIdentifier }) else {
-                return
-            }
+            var patterns = [outlinePattern, firstLayerPattern]
+            patterns.append(contentsOf: innerPatterns)
             
-            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
-            let deathObjectAnimation = ObjectAnimation(identifier: death.identifier, frames: death.frames)
+            let safePatterns = patterns.compactMap { $0 }
             
-            let animations = [runObjectAnimation, deathObjectAnimation]
+            let mapStructure = SpiralStructurePattern.Structure(patterns: safePatterns)
             
-            let enemyNode = object(name: enemy.name,
-                                   physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
-                                   collision: collision)
-            
-            enemyNode.logic = LogicBody(health: enemy.logic.health,
-                                        damage: enemy.logic.damage,
-                                        isDestructible: enemy.logic.isDestructible,
-                                        isIntangible: enemy.logic.isIntangible)
-            
-            enemyNode.animations = animations
-            
-            guard let position = environment.map.tilePosition(from: levelEnemy.coordinate.coordinate) else { return }
-            
-            enemyNode.coordinate = levelEnemy.coordinate.coordinate
-            enemyNode.zPosition = GameConfiguration.worldConfiguration.playerZPosition
-            enemyNode.position = position
-            enemyNode.texture = SKTexture(imageNamed: enemy.image)
-            enemyNode.texture?.filteringMode = .nearest
-            
-            enemyNode.physicsBody?.friction = 0
-            enemyNode.physicsBody?.allowsRotation = false
-            enemyNode.physicsBody?.affectedByGravity = false
-            
-            print("Enemy added")
-            scene.addChildSafely(enemyNode)
-            
-            addEnemyItinerary(enemy: enemyNode, itinerary: levelEnemy.itinerary, frames: runObjectAnimation.frames)
+            let pattern = SpiralStructurePattern(map: environment.map,
+                                                 matrix: structure.matrix.matrix,
+                                                 coordinate: structure.coordinate.coordinate,
+                                                 object: environment.structureObjectElement,
+                                                 structure: mapStructure)
+            pattern.create()
         }
     }
     
-    private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
-        let leftAnimation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: 0.2)
-        
-        let startPosition = enemy.position
-        let endPosition = CGPoint(x: enemy.position.x + (environment.map.squareSize.width * CGFloat(itinerary)),
-                                  y: enemy.position.y)
-        
-        let movement = SKAction.moveForthAndBack(startPoint: startPosition,
-                                                 startAction: enemy.flipHorizontally,
-                                                 endPoint: endPosition,
-                                                 endAction: enemy.flipHorizontally,
-                                                 startDuration: 3,
-                                                 endDuration: 3)
-        
-        let repeatedAnimation = SKAction.repeatForever(leftAnimation)
-        let repeatedMovement = SKAction.repeatForever(movement)
-        
-        let groupedAnimations = SKAction.group([repeatedAnimation, repeatedMovement])
-        
-        enemy.run(groupedAnimations)
-    }
-    
-    // MARK: - Ground
-    private func createGround() {
-        if let level = scene.game?.level {
-            
-            for structure in level.structures {
-                //                let pattern = MapStructurePattern(map: environment.map,
-                //                                                  matrix: structure.matrix.matrix,
-                //                                                  coordinate: structure.coordinate.coordinate,
-                //                                                  object: environment.structureObjectElement,
-                //                                                  simple: StructurePatternConfiguration.GroundSimplePattern.cave)
-                //                pattern.create()
-                let mapStructure = MapStructure(topLeft: SKTexture(imageNamed: "caveGround00"),
-                                                topRight: SKTexture(imageNamed: "caveGround04"),
-                                                bottomLeft: SKTexture(imageNamed: "caveGround40"),
-                                                bottomRight: SKTexture(imageNamed: "caveGround44"),
-                                                left: SKTexture(imageNamed: "caveGround00"),
-                                                right: SKTexture(imageNamed: "caveGround04"),
-                                                top: SKTexture(imageNamed: "caveGround01"),
-                                                bottom: SKTexture(imageNamed: "caveGround41"),
-                                                middle: SKTexture(imageNamed: "caveGround33"))
-                let pattern = TestPattern(map: environment.map,
-                                          matrix: structure.matrix.matrix,
-                                          coordinate: structure.coordinate.coordinate,
-                                          object: environment.structureObjectElement,
-                                          structure: mapStructure)
-                pattern.create()
-            }
-        }
-    }
-    
-    // MARK: - Obstacles
-    
-    private func createObstacles() {
-        if let level = scene.game?.level {
-            for obstacle in level.obstacles {
-                let texture = SKTexture(imageNamed: obstacle.image)
-                texture.filteringMode = .nearest
-                environment.map.addObject(environment.structureObjectElement,
-                                          texture: texture,
-                                          size: environment.map.squareSize,
-                                          logic: LogicBody(),
-                                          animations: [],
-                                          matrix: obstacle.matrix.matrix,
-                                          startingCoordinate: obstacle.coordinate.coordinate)
-            }
-        }
-    }
-    private func createGems() {
+    /// Generate the gems on the current level.
+    private func generateGems() {
         if let level = scene.game?.level {
             for gem in level.gems {
                 if let gemItem = try? GameItem.get(gem.item) {
@@ -263,7 +177,9 @@ final public class GameContent {
             }
         }
     }
-    public func createExit() {
+    
+    /// Generate the exit on the current level.
+    public func generateExit() {
         guard let level = scene.game?.level else { return }
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
@@ -281,14 +197,18 @@ final public class GameContent {
         exit.physicsBody?.affectedByGravity = false
         scene.addChildSafely(exit)
     }
-    public func createNPCs() {
+    
+    /// Generate the NPCs on the current level.
+    public func generateNPCs() {
         if let level = scene.game?.level {
             for npc in level.npcs {
                 createNPC(npc)
             }
         }
     }
-    public func createTraps() {
+    
+    /// Generate the traps on the current level.
+    public func generateTraps() {
         if let level = scene.game?.level {
             for trap in level.traps {
                 createTrap(trap)
@@ -296,7 +216,8 @@ final public class GameContent {
         }
     }
     
-    private func createContainers() {
+    /// Generate an containers on the current level.
+    private func generateContainers() {
         if let level = scene.game?.level {
             for container in level.containers {
                 let coordinate = container.coordinate.coordinate
@@ -305,7 +226,10 @@ final public class GameContent {
         }
     }
     
-    private func createContainer(_ container: GameObjectContainer, at coordinate: Coordinate) {
+    // MARK: - Creations
+    
+    /// Create a container.
+    private func createContainer(_ container: LevelContainer, at coordinate: Coordinate) {
         if let dataObject = GameObject.get(container.name) {
             
             let collision = Collision(category: .object,
@@ -353,6 +277,8 @@ final public class GameContent {
                                       at: coordinate)
         }
     }
+    
+    /// Create an item.
     private func createItem(_ item: GameItem, at coordinate: Coordinate) {
         
         guard let dataObject = GameObject.all?.first(where: { item.name.contains($0.name) }) else { return }
@@ -384,7 +310,7 @@ final public class GameContent {
         itemNode.texture?.filteringMode = .nearest
         itemNode.animations = animations
         let position = environment.map.tilePosition(from: coordinate)
-        itemNode.zPosition = GameConfiguration.worldConfiguration.objectZPosition
+        itemNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
         itemNode.position = position ?? .zero
         itemNode.physicsBody?.isDynamic = false
         itemNode.physicsBody?.affectedByGravity = false
@@ -392,6 +318,8 @@ final public class GameContent {
         
         animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
     }
+    
+    /// Create a NPC.
     private func createNPC(_ npc: LevelNPC) {
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
@@ -405,12 +333,15 @@ final public class GameContent {
                                                   physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
                                                   collision: collision)
         
+        npcObject.size = environment.map.squareSize * CGFloat(npc.size)
         npcObject.texture = SKTexture(imageNamed: npc.sprite)
         npcObject.texture?.filteringMode = .nearest
         npcObject.position = npcPosition
         npcObject.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObject)
     }
+    
+    /// Create a trap.
     public func createTrap(_ levelTrap: LevelTrap) {
         guard let trap = GameObject.getTrap(levelTrap.name) else { return }
         
@@ -442,7 +373,7 @@ final public class GameContent {
         }
         
         trapNode.coordinate = levelTrap.coordinate.coordinate
-        trapNode.zPosition = GameConfiguration.worldConfiguration.playerZPosition
+        trapNode.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         trapNode.position = position
         trapNode.texture = SKTexture(imageNamed: trap.image)
         trapNode.texture?.filteringMode = .nearest
@@ -454,6 +385,84 @@ final public class GameContent {
         scene.addChildSafely(trapNode)
         
         logic.dropTrap(trapObject: trapNode)
+    }
+    
+    /// Create an enemy.
+    private func createEnemy(_ levelEnemy: LevelEnemy) {
+        if let enemy = GameObject.getEnemy(levelEnemy.name) {
+            let collision = Collision(category: .enemy,
+                                      collision: [.allClear],
+                                      contact: [.player, .playerProjectile])
+            
+            let runIdentifier = GameAnimation.StateID.run.rawValue
+            let deathIdentifier = GameAnimation.StateID.death.rawValue
+            
+            guard let run = enemy.animation.first(where: { $0.identifier == runIdentifier }) else {
+                return
+            }
+            
+            guard let death = enemy.animation.first(where: { $0.identifier == deathIdentifier }) else {
+                return
+            }
+            
+            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
+            let deathObjectAnimation = ObjectAnimation(identifier: death.identifier, frames: death.frames)
+            
+            let animations = [runObjectAnimation, deathObjectAnimation]
+            
+            let enemyNode = object(name: enemy.name,
+                                   physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
+                                   collision: collision)
+            
+            enemyNode.logic = LogicBody(health: enemy.logic.health,
+                                        damage: enemy.logic.damage,
+                                        isDestructible: enemy.logic.isDestructible,
+                                        isIntangible: enemy.logic.isIntangible)
+            
+            enemyNode.animations = animations
+            
+            guard let position = environment.map.tilePosition(from: levelEnemy.coordinate.coordinate) else { return }
+            
+            enemyNode.coordinate = levelEnemy.coordinate.coordinate
+            enemyNode.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
+            enemyNode.position = position
+            enemyNode.texture = SKTexture(imageNamed: enemy.image)
+            enemyNode.texture?.filteringMode = .nearest
+            
+            enemyNode.physicsBody?.friction = 0
+            enemyNode.physicsBody?.allowsRotation = false
+            enemyNode.physicsBody?.affectedByGravity = false
+            
+            print("Enemy added")
+            scene.addChildSafely(enemyNode)
+            
+            addEnemyItinerary(enemy: enemyNode, itinerary: levelEnemy.itinerary, frames: runObjectAnimation.frames)
+        }
+    }
+    
+    // MARK: - Adds
+    
+    /// Add a fixed intinerary movement to an enemy.
+    private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
+        let leftAnimation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: 0.2)
+        
+        let startPosition = enemy.position
+        let endPosition = CGPoint(x: enemy.position.x + (environment.map.squareSize.width * CGFloat(itinerary)),
+                                  y: enemy.position.y)
+        
+        let movement = SKAction.moveForthAndBack(startPoint: startPosition,
+                                                 startAction: enemy.flipHorizontally,
+                                                 endPoint: endPosition,
+                                                 endAction: enemy.flipHorizontally,
+                                                 startDuration: 3,
+                                                 endDuration: 3)
+        
+        let repeatedAnimation = SKAction.repeatForever(leftAnimation)
+        let repeatedMovement = SKAction.repeatForever(movement)
+        
+        let groupedAnimations = SKAction.group([repeatedAnimation, repeatedMovement])
+        
+        enemy.run(groupedAnimations)
     }
     
     // Additions
@@ -480,9 +489,17 @@ final public class GameContent {
      node.addChildSafely(progressBar)
      }*/
     
-    // States
-    func pause() { /*container.isPaused = true*/ }
-    func unpause() { /*container.isPaused = false*/ }
+    // MARK: - Pause
+    
+    /// Pause the generated content.
+    func pause() {
+        /*container.isPaused = true*/
+    }
+    
+    /// Unpause the generated content.
+    func unpause() {
+        /*container.isPaused = false*/
+    }
 }
 
 /*

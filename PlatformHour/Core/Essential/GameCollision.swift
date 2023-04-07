@@ -90,7 +90,7 @@ final public class GameCollision {
         guard let projectile = first.body.node as? PKObjectNode else { return }
         if manager.isColliding(first, with: second) {
             projectile.removeAllActions()
-            scene.player?.isProjectileTurningBack = true
+            scene.player?.state.hasProjectileTurningBack = true
         }
     }
     

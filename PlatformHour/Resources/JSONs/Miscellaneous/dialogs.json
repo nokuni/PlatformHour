@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Fly Power Up Dialog",
+        "conversation": [
+            {
+                "character": "Blue Spirit",
+                "spot": "right",
+                "lines": [
+                    "See ! That is my first line in the world of Paracia !",
+                    "Right there ! Watch that crystal !"
+                ]
+            },
+            {
+                "character": "Dice",
+                "spot": "left",
+                "lines": [
+                    "... ?"
+                ]
+            },
+        ]
+    },
+]

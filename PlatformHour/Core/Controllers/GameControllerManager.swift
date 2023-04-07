@@ -44,19 +44,24 @@ final public class GameControllerManager {
         isLongPressingButtonY = false
     }
     
+    /// Setup the actions on the gamepad controller
     public func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
         
-        manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.attack,
+        // Cross
+        manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.actionA,
                                                                   release: releaseButtonA)
         
-        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.jump,
+        // Circle
+        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.actionB,
                                                                   release: releaseButtonB)
         
-        manager?.action?.buttonX = ControllerManager.ButtonAction(press: nil,
+        // Square
+        manager?.action?.buttonX = ControllerManager.ButtonAction(press: action.actionX,
                                                                   release: releaseButtonX)
         
-        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.interact,
+        // Triangle
+        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.actionY,
                                                                   release: releaseButtonY)
         
         manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadAction,
@@ -66,6 +71,7 @@ final public class GameControllerManager {
                                                              release: releaseDPad)
     }
     
+    /// Setup the controllers
     private func setupControllers() {
         manager = ControllerManager(scene: scene)
         setupVirtualController()
@@ -73,6 +79,7 @@ final public class GameControllerManager {
         manager?.observeControllers()
     }
     
+    /// Setup the virtual controller.
     private func setupVirtualController() {
         manager?.virtualControllerElements = [.directionPad, .buttonA, .buttonB, .buttonX, .buttonY]
     }

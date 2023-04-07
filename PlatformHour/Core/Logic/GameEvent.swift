@@ -53,15 +53,31 @@ public final class GameEvent {
         timerNode.start()
     }
     
+    public func triggerDialog() {
+        guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
+        
+        if let dialog = level.dialogs.first(where: {
+            $0.triggerCoordinate.coordinate == player.node.coordinate
+        }) {
+            scene.game?.currentLevelDialog = dialog
+            player.controllerState = .inDialog
+            scene.core?.hud?.createDialogBox()
+        }
+    }
+    
     // Updates
     public func triggerPlayerDeathFall() {
         guard let player = scene.player else { return }
-        guard player.node.coordinate.x >= GameConfiguration.worldConfiguration.xDeathBoundary else {
+        guard let environment = scene.core?.environment else { return }
+        guard player.node.coordinate.x >= environment.deathLimit else {
             return
         }
-        player.isDead = true
-        if player.isDead {
-            player.isDead = false
+        
+        player.state.isDead = true
+        
+        if player.state.isDead {
+            player.state.isDead = false
             scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
                                                    isVisible: false,
                                                    scene: scene) {

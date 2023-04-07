@@ -22,8 +22,8 @@ public class GameHUD {
     private let layer = SKShapeNode(rectOf: .screen)
     private let actionSequence = SKNode()
     
-    public var diceActions: [SKSpriteNode] {
-        let actionNodes = actionSequence.childNodes(named: "Dice Action")
+    public var playerActions: [SKSpriteNode] {
+        let actionNodes = actionSequence.childNodes(named: "Player Action")
         let actions = actionNodes.compactMap { $0 as? SKSpriteNode }
         return actions
     }
@@ -48,7 +48,7 @@ public class GameHUD {
     public func createLayer() {
         layer.fillColor = .clear
         layer.strokeColor = .clear
-        layer.zPosition = GameConfiguration.worldConfiguration.hudZPosition
+        layer.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
         scene.camera?.addChild(layer)
     }
     public func createHUD() {
@@ -107,16 +107,16 @@ public class GameHUD {
         score.addChildSafely(item)
     }
     
-    public func addDiceActionsHUD() {
+    public func addSequenceOfActionsHUD() {
         guard let player = scene.player else { return }
         
         var actions: [SKSpriteNode] = []
         
         for index in 0..<player.currentRoll.rawValue {
-            let action = SKSpriteNode(imageNamed: "diceAction")
-            action.name = "Dice Action \(index)"
+            let action = SKSpriteNode(imageNamed: "actionSquare")
+            action.name = "Player Action \(index)"
             action.texture?.filteringMode = .nearest
-            action.zPosition = GameConfiguration.worldConfiguration.elementHUDZPosition
+            action.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
             action.size = GameConfiguration.worldConfiguration.tileSize
             let animation = SKAction.sequence([
                 SKAction.scale(by: 1.1, duration: 0.1),
@@ -137,6 +137,122 @@ public class GameHUD {
         })
     }
     
+    // MARK: - Dialog Box
+    
+    public func createDialogBox() {
+        let dialogBox = dialogBox
+        
+        layer.addChild(dialogBox)
+        
+        addDialogArrow(node: dialogBox)
+        
+        guard let levelDialog = scene.game?.currentLevelDialog else { return }
+        
+        guard let dialogData = GameDialog.get(levelDialog.dialog) else { return }
+        
+        if scene.game?.currentDialog == nil { scene.game?.currentDialog = dialogData }
+        
+        guard let currentDialog = scene.game?.currentDialog else { return }
+        
+        guard let dialog = scene.game?.currentDialog else { return }
+        
+        let conversation = currentDialog.conversation[dialog.currentDialogIndex]
+        
+        guard let character = GameCharacter.get(conversation.character) else { return }
+        
+        addDialogCharacter(conversation, gameCharacter: character, node: dialogBox)
+        
+        let lineIndex = currentDialog.conversation[dialog.currentDialogIndex].currentLineIndex
+        let text = currentDialog.conversation[dialog.currentDialogIndex].lines[lineIndex]
+        
+        addDialogText(text, node: dialogBox)
+    }
+    
+    public func displayNextLine() {
+        guard let dialogBox = layer.childNode(withName: "Dialog Box") else { return }
+        dialogBox.removeFromParent()
+        
+        guard let index = scene.game?.currentDialog?.currentDialogIndex else { return }
+        scene.game?.currentDialog?.conversation[index].moveOnNextLine()
+        
+        guard let isEndOfLine = scene.game?.currentDialog?.conversation[index].isEndOfLine else { return }
+        
+        if !isEndOfLine { createDialogBox() } else { displayNextDialog() }
+    }
+    
+    private func displayNextDialog() {
+        scene.game?.currentDialog?.moveOnNextDialog()
+        guard let isEndOfDialog = scene.game?.currentDialog?.isEndOfDialog else { return }
+        if !isEndOfDialog { createDialogBox() }
+    }
+    
+    private var dialogBox: SKSpriteNode {
+        let dialogBoxTexture = SKTexture(imageNamed: "dialogBox")
+        dialogBoxTexture.filteringMode = .nearest
+        let dialogBoxTextureSize = dialogBoxTexture.size()
+        
+        let position = layer.cornerPosition(corner: .bottomLeft, padding: EdgeInsets(top: 0, leading: CGSize.screen.width * 0.5, bottom: 100, trailing: 0))
+        
+        let dialogBox = SKSpriteNode()
+        dialogBox.name = "Dialog Box"
+        dialogBox.size = dialogBoxTextureSize * 2.5
+        dialogBox.texture = dialogBoxTexture
+        dialogBox.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+        dialogBox.position = position
+        
+        return dialogBox
+    }
+    
+    private func addDialogArrow(node: SKNode) {
+        let dialogBoxArrowTexture = SKTexture(imageNamed: "dialogArrow")
+        dialogBoxArrowTexture.filteringMode = .nearest
+        let dialogBoxTextureArrowSize = dialogBoxArrowTexture.size()
+        
+        let position = dialogBox.cornerPosition(corner: .bottomRight, padding: EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 35))
+        
+        let arrow = SKSpriteNode()
+        arrow.size = dialogBoxTextureArrowSize * 1.5
+        arrow.texture = dialogBoxArrowTexture
+        arrow.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
+        arrow.position = position
+        node.addChild(arrow)
+        
+        let animation = SKAction.moveForthAndBack(startPoint: CGPoint(x: arrow.position.x,
+                                                                      y: arrow.position.y - 5),
+                                                  endPoint: CGPoint(x: arrow.position.x,
+                                                                    y: arrow.position.y + 5))
+        
+        arrow.run(SKAction.repeatForever(animation))
+    }
+    
+    private func addDialogCharacter(_ characterDialog: GameCharacterDialog,
+                                    gameCharacter: GameCharacter,
+                                    node: SKNode) {
+        let characterTexture = SKTexture(imageNamed: gameCharacter.fullArt)
+        characterTexture.filteringMode = .nearest
+        let characterTextureSize = characterTexture.size()
+        
+        let padding = characterDialog.spot == .right ?
+        EdgeInsets(top: 50, leading: 0, bottom: 0, trailing:  150) :
+        EdgeInsets(top: 50, leading: 150, bottom: 0, trailing:  0)
+        
+        let corner: SKNode.QuadrilateralCorner = characterDialog.spot == .right ? .topRight : .topLeft
+        
+        let character = SKSpriteNode()
+        character.size = characterTextureSize * 6
+        character.texture = characterTexture
+        character.zPosition = -1
+        character.position = layer.cornerPosition(corner: corner, padding: padding)
+        node.addChild(character)
+    }
+    
+    private func addDialogText(_ text: String, node: SKNode) {
+        let parameter = TextManager.Paramater(content: text, fontName: "Outline Pixel7 Solid", fontSize: 20, fontColor: .black, lineSpacing: 10, padding: EdgeInsets(top: 25, leading: 25, bottom: 0, trailing: 25))
+        let scripwriter = PKTypewriterNode(container: node, parameter: parameter)
+        node.addChild(scripwriter)
+        scripwriter.start()
+    }
+    
     // MARK: - Updates
     public func updateScore() {
         let score = layer.childNode(withName: "Score")
@@ -144,8 +260,8 @@ public class GameHUD {
         createItemAmountHUD()
     }
     
-    public func removeDiceActions() {
-        diceActions.forEach { $0.removeFromParent() }
+    public func removeSequenceOfActions() {
+        playerActions.forEach { $0.removeFromParent() }
     }
     
     func createPauseButton() {

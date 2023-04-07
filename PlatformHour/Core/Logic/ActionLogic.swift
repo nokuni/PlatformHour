@@ -36,27 +36,26 @@ public final class ActionLogic {
     var isAttacking: Bool {
         scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.playerProjectile)
     }
-    
     var canAct: Bool {
         scene.isUserInteractionEnabled
     }
+    var dialogIndex = 0
     
     // MARK: - Underlying Actions/Animations
-    private func addAction(_ action: Dice.DiceAction) {
+    private func addAction(_ action: Player.SequenceAction) {
         guard let player = scene.player else { return }
         guard player.actions.count < player.currentRoll.rawValue else { return }
         player.actions.append(action)
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
         actionElement.size = GameConfiguration.worldConfiguration.tileSize * 0.5
-        scene.core?.hud?.diceActions[safe: player.actions.count - 1]?.addChildSafely(actionElement)
-        scene.core?.logic?.resolveActionSequence()
+        scene.core?.hud?.playerActions[safe: player.actions.count - 1]?.addChildSafely(actionElement)
+        scene.core?.logic?.resolveSequenceOfActions()
     }
-    
     private func move(on direction: Direction, by movementSpeed: Int) {
         guard let player = scene.player else { return }
         guard !isAnimating else { return }
-        guard !player.isJumping else { return }
+        guard !player.state.isJumping else { return }
         guard canAct else { return }
         
         scene.game?.controller?.isLongPressingDPad = true
@@ -70,31 +69,31 @@ public final class ActionLogic {
     }
     private func throwProjectile(_ projectileNode: PKObjectNode) {
         guard let player = scene.player else { return }
-        let distanceAmount = CGFloat(player.range)
+        let distanceAmount = CGFloat(player.stats.range)
         var xDistance: CGFloat = 0
         var yDistance: CGFloat = 0
-
+        
         switch player.orientation {
         case .right: xDistance = player.node.size.width * distanceAmount
         case .left: xDistance = -player.node.size.width * distanceAmount
         case .up: yDistance = player.node.size.height * distanceAmount
         case .down: yDistance = -player.node.size.height * distanceAmount
         }
-
+        
         let destination = CGPoint(x: player.node.position.x + xDistance,
                                   y: player.node.position.y + yDistance)
-
+        
         let sequence = SKAction.sequence([
-            SKAction.move(to: destination, duration: player.attackSpeed),
+            SKAction.move(to: destination, duration: player.stats.attackSpeed),
             SKAction.run {
-                player.isProjectileTurningBack = true
+                player.state.hasProjectileTurningBack = true
             }
         ])
-
+        
         projectileNode.run(sequence)
     }
-
-    func moveAnimation(by amount: Int) {
+    
+    private func moveAnimation(by amount: Int) {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
         
@@ -110,8 +109,7 @@ public final class ActionLogic {
         
         scene.player?.node.run(moveSequence)
     }
-    
-    func changeOrientation(direction: Direction) {
+    private func changeOrientation(direction: Direction) {
         switch direction {
         case .right:
             scene.player?.orientation = .right
@@ -126,60 +124,147 @@ public final class ActionLogic {
         }
     }
     
-    // MARK: - Actions
-    func rightPadAction() {
+    // MARK: - Directional Actions
+    
+    /// Trigger right pad actions.
+    public func rightPadAction() {
         guard let player = scene.player else { return }
         
-        switch player.state {
+        switch player.controllerState {
         case .normal:
             moveRight()
         case .inAction:
             addAction(.moveRight)
+        case .inDialog:
+            break
         }
     }
-    func leftPadAction() {
+    
+    /// Trigger left pad actions.
+    public func leftPadAction() {
         guard let player = scene.player else { return }
         
-        switch player.state {
+        switch player.controllerState {
         case .normal:
             moveLeft()
         case .inAction:
             addAction(.moveLeft)
-        }
-    }
-    func upPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.state {
-        case .normal: ()
-        case .inAction:
-            addAction(.moveUp)
-        }
-    }
-    func downPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.state {
-        case .normal: ()
-        case .inAction:
-            addAction(.moveDown)
+        case .inDialog:
+            break
         }
     }
     
-    func jump() {
+    /// Trigger up pad actions.
+    public func upPadAction() {
         guard let player = scene.player else { return }
-        guard !player.isJumping else { return }
+        
+        switch player.controllerState {
+        case .normal:
+            break
+        case .inAction:
+            addAction(.moveUp)
+        case .inDialog:
+            break
+        }
+    }
+    
+    /// Trigger down pad actions.
+    public func downPadAction() {
+        guard let player = scene.player else { return }
+        
+        switch player.controllerState {
+        case .normal:
+            break
+        case .inAction:
+            addAction(.moveDown)
+        case .inDialog:
+            break
+        }
+    }
+    
+    private func moveRight() {
+        guard let player = scene.player else { return }
+        guard !player.state.isJumping else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+        
+        let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
+        
+        move(on: .right, by: movementSpeed)
+    }
+    private func moveLeft() {
+        guard let player = scene.player else { return }
+        guard !player.state.isJumping else { return }
+        guard !isAnimating else { return }
+        guard canAct else { return }
+        
+        let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
+        
+        move(on: .left, by: movementSpeed)
+    }
+    
+    // MARK: - Button Actions
+    
+    /// Trigger button A actions.
+    func actionA() {
+        guard let player = scene.player else { return }
+        
+        switch player.controllerState {
+        case .normal:
+            jump()
+        case .inAction:
+            break
+        case .inDialog:
+            goToNextDialog()
+        }
+    }
+    
+    /// Trigger button B actions.
+    func actionB() {
+        
+    }
+    
+    /// Trigger button X actions.
+    func actionX() {
+        guard let player = scene.player else { return }
+        
+        switch player.controllerState {
+        case .normal:
+            attack()
+        case .inAction:
+            break
+        case .inDialog:
+            break
+        }
+    }
+    
+    /// Trigger button Y actions.
+    func actionY() {
+        guard let player = scene.player else { return }
+        
+        switch player.controllerState {
+        case .normal:
+            interact()
+        case .inAction:
+            break
+        case .inDialog:
+            break
+        }
+    }
+    
+    private func jump() {
+        guard let player = scene.player else { return }
+        guard !player.state.isJumping else { return }
         guard player.interactionStatus == .none else { return }
         guard !isAnimating else { return }
-
+        
         let action = jumpAction(player: player)
-
+        
         scene.core?.logic?.disableControls()
-        player.isJumping = true
+        player.state.isJumping = true
         player.node.run(action)
     }
-
-    func attack() {
+    private func attack() {
         guard !isAttacking else { return }
         guard !isAnimating else { return }
         guard canAct else { return }
@@ -189,7 +274,31 @@ public final class ActionLogic {
             throwProjectile(projectileNode)
         }
     }
-
+    private func interact() {
+        guard let player = scene.player else { return }
+        guard !player.bag.isEmpty else { return }
+        guard canAct else { return }
+        
+        switch player.interactionStatus {
+        case .none:
+            ()
+        case .onExit:
+            scene.core?.event?.loadNextLevel()
+        }
+    }
+    
+    // MARK: - Dialog
+    
+    func goToNextDialog() {
+        scene.core?.hud?.displayNextLine()
+    }
+    
+    private func speedUpCurrentDialog() {
+        
+    }
+    
+    // MARK: - Miscellaneous
+    
     func pause() {
         guard canAct else { return }
         
@@ -206,44 +315,10 @@ public final class ActionLogic {
             ()
         }
     }
-
-    func moveRight() {
-        guard let player = scene.player else { return }
-        guard !player.isJumping else { return }
-        guard !isAnimating else { return }
-        guard canAct else { return }
-
-        let movementSpeed = GameConfiguration.playerConfiguration.movementSpeed
-
-        move(on: .right, by: movementSpeed)
-    }
-    func moveLeft() {
-        guard let player = scene.player else { return }
-        guard !player.isJumping else { return }
-        guard !isAnimating else { return }
-        guard canAct else { return }
-
-        let movementSpeed = -GameConfiguration.playerConfiguration.movementSpeed
-
-        move(on: .left, by: movementSpeed)
-    }
     
-    func interact() {
-        guard let player = scene.player else { return }
-        guard !player.bag.isEmpty else { return }
-        guard canAct else { return }
-        
-        switch player.interactionStatus {
-        case .none:
-            ()
-        case .onExit:
-            scene.core?.event?.loadNextLevel()
-        }
-    }
-
     // MARK: - Animations
-
-    func jumpAction(player: Dice) -> SKAction {
+    
+    func jumpAction(player: Player) -> SKAction {
         let jumpValue = GameConfiguration.playerConfiguration.jumpValue
         let moveUpValue = GameConfiguration.worldConfiguration.tileSize.height
         let moveUpDestination = CGPoint(x: player.node.position.x,
@@ -259,8 +334,8 @@ public final class ActionLogic {
         }
         actions.append(SKAction.run {
             self.scene.core?.animation?.addGravityEffect(on: player.node)
-            self.scene.player?.state = .inAction
-            self.scene.core?.hud?.addDiceActionsHUD()
+            self.scene.player?.controllerState = .inAction
+            self.scene.core?.hud?.addSequenceOfActionsHUD()
         })
         let floatingSequence = SKAction.sequence([
             SKAction.moveBy(x: 0, y: -5, duration: 1),
@@ -268,9 +343,9 @@ public final class ActionLogic {
         ])
         let floatingAnimation = SKAction.repeatForever(floatingSequence)
         actions.append(floatingAnimation)
-
+        
         let jumpSequence = SKAction.sequence(actions)
-
+        
         return jumpSequence
     }
     func moveAction(destinationPosition: CGPoint,
@@ -287,6 +362,7 @@ public final class ActionLogic {
                 if !environment.collisionCoordinates.contains(groundCoordinate) {
                     self.scene.core?.logic?.dropPlayer()
                 }
+                self.scene.core?.event?.triggerDialog()
                 if self.scene.game!.controller!.isLongPressingDPad {
                     self.move(on: self.direction, by: self.movementSpeed)
                 }
