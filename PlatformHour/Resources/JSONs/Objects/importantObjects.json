@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Exit",
+        "image": "springExit",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation": []
+    },
+    {
+        "name": "Blue Crystal",
+        "image": "blueCrystal",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": true
+        },
+        "animation": []
+    },
+]

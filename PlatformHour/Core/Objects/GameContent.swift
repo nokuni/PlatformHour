@@ -5,27 +5,28 @@
 //  Created by Maertens Yann-Christophe on 02/02/23.
 //
 
+import SwiftUI
 import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
 final public class GameContent {
     
-    init(scene: GameScene,
-         environment: GameEnvironment,
-         animation: GameAnimation,
-         logic: GameLogic) {
+    public init(scene: GameScene,
+                environment: GameEnvironment,
+                animation: GameAnimation,
+                logic: GameLogic) {
         self.scene = scene
         self.environment = environment
         self.animation = animation
         self.logic = logic
-        generateContent()
+        generateLevelContent()
     }
     
-    var scene: GameScene
-    var environment: GameEnvironment
-    var animation: GameAnimation
-    var logic: GameLogic
+    public var scene: GameScene
+    public var environment: GameEnvironment
+    public var animation: GameAnimation
+    public var logic: GameLogic
     
     // MARK: - Objects
     public func object(name: String? = nil,
@@ -51,7 +52,7 @@ final public class GameContent {
                                   collision: [.object, .structure, .enemy],
                                   contact: [.object, .structure])
         
-        let attackNode = object(name: GameConfiguration.sceneConfigurationKey.playerProjectile,
+        let attackNode = object(name: GameConfiguration.nodeKey.playerProjectile,
                                 physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                                 collision: collision)
         
@@ -73,15 +74,15 @@ final public class GameContent {
     
     // MARK: - Main
     
-    private func generateContent() {
-        generateStructures()
-        generateGems()
-        generateTraps()
-        generateContainers()
-        generateExit()
-        generateNPCs()
-        generateEnemies()
-        generatePlayer()
+    private func generateLevelContent() {
+        generateLevelStructures()
+        generateLevelCollectibles()
+        generateLevelTraps()
+        generateLevelContainers()
+        generateLevelExit()
+        generateLevelNPCs()
+        generateLevelEnemies()
+        generateLevelPlayer()
     }
     
     // MARK: - Configurations
@@ -92,13 +93,15 @@ final public class GameContent {
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
         
-        player.node = object(name: GameConfiguration.sceneConfigurationKey.player,
+        player.node = object(name: GameConfiguration.nodeKey.player,
                              collision: collision)
         
-        player.node.logic = LogicBody(health: player.logic.health,
-                                      damage: player.logic.damage,
-                                      isDestructible: player.logic.isDestructible,
-                                      isIntangible: player.logic.isIntangible)
+        if let logic = player.dataObject?.logic {
+            player.node.logic = LogicBody(health: logic.health,
+                                          damage: logic.damage,
+                                          isDestructible: logic.isDestructible,
+                                          isIntangible: logic.isIntangible)
+        }
         
         player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         
@@ -114,14 +117,18 @@ final public class GameContent {
         
         player.node.coordinate = level.playerCoordinate.coordinate
         player.node.position = position
-        player.node.texture = SKTexture(imageNamed: "player\(player.currentRoll.rawValue)Idle")
-        player.node.texture?.filteringMode = .nearest
+        
+        if let sprite = player.sprite {
+            print(sprite)
+            player.node.texture = SKTexture(imageNamed: sprite)
+            player.node.texture?.filteringMode = .nearest
+        }
     }
     
     // MARK: - Level Generations
     
     /// Generate the player on the current level.
-    private func generatePlayer() {
+    private func generateLevelPlayer() {
         configurePlayer()
         if let player = scene.player {
             scene.addChildSafely(player.node)
@@ -129,16 +136,16 @@ final public class GameContent {
     }
     
     /// Generate the enemies on the current level.
-    private func generateEnemies() {
+    private func generateLevelEnemies() {
         if let level = scene.game?.level {
-            for enemy in level.enemies {
-                createEnemy(enemy)
+            for enemy in level.objects(category: .enemy) {
+                createLevelEnemy(enemy)
             }
         }
     }
     
     /// Generate the structures on the current level.
-    private func generateStructures() {
+    private func generateLevelStructures() {
         guard let level = scene.game?.level else { return }
         
         for structure in level.structures {
@@ -168,190 +175,160 @@ final public class GameContent {
     }
     
     /// Generate the gems on the current level.
-    private func generateGems() {
+    private func generateLevelCollectibles() {
         if let level = scene.game?.level {
-            for gem in level.gems {
-                if let gemItem = try? GameItem.get(gem.item) {
-                    createItem(gemItem, at: gem.coordinate.coordinate)
-                }
+            for collectible in level.objects(category: .collectible) {
+                createLevelCollectible(collectible)
             }
         }
     }
     
-    /// Generate the exit on the current level.
-    public func generateExit() {
+    /// Generate the level exit on the current level.
+    public func generateLevelExit() {
         guard let level = scene.game?.level else { return }
+        guard let exit = level.exit else { return }
+        guard let exitData = GameObject.getImportant(GameConfiguration.nodeKey.exit) else { return }
+        
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
-        let coordinate = level.exit.coordinate.coordinate
+        let coordinate = exit.coordinate.coordinate
+        
         guard let exitPosition = environment.map.tilePosition(from: coordinate) else { return }
         
-        let exit = environment.objectElement(name: GameConfiguration.sceneConfigurationKey.exit,
-                                             physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
-                                             collision: collision)
-        exit.texture = SKTexture(imageNamed: level.exit.sprite)
-        exit.texture?.filteringMode = .nearest
-        exit.position = exitPosition
-        exit.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(exit)
+        let exitNode = environment.objectElement(name: GameConfiguration.nodeKey.exit,
+                                                 physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
+                                                 collision: collision)
+        exitNode.coordinate = coordinate
+        exitNode.texture = SKTexture(imageNamed: exitData.image)
+        exitNode.texture?.filteringMode = .nearest
+        exitNode.position = exitPosition
+        exitNode.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(exitNode)
     }
     
     /// Generate the NPCs on the current level.
-    public func generateNPCs() {
+    public func generateLevelNPCs() {
         if let level = scene.game?.level {
-            for npc in level.npcs {
-                createNPC(npc)
+            for npc in level.objects(category: .npc) {
+                createLevelNPC(npc)
             }
         }
     }
     
     /// Generate the traps on the current level.
-    public func generateTraps() {
+    public func generateLevelTraps() {
         if let level = scene.game?.level {
-            for trap in level.traps {
-                createTrap(trap)
+            for trap in level.objects(category: .trap) {
+                createLevelTrap(trap)
             }
         }
     }
     
     /// Generate an containers on the current level.
-    private func generateContainers() {
+    private func generateLevelContainers() {
         if let level = scene.game?.level {
-            for container in level.containers {
-                let coordinate = container.coordinate.coordinate
-                createContainer(container, at: coordinate)
+            for container in level.objects(category: .container) {
+                createLevelContainer(container)
             }
         }
     }
     
-    // MARK: - Creations
+    // MARK: - Level Creations
     
-    /// Create a container.
-    private func createContainer(_ container: LevelContainer, at coordinate: Coordinate) {
-        if let dataObject = GameObject.get(container.name) {
+    /// Create a level container.
+    private func createLevelContainer(_ levelContainer: LevelObject) {
+        if let containerData = GameObject.getContainer(levelContainer.name) {
             
             let collision = Collision(category: .object,
                                       collision: [.player, .structure],
                                       contact: [.playerProjectile, .enemyProjectile])
             
-            let logic = LogicBody(health: dataObject.logic.health,
-                                  damage: dataObject.logic.damage,
-                                  isDestructible: dataObject.logic.isDestructible,
-                                  isIntangible: dataObject.logic.isIntangible)
-            
-            var drops: [Any] = []
-            
-            if let itemName = container.item,
-               let item = try? GameItem.get(itemName) {
-                drops.append(item)
-            }
-            
-            guard let death = dataObject.animation.first(where: {
-                $0.identifier == GameAnimation.StateID.death.rawValue
-            }) else {
-                return
-            }
-            
-            let animations = [
-                ObjectAnimation(identifier: death.identifier, frames: death.frames)
-            ]
+            let logic = LogicBody(health: containerData.logic.health,
+                                  damage: containerData.logic.damage,
+                                  isDestructible: containerData.logic.isDestructible,
+                                  isIntangible: containerData.logic.isIntangible)
             
             let objectNode = PKObjectNode()
-            objectNode.name = dataObject.name
+            objectNode.name = containerData.name
             objectNode.size = GameConfiguration.worldConfiguration.tileSize
             objectNode.zPosition = 2
             objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
-            let texture = SKTexture(imageNamed: dataObject.image)
+            let texture = SKTexture(imageNamed: containerData.image)
             texture.filteringMode = .nearest
             
             environment.map.addObject(objectNode,
                                       texture: texture,
                                       size: environment.map.squareSize,
                                       logic: logic,
-                                      drops: drops,
-                                      animations: animations,
-                                      at: coordinate)
+                                      animations: containerData.animations,
+                                      at: levelContainer.coordinate.coordinate)
         }
     }
     
-    /// Create an item.
-    private func createItem(_ item: GameItem, at coordinate: Coordinate) {
+    /// Create a level collectible.
+    private func createLevelCollectible(_ levelCollectible: LevelObject) {
         
-        guard let dataObject = GameObject.all?.first(where: { item.name.contains($0.name) }) else { return }
-        //let dataObject = GameObject.get(item.name)
-        
-        let collision = Collision(category: .item,
-                                  collision: [.structure],
-                                  contact: [.player])
-        
-        let idleIdentifier = GameAnimation.StateID.idle.rawValue
-        let deathIdentifier = GameAnimation.StateID.death.rawValue
-        
-        guard let idle = dataObject.animation.first(where: { $0.identifier == idleIdentifier }) else {
-            return
+        if let collectibleData = GameObject.getCollectible(levelCollectible.name) {
+            
+            guard let position = environment.map.tilePosition(from: levelCollectible.coordinate.coordinate) else {
+                return
+            }
+            
+            let collision = Collision(category: .item,
+                                      collision: [.structure],
+                                      contact: [.player])
+            
+            let itemNode = environment.objectElement(name: collectibleData.name,
+                                                     physicsBodySizeTailoring: -(GameConfiguration.worldConfiguration.tileSize.width / 2),
+                                                     collision: collision)
+            
+            itemNode.texture = SKTexture(imageNamed: collectibleData.image)
+            itemNode.texture?.filteringMode = .nearest
+            itemNode.animations = collectibleData.animations
+            itemNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
+            itemNode.position = position
+            itemNode.physicsBody?.isDynamic = false
+            itemNode.physicsBody?.affectedByGravity = false
+            scene.addChildSafely(itemNode)
+            
+            animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
         }
-        guard let death = dataObject.animation.first(where: { $0.identifier == deathIdentifier }) else {
-            return
-        }
-        
-        let animations = [
-            ObjectAnimation(identifier: idle.identifier, frames: idle.frames),
-            ObjectAnimation(identifier: death.identifier, frames: death.frames)
-        ]
-        
-        let itemNode = environment.objectElement(name: item.name,
-                                                 physicsBodySizeTailoring: -(GameConfiguration.worldConfiguration.tileSize.width / 2),
-                                                 collision: collision)
-        itemNode.texture = SKTexture(imageNamed: item.sprite)
-        itemNode.texture?.filteringMode = .nearest
-        itemNode.animations = animations
-        let position = environment.map.tilePosition(from: coordinate)
-        itemNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
-        itemNode.position = position ?? .zero
-        itemNode.physicsBody?.isDynamic = false
-        itemNode.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(itemNode)
-        
-        animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
     }
     
-    /// Create a NPC.
-    private func createNPC(_ npc: LevelNPC) {
+    /// Create a level NPC.
+    public func createLevelNPC(_ levelNPC: LevelObject) {
+        guard let npcData = GameObject.getNPC(levelNPC.name) else { return }
+        
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
-        let coordinate = npc.coordinate.coordinate
+        let coordinate = levelNPC.coordinate.coordinate
         
         guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
         
-        let npcObject = environment.objectElement(name: "Feather",
+        let npcObject = environment.objectElement(name: levelNPC.name,
                                                   physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
                                                   collision: collision)
         
-        npcObject.size = environment.map.squareSize * CGFloat(npc.size)
-        npcObject.texture = SKTexture(imageNamed: npc.sprite)
+        npcObject.coordinate = coordinate
+        npcObject.size = environment.map.squareSize * CGFloat(levelNPC.sizeGrowth)
+        npcObject.texture = SKTexture(imageNamed: npcData.image)
         npcObject.texture?.filteringMode = .nearest
         npcObject.position = npcPosition
         npcObject.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObject)
+        
+        animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }
     
     /// Create a trap.
-    public func createTrap(_ levelTrap: LevelTrap) {
+    public func createLevelTrap(_ levelTrap: LevelObject) {
         guard let trap = GameObject.getTrap(levelTrap.name) else { return }
-        
-        let deathIdentifier = GameAnimation.StateID.death.rawValue
-        
-        guard let death = trap.animation.first(where: { $0.identifier == deathIdentifier }) else { return }
-        
-        let deathObjectAnimation = ObjectAnimation(identifier: death.identifier, frames: death.frames)
-        
-        let animations = [deathObjectAnimation]
         
         let collision = Collision(category: .enemy,
                                   collision: [.allClear],
@@ -366,7 +343,7 @@ final public class GameContent {
                                    isDestructible: trap.logic.isDestructible,
                                    isIntangible: trap.logic.isIntangible)
         
-        trapNode.animations = animations
+        trapNode.animations = trap.animations
         
         guard let position = environment.map.tilePosition(from: levelTrap.coordinate.coordinate) else {
             return
@@ -388,27 +365,11 @@ final public class GameContent {
     }
     
     /// Create an enemy.
-    private func createEnemy(_ levelEnemy: LevelEnemy) {
+    private func createLevelEnemy(_ levelEnemy: LevelObject) {
         if let enemy = GameObject.getEnemy(levelEnemy.name) {
             let collision = Collision(category: .enemy,
                                       collision: [.allClear],
                                       contact: [.player, .playerProjectile])
-            
-            let runIdentifier = GameAnimation.StateID.run.rawValue
-            let deathIdentifier = GameAnimation.StateID.death.rawValue
-            
-            guard let run = enemy.animation.first(where: { $0.identifier == runIdentifier }) else {
-                return
-            }
-            
-            guard let death = enemy.animation.first(where: { $0.identifier == deathIdentifier }) else {
-                return
-            }
-            
-            let runObjectAnimation = ObjectAnimation(identifier: run.identifier, frames: run.frames)
-            let deathObjectAnimation = ObjectAnimation(identifier: death.identifier, frames: death.frames)
-            
-            let animations = [runObjectAnimation, deathObjectAnimation]
             
             let enemyNode = object(name: enemy.name,
                                    physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
@@ -419,7 +380,7 @@ final public class GameContent {
                                         isDestructible: enemy.logic.isDestructible,
                                         isIntangible: enemy.logic.isIntangible)
             
-            enemyNode.animations = animations
+            enemyNode.animations = enemy.animations
             
             guard let position = environment.map.tilePosition(from: levelEnemy.coordinate.coordinate) else { return }
             
@@ -436,8 +397,38 @@ final public class GameContent {
             print("Enemy added")
             scene.addChildSafely(enemyNode)
             
-            addEnemyItinerary(enemy: enemyNode, itinerary: levelEnemy.itinerary, frames: runObjectAnimation.frames)
+            if let runAnimation = enemy.animation(stateID: .run),
+               let itinerary = levelEnemy.itinerary {
+                addEnemyItinerary(enemy: enemyNode, itinerary: itinerary, frames: runAnimation.frames)
+            }
         }
+    }
+    
+    // MARK: - Creations
+    
+    /// Create an NPC.
+    public func createNPC(_ npc: GameObject, at coordinate: Coordinate) {
+        let collision = Collision(category: .npc,
+                                  collision: [.allClear],
+                                  contact: [.player])
+        
+        guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
+        
+        let npcObject = environment.objectElement(name: "",
+                                                  physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
+                                                  collision: collision)
+        
+        npcObject.coordinate = coordinate
+        npcObject.size = environment.map.squareSize
+        npcObject.position = npcPosition
+        npcObject.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(npcObject)
+        
+        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
+        
+        npcObject.run(idleAnimation)
+        
+        animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }
     
     // MARK: - Adds

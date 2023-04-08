@@ -1,0 +1,58 @@
+{
+    "name": "Dice",
+    "image": "player#Idle",
+    "logic": {
+        "health": 1,
+        "damage": 1,
+        "isDestructible": true,
+        "isIntangible": false
+    },
+    "animation":
+    [
+        {
+            "identifier": "runRight",
+            "frames": [
+                "player#Run0",
+                "player#Run1",
+                "player#Run2",
+                "player#Idle",
+                "player#Run0",
+                "player#Run1",
+                "player#Run2",
+                "player#Idle"
+            ]
+        },
+        {
+            "identifier": "runLeft",
+            "frames": [
+                "player#Run2",
+                "player#Run1",
+                "player#Run0",
+                "player#Idle",
+                "player#Run2",
+                "player#Run1",
+                "player#Run0",
+                "player#Idle"
+            ]
+        },
+        {
+            "identifier": "hit",
+            "frames": [
+                "playerHit0",
+                "playerHit1",
+                "playerHit0",
+                "playerHit1",
+                "player#Idle"
+            ]
+        },
+        {
+            "identifier": "death",
+            "frames": [
+                "playerDeath0",
+                "playerDeath1",
+                "playerDeath2",
+                "playerDeath3"
+            ]
+        },
+    ]
+}

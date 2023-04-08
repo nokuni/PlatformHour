@@ -31,14 +31,14 @@ public final class GameLogic {
         playerDestroy()
     }
     
-//    public func updatePlayerHealth() {
-//        guard let dice = scene.player else { return }
-//        guard let healthBar = dice.node.childNode(withName: "Health Bar") else { return }
-//        healthBar.removeFromParent()
-//        scene.core?.content?.addHealthBar(amount: dice.currentBarHealth,
-//                                          node: dice.node,
-//                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
-//    }
+    //    public func updatePlayerHealth() {
+    //        guard let dice = scene.player else { return }
+    //        guard let healthBar = dice.node.childNode(withName: "Health Bar") else { return }
+    //        healthBar.removeFromParent()
+    //        scene.core?.content?.addHealthBar(amount: dice.currentBarHealth,
+    //                                          node: dice.node,
+    //                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
+    //    }
     
     private func isDestroyed(_ objectNode: PKObjectNode) -> Bool {
         objectNode.logic.healthLost >= objectNode.logic.health
@@ -105,8 +105,10 @@ public final class GameLogic {
         }
     }
     
-    // Drop
-    private func dropCoordinate(object: PKObjectNode) -> Coordinate {
+    // MARK: - Falls
+    
+    /// Returns the coordinate where an object is supposed to stop falling.
+    private func fallCoordinate(object: PKObjectNode) -> Coordinate {
         
         let objectCoordinate = object.coordinate
         
@@ -122,33 +124,37 @@ public final class GameLogic {
         return destinationCoordinate
     }
     
-    private func dropPosition(object: PKObjectNode) -> CGPoint {
-        let coordinate = dropCoordinate(object: object)
+    /// Returns the position where an object is supposed to stop falling.
+    private func fallPosition(object: PKObjectNode) -> CGPoint {
+        let coordinate = fallCoordinate(object: object)
         guard let position = environment.map.tilePosition(from: coordinate) else { return .zero }
         
         return position
     }
-    private func dropAction(object: PKObjectNode, speed: CGFloat) -> SKAction {
-        let coordinate = dropCoordinate(object: object)
-        let position = dropPosition(object: object)
+    
+    /// Returns the animation of the object falling at a specific speed.
+    private func fallAnimation(object: PKObjectNode, speed: CGFloat) -> SKAction {
+        let coordinate = fallCoordinate(object: object)
+        let position = fallPosition(object: object)
         let moveAction = SKAction.move(from: object.position, to: position, at: speed)
         let action = !environment.isCollidingWithObject(at: coordinate) ? moveAction : SKAction.empty()
         
         return action
     }
     
+    /// Returns the player land animation after the fall.
     private var playerLandAnimation: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         let action = SKAction.run {
-            self.scene.player?.currentRoll = .one
-            self.scene.player?.resetToOne()
             self.scene.core?.animation?.circularSmoke(on: player.node)
             self.scene.core?.animation?.shakeScreen(scene: self.scene)
             self.scene.core?.sound.land(scene: self.scene)
         }
         return action
     }
-    private var playerLandCompletionAction: SKAction {
+    
+    /// Returns the player land completion animation after the land.
+    private var playerLandCompletionAnimation: SKAction {
         let action = SKAction.run {
             self.scene.player?.state.isJumping = false
             self.scene.player?.controllerState = .normal
@@ -157,36 +163,39 @@ public final class GameLogic {
         return action
     }
     
+    /// Make the player fall if possible.
     public func dropPlayer() {
         guard let player = scene.player else { return }
         player.node.removeAllActions()
         let drop = SKAction.sequence([
-            dropAction(object: player.node, speed: GameConfiguration.playerConfiguration.fallSpeed),
+            fallAnimation(object: player.node, speed: GameConfiguration.playerConfiguration.fallSpeed),
             playerLandAnimation,
             SKAction.wait(forDuration: 0.5),
-            playerLandCompletionAction
+            playerLandCompletionAnimation
         ])
         scene.player?.node.run(drop)
     }
+    
+    /// Make a trap fall repeateadly.
     public func dropTrap(trapObject: PKObjectNode) {
-        guard let game = scene.game else { return }
-        guard let trapName = trapObject.name else { return }
-        guard let id = trapName.extractedNumber else { return }
-        guard let leveltrap = GameLevel.get(game.levelIndex)?.traps.first(where: {
-            $0.id == String(id)
-        }) else { return }
+        guard let level = scene.game?.level else { return }
+        guard let levelTrap = indexedLevelObject(object: trapObject, data: level.objects(category: .trap)) else { return }
+        
         let drop = SKAction.sequence([
-            dropAction(object: trapObject, speed: 500),
+            fallAnimation(object: trapObject, speed: 500),
             SKAction.run {
                 self.scene.core?.animation?.destroyThenAnimate(scene: self.scene, node: trapObject, timeInterval: 0.1) {
-                    self.scene.core?.content?.createTrap(leveltrap)
+                    self.scene.core?.content?.createLevelTrap(levelTrap)
                 }
             }
         ])
+        
         trapObject.run(drop)
     }
     
-    // Action Sequence
+    // MARK: - Player Action Sequence
+    
+    /// Returns the sequence of action the player has to perform.
     private var actionSequenceAction: [SKAction] {
         guard let player = scene.player else { return [] }
         
@@ -208,21 +217,19 @@ public final class GameLogic {
         
         return moves
     }
-    public func endSequenceOfActions() {
-        guard let player = scene.player else { return }
-        player.actions.removeAll()
-        self.scene.core?.hud?.removeSequenceOfActions()
-    }
     
+    /// Resolve the perform of the sequence of actions.
     public func resolveSequenceOfActions() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
-            let gravityEffect = player.node.childNode(withName: GameConfiguration.sceneConfigurationKey.gravityEffect)
+            let gravityEffect = player.node.childNode(withName: GameConfiguration.nodeKey.gravityEffect)
             gravityEffect?.removeFromParent()
             disableControls()
             performActionSequence()
         }
     }
+    
+    /// Perform the sequence of actions.
     public func performActionSequence() {
         guard let player = scene.player else { return }
         
@@ -237,10 +244,17 @@ public final class GameLogic {
         player.node.run(sequence)
     }
     
-    // Projectiles
-    func projectileFollowPlayer() {
+    /// End the sequence of actions.
+    public func endSequenceOfActions() {
         guard let player = scene.player else { return }
-        guard let projectile = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.playerProjectile) else {
+        player.actions.removeAll()
+        self.scene.core?.hud?.removeActionSquares()
+    }
+    
+    // Projectiles
+    public func projectileFollowPlayer() {
+        guard let player = scene.player else { return }
+        guard let projectile = scene.childNode(withName: GameConfiguration.nodeKey.playerProjectile) else {
             return
         }
         
@@ -253,13 +267,27 @@ public final class GameLogic {
         }
     }
     
-    // Controls
+    // MARK: - Controls
+    
+    /// Disable the controls on the scene.
     public func disableControls() {
         scene.game?.controller?.manager?.action = nil
         scene.isUserInteractionEnabled = false
     }
+    
+    /// Enable the controls on the scene.
     public func enableControls() {
         scene.game?.controller?.setupActions()
         scene.isUserInteractionEnabled = true
+    }
+    
+    // MARK: - Miscellaneous
+    
+    public func indexedLevelObject<Element: LevelProtocol>(object: PKObjectNode,
+                                                           data: [Element]) -> Element? {
+        guard let objectName = object.name else { return nil }
+        guard let id = objectName.extractedNumber else { return nil }
+        let element = data.first(where: { $0.id == id })
+        return element
     }
 }

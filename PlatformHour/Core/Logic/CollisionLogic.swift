@@ -16,23 +16,29 @@ public final class CollisionLogic {
     
     public var scene: GameScene
     
+    /// When the player projectile hit an object.
     public func projectileHitObject(_ projectileNode: PKObjectNode, objectNode: PKObjectNode) {
         scene.core?.logic?.damageObject(objectNode, with: projectileNode)
         projectileNode.removeAllActions()
         scene.player?.state.hasProjectileTurningBack = true
     }
     
-    public func pickUpItem(object: PKObjectNode, name: String) {
-        if let item = try? GameItem.get(name) {
-            try? scene.core?.sound.manager.playSFX(name: item.sound, volume: 0.1)
-            scene.player?.bag.append(item)
-            scene.core?.hud?.updateScore()
+    /// When the player pick up an item.
+    public func pickUpCollectible(object: PKObjectNode) {
+        if let objectName = object.name,
+           let collectibleData = GameObject.getCollectible(objectName) {
+            if let collectibleSound = collectibleData.sound {
+                try? scene.core?.sound.manager.playSFX(name: collectibleSound, volume: 0.1)
+            }
+            scene.player?.bag.append(collectibleData)
+            scene.core?.hud?.updateGemScore()
             scene.core?.animation?.destroyThenAnimate(scene: scene,
                                                       node: object,
                                                       timeInterval: 0.1)
         }
     }
     
+    /// When the player drop on the head of an enemy.
     public func playerDropOnEnemy(_ enemyNode: PKObjectNode) {
         guard let player = scene.player else { return }
         if player.state.isJumping {
@@ -40,9 +46,10 @@ public final class CollisionLogic {
         }
     }
     
+    /// When an enemy hit the player.
     public func enemyHitPlayer(_ enemyNode: PKObjectNode) {
-//        guard let player = scene.player else { return }
-//        guard let environment = scene.core?.environment else { return }
+        //        guard let player = scene.player else { return }
+        //        guard let environment = scene.core?.environment else { return }
         self.scene.core?.logic?.damagePlayer(with: enemyNode)
         //        player.hitted(scene: scene, by: enemyNode) {
         //            if let playerCoordinate = self.scene.player?.node.coordinate {
@@ -58,6 +65,7 @@ public final class CollisionLogic {
         //        }
     }
     
+    /// When the player land on a structure.
     public func landOnGround() {
         guard let player = scene.player else { return }
         

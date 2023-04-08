@@ -18,9 +18,11 @@ final public class GameAnimation {
         let image: String
         let frameCount: Int
     }
-    public enum StateID: String {
+    public enum StateID: String, CaseIterable {
         case idle = "idle"
         case run = "run"
+        case runRight = "runRight"
+        case runLeft = "runLeft"
         case hit = "hit"
         case death = "death"
     }
@@ -36,10 +38,38 @@ final public class GameAnimation {
         }
     }
     
-    /// Add a gravityt effect on a node.
+    /// Add a pulsing animation on a node.
+    public func addShadowPulseEffect(scene: GameScene,
+                                     node: SKSpriteNode,
+                                     growth: CGFloat = 1.1,
+                                     scaling: CGFloat = 1.1,
+                                     duration: TimeInterval = 0.5) {
+        let shadow = SKSpriteNode()
+        shadow.size = node.size * growth
+        shadow.texture = node.texture
+        shadow.texture?.filteringMode = .nearest
+        shadow.position = node.position
+        
+        scene.addChildSafely(shadow)
+        
+        let scaleUpAndFadeOut = SKAction.group([
+            SKAction.scale(to: scaling, duration: duration),
+            SKAction.fadeOut(withDuration: duration),
+        ])
+        
+        let animation = SKAction.sequence([
+            scaleUpAndFadeOut,
+            SKAction.scale(to: 1, duration: 0),
+            SKAction.fadeIn(withDuration: 0)
+        ])
+        
+        shadow.run(SKAction.repeatForever(animation))
+    }
+    
+    /// Add a gravity effect on a node.
     public func addGravityEffect(on node: SKNode) {
         let gravityEffectNode = SKSpriteNode()
-        gravityEffectNode.name = GameConfiguration.sceneConfigurationKey.gravityEffect
+        gravityEffectNode.name = GameConfiguration.nodeKey.gravityEffect
         gravityEffectNode.size = GameConfiguration.worldConfiguration.tileSize
         node.addChildSafely(gravityEffectNode)
         
@@ -158,7 +188,7 @@ final public class GameAnimation {
             animate(node: animatedNode,
                     identifier: .death,
                     filteringMode: .nearest,
-                    hitTimeInterval: timeInterval),
+                    timeInterval: timeInterval),
             SKAction.removeFromParent(),
         ])
         
@@ -171,11 +201,11 @@ final public class GameAnimation {
     public func animate(node: PKObjectNode,
                         identifier: StateID,
                         filteringMode: SKTextureFilteringMode = .linear,
-                        hitTimeInterval: TimeInterval = 0.05) -> SKAction {
+                        timeInterval: TimeInterval = 0.05) -> SKAction {
         guard node.animation(from: identifier.rawValue) != nil else { return SKAction.empty() }
         let animation = node.animatedAction(with: identifier.rawValue,
                                             filteringMode: filteringMode,
-                                            timeInterval: hitTimeInterval)
+                                            timeInterval: timeInterval)
         return animation
     }
     
@@ -186,7 +216,7 @@ final public class GameAnimation {
         let action = animate(node: node,
                              identifier: .idle,
                              filteringMode: filteringMode,
-                             hitTimeInterval: timeInterval)
+                             timeInterval: timeInterval)
         
         node.run(SKAction.repeatForever(action))
     }
@@ -198,7 +228,7 @@ final public class GameAnimation {
         node.run(animate(node: node,
                          identifier: .hit,
                          filteringMode: filteringMode,
-                         hitTimeInterval: timeInterval))
+                         timeInterval: timeInterval))
     }
     
     /// Animate a node with an death state identifier.
@@ -212,7 +242,7 @@ final public class GameAnimation {
             animate(node: node,
                     identifier: .death,
                     filteringMode: filteringMode,
-                    hitTimeInterval: timeInterval),
+                    timeInterval: timeInterval),
             SKAction.removeFromParent(),
         ])
         

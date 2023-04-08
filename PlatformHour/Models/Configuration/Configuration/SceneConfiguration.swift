@@ -16,4 +16,5 @@ struct SceneConfiguration {
     let hudZPosition: CGFloat = 5
     let elementHUDZPosition: CGFloat = 6
     let overlayZPosition: CGFloat = 7
+    let overOverlayZPosition: CGFloat = 8
 }

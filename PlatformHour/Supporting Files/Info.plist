@@ -5,9 +5,6 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Outline Pixel7 Solid.ttf</string>
-		<string>NinjaAdventure.ttf</string>
-		<string>8-bit Arcade In.ttf</string>
-		<string>Karmatic Arcade.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

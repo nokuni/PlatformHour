@@ -1,5 +1,51 @@
 [
     {
+        "name": "Ancient Cavern Intro Dialog",
+        "conversation": [
+            {
+                "character": "Blue Spirit",
+                "spot": "right",
+                "lines": [
+                    "Finally free !"
+                ]
+            },
+            {
+                "character": "Dice",
+                "spot": "left",
+                "lines": [
+                    "..."
+                ]
+            },
+            {
+                "character": "Blue Spirit",
+                "spot": "right",
+                "lines": [
+                    "...",
+                    "Oh no ! I did not pay attention ! This body is not a mage...neither a human.",
+                    "It's a... dice ? What a dice is doing here ?"
+                ]
+            },
+            {
+                "character": "Dice",
+                "spot": "left",
+                "lines": [
+                    "..."
+                ]
+            },
+            {
+                "character": "Blue Spirit",
+                "spot": "right",
+                "lines": [
+                    "if you are now my host, it means you have a soul. But a dice does not have one. What happens to you ?",
+                    "Well ... for now, we need to leave this place.",
+                    "I can't do anything without my host and right now, my powers are limited.",
+                    "I can only give you the power to move but it's enough to escape.",
+                    "Close your eyes ... Ah ! That's true, you are dice."
+                ]
+            },
+        ]
+    },
+    {
         "name": "Fly Power Up Dialog",
         "conversation": [
             {

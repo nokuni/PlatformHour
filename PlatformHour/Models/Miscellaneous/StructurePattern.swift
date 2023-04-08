@@ -15,7 +15,7 @@ struct StructurePattern: Codable {
 
 extension StructurePattern {
     static var all: [StructurePattern]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonConfigurationKey.structures)
+        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.structures)
     }
     
     static func get(_ name: String) -> StructurePattern? {

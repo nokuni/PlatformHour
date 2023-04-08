@@ -1,0 +1,13 @@
+[
+    {
+        "name": "Placeholder",
+        "image": "placeholder",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation": [],
+    },
+]

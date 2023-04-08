@@ -9,15 +9,18 @@ import PlayfulKit
 
 public struct GameConfiguration {
     
-    static let soundConfigurationKey = SoundConfigurationKey()
-    static let sceneConfigurationKey = NodeConfigurationKey()
-    static let imageConfigurationKey = ImageConfigurationKey()
-    static let jsonConfigurationKey = JSONConfigurationKey()
+    // MARK: Keys
+    static let soundKey = SoundKey()
+    static let nodeKey = NodeKey()
+    static let imageKey = ImageKey()
+    static let jsonKey = JSONKey()
     
+    // MARK: - Configurations
     static let worldConfiguration = WorldConfiguration()
     static let sceneConfiguration = SceneConfiguration()
     static let playerConfiguration = PlayerConfiguration()
     static let animationConfiguration = AnimationConfiguration()
     
+    // MARK: - Managers
     static let assemblyManager = AssemblyManager()
 }

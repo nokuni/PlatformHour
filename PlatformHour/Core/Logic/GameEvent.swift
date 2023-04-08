@@ -17,16 +17,17 @@ public final class GameEvent {
     
     var scene: GameScene
     
-    // Dismisses
+    /// Dismiss the current pop up button.
     public func dismissButtonPopUp() {
-        guard let buttonPopUp = scene.childNode(withName: GameConfiguration.sceneConfigurationKey.buttonPopUp) else {
+        guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
             return
         }
-        buttonPopUp.removeFromParent()
+        print("popUpButton removed")
+        popUpButton.removeFromParent()
         scene.player?.interactionStatus = .none
     }
     
-    // Level
+    /// Load the next level of the game.
     public func loadNextLevel() {
         scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
                                                 isVisible: false,
@@ -36,6 +37,7 @@ public final class GameEvent {
         }
     }
     
+    /// Restart the current level of the game.
     public func restartLevel(delayedBy seconds: Double = 0) {
         let configuration = PKTimerNode.TimerConfiguration(countdown: seconds,
                                                            counter: 1,
@@ -52,7 +54,11 @@ public final class GameEvent {
         scene.addChildSafely(timerNode)
         timerNode.start()
     }
+
     
+    // MARK: - Triggers
+    
+    /// Trigger a dialog.
     public func triggerDialog() {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
@@ -60,13 +66,24 @@ public final class GameEvent {
         if let dialog = level.dialogs.first(where: {
             $0.triggerCoordinate.coordinate == player.node.coordinate
         }) {
-            scene.game?.currentLevelDialog = dialog
-            player.controllerState = .inDialog
-            scene.core?.hud?.createDialogBox()
+            if dialog.isDialogAvailable {
+                scene.game?.currentLevelDialog = dialog
+                player.controllerState = .inDialog
+                scene.core?.hud?.generateDialogBox()
+            }
         }
     }
     
-    // Updates
+    /// Trigger an interaction pop up.
+    public func triggerInteractionPopUp(at coordinate: Coordinate) {
+        guard let environment = scene.core?.environment else { return }
+        if let position = environment.map.tilePosition(from: coordinate) {
+            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 2))
+            environment.generatePopUpButton(buttonSymbol: .y, position: buttonPosition)
+        }
+    }
+    
+    /// Trigger the player death fall.
     public func triggerPlayerDeathFall() {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
@@ -85,6 +102,10 @@ public final class GameEvent {
             }
         }
     }
+    
+    // MARK: - Updates
+    
+    /// Updates player coordinate
     public func updatePlayerCoordinate() {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
@@ -117,4 +138,11 @@ public final class GameEvent {
     //            platform.coordinate = objectElement.coordinate
     //        }
     //    }
+    
+    // MARK: - Cinematics
+    
+    public func spiritIntroCinematic(node: SKNode) {
+        //guard let spiritNPC = scene.game?.level?.npcs.first else { return }
+        //scene.core?.content?.createNPC(spiritNPC)
+    }
 }

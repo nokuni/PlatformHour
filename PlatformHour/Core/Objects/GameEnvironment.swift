@@ -14,18 +14,20 @@ final public class GameEnvironment {
     
     public init(scene: GameScene) {
         self.scene = scene
-        createEnvironment()
+        generateEnvironment()
     }
     
     public var scene: GameScene
     public var map = PKMapNode()
     public var backgroundContainer = SKNode()
     
+    /// Current map.
     public var mapMatrix: Matrix {
         guard let matrix = scene.game?.level?.mapMatrix.matrix else { return .zero }
         return Matrix(row: matrix.row, column: matrix.column)
     }
     
+    /// Limits on the current map.
     public var mapLimits: (top: Int?, right: Int?, bottom: Int?, left: Int?) {
         let playerCoordinate = scene.game?.level?.playerCoordinate.coordinate
         
@@ -42,39 +44,40 @@ final public class GameEnvironment {
         return (top, right, bottom, left)
     }
     
+    /// Death limit of the current map.
     public var deathLimit: Int {
         mapMatrix.row - 1
     }
     
+    /// Returns all tiles and objects on the current map.
     public var allElements: [SKSpriteNode] {
         let allTiles = map.tiles
         let allObjects = map.objects
         let allElements = allTiles + allObjects
         return allElements
     }
+    
+    /// Returns coordinates from the objects on the current map.
     public var collisionCoordinates: [Coordinate] {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
         return coordinates
     }
-    public var backgroundSize: CGSize {
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
-        let width = tileSize.width * 13
-        let height = tileSize.height * 9
-        return CGSize(width: width, height: height)
-    }
     
+    /// Returns true there is a collision with an object at a coordinate, false otherwise.
     public func isCollidingWithObject(at coordinate: Coordinate) -> Bool {
         collisionCoordinates.contains(coordinate)
     }
     
     // MARK: - Main
-    private func createEnvironment() {
-        createMap()
-        createBackground()
+    private func generateEnvironment() {
+        generateMap()
+        generateBackground()
     }
     
     // MARK: - Elements
+    
+    /// Returns an unconfigured object node.
     public func objectElement(name: String? = nil,
                               physicsBodySizeTailoring: CGFloat = 0,
                               collision: Collision) -> PKObjectNode {
@@ -91,6 +94,7 @@ final public class GameEnvironment {
         return object
     }
     
+    /// Returns an object node configured for structures.
     public var structureObjectElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
@@ -104,48 +108,8 @@ final public class GameEnvironment {
         return structureElement
     }
     
-    public func backgroundObjectElement(name: String? = nil,
-                                        physicsBodySizeTailoring: CGFloat = 0,
-                                        collision: Collision) -> PKObjectNode {
-        let structureElement = objectElement(name: name,
-                                             physicsBodySizeTailoring: physicsBodySizeTailoring,
-                                             collision: collision)
-        structureElement.blendMode = .alpha
-        structureElement.name = name
-        structureElement.zPosition = GameConfiguration.sceneConfiguration.backgroundZPosition
-        structureElement.physicsBody?.isDynamic = false
-        structureElement.physicsBody?.affectedByGravity = false
-        return structureElement
-    }
-    
-    // MARK: - Background
-    private func createBackground() {
-        if let level = scene.game?.level {
-            backgroundContainer.name = GameConfiguration.sceneConfigurationKey.background
-            scene.addChildSafely(backgroundContainer)
-            let tileSize = GameConfiguration.worldConfiguration.tileSize
-            let centerPosition = map.centerPosition
-            let adjustement = GameConfiguration.worldConfiguration.tileSize.height * 5
-            let background = SKSpriteNode(imageNamed: level.background)
-            background.texture?.filteringMode = .nearest
-            background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
-                                     height: tileSize.width * CGFloat(map.matrix.row - 10))
-            background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
-            backgroundContainer.addChildSafely(background)
-        }
-    }
-    
-    private func createMap() {
-        map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
-                        matrix: mapMatrix)
-        let texture = SKTexture(imageNamed: "leadSquare")
-        texture.filteringMode = .nearest
-        map.drawTexture(texture)
-        scene.addChild(map)
-    }
-    
-    // MARK: - Miscellaneous
-    private func controllerButtonSprites(_ buttonSymbol: ControllerManager.ButtonSymbol) -> [String]? {
+    /// Returns the controller button image names of a button. (The image names are different depending on the current connected gamepad).
+    private func controllerButtons(_ buttonSymbol: ControllerManager.ButtonSymbol) -> [String]? {
         guard let controllerManager = scene.game?.controller?.manager else {
             return nil
         }
@@ -197,34 +161,61 @@ final public class GameEnvironment {
         }
     }
     
-    public func showStatueInteractionPopUp() {
-        guard let exit = scene.game?.level?.exit else { return }
-        
-        if let position = map.tilePosition(from: exit.coordinate.coordinate) {
-            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 2))
-            createButtonPopUp(buttonSymbol: .y, position: buttonPosition)
+    // MARK: - Generations
+    
+    /// Generate the current map.
+    private func generateMap() {
+        map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
+                        matrix: mapMatrix)
+        let texture = SKTexture(imageNamed: "leadSquare")
+        texture.filteringMode = .nearest
+        map.drawTexture(texture)
+        scene.addChildSafely(map)
+    }
+    
+    /// Generate the current background.
+    private func generateBackground() {
+        if let level = scene.game?.level {
+            backgroundContainer.name = GameConfiguration.nodeKey.background
+            scene.addChildSafely(backgroundContainer)
+            let tileSize = GameConfiguration.worldConfiguration.tileSize
+            let centerPosition = map.centerPosition
+            let adjustement = GameConfiguration.worldConfiguration.tileSize.height * CGFloat(level.background.adjustement)
+            let background = SKSpriteNode(imageNamed: level.background.image)
+            background.texture?.filteringMode = .nearest
+            background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
+                                     height: tileSize.width * CGFloat(map.matrix.row - level.background.adjustement))
+            background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
+            backgroundContainer.addChildSafely(background)
         }
     }
     
-    private func createButtonPopUp(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
+    /// Generate an animated pop up controller button.
+    public func generatePopUpButton(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
-        let buttonPopUp = SKNode()
-        buttonPopUp.name = "Button pop up"
-        scene.addChildSafely(buttonPopUp)
+        let popUpButton = SKNode()
+        popUpButton.name = GameConfiguration.nodeKey.popUpButton
+        scene.addChildSafely(popUpButton)
         
         let button = SKSpriteNode()
         button.size = GameConfiguration.worldConfiguration.tileSize
         button.setScale(0.6)
+        button.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
         button.position = position
-        buttonPopUp.addChildSafely(button)
+        popUpButton.addChildSafely(button)
         
-        if let sprites = controllerButtonSprites(buttonSymbol) {
+        if let sprites = controllerButtons(buttonSymbol) {
+            print(sprites)
             let action = SKAction.animate(with: sprites, filteringMode: .nearest, timePerFrame: 0.5)
             button.run(SKAction.repeatForever(action))
         }
     }
     
+    // MARK: - Miscellaneous
+    
+    /// Pause the current map.
     public func pause() { map.isPaused = true }
     
+    /// Unpause the current map.
     public func unpause() { map.isPaused = false }
 }

@@ -174,7 +174,7 @@ public class SpiralStructurePattern {
                                   matrixValue: Int,
                                   coordinate: (Int) -> Coordinate,
                                   textures: [SKTexture]) {
-        guard startingIndexValue < (matrixValue - endingIndexValue) else { return }
+        guard startingIndexValue <= (matrixValue - endingIndexValue) else { return }
         let range = startingIndexValue ... (matrixValue - endingIndexValue)
         let coordinates = range.map { coordinate($0) }
         var textureIndex = 0

@@ -29,17 +29,17 @@ public final class ActionLogic {
     public var direction: Direction = .none
     public var movementSpeed: Int = 0
     
-    var isAnimating: Bool {
+    public var isAnimating: Bool {
         guard let player = scene.player else { return false }
         return player.node.hasActions()
     }
-    var isAttacking: Bool {
-        scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.playerProjectile)
+    public var isAttacking: Bool {
+        scene.isExistingChildNode(named: GameConfiguration.nodeKey.playerProjectile)
     }
-    var canAct: Bool {
+    public var canAct: Bool {
         scene.isUserInteractionEnabled
     }
-    var dialogIndex = 0
+    //private var dialogIndex = 0
     
     // MARK: - Underlying Actions/Animations
     private func addAction(_ action: Player.SequenceAction) {
@@ -49,7 +49,7 @@ public final class ActionLogic {
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
         actionElement.size = GameConfiguration.worldConfiguration.tileSize * 0.5
-        scene.core?.hud?.playerActions[safe: player.actions.count - 1]?.addChildSafely(actionElement)
+        scene.core?.hud?.actionSquares[safe: player.actions.count - 1]?.addChildSafely(actionElement)
         scene.core?.logic?.resolveSequenceOfActions()
     }
     private func move(on direction: Direction, by movementSpeed: Int) {
@@ -215,7 +215,7 @@ public final class ActionLogic {
         case .inAction:
             break
         case .inDialog:
-            goToNextDialog()
+            scene.core?.hud?.passDialog()
         }
     }
     
@@ -276,7 +276,6 @@ public final class ActionLogic {
     }
     private func interact() {
         guard let player = scene.player else { return }
-        guard !player.bag.isEmpty else { return }
         guard canAct else { return }
         
         switch player.interactionStatus {
@@ -285,16 +284,6 @@ public final class ActionLogic {
         case .onExit:
             scene.core?.event?.loadNextLevel()
         }
-    }
-    
-    // MARK: - Dialog
-    
-    func goToNextDialog() {
-        scene.core?.hud?.displayNextLine()
-    }
-    
-    private func speedUpCurrentDialog() {
-        
     }
     
     // MARK: - Miscellaneous
@@ -335,7 +324,7 @@ public final class ActionLogic {
         actions.append(SKAction.run {
             self.scene.core?.animation?.addGravityEffect(on: player.node)
             self.scene.player?.controllerState = .inAction
-            self.scene.core?.hud?.addSequenceOfActionsHUD()
+            self.scene.core?.hud?.addActionSquaresHUD()
         })
         let floatingSequence = SKAction.sequence([
             SKAction.moveBy(x: 0, y: -5, duration: 1),
@@ -356,18 +345,26 @@ public final class ActionLogic {
         let groundCoordinate = Coordinate(x: destinationCoordinate.x + 1, y: destinationCoordinate.y)
         let sequence = SKAction.sequence([
             SKAction.move(to: destinationPosition, duration: player.runDuration),
-            SKAction.run {
-                self.scene.core?.sound.step()
-                self.scene.player?.node.removeAllActions()
-                if !environment.collisionCoordinates.contains(groundCoordinate) {
-                    self.scene.core?.logic?.dropPlayer()
-                }
-                self.scene.core?.event?.triggerDialog()
-                if self.scene.game!.controller!.isLongPressingDPad {
-                    self.move(on: self.direction, by: self.movementSpeed)
-                }
-            }
+            endOfMoveAction(groundCoordinate: groundCoordinate)
         ])
         return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
+    }
+    
+    private func endOfMoveAction(groundCoordinate: Coordinate) -> SKAction {
+        guard let environment = scene.core?.environment else { return SKAction.empty() }
+        
+        let action = SKAction.run {
+            self.scene.core?.sound.step()
+            self.scene.player?.node.removeAllActions()
+            if !environment.collisionCoordinates.contains(groundCoordinate) {
+                self.scene.core?.logic?.dropPlayer()
+            }
+            self.scene.core?.event?.triggerDialog()
+            if self.scene.game!.controller!.isLongPressingDPad {
+                self.move(on: self.direction, by: self.movementSpeed)
+            }
+        }
+        
+        return action
     }
 }

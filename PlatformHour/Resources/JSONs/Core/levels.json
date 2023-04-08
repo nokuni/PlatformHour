@@ -1,14 +1,164 @@
 [
     {
         "id": 0,
+        "mapMatrix": "2030",
+        "playerCoordinate": "1613",
+        "musics": ["cavernBS.wav", "cavernBS_2.wav"],
+        "background": {
+            "image": "introCavernBackground",
+            "adjustement": 2
+        },
+        "objects": [
+            {
+                "id": 0,
+                "name": "Exit",
+                "category": "important",
+                "coordinate": "1628"
+            },
+            {
+                "id": 1,
+                "name": "Spirit",
+                "category": "important",
+                "coordinate": "2915"
+            },
+        ],
+        "structures": [
+            {
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0330",
+                "coordinate": "1700"
+            }
+        ],
+        "dialogs": [
+            {
+                "dialog": "Ancient Cavern Intro Dialog",
+                "triggerCoordinate": "1613"
+            }
+        ]
+    },
+    {
+        "id": 1,
         "mapMatrix": "4060",
         "playerCoordinate": "2908",
-        "background": "cavernBackground",
-        "musics": ["cavernBS.wav", "cavernBS_2.wav"],
-        "exit": {
-            "sprite": "springExit",
-            "coordinate": "2957"
+        "musics": [
+            "cavernBS.wav",
+            "cavernBS_2.wav"
+        ],
+        "background": {
+            "image": "cavernBackground",
+            "adjustement": 5
         },
+        "objects": [
+            {
+                "id": 0,
+                "name": "Exit",
+                "category": "important",
+                "coordinate": "2957"
+            },
+            {
+                "id": 0,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1010"
+            },
+            {
+                "id": 1,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1515"
+            },
+            {
+                "id": 2,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1120"
+            },
+            {
+                "id": 3,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1825"
+            },
+            {
+                "id": 4,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1330"
+            },
+            {
+                "id": 5,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1735"
+            },
+            {
+                "id": 6,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "2040"
+            },
+            {
+                "id": 7,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1445"
+            },
+            {
+                "id": 8,
+                "name": "Rock",
+                "category": "trap",
+                "coordinate": "1650"
+            },
+            {
+                "id": 0,
+                "name": "Blue Gem A",
+                "category": "collectible",
+                "coordinate": "2917"
+            },
+            {
+                "id": 1,
+                "name": "Blue Gem S",
+                "category": "collectible",
+                "coordinate": "2918"
+            },
+            {
+                "id": 2,
+                "name": "Blue Gem D",
+                "category": "collectible",
+                "coordinate": "2927"
+            },
+            {
+                "id": 3,
+                "name": "Blue Gem F",
+                "category": "collectible",
+                "coordinate": "2928"
+            },
+            {
+                "id": 4,
+                "name": "Blue Gem G",
+                "category": "collectible",
+                "coordinate": "2937"
+            },
+            {
+                "id": 5,
+                "name": "Blue Gem H",
+                "category": "collectible",
+                "coordinate": "2938"
+            },
+            {
+                "id": 6,
+                "name": "Blue Gem J",
+                "category": "collectible",
+                "coordinate": "2947"
+            },
+            {
+                "id": 7,
+                "name": "Blue Gem K",
+                "category": "collectible",
+                "coordinate": "2948"
+            }
+        ],
         "structures": [
             {
                 "outline": "Cavern Outline",
@@ -19,102 +169,32 @@
                 "coordinate": "3000"
             }
         ],
-        "containers": [],
-        "traps": [
-            {
-                "id": "0",
-                "name": "Rock",
-                "coordinate": "1010"
-            },
-            {
-                "id": "1",
-                "name": "Rock",
-                "coordinate": "1515"
-            },
-            {
-                "id": "2",
-                "name": "Rock",
-                "coordinate": "1120"
-            },
-            {
-                "id": "3",
-                "name": "Rock",
-                "coordinate": "1825"
-            },
-            {
-                "id": "4",
-                "name": "Rock",
-                "coordinate": "1330"
-            },
-            {
-                "id": "5",
-                "name": "Rock",
-                "coordinate": "1735"
-            },
-            {
-                "id": "6",
-                "name": "Rock",
-                "coordinate": "2040"
-            },
-            {
-                "id": "7",
-                "name": "Rock",
-                "coordinate": "1445"
-            },
-            {
-                "id": "8",
-                "name": "Rock",
-                "coordinate": "1650"
-            },
-        ],
-        "npcs": [],
-        "enemies": [],
-        "gems": [
-            {
-                "item": "Blue Gem A",
-                "coordinate": "2917"
-            },
-            {
-                "item": "Blue Gem S",
-                "coordinate": "2918"
-            },
-            {
-                "item": "Blue Gem D",
-                "coordinate": "2927"
-            },
-            {
-                "item": "Blue Gem F",
-                "coordinate": "2928"
-            },
-            {
-                "item": "Blue Gem G",
-                "coordinate": "2937"
-            },
-            {
-                "item": "Blue Gem H",
-                "coordinate": "2938"
-            },
-            {
-                "item": "Blue Gem J",
-                "coordinate": "2947"
-            },
-            {
-                "item": "Blue Gem K",
-                "coordinate": "2948"
-            }
-        ],
         "dialogs": []
     },
     {
-        "id": 1,
+        "id": 2,
         "mapMatrix": "4060",
         "playerCoordinate": "2908",
-        "background": "cavernBackground2",
         "musics": ["cavern_power_BS.wav"],
-        "exit": {
-            "sprite": "springExit",
-            "coordinate": "1957"
+        "background": {
+            "image": "cavernBackground2",
+            "adjustement": 5
         },
+        "objects": [
+            {
+                "id": 0,
+                "name": "Exit",
+                "category": "important",
+                "coordinate": "1957"
+            },
+            {
+                "id": 1,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2915",
+                "sizeGrowth": 1.1
+            },
+        ],
         "structures": [
             {
                 "outline": "Cavern Outline",
@@ -146,22 +226,11 @@
                 "coordinate": "2050"
             },
         ],
-        "containers": [],
-        "traps": [],
-        "npcs": [
-            {
-                "sprite": "blueCrystal",
-                "size": 2,
-                "coordinate": "2915"
-            },
-        ],
-        "enemies": [],
-        "gems": [],
         "dialogs": [
             {
                 "dialog": "Fly Power Up Dialog",
                 "triggerCoordinate": "2913"
             }
         ]
-    },
+    }
 ]

@@ -21,72 +21,45 @@ final public class GameCollision {
     
     public var manager = CollisionManager()
     
-    func all(firstBody: SKPhysicsBody, secondBody: SKPhysicsBody) {
+    /// All collisions on the current scene.
+    public func all(firstBody: SKPhysicsBody, secondBody: SKPhysicsBody) {
         
-        // Projectile collision with structures
-        projectileHit(
+        projectileTouchStructure(
             CollisionManager.NodeBody(body: firstBody,
                                       bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
             with: CollisionManager.NodeBody(body: secondBody,
                                             bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
-        // Player projectile collision with objects
-        projectileHit(
-            CollisionManager.NodeBody(body: firstBody,
-                                      bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
-            with: CollisionManager.NodeBody(body: secondBody,
-                                            bitmaskCategory: CollisionCategory.object.rawValue)
-        )
-        
-        // Player projectile collision structure
-        projectileStructure(
-            CollisionManager.NodeBody(body: firstBody,
-                                      bitmaskCategory: CollisionCategory.playerProjectile.rawValue),
-            with: CollisionManager.NodeBody(body: secondBody,
-                                            bitmaskCategory: CollisionCategory.structure.rawValue)
-        )
-        
-        // Player collision with object item
-        playerTouchItem(
+        playerTouchCollectible(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.item.rawValue)
         )
         
-        // Player collision with object exit
-        playerIsOnExit(
+        playerOnExit(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
         
-        // Player collision with structure
         playerTouchGround(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.structure.rawValue)
         )
         
-        // Enemy collision with player
         enemyTouchPlayer(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
         
-        // Player collision with enemy
         playerTouchEnemy(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
     }
     
-    func projectileHit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
-        guard let projectile = first.body.node as? PKObjectNode else { return }
-        guard let object = second.body.node as? PKObjectNode else { return }
-        if manager.isColliding(first, with: second) {
-            collisionLogic.projectileHitObject(projectile, objectNode: object)
-        }
-    }
-    
-    func projectileStructure(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    /// When the player projectile collides with a structure.
+    private func projectileTouchStructure(_ first: CollisionManager.NodeBody,
+                                          with second: CollisionManager.NodeBody) {
         guard let projectile = first.body.node as? PKObjectNode else { return }
         if manager.isColliding(first, with: second) {
             projectile.removeAllActions()
@@ -94,40 +67,47 @@ final public class GameCollision {
         }
     }
     
-    func playerTouchItem(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    /// When the player collides with a collectible.
+    private func playerTouchCollectible(_ first: CollisionManager.NodeBody,
+                                        with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard let itemName = object.name else { return }
-        guard let allItemNames = GameItem.allNames else { return }
-        guard allItemNames.contains(itemName) else { return }
         if manager.isColliding(first, with: second) {
-            collisionLogic.pickUpItem(object: object, name: itemName)
+            collisionLogic.pickUpCollectible(object: object)
         }
     }
     
-    func playerIsOnExit(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    /// When the player is on the coordinate of the exit.
+    private func playerOnExit(_ first: CollisionManager.NodeBody,
+                              with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameConfiguration.sceneConfigurationKey.exit else { return }
+        guard object.name == GameConfiguration.nodeKey.exit else { return }
         if manager.isColliding(first, with: second) {
-            scene.core?.environment?.showStatueInteractionPopUp()
+            print(object.coordinate)
+            scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
             scene.player?.interactionStatus = .onExit
         }
     }
     
-    func playerTouchGround(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    /// When the player collides with the ground of a structure.
+    private func playerTouchGround(_ first: CollisionManager.NodeBody,
+                                   with second: CollisionManager.NodeBody) {
         if manager.isColliding(first, with: second) {
             collisionLogic.landOnGround()
         }
     }
     
-    func enemyTouchPlayer(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
-        guard let player = scene.player else { return }
+    /// When the player collides with the ground of a structure.
+    private func enemyTouchPlayer(_ first: CollisionManager.NodeBody,
+                                  with second: CollisionManager.NodeBody) {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
-        if !player.logic.isIntangible && manager.isColliding(first, with: second) {
+        if manager.isColliding(first, with: second) {
             collisionLogic.enemyHitPlayer(enemyNode)
         }
     }
     
-    func playerTouchEnemy(_ first: CollisionManager.NodeBody, with second: CollisionManager.NodeBody) {
+    /// When the player collides with an enemy.
+    private func playerTouchEnemy(_ first: CollisionManager.NodeBody,
+                                  with second: CollisionManager.NodeBody) {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
         if manager.isColliding(first, with: second) {
             collisionLogic.playerDropOnEnemy(enemyNode)

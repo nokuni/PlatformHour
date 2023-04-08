@@ -17,7 +17,7 @@ public final class GameScene: SKScene {
     var core: GameCore?
     
     func startGame() {
-        setup()
+        setup(configuration: .init(backgroundColor: .white))
         player = Player()
         game?.loadGame()
         game = Game.shared

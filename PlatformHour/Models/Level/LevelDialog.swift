@@ -15,4 +15,10 @@ public struct LevelDialog: Codable {
     
     public let dialog: String
     public let triggerCoordinate: String
+    public var isDialogAvailable: Bool = true
+    
+    enum CodingKeys: String, CodingKey {
+        case dialog
+        case triggerCoordinate
+    }
 }

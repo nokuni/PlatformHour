@@ -12,11 +12,11 @@ final public class GameSound {
     
     public init() { }
     
-    let manager = SoundManager()
+    public let manager = SoundManager()
     
     /// Play a step sound.
     public func step() {
-        try? manager.playSFX(name: GameConfiguration.soundConfigurationKey.playerStep, volume: 0.1)
+        try? manager.playSFX(name: GameConfiguration.soundKey.playerStep, volume: 0.1)
     }
     
     /// Play a landing sound.

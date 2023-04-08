@@ -37,16 +37,19 @@ final public class GameCamera {
         return adjustedPosition
     }
     
+    /// Returns the current player position.
     public var playerPosition: CGPoint {
         guard let player = scene.player else { return .zero }
         return CGPoint(x: player.node.position.x, y: player.node.position.y + adjustement)
     }
     
+    /// Configure the current camera on the scene.
     private func configure() {
         isFollowingPlayer = true
         camera.configure(configuration: .init(position: position, zoom: zoom))
     }
     
+    /// Set the limit of the camera.
     private func setCameraLimit() {
         
         guard let topLimit = environment.mapLimits.top else { return }
@@ -77,9 +80,10 @@ final public class GameCamera {
         }
     }
     
+    /// The camera follows the player position.
     public func followPlayer() {
         guard isFollowingPlayer else { return }
-        guard scene.isExistingChildNode(named: GameConfiguration.sceneConfigurationKey.player) else { return }
+        guard scene.isExistingChildNode(named: GameConfiguration.nodeKey.player) else { return }
 //        guard let controller = scene.game?.controller else { return }
 //        guard controller.action.canAct else { return }
         

@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Spirit",
+        "image": "spirit0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation": [
+            {
+                "identifier": "idle",
+                "frames": [
+                    "spirit0",
+                    "spirit1",
+                    "spirit2",
+                    "spirit3"
+                ]
+            },
+        ],
+    },
+]

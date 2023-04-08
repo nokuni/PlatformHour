@@ -1,0 +1,244 @@
+[
+    {
+        "name": "Blue Gem A",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsA.wav"
+    },
+    {
+        "name": "Blue Gem S",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsS.wav"
+    },
+    {
+        "name": "Blue Gem D",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsD.wav"
+    },
+    {
+        "name": "Blue Gem F",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsF.wav"
+    },
+    {
+        "name": "Blue Gem G",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsG.wav"
+    },
+    {
+        "name": "Blue Gem H",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsH.wav"
+    },
+    {
+        "name": "Blue Gem J",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsJ.wav"
+    },
+    {
+        "name": "Blue Gem K",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsK.wav"
+    },
+    {
+        "name": "Blue Gem L",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsL.wav"
+    },
+    {
+        "name": "Blue Gem Ò",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsÒ.wav"
+    },
+    {
+        "name": "Blue Gem À",
+        "image": "blueGem0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation":
+        [
+            {
+                "identifier": "idle",
+                "frames": ["blueGem0", "blueGem1", "blueGem2", "blueGem3", "blueGem4", "blueGem5"]
+            },
+            {
+                "identifier": "death",
+                "frames": ["blueGemDeath0", "blueGemDeath1", "blueGemDeath2", "blueGemDeath3", "blueGemDeath4", "blueGemDeath5"]
+            }
+        ],
+        "sound": "ChimeraBellsÀ.wav"
+    },
+]

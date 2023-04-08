@@ -11,22 +11,23 @@ import PlayfulKit
 
 final public class GameControllerManager {
     
-    init(scene: GameScene) {
+    public init(scene: GameScene) {
         self.scene = scene
         self.action = ActionLogic(scene: scene)
         print("Game Controller initialized ...")
         setupControllers()
     }
     
-    var scene: GameScene
-    var action: ActionLogic
+    public var scene: GameScene
+    public var action: ActionLogic
     
-    var manager: ControllerManager?
-    var isLongPressingDPad: Bool = false
-    var isLongPressingButtonA: Bool = false
-    var isLongPressingButtonB: Bool = false
-    var isLongPressingButtonX: Bool = false
-    var isLongPressingButtonY: Bool = false
+    public var manager: ControllerManager?
+    
+    public var isLongPressingDPad: Bool = false
+    public var isLongPressingButtonA: Bool = false
+    public var isLongPressingButtonB: Bool = false
+    public var isLongPressingButtonX: Bool = false
+    public var isLongPressingButtonY: Bool = false
     
     private func releaseDPad() {
         isLongPressingDPad = false
