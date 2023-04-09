@@ -157,7 +157,7 @@ public final class GameLogic {
     private var playerLandCompletionAnimation: SKAction {
         let action = SKAction.run {
             self.scene.player?.state.isJumping = false
-            self.scene.player?.controllerState = .normal
+            self.scene.core?.state.switchOn(newStatus: .inDefault)
             self.enableControls()
         }
         return action

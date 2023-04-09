@@ -16,10 +16,8 @@ public struct GameConfiguration {
     static let jsonKey = JSONKey()
     
     // MARK: - Configurations
-    static let worldConfiguration = WorldConfiguration()
     static let sceneConfiguration = SceneConfiguration()
     static let playerConfiguration = PlayerConfiguration()
-    static let animationConfiguration = AnimationConfiguration()
     
     // MARK: - Managers
     static let assemblyManager = AssemblyManager()

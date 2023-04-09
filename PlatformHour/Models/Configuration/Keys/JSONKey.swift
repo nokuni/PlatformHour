@@ -26,8 +26,8 @@ struct JSONKey {
     let structures = "structures.json"
     
     // MARK: - Animations
-    let playerAnimations = "playerAnimations.json"
     let npcAnimations = "npcAnimations.json"
+    let animationEffects = "animationEffects.json"
     
     // MARK: - Other
     let dialogs = "dialogs.json"

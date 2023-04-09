@@ -2,7 +2,7 @@
     {
         "id": 0,
         "mapMatrix": "2030",
-        "playerCoordinate": "1613",
+        "playerCoordinate": "1612",
         "musics": ["cavernBS.wav", "cavernBS_2.wav"],
         "background": {
             "image": "introCavernBackground",
@@ -16,10 +16,10 @@
                 "coordinate": "1628"
             },
             {
-                "id": 1,
+                "id": 0,
                 "name": "Spirit",
-                "category": "important",
-                "coordinate": "2915"
+                "category": "npc",
+                "coordinate": "0515"
             },
         ],
         "structures": [
@@ -34,6 +34,12 @@
             {
                 "dialog": "Ancient Cavern Intro Dialog",
                 "triggerCoordinate": "1613"
+            }
+        ],
+        "cinematics": [
+            {
+                "Spirit Soul Intro",
+                "triggerCoordinate": "1612"
             }
         ]
     },
@@ -169,7 +175,8 @@
                 "coordinate": "3000"
             }
         ],
-        "dialogs": []
+        "dialogs": [],
+        "cinematics": []
     },
     {
         "id": 2,
@@ -231,6 +238,7 @@
                 "dialog": "Fly Power Up Dialog",
                 "triggerCoordinate": "2913"
             }
-        ]
+        ],
+        "cinematics": []
     }
 ]

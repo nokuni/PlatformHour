@@ -21,10 +21,8 @@ extension GameWorld {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.worlds)
     }
     
-    static func get(_ name: String) -> GameWorld? {
-        let world = GameWorld.all?.first(where: {
-            $0.name == name
-        })
+    static func get(_ id: Int) -> GameWorld? {
+        let world = GameWorld.all?.first(where: { $0.id == id })
         return world
     }
     

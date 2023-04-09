@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Spirit Soul Intro",
+        "actions": [
+            {
+                "id": 0,
+                "objectName": "Spirit",
+                "stateIDIdentifier": "specialIdle",
+                "destinationCoordinate": "1615",
+                "isFollowedByCamera": true
+            }
+        ]
+    }
+]

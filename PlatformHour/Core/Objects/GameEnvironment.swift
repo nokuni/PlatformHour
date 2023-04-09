@@ -84,7 +84,7 @@ final public class GameEnvironment {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = GameConfiguration.worldConfiguration.tileSize
+        object.size = GameConfiguration.sceneConfiguration.tileSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -165,7 +165,7 @@ final public class GameEnvironment {
     
     /// Generate the current map.
     private func generateMap() {
-        map = PKMapNode(squareSize: GameConfiguration.worldConfiguration.tileSize,
+        map = PKMapNode(squareSize: GameConfiguration.sceneConfiguration.tileSize,
                         matrix: mapMatrix)
         let texture = SKTexture(imageNamed: "leadSquare")
         texture.filteringMode = .nearest
@@ -178,9 +178,9 @@ final public class GameEnvironment {
         if let level = scene.game?.level {
             backgroundContainer.name = GameConfiguration.nodeKey.background
             scene.addChildSafely(backgroundContainer)
-            let tileSize = GameConfiguration.worldConfiguration.tileSize
+            let tileSize = GameConfiguration.sceneConfiguration.tileSize
             let centerPosition = map.centerPosition
-            let adjustement = GameConfiguration.worldConfiguration.tileSize.height * CGFloat(level.background.adjustement)
+            let adjustement = GameConfiguration.sceneConfiguration.tileSize.height * CGFloat(level.background.adjustement)
             let background = SKSpriteNode(imageNamed: level.background.image)
             background.texture?.filteringMode = .nearest
             background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
@@ -198,7 +198,7 @@ final public class GameEnvironment {
         scene.addChildSafely(popUpButton)
         
         let button = SKSpriteNode()
-        button.size = GameConfiguration.worldConfiguration.tileSize
+        button.size = GameConfiguration.sceneConfiguration.tileSize
         button.setScale(0.6)
         button.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
         button.position = position

@@ -129,6 +129,7 @@ public class SpiralStructurePattern {
         map.addObject(object, texture: textures.bottomLeft, size: map.squareSize, at: cornerBottomLeftCoordinate)
         map.addObject(object, texture: textures.bottomRight, size: map.squareSize, at: cornerBottomRightCoordinate)
     }
+    
     private func addBorders(index: Int,
                             startingIndexValue: Int,
                             endingIndexValue: Int,

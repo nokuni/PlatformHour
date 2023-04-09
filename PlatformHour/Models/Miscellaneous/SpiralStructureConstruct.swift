@@ -1,5 +1,5 @@
 //
-//  StructurePatternConfiguration.swift
+//  SpiralStructureConstruct.swift
 //  PlatformHour
 //
 //  Created by Maertens Yann-Christophe on 25/03/23.
@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-public class SpiralStructureConfiguration {
+public class SpiralStructureConstruct {
     
     public init(outline: String,
          firstLayer: String?,
@@ -120,24 +120,23 @@ public class SpiralStructureConfiguration {
         return borderPattern
     }
     
-    public func outlinePattern(configuration: SpiralStructureConfiguration) -> SpiralStructurePattern.Pattern? {
-        guard let outlineCorner = configuration.outlineCorner else { return nil }
-        guard let outlineBorder = configuration.outlineBorder else { return nil }
+    public var outlinePattern: SpiralStructurePattern.Pattern? {
+        guard let outlineCorner = self.outlineCorner else { return nil }
+        guard let outlineBorder = self.outlineBorder else { return nil }
         let outlinePattern = SpiralStructurePattern.Pattern(cornerPattern: outlineCorner, borderPattern: outlineBorder)
         return outlinePattern
     }
     
-    public func firstLayerPattern(configuration: SpiralStructureConfiguration) -> SpiralStructurePattern.Pattern? {
-        guard let firstLayerCorner = configuration.firstLayerCorner else { return nil }
-        guard let firstLayerBorder = configuration.firstLayerBorder else { return nil }
+    public var firstLayerPattern: SpiralStructurePattern.Pattern? {
+        guard let firstLayerCorner = self.firstLayerCorner else { return nil }
+        guard let firstLayerBorder = self.firstLayerBorder else { return nil }
         let firstLayerPattern = SpiralStructurePattern.Pattern(cornerPattern: firstLayerCorner, borderPattern: firstLayerBorder)
         return firstLayerPattern
     }
     
-    public func innerPatterns(structure: LevelStructure,
-                               configuration: SpiralStructureConfiguration) -> [SpiralStructurePattern.Pattern] {
-        guard let innerLayerCorner = configuration.innerLayerCorner else { return [] }
-        guard let innerLayerBorder = configuration.innerLayerBorder else { return [] }
+    public func innerPatterns(structure: LevelStructure) -> [SpiralStructurePattern.Pattern] {
+        guard let innerLayerCorner = self.innerLayerCorner else { return [] }
+        guard let innerLayerBorder = self.innerLayerBorder else { return [] }
         
         let innerLayers: [(SpiralStructurePattern.CornerPattern, SpiralStructurePattern.BorderPattern)] =
         Array(repeating: (innerLayerCorner, innerLayerBorder),

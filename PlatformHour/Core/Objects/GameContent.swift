@@ -35,7 +35,7 @@ final public class GameContent {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = GameConfiguration.worldConfiguration.tileSize
+        object.size = GameConfiguration.sceneConfiguration.tileSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -89,22 +89,21 @@ final public class GameContent {
     private func configurePlayer() {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
+        guard let playerData = player.dataObject else { return }
+        
         let collision = Collision(category: .player,
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
         
-        player.node = object(name: GameConfiguration.nodeKey.player,
+        player.node = object(name: playerData.name,
                              collision: collision)
         
-        if let logic = player.dataObject?.logic {
-            player.node.logic = LogicBody(health: logic.health,
-                                          damage: logic.damage,
-                                          isDestructible: logic.isDestructible,
-                                          isIntangible: logic.isIntangible)
-        }
+        player.node.logic = LogicBody(health: playerData.logic.health,
+                                      damage: playerData.logic.damage,
+                                      isDestructible: playerData.logic.isDestructible,
+                                      isIntangible: playerData.logic.isIntangible)
         
         player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
-        
         player.node.physicsBody?.friction = 0
         player.node.physicsBody?.allowsRotation = false
         player.node.physicsBody?.affectedByGravity = false
@@ -119,7 +118,6 @@ final public class GameContent {
         player.node.position = position
         
         if let sprite = player.sprite {
-            print(sprite)
             player.node.texture = SKTexture(imageNamed: sprite)
             player.node.texture?.filteringMode = .nearest
         }
@@ -150,13 +148,13 @@ final public class GameContent {
         
         for structure in level.structures {
             
-            let configuration = SpiralStructureConfiguration(outline: structure.outline,
-                                                             firstLayer: structure.firstLayer,
-                                                             innerLayer: structure.innerLayer)
+            let construct = SpiralStructureConstruct(outline: structure.outline,
+                                                     firstLayer: structure.firstLayer,
+                                                     innerLayer: structure.innerLayer)
             
-            let outlinePattern = configuration.outlinePattern(configuration: configuration)
-            let firstLayerPattern = configuration.firstLayerPattern(configuration: configuration)
-            let innerPatterns = configuration.innerPatterns(structure: structure, configuration: configuration)
+            let outlinePattern = construct.outlinePattern
+            let firstLayerPattern = construct.firstLayerPattern
+            let innerPatterns = construct.innerPatterns(structure: structure)
             
             var patterns = [outlinePattern, firstLayerPattern]
             patterns.append(contentsOf: innerPatterns)
@@ -198,7 +196,7 @@ final public class GameContent {
         guard let exitPosition = environment.map.tilePosition(from: coordinate) else { return }
         
         let exitNode = environment.objectElement(name: GameConfiguration.nodeKey.exit,
-                                                 physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
+                                                 physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                  collision: collision)
         exitNode.coordinate = coordinate
         exitNode.texture = SKTexture(imageNamed: exitData.image)
@@ -252,9 +250,9 @@ final public class GameContent {
             
             let objectNode = PKObjectNode()
             objectNode.name = containerData.name
-            objectNode.size = GameConfiguration.worldConfiguration.tileSize
+            objectNode.size = GameConfiguration.sceneConfiguration.tileSize
             objectNode.zPosition = 2
-            objectNode.applyPhysicsBody(size: GameConfiguration.worldConfiguration.tileSize, collision: collision)
+            objectNode.applyPhysicsBody(size: GameConfiguration.sceneConfiguration.tileSize, collision: collision)
             objectNode.physicsBody?.isDynamic = false
             
             let texture = SKTexture(imageNamed: containerData.image)
@@ -283,7 +281,7 @@ final public class GameContent {
                                       contact: [.player])
             
             let itemNode = environment.objectElement(name: collectibleData.name,
-                                                     physicsBodySizeTailoring: -(GameConfiguration.worldConfiguration.tileSize.width / 2),
+                                                     physicsBodySizeTailoring: -(GameConfiguration.sceneConfiguration.tileSize.width / 2),
                                                      collision: collision)
             
             itemNode.texture = SKTexture(imageNamed: collectibleData.image)
@@ -311,19 +309,24 @@ final public class GameContent {
         
         guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
         
-        let npcObject = environment.objectElement(name: levelNPC.name,
-                                                  physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
-                                                  collision: collision)
+        let npcObjectNode = environment.objectElement(name: levelNPC.name,
+                                                      physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                      collision: collision)
         
-        npcObject.coordinate = coordinate
-        npcObject.size = environment.map.squareSize * CGFloat(levelNPC.sizeGrowth)
-        npcObject.texture = SKTexture(imageNamed: npcData.image)
-        npcObject.texture?.filteringMode = .nearest
-        npcObject.position = npcPosition
-        npcObject.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(npcObject)
+        npcObjectNode.animations = npcData.animations
+        npcObjectNode.coordinate = coordinate
+        npcObjectNode.size = environment.map.squareSize * CGFloat(levelNPC.sizeGrowth)
+        npcObjectNode.texture = SKTexture(imageNamed: npcData.image)
+        npcObjectNode.texture?.filteringMode = .nearest
+        npcObjectNode.position = npcPosition
+        npcObjectNode.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(npcObjectNode)
         
-        animation.addShadowPulseEffect(scene: scene, node: npcObject)
+        let animation = animation.animate(node: npcObjectNode, identifier: .specialIdle, filteringMode: .nearest, timeInterval: 0.1)
+        
+        npcObjectNode.run(SKAction.repeatForever(animation))
+        
+        //animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }
     
     /// Create a trap.
@@ -415,7 +418,7 @@ final public class GameContent {
         guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
         
         let npcObject = environment.objectElement(name: "",
-                                                  physicsBodySizeTailoring: -GameConfiguration.worldConfiguration.tileSize.width * 0.5,
+                                                  physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                   collision: collision)
         
         npcObject.coordinate = coordinate

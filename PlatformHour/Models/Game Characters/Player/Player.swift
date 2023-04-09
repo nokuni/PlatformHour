@@ -64,11 +64,6 @@ public class Player {
             }
         }
     }
-    public enum ControllerState {
-        case normal
-        case inAction
-        case inDialog
-    }
     
     public struct Stats {
         public init(range: CGFloat, attackSpeed: CGFloat) {
@@ -80,7 +75,6 @@ public class Player {
         public var attackSpeed: CGFloat
     }
     
-    public var controllerState: ControllerState = .normal
     public var currentRoll: Roll = .one
     public var stats = Stats(range: GameConfiguration.playerConfiguration.range,
                              attackSpeed: GameConfiguration.playerConfiguration.attackSpeed)
@@ -130,7 +124,7 @@ extension Player {
     
     // MARK: - Actions
     private func knockedBack(by enemy: PKObjectNode) -> SKAction {
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let knockBack = enemy.xScale > 0 ?
         SKAction.move(to: CGPoint(x: node.position.x + (tileSize.width * 2), y: node.position.y), duration: 0.1) :
         SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
@@ -149,7 +143,7 @@ extension Player {
     func death(scene: GameScene) {
         guard let deathFrames = frames(stateID: .death) else { return }
         let animationNode = SKSpriteNode()
-        animationNode.size = GameConfiguration.worldConfiguration.tileSize
+        animationNode.size = GameConfiguration.sceneConfiguration.tileSize
         animationNode.position = node.position
         scene.addChild(animationNode)
         

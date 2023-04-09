@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "name": "Cavern",
+        "name": "The Ancient Cavern",
         "levelIDs": [0,1,2,3,4],
         "playerLandSound": "cavernLandSound.wav"
     }

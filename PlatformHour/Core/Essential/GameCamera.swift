@@ -21,31 +21,28 @@ final public class GameCamera {
     public var environment: GameEnvironment
     
     public var camera: CameraManager
-    public var isFollowingPlayer: Bool = true
+    public var isUpdatingMovement: Bool = true
+    public var followedObject: PKObjectNode?
     
-    private let zoom = GameConfiguration.worldConfiguration.cameraZoom
-    private let catchUpDelay: CGFloat = GameConfiguration.worldConfiguration.cameraCatchUpDelay
+    private let zoom = GameConfiguration.sceneConfiguration.cameraZoom
+    private let catchUpDelay: CGFloat = GameConfiguration.sceneConfiguration.cameraCatchUpDelay
     
     public var adjustement: CGFloat {
-        GameConfiguration.worldConfiguration.cameraAdjustement
+        GameConfiguration.sceneConfiguration.cameraAdjustement
     }
     
     private var position : CGPoint {
-        guard let playerCoordinate = scene.game?.level?.playerCoordinate.coordinate else { return .zero }
-        guard let position = environment.map.tilePosition(from: playerCoordinate) else { return .zero }
-        let adjustedPosition = CGPoint(x: position.x, y: position.y + adjustement)
+        guard let followedObject = followedObject else { return .zero }
+        let adjustedPosition = CGPoint(x: followedObject.position.x,
+                                       y: followedObject.position.y + adjustement)
         return adjustedPosition
-    }
-    
-    /// Returns the current player position.
-    public var playerPosition: CGPoint {
-        guard let player = scene.player else { return .zero }
-        return CGPoint(x: player.node.position.x, y: player.node.position.y + adjustement)
     }
     
     /// Configure the current camera on the scene.
     private func configure() {
-        isFollowingPlayer = true
+        guard let player = scene.player else { return }
+        isUpdatingMovement = true
+        followedObject = player.node
         camera.configure(configuration: .init(position: position, zoom: zoom))
     }
     
@@ -63,31 +60,26 @@ final public class GameCamera {
         guard let minCameraPosition = environment.map.tilePosition(from: minimumCoordinate) else { return }
         guard let maxCameraPosition = environment.map.tilePosition(from: maximumCoordinate) else { return }
         
-        if playerPosition.x < minCameraPosition.x {
-            camera.move(to: CGPoint(x: minCameraPosition.x, y: playerPosition.y), catchUpDelay: GameConfiguration.worldConfiguration.cameraCatchUpDelay)
+        if position.x < minCameraPosition.x {
+            camera.move(to: CGPoint(x: minCameraPosition.x, y: position.y), catchUpDelay: GameConfiguration.sceneConfiguration.cameraCatchUpDelay)
         }
         
-        if playerPosition.x > maxCameraPosition.x {
-            camera.move(to: CGPoint(x: maxCameraPosition.x, y: playerPosition.y), catchUpDelay: GameConfiguration.worldConfiguration.cameraCatchUpDelay)
+        if position.x > maxCameraPosition.x {
+            camera.move(to: CGPoint(x: maxCameraPosition.x, y: position.y), catchUpDelay: GameConfiguration.sceneConfiguration.cameraCatchUpDelay)
         }
         
-        if playerPosition.y > minCameraPosition.y {
-            camera.scene.camera?.run(SKAction.moveTo(y: minCameraPosition.y, duration: GameConfiguration.worldConfiguration.cameraCatchUpDelay))
+        if position.y > minCameraPosition.y {
+            camera.scene.camera?.run(SKAction.moveTo(y: minCameraPosition.y, duration: GameConfiguration.sceneConfiguration.cameraCatchUpDelay))
         }
         
-        if playerPosition.y < maxCameraPosition.y {
-            camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: GameConfiguration.worldConfiguration.cameraCatchUpDelay))
+        if position.y < maxCameraPosition.y {
+            camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: GameConfiguration.sceneConfiguration.cameraCatchUpDelay))
         }
     }
     
-    /// The camera follows the player position.
-    public func followPlayer() {
-        guard isFollowingPlayer else { return }
-        guard scene.isExistingChildNode(named: GameConfiguration.nodeKey.player) else { return }
-//        guard let controller = scene.game?.controller else { return }
-//        guard controller.action.canAct else { return }
-        
-        camera.move(to: playerPosition, catchUpDelay: catchUpDelay)
+    public func follow() {
+        guard isUpdatingMovement else { return }
+        camera.move(to: position, catchUpDelay: catchUpDelay)
         setCameraLimit()
     }
 }

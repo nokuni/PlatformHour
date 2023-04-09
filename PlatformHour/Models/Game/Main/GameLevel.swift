@@ -17,6 +17,7 @@ struct GameLevel: Codable {
     let objects: [LevelObject]
     let structures: [LevelStructure]
     var dialogs: [LevelDialog]
+    let cinematics: [LevelCinematic]
 }
 
 extension GameLevel {
@@ -30,7 +31,7 @@ extension GameLevel {
     }
     
     var exit: LevelObject? {
-        objects(category: .important).first { $0.name == "Exit" }
+        objects(category: .important).first { $0.name == GameConfiguration.nodeKey.exit }
     }
     
     static func get(_ id: Int) -> GameLevel? {

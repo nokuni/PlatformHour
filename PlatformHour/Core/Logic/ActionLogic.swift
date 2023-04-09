@@ -11,9 +11,12 @@ import Utility_Toolbox
 
 public final class ActionLogic {
     
-    public init(scene: GameScene) {
+    public init(scene: GameScene, state: GameState) {
         self.scene = scene
+        self.state = state
     }
+    
+    public var state: GameState
     
     public enum Direction: String, CaseIterable {
         case none
@@ -48,7 +51,7 @@ public final class ActionLogic {
         player.actions.append(action)
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
-        actionElement.size = GameConfiguration.worldConfiguration.tileSize * 0.5
+        actionElement.size = GameConfiguration.sceneConfiguration.tileSize * 0.5
         scene.core?.hud?.actionSquares[safe: player.actions.count - 1]?.addChildSafely(actionElement)
         scene.core?.logic?.resolveSequenceOfActions()
     }
@@ -128,56 +131,64 @@ public final class ActionLogic {
     
     /// Trigger right pad actions.
     public func rightPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             moveRight()
         case .inAction:
             addAction(.moveRight)
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
     
     /// Trigger left pad actions.
     public func leftPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             moveLeft()
         case .inAction:
             addAction(.moveLeft)
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
     
     /// Trigger up pad actions.
     public func upPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             break
         case .inAction:
             addAction(.moveUp)
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
     
     /// Trigger down pad actions.
     public func downPadAction() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             break
         case .inAction:
             addAction(.moveDown)
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
@@ -207,15 +218,17 @@ public final class ActionLogic {
     
     /// Trigger button A actions.
     func actionA() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             jump()
         case .inAction:
             break
         case .inDialog:
             scene.core?.hud?.passDialog()
+        case .inCinematic:
+            break
+        case .inPause:
+            break
         }
     }
     
@@ -226,28 +239,32 @@ public final class ActionLogic {
     
     /// Trigger button X actions.
     func actionX() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             attack()
         case .inAction:
             break
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
     
     /// Trigger button Y actions.
     func actionY() {
-        guard let player = scene.player else { return }
-        
-        switch player.controllerState {
-        case .normal:
+        switch state.status {
+        case .inDefault:
             interact()
         case .inAction:
             break
         case .inDialog:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
             break
         }
     }
@@ -289,19 +306,16 @@ public final class ActionLogic {
     // MARK: - Miscellaneous
     
     func pause() {
-        guard canAct else { return }
-        
-        switch scene.core?.state.status {
-        case .inGame:
-            scene.core?.content?.pause()
-            scene.core?.state.status = .inPause
-            scene.core?.hud?.createPauseScreen()
-        case .inPause:
+        scene.core?.content?.pause()
+        state.switchOn(newStatus: .inPause)
+        scene.core?.hud?.createPauseScreen()
+    }
+    
+    func unPause() {
+        if state.status == .inPause {
             scene.core?.content?.unpause()
-            scene.core?.state.status = .inGame
+            state.switchOnPreviousStatus()
             scene.core?.hud?.removePauseScreen()
-        case .none:
-            ()
         }
     }
     
@@ -309,7 +323,7 @@ public final class ActionLogic {
     
     func jumpAction(player: Player) -> SKAction {
         let jumpValue = GameConfiguration.playerConfiguration.jumpValue
-        let moveUpValue = GameConfiguration.worldConfiguration.tileSize.height
+        let moveUpValue = GameConfiguration.sceneConfiguration.tileSize.height
         let moveUpDestination = CGPoint(x: player.node.position.x,
                                         y: player.node.position.y + moveUpValue)
         let array = stride(from: 0, to: jumpValue, by: 1)
@@ -323,7 +337,7 @@ public final class ActionLogic {
         }
         actions.append(SKAction.run {
             self.scene.core?.animation?.addGravityEffect(on: player.node)
-            self.scene.player?.controllerState = .inAction
+            self.state.switchOn(newStatus: .inAction)
             self.scene.core?.hud?.addActionSquaresHUD()
         })
         let floatingSequence = SKAction.sequence([

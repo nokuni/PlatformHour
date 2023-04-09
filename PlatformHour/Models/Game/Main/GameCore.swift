@@ -41,8 +41,11 @@ public struct GameCore {
     public var collision: GameCollision?
     public var gameCamera: GameCamera?
     public var content: GameContent?
+}
+
+public extension GameCore {
     
-    mutating public func start(game: Game?, scene: GameScene) {
+    mutating func setup(scene: GameScene) {
         event = GameEvent(scene: scene)
         environment = GameEnvironment(scene: scene)
         collision = GameCollision(scene: scene)
@@ -57,25 +60,23 @@ public struct GameCore {
         
         guard let logic = logic else { return }
         
-        gameCamera = GameCamera(scene: scene, environment: environment)
         content = GameContent(scene: scene, environment: environment, animation: animation, logic: logic)
+        gameCamera = GameCamera(scene: scene, environment: environment)
+        
+        playBackgroundSound(scene: scene)
+        
+        setupControllers(scene: scene)
     }
     
-    public func animateLaunch(game: Game?, scene: GameScene, player: Player?) {
-        scene.isUserInteractionEnabled = false
-        let smoke = SKShapeNode(rectOf: scene.size * 2)
-        smoke.fillColor = .white
-        smoke.strokeColor = .white
-        smoke.position = player?.node.position ?? .zero
-        scene.addChild(smoke)
-        let sequence = SKAction.sequence([
-            SKAction.fadeOut(withDuration: 2),
-            SKAction.removeFromParent(),
-            SKAction.run {
-                scene.isUserInteractionEnabled = true
-                game?.controller = GameControllerManager(scene: scene)
-            }
-        ])
-        smoke.run(sequence)
+    private func playBackgroundSound(scene: GameScene) {
+        sound.playBackgroundMusics(scene: scene)
+    }
+    
+    private func setupControllers(scene: GameScene) {
+        animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
+                                    isVisible: true,
+                                    scene: scene) {
+            scene.game?.controller = GameControllerManager(scene: scene, state: state)
+        }
     }
 }

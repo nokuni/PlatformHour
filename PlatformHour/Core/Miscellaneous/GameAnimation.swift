@@ -14,12 +14,9 @@ final public class GameAnimation {
     
     public init() { }
     
-    public struct SpecialEffect {
-        let image: String
-        let frameCount: Int
-    }
     public enum StateID: String, CaseIterable {
         case idle = "idle"
+        case specialIdle = "specialIdle"
         case run = "run"
         case runRight = "runRight"
         case runLeft = "runLeft"
@@ -32,9 +29,9 @@ final public class GameAnimation {
         guard let camera = scene.camera else { return }
         let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
         SKAction.start(actionOnLaunch: {
-            scene.core?.gameCamera?.isFollowingPlayer = false
+            scene.core?.gameCamera?.isUpdatingMovement = false
         }, animation: shake, node: camera) {
-            scene.core?.gameCamera?.isFollowingPlayer = true
+            scene.core?.gameCamera?.isUpdatingMovement = true
         }
     }
     
@@ -70,10 +67,14 @@ final public class GameAnimation {
     public func addGravityEffect(on node: SKNode) {
         let gravityEffectNode = SKSpriteNode()
         gravityEffectNode.name = GameConfiguration.nodeKey.gravityEffect
-        gravityEffectNode.size = GameConfiguration.worldConfiguration.tileSize
+        gravityEffectNode.size = GameConfiguration.sceneConfiguration.tileSize
         node.addChildSafely(gravityEffectNode)
         
-        let effects = GameConfiguration.animationConfiguration.gravityEffects
+        let effects = [
+            GameAnimationEffect.get(id: 0, name: "Gravity Effect")?.frames,
+            GameAnimationEffect.get(id: 1, name: "Gravity Effect")?.frames,
+            GameAnimationEffect.get(id: 2, name: "Gravity Effect")?.frames
+        ].compactMap { $0 }
         
         let actions = effects.map {
             SKAction.animate(with: $0, filteringMode: .nearest, timePerFrame: 0.05)
@@ -82,11 +83,7 @@ final public class GameAnimation {
         guard !actions.isEmpty else { return }
         guard actions.count == effects.count else { return }
         
-        let animation = SKAction.sequence([
-            actions[0],
-            actions[1],
-            actions[2]
-        ])
+        let animation = SKAction.sequence(actions)
         
         gravityEffectNode.run(SKAction.repeatForever(animation))
     }
@@ -97,7 +94,7 @@ final public class GameAnimation {
                                  scene: GameScene,
                                  completion: (() -> Void)?) {
         scene.isUserInteractionEnabled = false
-        let effectNode = SKShapeNode(rectOf: scene.size * 2)
+        let effectNode = SKShapeNode(rectOf: scene.size * 3)
         effectNode.alpha = isVisible ? 1 : 0
         effectNode.fillColor = .black
         effectNode.strokeColor = .black
@@ -106,6 +103,8 @@ final public class GameAnimation {
         scene.addChild(effectNode)
         let sequence = SKAction.sequence([
             effect,
+            SKAction.run { self.titleTransitionEffect(scene: scene) },
+            SKAction.wait(forDuration: 4),
             SKAction.run {
                 scene.isUserInteractionEnabled = true
                 completion?()
@@ -114,13 +113,39 @@ final public class GameAnimation {
         effectNode.run(sequence)
     }
     
+    public func titleTransitionEffect(scene: GameScene) {
+        guard let world = scene.game?.world else { return }
+        let textManager = TextManager()
+        let attributedText = textManager.attributedText(parameter: .init(content: world.name, fontName: "Daydream", fontSize: 40, fontColor: .white, strokeWidth: -10, strokeColor: .black))
+        
+        let titleNode = SKLabelNode(attributedText: attributedText)
+        titleNode.alpha = 0
+        titleNode.fontName = "Daydream"
+        titleNode.fontSize = 40
+        titleNode.fontColor = .white
+        titleNode.position = scene.camera?.position ?? .zero
+        scene.addChildSafely(titleNode)
+        
+        let sequence = SKAction.sequence([
+            SKAction.fadeIn(withDuration: 2),
+            SKAction.fadeOut(withDuration: 2),
+            SKAction.removeFromParent()
+        ])
+        
+        titleNode.run(sequence)
+    }
+    
     /// Circular smoke animation.
     public func circularSmoke(on node: SKNode) {
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let animationNode = SKSpriteNode()
         animationNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
         
-        let animation = SKAction.animate(with: GameConfiguration.animationConfiguration.circularSmoke, filteringMode: .nearest, timePerFrame: 0.05)
+        guard let animationEffect = GameAnimationEffect.get(id: 0, name: "Circular Smoke") else { return }
+        
+        let frames = animationEffect.frames
+        
+        let animation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: 0.05)
         
         let sequence = SKAction.sequence([
             animation,
@@ -133,7 +158,7 @@ final public class GameAnimation {
     }
     
     public func orbSplitEffect(scene: GameScene, on position: CGPoint) {
-        let tileSize = GameConfiguration.worldConfiguration.tileSize
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let positions = [
             CGPoint(x: position.x, y: position.y + tileSize.height),
             CGPoint(x: position.x + tileSize.width, y: position.y + tileSize.height),

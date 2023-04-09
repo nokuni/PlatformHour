@@ -11,10 +11,25 @@ public final class GameState {
     
     public init() { }
     
-    public var status: Status = .inGame
+    public var status: Status = .inDefault
+    public var previousStatus: Status?
     
     public enum Status {
-        case inGame
+        case inDefault
+        case inAction
+        case inDialog
+        case inCinematic
         case inPause
+    }
+    
+    func switchOn(newStatus: Status) {
+        previousStatus = status
+        status = newStatus
+    }
+    
+    func switchOnPreviousStatus() {
+        if let previousStatus = previousStatus {
+            status = previousStatus
+        }
     }
 }

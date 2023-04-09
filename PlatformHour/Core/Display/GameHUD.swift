@@ -29,7 +29,7 @@ public class GameHUD {
     }
     
     private var actionSequenceHUDConstraints: EdgeInsets {
-        let leading = (layer.frame.width / 2) - (GameConfiguration.worldConfiguration.tileSize.width * 3) + (GameConfiguration.worldConfiguration.tileSize.width / 2)
+        let leading = (layer.frame.width / 2) - (GameConfiguration.sceneConfiguration.tileSize.width * 3) + (GameConfiguration.sceneConfiguration.tileSize.width / 2)
         let constraints = EdgeInsets(top: 40, leading: leading, bottom: 0, trailing: 0)
         return constraints
     }
@@ -62,7 +62,7 @@ public class GameHUD {
         for image in sequenceImages {
             let hud = SKSpriteNode(imageNamed: image)
             hud.texture?.filteringMode = .nearest
-            hud.size = GameConfiguration.worldConfiguration.tileSize
+            hud.size = GameConfiguration.sceneConfiguration.tileSize
             sequenceHUD.append(hud)
         }
         
@@ -84,22 +84,22 @@ public class GameHUD {
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
         xLetter.texture?.filteringMode = .nearest
-        xLetter.size = GameConfiguration.worldConfiguration.tileSize
-        xLetter.position = CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width / 2, y: 0)
+        xLetter.size = GameConfiguration.sceneConfiguration.tileSize
+        xLetter.position = CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width / 2, y: 0)
         score.addChildSafely(xLetter)
         
         player.bag.count.intoSprites(with: "indicator",
                                      filteringMode: .nearest,
                                      spacing: 0.5,
-                                     of: GameConfiguration.worldConfiguration.tileSize,
-                                     at: CGPoint(x: GameConfiguration.worldConfiguration.tileSize.width * 1.5,
+                                     of: GameConfiguration.sceneConfiguration.tileSize,
+                                     at: CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width * 1.5,
                                                  y: 0),
                                      on: score)
         
         let item = SKSpriteNode(imageNamed: "hudGem")
         item.name = "Orb"
         item.texture?.filteringMode = .nearest
-        item.size = GameConfiguration.worldConfiguration.tileSize
+        item.size = GameConfiguration.sceneConfiguration.tileSize
         item.position = .zero
         score.addChildSafely(item)
     }
@@ -115,7 +115,7 @@ public class GameHUD {
             action.name = "Action Square \(index)"
             action.texture?.filteringMode = .nearest
             action.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
-            action.size = GameConfiguration.worldConfiguration.tileSize
+            action.size = GameConfiguration.sceneConfiguration.tileSize
             let animation = SKAction.sequence([
                 SKAction.scale(by: 1.1, duration: 0.1),
                 SKAction.scale(by: 0.9, duration: 0.1),
@@ -298,7 +298,7 @@ public class GameHUD {
     /// Ends the current dialog.
     private func endDialog() {
         disableDialog()
-        scene.player?.controllerState = .normal
+        scene.core?.state.switchOn(newStatus: .inDefault)
     }
     
     // MARK: - Updates

@@ -12,7 +12,7 @@ import Utility_Toolbox
 public final class Game: ObservableObject {
     
     init() {
-        loadGame()
+        loadSave()
     }
     
     //    @AppStorage("world") var currentWorld = "Timeless Temple"
@@ -34,11 +34,10 @@ public final class Game: ObservableObject {
         return Int(currentLevel)
     }
     
-    func loadGame() {
-        print("Game Initialized ...")
+    func loadSave() {
         loadSaves()
         createSave()
-        world = GameWorld.get("Cavern")
+        world = GameWorld.get(0)
         level = GameLevel.get(levelIndex)
     }
     

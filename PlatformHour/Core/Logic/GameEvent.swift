@@ -68,7 +68,7 @@ public final class GameEvent {
         }) {
             if dialog.isDialogAvailable {
                 scene.game?.currentLevelDialog = dialog
-                player.controllerState = .inDialog
+                scene.core?.state.switchOn(newStatus: .inDialog)
                 scene.core?.hud?.generateDialogBox()
             }
         }
@@ -78,7 +78,7 @@ public final class GameEvent {
     public func triggerInteractionPopUp(at coordinate: Coordinate) {
         guard let environment = scene.core?.environment else { return }
         if let position = environment.map.tilePosition(from: coordinate) {
-            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.worldConfiguration.tileSize.height * 2))
+            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.sceneConfiguration.tileSize.height * 2))
             environment.generatePopUpButton(buttonSymbol: .y, position: buttonPosition)
         }
     }

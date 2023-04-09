@@ -18,6 +18,13 @@
                     "spirit3"
                 ]
             },
+            {
+                "identifier": "specialIdle",
+                "frames": [
+                    "spiritSoulForm0",
+                    "spiritSoulForm1",
+                ]
+            },
         ],
     },
 ]

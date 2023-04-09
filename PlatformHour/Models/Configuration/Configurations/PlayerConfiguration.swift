@@ -20,9 +20,4 @@ public struct PlayerConfiguration {
     public let runTimePerFrame: TimeInterval = 0.03
     public let hitTimePerFrame: TimeInterval = 0.05
     public let deathTimePerFrame: TimeInterval = 0.05
-    
-    public let runRightAnimation = "Player Run Right"
-    public let runLeftAnimation = "Player Run Left"
-    public let hitAnimation = "Player Hit"
-    public let deathAnimation = "Player Death"
 }

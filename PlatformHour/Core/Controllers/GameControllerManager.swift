@@ -11,14 +11,16 @@ import PlayfulKit
 
 final public class GameControllerManager {
     
-    public init(scene: GameScene) {
+    public init(scene: GameScene, state: GameState) {
         self.scene = scene
-        self.action = ActionLogic(scene: scene)
+        self.state = state
+        self.action = ActionLogic(scene: scene, state: state)
         print("Game Controller initialized ...")
         setupControllers()
     }
     
     public var scene: GameScene
+    public var state: GameState
     public var action: ActionLogic
     
     public var manager: ControllerManager?

@@ -54,7 +54,7 @@ extension GameObject {
     }
     
     static var npcs: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.containerObjects)
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.npcObjects)
     }
     
     static var enemies: [GameObject]? {

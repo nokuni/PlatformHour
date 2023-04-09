@@ -17,18 +17,12 @@ public final class GameScene: SKScene {
     var core: GameCore?
     
     func startGame() {
-        setup(configuration: .init(backgroundColor: .white))
+        //setup(configuration: .init(backgroundColor: .white))
         player = Player()
-        game?.loadGame()
+        game?.loadSave()
         game = Game.shared
         core = GameCore()
-        core?.start(game: game, scene: self)
-        //core?.sound.playBackgroundMusic(scene: self)
-        core?.animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
-                                         isVisible: true,
-                                         scene: self) {
-            self.game?.controller = GameControllerManager(scene: self)
-        }
+        core?.setup(scene: self)
     }
     
     public override func didMove(to view: SKView) {
@@ -37,7 +31,7 @@ public final class GameScene: SKScene {
     }
     
     public override func update(_ currentTime: TimeInterval) {
-        core?.gameCamera?.followPlayer()
+        core?.gameCamera?.follow()
         core?.logic?.projectileFollowPlayer()
         core?.event?.updatePlayerCoordinate()
         //core?.event?.updatePlatformCoordinates()
