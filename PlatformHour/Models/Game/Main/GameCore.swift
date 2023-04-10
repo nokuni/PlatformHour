@@ -63,7 +63,7 @@ public extension GameCore {
         content = GameContent(scene: scene, environment: environment, animation: animation, logic: logic)
         gameCamera = GameCamera(scene: scene, environment: environment)
         
-        //playBackgroundSound(scene: scene)
+        playBackgroundSound(scene: scene)
         
         start(scene: scene)
     }
