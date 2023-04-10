@@ -161,6 +161,7 @@ public final class GameEvent {
     /// Play a level cinematic.
     public func playCinematic(cinematic: LevelCinematic) {
         guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
         guard cinematic.isAvailable else { return }
         
         scene.game?.currentLevelCinematic = cinematic
@@ -173,6 +174,7 @@ public final class GameEvent {
                 if let dialog = cinematicData.dialogCompletion,
                    let levelDialog = level.dialogs.first(where: { $0.dialog == dialog }) {
                     self.playDialog(levelDialog: levelDialog)
+                    self.scene.core?.gameCamera?.followedObject = player.node
                 }
             })
         }
@@ -211,6 +213,7 @@ public final class GameEvent {
             let objectAnimation = effect.isRepeatingForever ? SKAction.repeatForever(spriteAnimation) : spriteAnimation
             if action.movement == nil {
                 actions.append(objectAnimation)
+                actions.append(SKAction.removeFromParent())
             } else {
                 objectNode.run(objectAnimation)
             }

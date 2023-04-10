@@ -46,16 +46,6 @@
                     "isRepeatingForever": false
                 },
                 "isFollowedByCamera": false
-            },
-            {
-                "id": 1,
-                "objectName": "Spirit",
-                "startingCoordinate": "1612",
-                "effect": {
-                    "stateIDIdentifier": "spark",
-                    "isRepeatingForever": false
-                },
-                "isFollowedByCamera": false
             }
         ],
         "dialogCompletion": "Movement Power Up Dialog"

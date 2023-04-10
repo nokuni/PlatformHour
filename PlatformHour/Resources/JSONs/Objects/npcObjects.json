@@ -34,12 +34,7 @@
                     "powerUp2",
                     "powerUp3",
                     "powerUp4",
-                    "powerUp5"
-                ]
-            },
-            {
-                "identifier": "spark",
-                "frames": [
+                    "powerUp5",
                     "spark0",
                     "spark1",
                     "spark2",
@@ -48,7 +43,7 @@
                     "spark5",
                     "spark6"
                 ]
-            },
+            }
         ],
     },
 ]

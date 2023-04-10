@@ -18,7 +18,6 @@ final public class GameAnimation {
         case idle = "idle"
         case specialIdle = "specialIdle"
         case powerUp = "powerUp"
-        case spark = "spark"
         case run = "run"
         case runRight = "runRight"
         case runLeft = "runLeft"
