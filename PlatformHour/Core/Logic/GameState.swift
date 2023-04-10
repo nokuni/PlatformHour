@@ -22,12 +22,12 @@ public final class GameState {
         case inPause
     }
     
-    func switchOn(newStatus: Status) {
+    public func switchOn(newStatus: Status) {
         previousStatus = status
         status = newStatus
     }
     
-    func switchOnPreviousStatus() {
+    public func switchOnPreviousStatus() {
         if let previousStatus = previousStatus {
             status = previousStatus
         }

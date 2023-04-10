@@ -37,11 +37,7 @@ public struct GameObject: Codable {
     }
 }
 
-extension GameObject {
-    
-    enum GameObjectError: String, Error {
-        case objectNotFound
-    }
+public extension GameObject {
     
     // MARK: - Data
     

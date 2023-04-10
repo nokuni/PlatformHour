@@ -33,4 +33,5 @@ struct JSONKey {
     let dialogs = "dialogs.json"
     let characters = "characters.json"
     let controllerButtons = "controllerButtons.json"
+    let cinematics = "cinematics.json"
 }

@@ -17,6 +17,8 @@ final public class GameAnimation {
     public enum StateID: String, CaseIterable {
         case idle = "idle"
         case specialIdle = "specialIdle"
+        case powerUp = "powerUp"
+        case spark = "spark"
         case run = "run"
         case runRight = "runRight"
         case runLeft = "runLeft"
@@ -28,9 +30,9 @@ final public class GameAnimation {
     public func shakeScreen(scene: GameScene) {
         guard let camera = scene.camera else { return }
         let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
-        SKAction.start(actionOnLaunch: {
+        SKAction.animate(startCompletion: {
             scene.core?.gameCamera?.isUpdatingMovement = false
-        }, animation: shake, node: camera) {
+        }, action: shake, node: camera) {
             scene.core?.gameCamera?.isUpdatingMovement = true
         }
     }
@@ -217,7 +219,7 @@ final public class GameAnimation {
             SKAction.removeFromParent(),
         ])
         
-        SKAction.start(actionOnLaunch: nil, animation: sequence, node: animatedNode, actionOnEnd: actionAfter)
+        SKAction.animate(action: sequence, node: animatedNode, endCompletion: actionAfter)
         
         node.removeFromParent()
     }
@@ -271,6 +273,6 @@ final public class GameAnimation {
             SKAction.removeFromParent(),
         ])
         
-        SKAction.start(actionOnLaunch: nil, animation: sequence, node: node, actionOnEnd: actionAfter)
+        SKAction.animate(action: sequence, node: node, endCompletion: actionAfter)
     }
 }

@@ -12,12 +12,12 @@ import Utility_Toolbox
 
 public final class GameScene: SKScene {
     
-    var player: Player?
-    var game: Game?
-    var core: GameCore?
+    public var player: Player?
+    public var game: Game?
+    public var core: GameCore?
     
-    func startGame() {
-        //setup(configuration: .init(backgroundColor: .white))
+    public func launch() {
+        setup(configuration: .init(backgroundColor: .white))
         player = Player()
         game?.loadSave()
         game = Game.shared
@@ -26,7 +26,7 @@ public final class GameScene: SKScene {
     }
     
     public override func didMove(to view: SKView) {
-        startGame()
+        launch()
         core?.gameCamera?.camera.gesture(view)
     }
     

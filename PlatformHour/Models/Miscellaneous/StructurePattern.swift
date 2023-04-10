@@ -7,13 +7,21 @@
 
 import Foundation
 
-struct StructurePattern: Codable {
+public struct StructurePattern: Codable {
+    
+    public init(name: String, corners: [String], borders: [String]) {
+        self.name = name
+        self.corners = corners
+        self.borders = borders
+    }
+    
     var name: String
     var corners: [String]
     var borders: [String]
 }
 
-extension StructurePattern {
+public extension StructurePattern {
+    
     static var all: [StructurePattern]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.structures)
     }

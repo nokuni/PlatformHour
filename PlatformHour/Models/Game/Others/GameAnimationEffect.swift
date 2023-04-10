@@ -7,14 +7,21 @@
 
 import Foundation
 
-struct GameAnimationEffect: Codable {
-    let id: Int
-    let name: String
-    let frames: [String]
+public struct GameAnimationEffect: Codable {
+    
+    public init(id: Int, name: String, frames: [String]) {
+        self.id = id
+        self.name = name
+        self.frames = frames
+    }
+    
+    public let id: Int
+    public let name: String
+    public let frames: [String]
 }
 
 
-extension GameAnimationEffect {
+public extension GameAnimationEffect {
     
     static var all: [GameAnimationEffect]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.animationEffects)

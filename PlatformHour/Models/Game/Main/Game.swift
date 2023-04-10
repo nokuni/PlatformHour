@@ -11,59 +11,75 @@ import Utility_Toolbox
 
 public final class Game: ObservableObject {
     
-    init() {
+    public init() {
         loadSave()
     }
     
-    //    @AppStorage("world") var currentWorld = "Timeless Temple"
     @Published var saves: [SaveEntity] = []
     
     static let shared = Game()
     
-    var saveManager = SaveManager(container: PersistenceController.shared.container)
-    var controller: GameControllerManager?
+    public var saveManager = SaveManager(container: PersistenceController.shared.container)
+    public var controller: GameControllerManager?
     
-    var world: GameWorld?
-    var level: GameLevel?
+    // MARK: - Worlds
     
-    var currentLevelDialog: LevelDialog?
-    var currentDialog: GameDialog?
+    public var world: GameWorld?
     
-    var levelIndex: Int {
+    // MARK: - Levels
+    
+    public var level: GameLevel?
+    public var levelIndex: Int {
         guard let currentLevel = saves.first?.level else { return 0 }
         return Int(currentLevel)
     }
     
-    func loadSave() {
-        loadSaves()
+    // MARK: - Dialogs
+    
+    public var currentLevelDialog: LevelDialog?
+    public var currentDialog: GameDialog?
+    
+    // MARK: - Cinematics
+    
+    public var currentLevelCinematic: LevelCinematic?
+    public var currentCinematic: GameCinematic?
+    
+    // MARK: - Save
+    
+    /// Load the game save.
+    public func loadSave() {
+        fetchSaves()
         createSave()
-        world = GameWorld.get(0)
+        world = GameWorld.get(GameConfiguration.startingWorldID)
         level = GameLevel.get(levelIndex)
     }
     
-    func createSave() {
-        if saves.isEmpty {
-            let newSave = SaveEntity(context: saveManager.container.viewContext)
-            newSave.id = UUID()
-            newSave.level = 0
-            save()
-            loadSaves()
-        }
+    /// Create the game save.
+    private func createSave() {
+        guard saves.isEmpty else { return }
+        
+        let newSave = SaveEntity(context: saveManager.container.viewContext)
+        newSave.id = UUID()
+        newSave.level = 0
+        save()
+        fetchSaves()
     }
     
-    func loadSaves() {
+    /// Fetch the game save.
+    private func fetchSaves() {
         if let fetchedSaves: [SaveEntity] = try? saveManager.fetchedObjects(entityName: "SaveEntity") {
             saves = fetchedSaves
         }
     }
     
-    func save() {
-        try? saveManager.save()
-    }
+    /// Save the game progress.
+    private func save() { try? saveManager.save() }
     
-    func setupNextLevel() {
+    /// Save the progress on next game level.
+    public func setupNextLevel() {
+        guard !saves.isEmpty else { return }
         saves[0].level += 1
         save()
-        loadSaves()
+        fetchSaves()
     }
 }

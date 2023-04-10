@@ -7,26 +7,38 @@
 
 import Foundation
 
-struct ControllerButton: Codable {
-    let pressedSprite: String
-    let releasedSprite: String
-    let category: Category
-    let product: Product
-
-    enum Category: String, Codable {
+public struct ControllerButton: Codable {
+    public init(pressedSprite: String,
+                releasedSprite: String,
+                category: ControllerButton.Category,
+                product: ControllerButton.Product) {
+        self.pressedSprite = pressedSprite
+        self.releasedSprite = releasedSprite
+        self.category = category
+        self.product = product
+    }
+    
+    
+    public let pressedSprite: String
+    public let releasedSprite: String
+    public let category: Category
+    public let product: Product
+    
+    public enum Category: String, Codable {
         case a
         case b
         case x
         case y
     }
-    enum Product: String, Codable {
+    
+    public enum Product: String, Codable {
         case xbox
         case playstation
         case nintendo
     }
 }
 
-extension ControllerButton {
+public extension ControllerButton {
     
     static var all: [ControllerButton]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.controllerButtons)

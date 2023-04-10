@@ -8,14 +8,24 @@
 import Foundation
 import PlayfulKit
 
-struct GameWorld: Codable {
-    let id: Int
-    let name: String
-    let levelIDs: [Int]
-    let playerLandSound: String
+public struct GameWorld: Codable {
+    public init(id: Int,
+                name: String,
+                levelIDs: [Int],
+                playerLandSound: String) {
+        self.id = id
+        self.name = name
+        self.levelIDs = levelIDs
+        self.playerLandSound = playerLandSound
+    }
+    
+    public let id: Int
+    public let name: String
+    public let levelIDs: [Int]
+    public let playerLandSound: String
 }
 
-extension GameWorld {
+public extension GameWorld {
     
     static var all: [GameWorld]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.worlds)

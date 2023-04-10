@@ -17,7 +17,7 @@ public class GameHUD {
         generateContentHUD()
     }
     
-    var scene: GameScene
+    public var scene: GameScene
     
     private let layer = SKShapeNode(rectOf: .screen)
     private let actionSequence = SKNode()
@@ -136,7 +136,7 @@ public class GameHUD {
     }
     
     /// Generate a filter over the HUD.
-    func generateFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
+    private func generateFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
         guard let camera = scene.camera else { return }
         let filterNode = SKShapeNode(rectOf: CGSize.screen * 2)
         filterNode.strokeColor = color
@@ -168,9 +168,10 @@ public class GameHUD {
         
         let conversation = currentDialog.conversation[dialog.currentDialogIndex]
         
-        guard let character = GameCharacter.get(conversation.character) else { return }
-        
-        addDialogCharacter(conversation, gameCharacter: character, node: dialogBox)
+        if let conversationCharacter = conversation.character,
+           let character = GameCharacter.get(conversationCharacter) {
+            addDialogCharacter(conversation, gameCharacter: character, node: dialogBox)
+        }
         
         let lineIndex = currentDialog.conversation[dialog.currentDialogIndex].currentLineIndex
         let text = currentDialog.conversation[dialog.currentDialogIndex].lines[lineIndex]
@@ -291,14 +292,24 @@ public class GameHUD {
         if let index = scene.game?.level?.dialogs.firstIndex(where: {
             $0.dialog == scene.game?.currentLevelDialog?.dialog
         }) {
-            scene.game?.level?.dialogs[index].isDialogAvailable = false
+            scene.game?.level?.dialogs[index].isAvailable = false
         }
     }
     
     /// Ends the current dialog.
     private func endDialog() {
-        disableDialog()
-        scene.core?.state.switchOn(newStatus: .inDefault)
+        guard let level = scene.game?.level else { return }
+        if let cinematicCompletion = scene.game?.currentDialog?.cinematicCompletion,
+           let levelCinematic = level.cinematics.first(where: { $0.name == cinematicCompletion }) {
+            scene.core?.event?.playCinematic(cinematic: levelCinematic)
+            scene.game?.currentLevelDialog = nil
+            scene.game?.currentDialog = nil
+        } else {
+            disableDialog()
+            scene.game?.currentLevelDialog = nil
+            scene.game?.currentDialog = nil
+            scene.core?.state.switchOn(newStatus: .inDefault)
+        }
     }
     
     // MARK: - Updates
@@ -318,12 +329,12 @@ public class GameHUD {
     // MARK: - Pause
     
     /// Create the pause button.
-    func createPauseButton() {
+    private func createPauseButton() {
         
     }
     
     /// Create the pause screen.
-    func createPauseScreen() {
+    public func createPauseScreen() {
         let pauseNode = SKNode()
         pauseNode.name = "Pause Screen"
         scene.addChild(pauseNode)
@@ -332,13 +343,13 @@ public class GameHUD {
     }
     
     /// Remove the pause screen.
-    func removePauseScreen() {
+    public func removePauseScreen() {
         guard let pauseScreen = scene.childNode(withName: "Pause Screen") else { return }
         pauseScreen.removeFromParent()
     }
     
     /// Create the pause menu.
-    func createPauseMenu(on node: SKNode) {
+    private func createPauseMenu(on node: SKNode) {
         guard let camera = scene.camera else { return }
         let menuNode = SKShapeNode(rectOf: CGSize(width: 250, height: 250))
         menuNode.fillColor = .white
@@ -347,8 +358,8 @@ public class GameHUD {
     }
     
     /// Pause the HUD.
-    func pause() { layer.isPaused = true }
+    public func pause() { layer.isPaused = true }
     
     /// Unpause the HUD.
-    func unpause() { layer.isPaused = false }
+    public func unpause() { layer.isPaused = false }
 }

@@ -1,6 +1,7 @@
 [
     {
         "name": "Ancient Cavern Intro Dialog",
+        "category": "onCinematic",
         "conversation": [
             {
                 "character": "Blue Spirit",
@@ -43,10 +44,30 @@
                     "Close your eyes ... Ah ! That's true, you are dice."
                 ]
             },
+        ],
+        "cinematicCompletion": "Movement Power Up Cinematic"
+    },
+    {
+        "name": "Movement Power Up Dialog",
+        "category": "onCinematic",
+        "conversation": [
+            {
+                "spot": "none",
+                "lines": [
+                    "You have the power to move now !"
+                ]
+            },
+            {
+                "spot": "none",
+                "lines": [
+                    "Press the left or right directional buttons to move. Try it !"
+                ]
+            }
         ]
     },
     {
         "name": "Fly Power Up Dialog",
+        "category": "onPlayerCoordinate",
         "conversation": [
             {
                 "character": "Blue Spirit",

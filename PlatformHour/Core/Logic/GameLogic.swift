@@ -136,7 +136,7 @@ public final class GameLogic {
     private func fallAnimation(object: PKObjectNode, speed: CGFloat) -> SKAction {
         let coordinate = fallCoordinate(object: object)
         let position = fallPosition(object: object)
-        let moveAction = SKAction.move(from: object.position, to: position, at: speed)
+        let moveAction = SKAction.move(from: object.position, to: position, speed: speed)
         let action = !environment.isCollidingWithObject(at: coordinate) ? moveAction : SKAction.empty()
         
         return action

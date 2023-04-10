@@ -8,19 +8,39 @@
 import Foundation
 import PlayfulKit
 
-struct GameLevel: Codable {
-    let id: Int
-    let mapMatrix: String
-    let playerCoordinate: String
-    let musics: [String]
-    let background: LevelBackground
-    let objects: [LevelObject]
-    let structures: [LevelStructure]
-    var dialogs: [LevelDialog]
-    let cinematics: [LevelCinematic]
+public struct GameLevel: Codable {
+    public init(id: Int,
+                mapMatrix: String,
+                playerCoordinate: String,
+                musics: [String],
+                background: LevelBackground,
+                objects: [LevelObject],
+                structures: [LevelStructure],
+                dialogs: [LevelDialog],
+                cinematics: [LevelCinematic]) {
+        self.id = id
+        self.mapMatrix = mapMatrix
+        self.playerCoordinate = playerCoordinate
+        self.musics = musics
+        self.background = background
+        self.objects = objects
+        self.structures = structures
+        self.dialogs = dialogs
+        self.cinematics = cinematics
+    }
+    
+    public let id: Int
+    public let mapMatrix: String
+    public let playerCoordinate: String
+    public let musics: [String]
+    public let background: LevelBackground
+    public let objects: [LevelObject]
+    public let structures: [LevelStructure]
+    public var dialogs: [LevelDialog]
+    public var cinematics: [LevelCinematic]
 }
 
-extension GameLevel {
+public extension GameLevel {
     
     static var all: [GameLevel]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.levels)

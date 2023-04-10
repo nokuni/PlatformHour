@@ -59,4 +59,29 @@
             "empty"
         ]
     },
+    {
+        "id": 0
+        "name": "Power Up",
+        "frames": [
+            "powerUp0",
+            "powerUp1",
+            "powerUp2",
+            "powerUp3",
+            "powerUp4",
+            "powerUp5"
+        ]
+    },
+    {
+        "id": 0
+        "name": "Spark",
+        "frames": [
+            "spark0",
+            "spark1",
+            "spark2",
+            "spark3",
+            "spark4",
+            "spark5",
+            "spark6"
+        ]
+    },
 ]

@@ -21,4 +21,7 @@ public struct GameConfiguration {
     
     // MARK: - Managers
     static let assemblyManager = AssemblyManager()
+    
+    static let startingWorldID = 0
+    static let startingLevelID = 0
 }

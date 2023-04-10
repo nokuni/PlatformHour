@@ -15,12 +15,6 @@
                 "category": "important",
                 "coordinate": "1628"
             },
-            {
-                "id": 0,
-                "name": "Spirit",
-                "category": "npc",
-                "coordinate": "0515"
-            },
         ],
         "structures": [
             {
@@ -32,14 +26,21 @@
         ],
         "dialogs": [
             {
-                "dialog": "Ancient Cavern Intro Dialog",
-                "triggerCoordinate": "1613"
+                "dialog": "Ancient Cavern Intro Dialog"
+            },
+            {
+                "dialog": "Movement Power Up Dialog"
             }
         ],
         "cinematics": [
             {
-                "Spirit Soul Intro",
+                "name": "Spirit Soul Intro Cinematic",
+                "category": "onStart",
                 "triggerCoordinate": "1612"
+            },
+            {
+                "name": "Movement Power Up Cinematic",
+                "category": "onDialog"
             }
         ]
     },

@@ -23,7 +23,7 @@ public struct GameCharacter: Codable {
     }
 }
 
-extension GameCharacter {
+public extension GameCharacter {
     
     static var all: [GameCharacter]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.characters)

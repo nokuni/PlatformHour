@@ -1,14 +1,63 @@
 [
     {
-        "name": "Spirit Soul Intro",
+        "name": "Spirit Soul Intro Cinematic",
+        "category": "onLevelStart",
         "actions": [
             {
                 "id": 0,
                 "objectName": "Spirit",
-                "stateIDIdentifier": "specialIdle",
-                "destinationCoordinate": "1615",
+                "startingCoordinate": "0515",
+                "movement": {
+                    "destinationCoordinate": "1615",
+                    "willDisappear": false
+                },
+                "effect": {
+                    "stateIDIdentifier": "specialIdle",
+                    "isRepeatingForever": true
+                },
+                "isFollowedByCamera": true
+            },
+            {
+                "id": 1,
+                "objectName": "Spirit",
+                "movement": {
+                    "destinationCoordinate": "1612",
+                    "willDisappear": true
+                },
+                "effect": {
+                    "stateIDIdentifier": "idle",
+                    "isRepeatingForever": true
+                },
                 "isFollowedByCamera": true
             }
-        ]
+        ],
+        "dialogCompletion": "Ancient Cavern Intro Dialog"
+    },
+    {
+        "name": "Movement Power Up Cinematic",
+        "category": "onDialog",
+        "actions": [
+            {
+                "id": 0,
+                "objectName": "Spirit",
+                "startingCoordinate": "1612",
+                "effect": {
+                    "stateIDIdentifier": "powerUp",
+                    "isRepeatingForever": false
+                },
+                "isFollowedByCamera": false
+            },
+            {
+                "id": 1,
+                "objectName": "Spirit",
+                "startingCoordinate": "1612",
+                "effect": {
+                    "stateIDIdentifier": "spark",
+                    "isRepeatingForever": false
+                },
+                "isFollowedByCamera": false
+            }
+        ],
+        "dialogCompletion": "Movement Power Up Dialog"
     }
 ]

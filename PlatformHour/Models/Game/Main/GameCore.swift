@@ -63,9 +63,9 @@ public extension GameCore {
         content = GameContent(scene: scene, environment: environment, animation: animation, logic: logic)
         gameCamera = GameCamera(scene: scene, environment: environment)
         
-        playBackgroundSound(scene: scene)
+        //playBackgroundSound(scene: scene)
         
-        setupControllers(scene: scene)
+        start(scene: scene)
     }
     
     private func playBackgroundSound(scene: GameScene) {
@@ -73,10 +73,19 @@ public extension GameCore {
     }
     
     private func setupControllers(scene: GameScene) {
+        scene.game?.controller = GameControllerManager(scene: scene, state: state)
+    }
+    
+    private func start(scene: GameScene) {
         animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
                                     isVisible: true,
                                     scene: scene) {
-            scene.game?.controller = GameControllerManager(scene: scene, state: state)
+            self.setupControllers(scene: scene)
+            if let cinematic = scene.game?.level?.cinematics.first(where: {
+                $0.category == .onStart
+            }) {
+                scene.core?.event?.playCinematic(cinematic: cinematic)
+            }
         }
     }
 }

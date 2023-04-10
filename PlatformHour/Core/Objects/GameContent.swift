@@ -331,7 +331,7 @@ final public class GameContent {
     
     /// Create a trap.
     public func createLevelTrap(_ levelTrap: LevelObject) {
-        guard let trap = GameObject.getTrap(levelTrap.name) else { return }
+        guard let trapData = GameObject.getTrap(levelTrap.name) else { return }
         
         let collision = Collision(category: .enemy,
                                   collision: [.allClear],
@@ -341,12 +341,12 @@ final public class GameContent {
                               physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                               collision: collision)
         
-        trapNode.logic = LogicBody(health: trap.logic.health,
-                                   damage: trap.logic.damage,
-                                   isDestructible: trap.logic.isDestructible,
-                                   isIntangible: trap.logic.isIntangible)
+        trapNode.logic = LogicBody(health: trapData.logic.health,
+                                   damage: trapData.logic.damage,
+                                   isDestructible: trapData.logic.isDestructible,
+                                   isIntangible: trapData.logic.isIntangible)
         
-        trapNode.animations = trap.animations
+        trapNode.animations = trapData.animations
         
         guard let position = environment.map.tilePosition(from: levelTrap.coordinate.coordinate) else {
             return
@@ -355,7 +355,7 @@ final public class GameContent {
         trapNode.coordinate = levelTrap.coordinate.coordinate
         trapNode.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         trapNode.position = position
-        trapNode.texture = SKTexture(imageNamed: trap.image)
+        trapNode.texture = SKTexture(imageNamed: trapData.image)
         trapNode.texture?.filteringMode = .nearest
         
         trapNode.physicsBody?.friction = 0
@@ -369,28 +369,28 @@ final public class GameContent {
     
     /// Create an enemy.
     private func createLevelEnemy(_ levelEnemy: LevelObject) {
-        if let enemy = GameObject.getEnemy(levelEnemy.name) {
+        if let enemyData = GameObject.getEnemy(levelEnemy.name) {
             let collision = Collision(category: .enemy,
                                       collision: [.allClear],
                                       contact: [.player, .playerProjectile])
             
-            let enemyNode = object(name: enemy.name,
+            let enemyNode = object(name: enemyData.name,
                                    physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                                    collision: collision)
             
-            enemyNode.logic = LogicBody(health: enemy.logic.health,
-                                        damage: enemy.logic.damage,
-                                        isDestructible: enemy.logic.isDestructible,
-                                        isIntangible: enemy.logic.isIntangible)
+            enemyNode.logic = LogicBody(health: enemyData.logic.health,
+                                        damage: enemyData.logic.damage,
+                                        isDestructible: enemyData.logic.isDestructible,
+                                        isIntangible: enemyData.logic.isIntangible)
             
-            enemyNode.animations = enemy.animations
+            enemyNode.animations = enemyData.animations
             
             guard let position = environment.map.tilePosition(from: levelEnemy.coordinate.coordinate) else { return }
             
             enemyNode.coordinate = levelEnemy.coordinate.coordinate
             enemyNode.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
             enemyNode.position = position
-            enemyNode.texture = SKTexture(imageNamed: enemy.image)
+            enemyNode.texture = SKTexture(imageNamed: enemyData.image)
             enemyNode.texture?.filteringMode = .nearest
             
             enemyNode.physicsBody?.friction = 0
@@ -400,7 +400,7 @@ final public class GameContent {
             print("Enemy added")
             scene.addChildSafely(enemyNode)
             
-            if let runAnimation = enemy.animation(stateID: .run),
+            if let runAnimation = enemyData.animation(stateID: .run),
                let itinerary = levelEnemy.itinerary {
                 addEnemyItinerary(enemy: enemyNode, itinerary: itinerary, frames: runAnimation.frames)
             }
@@ -417,21 +417,22 @@ final public class GameContent {
         
         guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
         
-        let npcObject = environment.objectElement(name: "",
+        let npcObject = environment.objectElement(name: npc.name,
                                                   physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                   collision: collision)
         
         npcObject.coordinate = coordinate
+        npcObject.animations = npc.animations
         npcObject.size = environment.map.squareSize
         npcObject.position = npcPosition
         npcObject.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObject)
         
-        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
+//        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
+//
+//        npcObject.run(idleAnimation)
         
-        npcObject.run(idleAnimation)
-        
-        animation.addShadowPulseEffect(scene: scene, node: npcObject)
+        //animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }
     
     // MARK: - Adds
@@ -486,12 +487,12 @@ final public class GameContent {
     // MARK: - Pause
     
     /// Pause the generated content.
-    func pause() {
+    public func pause() {
         /*container.isPaused = true*/
     }
     
     /// Unpause the generated content.
-    func unpause() {
+    public func unpause() {
         /*container.isPaused = false*/
     }
 }

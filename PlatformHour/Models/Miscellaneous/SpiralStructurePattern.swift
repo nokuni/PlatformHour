@@ -81,7 +81,7 @@ public class SpiralStructurePattern {
         public let patterns: [Pattern]
     }
     
-    func create() {
+    public func create() {
         
         guard isPatternPossible else { return }
         

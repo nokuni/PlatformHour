@@ -23,6 +23,30 @@
                 "frames": [
                     "spiritSoulForm0",
                     "spiritSoulForm1",
+                    "spiritSoulForm2"
+                ]
+            },
+            {
+                "identifier": "powerUp",
+                "frames": [
+                    "powerUp0",
+                    "powerUp1",
+                    "powerUp2",
+                    "powerUp3",
+                    "powerUp4",
+                    "powerUp5"
+                ]
+            },
+            {
+                "identifier": "spark",
+                "frames": [
+                    "spark0",
+                    "spark1",
+                    "spark2",
+                    "spark3",
+                    "spark4",
+                    "spark5",
+                    "spark6"
                 ]
             },
         ],

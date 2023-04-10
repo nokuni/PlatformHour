@@ -217,7 +217,7 @@ public final class ActionLogic {
     // MARK: - Button Actions
     
     /// Trigger button A actions.
-    func actionA() {
+    public func actionA() {
         switch state.status {
         case .inDefault:
             jump()
@@ -233,12 +233,12 @@ public final class ActionLogic {
     }
     
     /// Trigger button B actions.
-    func actionB() {
+    public func actionB() {
         
     }
     
     /// Trigger button X actions.
-    func actionX() {
+    public func actionX() {
         switch state.status {
         case .inDefault:
             attack()
@@ -254,7 +254,7 @@ public final class ActionLogic {
     }
     
     /// Trigger button Y actions.
-    func actionY() {
+    public func actionY() {
         switch state.status {
         case .inDefault:
             interact()
@@ -281,6 +281,7 @@ public final class ActionLogic {
         player.state.isJumping = true
         player.node.run(action)
     }
+    
     private func attack() {
         guard !isAttacking else { return }
         guard !isAnimating else { return }
@@ -291,6 +292,7 @@ public final class ActionLogic {
             throwProjectile(projectileNode)
         }
     }
+    
     private func interact() {
         guard let player = scene.player else { return }
         guard canAct else { return }
@@ -305,13 +307,13 @@ public final class ActionLogic {
     
     // MARK: - Miscellaneous
     
-    func pause() {
+    public func pause() {
         scene.core?.content?.pause()
         state.switchOn(newStatus: .inPause)
         scene.core?.hud?.createPauseScreen()
     }
     
-    func unPause() {
+    public func unPause() {
         if state.status == .inPause {
             scene.core?.content?.unpause()
             state.switchOnPreviousStatus()
@@ -321,7 +323,7 @@ public final class ActionLogic {
     
     // MARK: - Animations
     
-    func jumpAction(player: Player) -> SKAction {
+    private func jumpAction(player: Player) -> SKAction {
         let jumpValue = GameConfiguration.playerConfiguration.jumpValue
         let moveUpValue = GameConfiguration.sceneConfiguration.tileSize.height
         let moveUpDestination = CGPoint(x: player.node.position.x,
@@ -351,7 +353,8 @@ public final class ActionLogic {
         
         return jumpSequence
     }
-    func moveAction(destinationPosition: CGPoint,
+    
+    private func moveAction(destinationPosition: CGPoint,
                     destinationCoordinate: Coordinate,
                     amount: Int) -> SKAction {
         guard let player = scene.player else { return SKAction.empty() }
@@ -373,7 +376,8 @@ public final class ActionLogic {
             if !environment.collisionCoordinates.contains(groundCoordinate) {
                 self.scene.core?.logic?.dropPlayer()
             }
-            self.scene.core?.event?.triggerDialog()
+            self.scene.core?.event?.triggerDialogOnCoordinate()
+            //self.scene.core?.event?.playCinematic()
             if self.scene.game!.controller!.isLongPressingDPad {
                 self.move(on: self.direction, by: self.movementSpeed)
             }

@@ -89,7 +89,7 @@ public class Player {
     public var dataObject = GameObject.player
 }
 
-extension Player {
+public extension Player {
     
     var sprite: String? {
         let currentRollValue = currentRoll.rawValue
@@ -137,7 +137,7 @@ extension Player {
         guard let leftRunFrames = frames(stateID: .runLeft) else { return }
         let frames = orientation == .right ? rightRunFrames : leftRunFrames
         let action = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
-        SKAction.start(actionOnLaunch: nil, animation: action, node: node, actionOnEnd: nil)
+        SKAction.animate(action: action, node: node, endCompletion: nil)
     }
     
     func death(scene: GameScene) {
@@ -155,10 +155,9 @@ extension Player {
             SKAction.removeFromParent()
         ])
         
-        SKAction.start(actionOnLaunch: node.removeFromParent,
-                       animation: sequence,
-                       node: animationNode,
-                       actionOnEnd: nil)
+        SKAction.animate(startCompletion: node.removeFromParent,
+                         action: sequence,
+                         node: animationNode)
     }
     
     func hitted(scene: GameScene, by enemy: PKObjectNode, completion: (() -> Void)?) {
@@ -167,12 +166,13 @@ extension Player {
         let knockBackAnimation = knockedBack(by: enemy)
         let groupedAnimation = SKAction.group([hitAnimation, knockBackAnimation])
         node.removeAllActions()
-        SKAction.start(actionOnLaunch: nil, animation: groupedAnimation, node: node) {
+        SKAction.animate(action: groupedAnimation, node: node) {
             completion?()
         }
     }
     
     // MARK: - Logic
+    
     func advanceRoll() {
         guard let lastRoll = Roll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {
