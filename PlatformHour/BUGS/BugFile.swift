@@ -7,7 +7,13 @@
 
 import SwiftUI
 
-// MARK: - FEEDBACK FIX:
+// MARK: Bugs
+
+// When on virtual controller, the player movement is continuous and cannot be stopped
+// (Happens when the player goes on the next level via the exit.)
+// It fixes itself when the app is killed and open again.
+
+// MARK: - Feedbacks:
 
 // the game controller inputs are too much faster than the action sequence.
 

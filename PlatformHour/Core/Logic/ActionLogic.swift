@@ -43,6 +43,7 @@ public final class ActionLogic {
         scene.isUserInteractionEnabled
     }
     //private var dialogIndex = 0
+    public var isLongPressingDPad: Bool = false
     
     // MARK: - Underlying Actions/Animations
     private func addAction(_ action: Player.SequenceAction) {
@@ -61,7 +62,7 @@ public final class ActionLogic {
         guard !player.state.isJumping else { return }
         guard canAct else { return }
         
-        scene.game?.controller?.isLongPressingDPad = true
+        isLongPressingDPad = true
         scene.core?.event?.dismissButtonPopUp()
         self.direction = direction
         changeOrientation(direction: self.direction)
@@ -268,6 +269,10 @@ public final class ActionLogic {
             break
         }
     }
+
+    public func releaseDPad() {
+        isLongPressingDPad = false
+    }
     
     private func jump() {
         guard let player = scene.player else { return }
@@ -355,8 +360,8 @@ public final class ActionLogic {
     }
     
     private func moveAction(destinationPosition: CGPoint,
-                    destinationCoordinate: Coordinate,
-                    amount: Int) -> SKAction {
+                            destinationCoordinate: Coordinate,
+                            amount: Int) -> SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         guard let environment = scene.core?.environment else { return SKAction.empty() }
         let groundCoordinate = Coordinate(x: destinationCoordinate.x + 1, y: destinationCoordinate.y)
@@ -378,7 +383,7 @@ public final class ActionLogic {
             }
             self.scene.core?.event?.triggerDialogOnCoordinate()
             //self.scene.core?.event?.playCinematic()
-            if self.scene.game!.controller!.isLongPressingDPad {
+            if self.isLongPressingDPad {
                 self.move(on: self.direction, by: self.movementSpeed)
             }
         }

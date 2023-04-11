@@ -25,53 +25,31 @@ final public class GameControllerManager {
     
     public var manager: ControllerManager?
     
-    public var isLongPressingDPad: Bool = false
-    public var isLongPressingButtonA: Bool = false
-    public var isLongPressingButtonB: Bool = false
-    public var isLongPressingButtonX: Bool = false
-    public var isLongPressingButtonY: Bool = false
-    
-    private func releaseDPad() {
-        isLongPressingDPad = false
-    }
-    private func releaseButtonA() {
-        isLongPressingButtonA = false
-    }
-    private func releaseButtonB() {
-        isLongPressingButtonB = false
-    }
-    private func releaseButtonX() {
-        isLongPressingButtonX = false
-    }
-    private func releaseButtonY() {
-        isLongPressingButtonY = false
-    }
-    
     /// Setup the actions on the gamepad controller
     public func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
         
         // Cross
         manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.actionA,
-                                                                  release: releaseButtonA)
+                                                                  release: nil)
         
         // Circle
         manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.actionB,
-                                                                  release: releaseButtonB)
+                                                                  release: nil)
         
         // Square
         manager?.action?.buttonX = ControllerManager.ButtonAction(press: action.actionX,
-                                                                  release: releaseButtonX)
+                                                                  release: nil)
         
         // Triangle
         manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.actionY,
-                                                                  release: releaseButtonY)
+                                                                  release: nil)
         
         manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadAction,
                                                              rightPress: action.rightPadAction,
                                                              upPress: action.upPadAction,
                                                              downPress: action.downPadAction,
-                                                             release: releaseDPad)
+                                                             release: action.releaseDPad)
     }
     
     /// Setup the controllers
