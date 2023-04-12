@@ -25,6 +25,7 @@ public struct GameCharacter: Codable {
 
 public extension GameCharacter {
     
+    /// Returns all the game characters of the game.
     static var all: [GameCharacter]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.characters)
     }

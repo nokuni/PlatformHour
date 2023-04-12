@@ -14,13 +14,22 @@ final public class GameEnvironment {
     
     public init(scene: GameScene) {
         self.scene = scene
-        generateEnvironment()
+        generate()
     }
     
     public var scene: GameScene
     public var map = PKMapNode()
     public var backgroundContainer = SKNode()
     
+    private func generate() {
+        createMap()
+        createBackground()
+    }
+}
+
+// MARK: - Informations
+
+extension GameEnvironment {
     /// Current map.
     public var mapMatrix: Matrix {
         guard let matrix = scene.game?.level?.mapMatrix.matrix else { return .zero }
@@ -68,15 +77,11 @@ final public class GameEnvironment {
     public func isCollidingWithObject(at coordinate: Coordinate) -> Bool {
         collisionCoordinates.contains(coordinate)
     }
-    
-    // MARK: - Main
-    private func generateEnvironment() {
-        generateMap()
-        generateBackground()
-    }
-    
-    // MARK: - Elements
-    
+}
+
+// MARK: - Elements
+
+extension GameEnvironment {
     /// Returns an unconfigured object node.
     public func objectElement(name: String? = nil,
                               physicsBodySizeTailoring: CGFloat = 0,
@@ -160,11 +165,13 @@ final public class GameEnvironment {
             }
         }
     }
-    
-    // MARK: - Generations
-    
+}
+
+// MARK: - Creations
+
+extension GameEnvironment {
     /// Generate the current map.
-    private func generateMap() {
+    private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.sceneConfiguration.tileSize,
                         matrix: mapMatrix)
         let texture = SKTexture(imageNamed: "leadSquare")
@@ -174,7 +181,7 @@ final public class GameEnvironment {
     }
     
     /// Generate the current background.
-    private func generateBackground() {
+    private func createBackground() {
         if let level = scene.game?.level {
             backgroundContainer.name = GameConfiguration.nodeKey.background
             scene.addChildSafely(backgroundContainer)
@@ -191,7 +198,7 @@ final public class GameEnvironment {
     }
     
     /// Generate an animated pop up controller button.
-    public func generatePopUpButton(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
+    public func createPopUpButton(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
         let popUpButton = SKNode()
         popUpButton.name = GameConfiguration.nodeKey.popUpButton
@@ -210,9 +217,11 @@ final public class GameEnvironment {
             button.run(SKAction.repeatForever(action))
         }
     }
-    
-    // MARK: - Miscellaneous
-    
+}
+
+// MARK: - Miscellaneous
+
+extension GameEnvironment {
     /// Pause the current map.
     public func pause() { map.isPaused = true }
     

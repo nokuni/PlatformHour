@@ -46,6 +46,7 @@ public struct GameCore {
 
 public extension GameCore {
     
+    /// Setup the scene.
     mutating func setup(scene: GameScene) {
         event = GameEvent(scene: scene)
         environment = GameEnvironment(scene: scene)
@@ -69,19 +70,23 @@ public extension GameCore {
         start(scene: scene)
     }
     
+    /// Play the level background sound on the scene.
     private func playBackgroundSound(scene: GameScene) {
         sound.playBackgroundMusics(scene: scene)
     }
     
+    /// Instantiate the game controllers on the scene.
     private func setupControllers(scene: GameScene) {
         scene.game?.controller = GameControllerManager(scene: scene, state: state)
     }
     
+    /// Returns the starting level cinematic.
     private func startingCinematic(scene: GameScene) -> LevelCinematic? {
         let cinematic = scene.game?.level?.cinematics.first(where: { $0.category == .onStart })
         return cinematic
     }
     
+    /// Launchs the starting level cinematic.
     private func launchStartingCinematic(scene: GameScene) {
         if let cinematic = startingCinematic(scene: scene) {
             scene.core?.event?.playCinematic(cinematic: cinematic)
@@ -89,6 +94,7 @@ public extension GameCore {
         }
     }
     
+    /// Hide the visible HUD elements on the screen.
     private func hideHUD(scene: GameScene) {
         hud?.removeContent()
         guard let controllerManager = scene.game?.controller?.manager else { return }
@@ -96,6 +102,7 @@ public extension GameCore {
         if isVirtualControllerAvailable { scene.game?.controller?.hideVirtualController() }
     }
     
+    /// Start the scene transition.
     private func start(scene: GameScene) {
         hideHUD(scene: scene)
         animation?.sceneTransitionEffect(scene: scene,

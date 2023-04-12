@@ -93,13 +93,13 @@ public extension Player {
     
     var sprite: String? {
         let currentRollValue = currentRoll.rawValue
-        return dataObject?.decodedString(dataObject?.image, cryptedCharacter: "#", replacingvalue: "\(currentRollValue)")
+        return dataObject?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
     }
     
     func frames(stateID: GameAnimation.StateID) -> [String]? {
         let currentRollValue = currentRoll.rawValue
         let animation = dataObject?.animations.first(where: { $0.identifier == stateID.rawValue })
-        let frames = dataObject?.decodedStrings(strings: animation?.frames, cryptedCharacter: "#", replacingvalue: "\(currentRollValue)")
+        let frames = animation?.frames.replacingOccurences(character: "#", newCharacter: "\(currentRollValue)")
         return frames
     }
     

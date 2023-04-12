@@ -32,6 +32,8 @@
 		962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1729892736004DB446 /* GameControllerManager.swift */; };
 		962F255229D0B618007D46B7 /* LevelStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255129D0B618007D46B7 /* LevelStructure.swift */; };
 		962F255829D17C51007D46B7 /* enemyObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 962F255729D17C51007D46B7 /* enemyObjects.json */; };
+		964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */; };
+		964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */; };
 		964626BB29CF6F9E00A872A5 /* SpiralStructureConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */; };
 		964626BD29CF6FDA00A872A5 /* SpiralStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
@@ -127,6 +129,8 @@
 		962A0D1729892736004DB446 /* GameControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerManager.swift; sourceTree = "<group>"; };
 		962F255129D0B618007D46B7 /* LevelStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelStructure.swift; sourceTree = "<group>"; };
 		962F255729D17C51007D46B7 /* enemyObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = enemyObjects.json; sourceTree = "<group>"; };
+		964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionMovement.swift; sourceTree = "<group>"; };
+		964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionEffect.swift; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructureConstruct.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
@@ -321,6 +325,8 @@
 			children = (
 				9625A9F729E2ECD30089F309 /* GameCinematic.swift */,
 				9625A9FF29E457350089F309 /* GameCharacterCinematicAction.swift */,
+				964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */,
+				964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */,
 			);
 			path = Cinematic;
 			sourceTree = "<group>";
@@ -788,8 +794,10 @@
 				96540536298C27FB00620E76 /* ActionLogic.swift in Sources */,
 				964E7E4C29C1FA24003CE54B /* ControllerButton.swift in Sources */,
 				96FE62A1298AD81A00B2C614 /* Player.swift in Sources */,
+				964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */,
 				961946622996894F000859C8 /* GameWorld.swift in Sources */,
 				964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */,
+				964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,
 				964E7E6429C46291003CE54B /* PlayerConfiguration.swift in Sources */,
 				964626BB29CF6F9E00A872A5 /* SpiralStructureConstruct.swift in Sources */,

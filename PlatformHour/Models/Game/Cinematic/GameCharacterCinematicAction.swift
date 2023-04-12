@@ -38,13 +38,3 @@ public struct GameCharacterCinematicAction: Codable {
         case isFollowedByCamera
     }
 }
-
-public struct GameCharacterCinematicActionMovement: Codable {
-    public let destinationCoordinate: String
-    public let willDisappear: Bool
-}
-
-public struct GameCharacterCinematicActionEffect: Codable {
-    public let stateIDIdentifier: String
-    public let isRepeatingForever: Bool
-}

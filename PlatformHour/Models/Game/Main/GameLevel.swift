@@ -42,14 +42,17 @@ public struct GameLevel: Codable {
 
 public extension GameLevel {
     
+    /// Returns all the game levels.
     static var all: [GameLevel]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.levels)
     }
     
+    /// Returns the level objects of a specific category.
     func objects(category: LevelObject.Category) -> [LevelObject] {
         objects.filter { $0.category == category }
     }
     
+    /// Returns the level exit.
     var exit: LevelObject? {
         objects(category: .important).first { $0.name == GameConfiguration.nodeKey.exit }
     }

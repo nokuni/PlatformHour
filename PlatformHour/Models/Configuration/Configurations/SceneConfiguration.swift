@@ -32,4 +32,7 @@ struct SceneConfiguration {
     let tileSize = UIDevice.isOnPhone ?
     CGSize(width: CGSize.screen.height * 0.15, height: CGSize.screen.height * 0.15) :
     CGSize(width: CGSize.screen.width * 0.07, height: CGSize.screen.width * 0.07)
+    
+    // MARK: - Objects
+    var objectCollisionSizeTailoring: CGFloat { -tileSize.width * 0.5 }
 }

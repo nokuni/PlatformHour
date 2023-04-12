@@ -41,36 +41,44 @@ public extension GameObject {
     
     // MARK: - Data
     
+    /// Returns the player object of the game.
     static var player: GameObject? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.playerObject)
     }
     
+    /// Returns important objects of the game.
     static var importants: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.importantObjects)
     }
     
+    /// Returns NPC objects of the game.
     static var npcs: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.npcObjects)
     }
     
+    /// Returns enemy objects of the game.
     static var enemies: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.enemyObjects)
     }
     
+    /// Returns collectible objects of the game.
     static var collectibles: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.collectibleObjects)
     }
     
+    /// Returns trap objects of the game.
     static var traps: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.trapObjects)
     }
     
+    /// Returns container objects of the game.
     static var containers: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.containerObjects)
     }
     
     // MARK: - Gets
     
+    /// Returns an important object by giving its name.
     static func getImportant(_ name: String) -> GameObject? {
         let important = GameObject.importants?.first(where: {
             $0.name == name
@@ -78,6 +86,7 @@ public extension GameObject {
         return important
     }
     
+    /// Returns a NPC object by giving his name.
     static func getNPC(_ name: String) -> GameObject? {
         let npc = GameObject.npcs?.first(where: {
             $0.name == name
@@ -85,6 +94,7 @@ public extension GameObject {
         return npc
     }
     
+    /// Returns an enemy object by giving his name.
     static func getEnemy(_ name: String) -> GameObject? {
         let enemy = GameObject.enemies?.first(where: {
             $0.name == name
@@ -92,6 +102,7 @@ public extension GameObject {
         return enemy
     }
     
+    /// Returns a collectible object by giving his name.
     static func getCollectible(_ name: String) -> GameObject? {
         let collectible = GameObject.collectibles?.first(where: {
             $0.name == name
@@ -99,6 +110,7 @@ public extension GameObject {
         return collectible
     }
     
+    /// Returns a trap object by giving his name.
     static func getTrap(_ name: String) -> GameObject? {
         let trap = GameObject.traps?.first(where: {
             $0.name == name
@@ -106,6 +118,7 @@ public extension GameObject {
         return trap
     }
     
+    /// Returns a container object by giving its name.
     static func getContainer(_ name: String) -> GameObject? {
         let container = GameObject.containers?.first(where: {
             $0.name == name
@@ -115,6 +128,7 @@ public extension GameObject {
     
     // MARK: - Values
     
+    /// Returns the animations of the object.
     var animations: [ObjectAnimation] {
         
         let stateIDValues: [String] = GameAnimation.StateID.allCases.map { $0.rawValue }
@@ -129,20 +143,8 @@ public extension GameObject {
         return animations
     }
     
+    /// Returns one animation from the object by giving his state ID.
     func animation(stateID: GameAnimation.StateID) -> ObjectAnimation? {
         animations.first { $0.identifier == stateID.rawValue }
-    }
-    
-    // MARK: - Utils
-    
-    func decodedString(_ string: String?, cryptedCharacter: String, replacingvalue: String) -> String? {
-        return string?.replacingOccurrences(of: cryptedCharacter, with: replacingvalue)
-    }
-    
-    func decodedStrings(strings: [String]?, cryptedCharacter: String, replacingvalue: String) -> [String]? {
-        let decodedFrames = strings?.compactMap {
-            decodedString($0, cryptedCharacter: cryptedCharacter, replacingvalue: replacingvalue)
-        }
-        return decodedFrames
     }
 }

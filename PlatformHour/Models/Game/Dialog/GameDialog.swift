@@ -55,6 +55,7 @@ public struct GameDialog: Codable {
 
 public extension GameDialog {
     
+    /// Returns all the game dialogs
     static var all: [GameDialog]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.dialogs)
     }

@@ -34,6 +34,7 @@ public struct GameCinematic: Codable {
 
 public extension GameCinematic {
     
+    /// Returns all the game cinematics.
     static var all: [GameCinematic]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.cinematics)
     }

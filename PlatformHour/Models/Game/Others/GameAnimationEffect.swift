@@ -23,6 +23,7 @@ public struct GameAnimationEffect: Codable {
 
 public extension GameAnimationEffect {
     
+    /// Returns all the game animation effects.
     static var all: [GameAnimationEffect]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.animationEffects)
     }

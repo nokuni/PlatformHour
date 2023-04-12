@@ -87,7 +87,7 @@ public final class GameEvent {
         guard let environment = scene.core?.environment else { return }
         if let position = environment.map.tilePosition(from: coordinate) {
             let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.sceneConfiguration.tileSize.height * 2))
-            environment.generatePopUpButton(buttonSymbol: .y, position: buttonPosition)
+            environment.createPopUpButton(buttonSymbol: .y, position: buttonPosition)
         }
     }
     

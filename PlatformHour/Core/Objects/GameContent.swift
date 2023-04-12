@@ -20,7 +20,7 @@ final public class GameContent {
         self.environment = environment
         self.animation = animation
         self.logic = logic
-        generateLevelContent()
+        generate()
     }
     
     public var scene: GameScene
@@ -28,53 +28,7 @@ final public class GameContent {
     public var animation: GameAnimation
     public var logic: GameLogic
     
-    // MARK: - Objects
-    public func object(name: String? = nil,
-                       physicsBodySizeTailoring: CGFloat = 0,
-                       collision: Collision) -> PKObjectNode {
-        
-        let object = PKObjectNode()
-        object.name = name
-        object.size = GameConfiguration.sceneConfiguration.tileSize
-        
-        object.applyPhysicsBody(
-            size: object.size + physicsBodySizeTailoring,
-            collision: collision
-        )
-        
-        return object
-    }
-    public var projectileNode: PKObjectNode {
-        guard let player = scene.player else { return PKObjectNode() }
-        let currentRoll = player.currentRoll.rawValue
-        
-        let collision = Collision(category: .playerProjectile,
-                                  collision: [.object, .structure, .enemy],
-                                  contact: [.object, .structure])
-        
-        let attackNode = object(name: GameConfiguration.nodeKey.playerProjectile,
-                                physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
-                                collision: collision)
-        
-        attackNode.logic.damage = currentRoll
-        attackNode.texture = SKTexture(imageNamed: player.node.texture?.name ?? "")
-        attackNode.texture?.filteringMode = .nearest
-        attackNode.coordinate = player.node.coordinate
-        attackNode.zPosition = 2
-        attackNode.position = player.node.position
-        attackNode.alpha = 0.5
-        
-        attackNode.physicsBody?.affectedByGravity = false
-        attackNode.physicsBody?.restitution = -10
-        attackNode.physicsBody?.friction = 0
-        attackNode.physicsBody?.allowsRotation = false
-        
-        return attackNode
-    }
-    
-    // MARK: - Main
-    
-    private func generateLevelContent() {
+    private func generate() {
         generateLevelStructures()
         generateLevelCollectibles()
         generateLevelTraps()
@@ -84,46 +38,11 @@ final public class GameContent {
         generateLevelEnemies()
         generateLevelPlayer()
     }
-    
-    // MARK: - Configurations
-    private func configurePlayer() {
-        guard let level = scene.game?.level else { return }
-        guard let player = scene.player else { return }
-        guard let playerData = player.dataObject else { return }
-        
-        let collision = Collision(category: .player,
-                                  collision: [.allClear],
-                                  contact: [.enemyProjectile, .object, .npc, .enemy])
-        
-        player.node = object(name: playerData.name,
-                             collision: collision)
-        
-        player.node.logic = LogicBody(health: playerData.logic.health,
-                                      damage: playerData.logic.damage,
-                                      isDestructible: playerData.logic.isDestructible,
-                                      isIntangible: playerData.logic.isIntangible)
-        
-        player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
-        player.node.physicsBody?.friction = 0
-        player.node.physicsBody?.allowsRotation = false
-        player.node.physicsBody?.affectedByGravity = false
-        
-        //addHealthBar(amount: dice.currentBarHealth, node: dice.node, widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
-        
-        guard let position = environment.map.tilePosition(from: level.playerCoordinate.coordinate) else {
-            return
-        }
-        
-        player.node.coordinate = level.playerCoordinate.coordinate
-        player.node.position = position
-        
-        if let sprite = player.sprite {
-            player.node.texture = SKTexture(imageNamed: sprite)
-            player.node.texture?.filteringMode = .nearest
-        }
-    }
-    
-    // MARK: - Level Generations
+}
+
+// MARK: - Level Generations
+
+extension GameContent {
     
     /// Generate the player on the current level.
     private func generateLevelPlayer() {
@@ -232,8 +151,11 @@ final public class GameContent {
             }
         }
     }
-    
-    // MARK: - Level Creations
+}
+
+// MARK: - Level Creations
+
+extension GameContent {
     
     /// Create a level container.
     private func createLevelContainer(_ levelContainer: LevelObject) {
@@ -406,10 +328,107 @@ final public class GameContent {
             }
         }
     }
+}
+
+// MARK: - Objects
+
+extension GameContent {
     
-    // MARK: - Creations
+    /// Returns a default setuped object.
+    public func object(name: String? = nil,
+                       physicsBodySizeTailoring: CGFloat = 0,
+                       collision: Collision) -> PKObjectNode {
+        
+        let object = PKObjectNode()
+        object.name = name
+        object.size = GameConfiguration.sceneConfiguration.tileSize
+        
+        object.applyPhysicsBody(
+            size: object.size + physicsBodySizeTailoring,
+            collision: collision
+        )
+        
+        return object
+    }
     
-    /// Create an NPC.
+    /// Returns an object setuped to be a player projectile.
+    public var projectileNode: PKObjectNode {
+        guard let player = scene.player else { return PKObjectNode() }
+        let currentRoll = player.currentRoll.rawValue
+        
+        let collision = Collision(category: .playerProjectile,
+                                  collision: [.object, .structure, .enemy],
+                                  contact: [.object, .structure])
+        
+        let attackNode = object(name: GameConfiguration.nodeKey.playerProjectile,
+                                physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
+                                collision: collision)
+        
+        attackNode.logic.damage = currentRoll
+        attackNode.texture = SKTexture(imageNamed: player.node.texture?.name ?? "")
+        attackNode.texture?.filteringMode = .nearest
+        attackNode.coordinate = player.node.coordinate
+        attackNode.zPosition = 2
+        attackNode.position = player.node.position
+        attackNode.alpha = 0.5
+        
+        attackNode.physicsBody?.affectedByGravity = false
+        attackNode.physicsBody?.restitution = -10
+        attackNode.physicsBody?.friction = 0
+        attackNode.physicsBody?.allowsRotation = false
+        
+        return attackNode
+    }
+}
+
+// MARK: Configurations
+
+extension GameContent {
+    
+    /// Configure the player object.
+    private func configurePlayer() {
+        guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
+        guard let playerData = player.dataObject else { return }
+        
+        let collision = Collision(category: .player,
+                                  collision: [.allClear],
+                                  contact: [.enemyProjectile, .object, .npc, .enemy])
+        
+        player.node = object(name: playerData.name,
+                             collision: collision)
+        
+        player.node.logic = LogicBody(health: playerData.logic.health,
+                                      damage: playerData.logic.damage,
+                                      isDestructible: playerData.logic.isDestructible,
+                                      isIntangible: playerData.logic.isIntangible)
+        
+        player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
+        player.node.physicsBody?.friction = 0
+        player.node.physicsBody?.allowsRotation = false
+        player.node.physicsBody?.affectedByGravity = false
+        
+        //addHealthBar(amount: dice.currentBarHealth, node: dice.node, widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
+        
+        guard let position = environment.map.tilePosition(from: level.playerCoordinate.coordinate) else {
+            return
+        }
+        
+        player.node.coordinate = level.playerCoordinate.coordinate
+        player.node.position = position
+        
+        if let sprite = player.sprite {
+            player.node.texture = SKTexture(imageNamed: sprite)
+            player.node.texture?.filteringMode = .nearest
+        }
+    }
+}
+
+// MARK: - Creations
+
+extension GameContent {
+    
+    /// Create an NPC object.
     public func createNPC(_ npc: GameObject, at coordinate: Coordinate) {
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
@@ -418,25 +437,36 @@ final public class GameContent {
         guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
         
         let npcObject = environment.objectElement(name: npc.name,
-                                                  physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                  physicsBodySizeTailoring: GameConfiguration.sceneConfiguration.objectCollisionSizeTailoring,
                                                   collision: collision)
         
         npcObject.coordinate = coordinate
         npcObject.animations = npc.animations
         npcObject.size = environment.map.squareSize
-        npcObject.zPosition = 99
         npcObject.position = npcPosition
         npcObject.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObject)
-        
-        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
+    }
+}
 
-        npcObject.run(idleAnimation)
-        
-        //animation.addShadowPulseEffect(scene: scene, node: npcObject)
+// MARK: - Miscellaneous
+
+extension GameContent {
+    
+    /// Pause the generated content.
+    public func pause() {
+        /*container.isPaused = true*/
     }
     
-    // MARK: - Adds
+    /// Unpause the generated content.
+    public func unpause() {
+        /*container.isPaused = false*/
+    }
+}
+
+// MARK: - Object Adds
+
+extension GameContent {
     
     /// Add a fixed intinerary movement to an enemy.
     private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
@@ -461,7 +491,7 @@ final public class GameContent {
         enemy.run(groupedAnimations)
     }
     
-    // Additions
+    /// Adds a health bar to the player.
     /*func addHealthBar(amount: CGFloat,
      node: PKObjectNode,
      widthTailoring: CGFloat = 0) {
@@ -484,35 +514,4 @@ final public class GameContent {
      
      node.addChildSafely(progressBar)
      }*/
-    
-    // MARK: - Pause
-    
-    /// Pause the generated content.
-    public func pause() {
-        /*container.isPaused = true*/
-    }
-    
-    /// Unpause the generated content.
-    public func unpause() {
-        /*container.isPaused = false*/
-    }
 }
-
-/*
- {
- "name": "Enemy Slime",
- "coordinate": "2913",
- "itinerary": 6
- }
- 
- {
- "name": "Cube 6",
- "coordinate": "2946"
- }
- 
- {
- "image": "caveGround00",
- "matrix": "0402",
- "coordinate": "2644"
- }
- */
