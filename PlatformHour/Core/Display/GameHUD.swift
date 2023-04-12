@@ -13,13 +13,13 @@ import SwiftUI
 public class GameHUD {
     public init(scene: GameScene) {
         self.scene = scene
-        generateLayer()
-        generateContentHUD()
+        create()
     }
     
     public var scene: GameScene
     
     private let layer = SKShapeNode(rectOf: .screen)
+    private let contentContainer = SKNode()
     private let actionSequence = SKNode()
     
     public var actionSquares: [SKSpriteNode] {
@@ -34,18 +34,36 @@ public class GameHUD {
         return constraints
     }
     
-    // MARK: - Generations
+    // MARK: - Creation/Removal
     
-    /// Generate the HUD layer on the scene.
-    public func generateLayer() {
+    public func create() {
+        createLayer()
+        createContentContainer()
+        generateContent()
+    }
+    
+    /// Create the HUD layer on the scene.
+    private func createLayer() {
+        layer.name = "HUD Layer"
         layer.fillColor = .clear
         layer.strokeColor = .clear
         layer.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
         scene.camera?.addChild(layer)
     }
     
+    /// Create the HUD content container on the scene.
+    private func createContentContainer() {
+        layer.addChild(contentContainer)
+    }
+    
+    public func removeContent() {
+        contentContainer.removeAllChildren()
+    }
+    
+    // MARK: - Generations
+    
     /// Generate the content on the HUD layer.
-    public func generateContentHUD() {
+    public func generateContent() {
         generateGemScore()
         generateActionSequenceBar()
     }
@@ -54,7 +72,7 @@ public class GameHUD {
     public func generateActionSequenceBar() {
         
         actionSequence.name = "Action Sequence"
-        layer.addChildSafely(actionSequence)
+        contentContainer.addChildSafely(actionSequence)
         
         let sequenceImages = ["sequenceSpace0", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace2"]
         var sequenceHUD: [SKSpriteNode] = []
@@ -68,7 +86,7 @@ public class GameHUD {
         
         let sequencePosition = layer.cornerPosition(corner: .topLeft, padding: actionSequenceHUDConstraints)
         
-        GameConfiguration.assemblyManager.createNodeList(of: sequenceHUD, at: sequencePosition, in: layer, axes: .horizontal, adjustement: .leading, spacing: 1)
+        GameConfiguration.assemblyManager.createNodeList(of: sequenceHUD, at: sequencePosition, in: contentContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
     /// Generate the gem score on the HUD.
@@ -80,7 +98,7 @@ public class GameHUD {
         score.name = "Score"
         score.setScale(0.8)
         score.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
-        layer.addChildSafely(score)
+        contentContainer.addChildSafely(score)
         
         let xLetter = SKSpriteNode(imageNamed: "xLetter")
         xLetter.texture?.filteringMode = .nearest
@@ -105,7 +123,7 @@ public class GameHUD {
     }
     
     /// Add an action square on the action sequence bar.
-    public func addActionSquaresHUD() {
+    public func addActionSquares() {
         guard let player = scene.player else { return }
         
         var actions: [SKSpriteNode] = []

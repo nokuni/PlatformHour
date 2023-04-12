@@ -33,4 +33,4 @@ import SwiftUI
 
 // Fix the circular smoke drop en ground.
 
-// The title appear everytime. Fix it or give a title for each level.
+// Disable Virtual controller and add the tap on dialog.

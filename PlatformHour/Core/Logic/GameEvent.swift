@@ -29,12 +29,14 @@ public final class GameEvent {
     
     /// Load the next level of the game.
     public func loadNextLevel() {
-        scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
-                                                isVisible: false,
-                                                scene: scene) {
+        scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                     effectAction: SKAction.fadeIn(withDuration: 2),
+                                                     isFadeIn: false,
+                                                     isShowingTitle: true,
+                                                     completion: {
             self.scene.game?.setupNextLevel()
             self.restartLevel()
-        }
+        })
     }
     
     /// Restart the current level of the game.
@@ -101,9 +103,10 @@ public final class GameEvent {
         
         if player.state.isDead {
             player.state.isDead = false
-            scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
-                                                    isVisible: false,
-                                                    scene: scene) {
+            scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                         effectAction: SKAction.fadeIn(withDuration: 2),
+                                                         isFadeIn: false,
+                                                         isShowingTitle: false) {
                 self.restartLevel()
             }
         }

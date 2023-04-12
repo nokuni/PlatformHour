@@ -60,6 +60,13 @@ final public class GameControllerManager {
         manager?.observeControllers()
     }
     
+    /// Hide buttons from virtual controller.
+    public func hideVirtualController() {
+        manager?.disconnectVirtualController()
+        manager?.virtualControllerElements = []
+        manager?.connectVirtualController()
+    }
+    
     /// Setup the virtual controller.
     private func setupVirtualController() {
         manager?.virtualControllerElements = [.directionPad, .buttonA, .buttonB, .buttonX, .buttonY]

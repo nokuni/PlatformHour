@@ -60,9 +60,10 @@ public final class GameLogic {
         guard let player = scene.player else { return }
         if isDestroyed(player.node) {
             player.death(scene: scene)
-            scene.core?.animation?.transitionEffect(effect: SKAction.fadeIn(withDuration: 2),
-                                                    isVisible: false,
-                                                    scene: scene) {
+            scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                         effectAction: SKAction.fadeIn(withDuration: 2),
+                                                         isFadeIn: false,
+                                                         isShowingTitle: false) {
                 self.scene.core?.event?.restartLevel()
             }
         }

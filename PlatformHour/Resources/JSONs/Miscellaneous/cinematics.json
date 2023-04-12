@@ -6,26 +6,13 @@
             {
                 "id": 0,
                 "objectName": "Spirit",
-                "startingCoordinate": "0515",
+                "startingCoordinate": "0514",
                 "movement": {
-                    "destinationCoordinate": "1615",
+                    "destinationCoordinate": "1614",
                     "willDisappear": false
                 },
                 "effect": {
                     "stateIDIdentifier": "specialIdle",
-                    "isRepeatingForever": true
-                },
-                "isFollowedByCamera": true
-            },
-            {
-                "id": 1,
-                "objectName": "Spirit",
-                "movement": {
-                    "destinationCoordinate": "1612",
-                    "willDisappear": true
-                },
-                "effect": {
-                    "stateIDIdentifier": "idle",
                     "isRepeatingForever": true
                 },
                 "isFollowedByCamera": true

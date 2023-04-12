@@ -90,26 +90,31 @@ final public class GameAnimation {
     }
     
     /// Scene transition effect.
-    public func transitionEffect(effect: SKAction,
-                                 isVisible: Bool = true,
-                                 scene: GameScene,
-                                 completion: (() -> Void)?) {
+    public func sceneTransitionEffect(scene: GameScene,
+                                      effectAction: SKAction,
+                                      isFadeIn: Bool = true,
+                                      isShowingTitle: Bool = true,
+                                      completion: (() -> Void)?) {
         scene.isUserInteractionEnabled = false
         let effectNode = SKShapeNode(rectOf: scene.size * 3)
-        effectNode.alpha = isVisible ? 1 : 0
+        effectNode.alpha = isFadeIn ? 1 : 0
         effectNode.fillColor = .black
         effectNode.strokeColor = .black
         effectNode.zPosition = GameConfiguration.sceneConfiguration.overlayZPosition
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)
-        let sequence = SKAction.sequence([
-            effect,
+        let showTitleAction = SKAction.sequence([
             SKAction.run { self.titleTransitionEffect(scene: scene) },
-            SKAction.wait(forDuration: 4),
-            SKAction.run {
-                scene.isUserInteractionEnabled = true
-                completion?()
-            }
+            SKAction.wait(forDuration: 4)
+        ])
+        let completionAction = SKAction.run {
+            scene.isUserInteractionEnabled = true
+            completion?()
+        }
+        let sequence = SKAction.sequence([
+            effectAction,
+            isShowingTitle ? showTitleAction : SKAction.empty(),
+            completionAction
         ])
         effectNode.run(sequence)
     }

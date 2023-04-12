@@ -424,13 +424,14 @@ final public class GameContent {
         npcObject.coordinate = coordinate
         npcObject.animations = npc.animations
         npcObject.size = environment.map.squareSize
+        npcObject.zPosition = 99
         npcObject.position = npcPosition
         npcObject.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObject)
         
-//        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
-//
-//        npcObject.run(idleAnimation)
+        let idleAnimation = animation.animate(node: npcObject, identifier: .idle, filteringMode: .nearest)
+
+        npcObject.run(idleAnimation)
         
         //animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }

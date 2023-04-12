@@ -77,6 +77,7 @@ final public class GameCamera {
         }
     }
     
+    /// Follow the current selected object.
     public func follow() {
         guard isUpdatingMovement else { return }
         camera.move(to: position, catchUpDelay: catchUpDelay)

@@ -2,7 +2,7 @@
     {
         "id": 0,
         "mapMatrix": "2030",
-        "playerCoordinate": "1612",
+        "playerCoordinate": "1614",
         "musics": ["cavernBS.wav", "cavernBS_2.wav"],
         "background": {
             "image": "introCavernBackground",
@@ -35,8 +35,7 @@
         "cinematics": [
             {
                 "name": "Spirit Soul Intro Cinematic",
-                "category": "onStart",
-                "triggerCoordinate": "1612"
+                "category": "onStart"
             },
             {
                 "name": "Movement Power Up Cinematic",

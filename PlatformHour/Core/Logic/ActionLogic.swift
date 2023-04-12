@@ -345,7 +345,7 @@ public final class ActionLogic {
         actions.append(SKAction.run {
             self.scene.core?.animation?.addGravityEffect(on: player.node)
             self.state.switchOn(newStatus: .inAction)
-            self.scene.core?.hud?.addActionSquaresHUD()
+            self.scene.core?.hud?.addActionSquares()
         })
         let floatingSequence = SKAction.sequence([
             SKAction.moveBy(x: 0, y: -5, duration: 1),

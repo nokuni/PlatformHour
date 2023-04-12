@@ -6,6 +6,7 @@
 //
 
 import SpriteKit
+import PlayfulKit
 import Utility_Toolbox
 
 public struct GameCore {
@@ -76,16 +77,33 @@ public extension GameCore {
         scene.game?.controller = GameControllerManager(scene: scene, state: state)
     }
     
+    private func startingCinematic(scene: GameScene) -> LevelCinematic? {
+        let cinematic = scene.game?.level?.cinematics.first(where: { $0.category == .onStart })
+        return cinematic
+    }
+    
+    private func launchStartingCinematic(scene: GameScene) {
+        if let cinematic = startingCinematic(scene: scene) {
+            scene.core?.event?.playCinematic(cinematic: cinematic)
+            hideHUD(scene: scene)
+        }
+    }
+    
+    private func hideHUD(scene: GameScene) {
+        hud?.removeContent()
+        guard let controllerManager = scene.game?.controller?.manager else { return }
+        let isVirtualControllerAvailable = !controllerManager.virtualControllerElements.isEmpty
+        if isVirtualControllerAvailable { scene.game?.controller?.hideVirtualController() }
+    }
+    
     private func start(scene: GameScene) {
-        animation?.transitionEffect(effect: SKAction.fadeOut(withDuration: 2),
-                                    isVisible: true,
-                                    scene: scene) {
+        hideHUD(scene: scene)
+        animation?.sceneTransitionEffect(scene: scene,
+                                         effectAction: SKAction.fadeOut(withDuration: 2),
+                                         isFadeIn: true,
+                                         isShowingTitle: startingCinematic(scene: scene) == nil) {
             self.setupControllers(scene: scene)
-            if let cinematic = scene.game?.level?.cinematics.first(where: {
-                $0.category == .onStart
-            }) {
-                scene.core?.event?.playCinematic(cinematic: cinematic)
-            }
+            self.launchStartingCinematic(scene: scene)
         }
     }
 }
