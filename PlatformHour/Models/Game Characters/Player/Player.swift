@@ -145,7 +145,7 @@ public extension Player {
         let animationNode = SKSpriteNode()
         animationNode.size = GameConfiguration.sceneConfiguration.tileSize
         animationNode.position = node.position
-        scene.addChild(animationNode)
+        scene.addChildSafely(animationNode)
         
         let animation = SKAction.animate(with: deathFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.deathTimePerFrame)
         

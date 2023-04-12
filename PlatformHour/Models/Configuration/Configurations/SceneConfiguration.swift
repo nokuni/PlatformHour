@@ -16,10 +16,11 @@ struct SceneConfiguration {
     let NPCZPosition: CGFloat = 3
     let objectZPosition: CGFloat = 4
     let playerZPosition: CGFloat = 4
-    let hudZPosition: CGFloat = 5
-    let elementHUDZPosition: CGFloat = 6
-    let overlayZPosition: CGFloat = 7
-    let overOverlayZPosition: CGFloat = 8
+    let animationZPosition: CGFloat = 5
+    let hudZPosition: CGFloat = 6
+    let elementHUDZPosition: CGFloat = 7
+    let overlayZPosition: CGFloat = 8
+    let overOverlayZPosition: CGFloat = 9
     
     // MARK: - Camera
     let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25
@@ -35,4 +36,7 @@ struct SceneConfiguration {
     
     // MARK: - Objects
     var objectCollisionSizeTailoring: CGFloat { -tileSize.width * 0.5 }
+    
+    // MARK: - Sound
+    let soundSFXVolume: Float = 0.1
 }

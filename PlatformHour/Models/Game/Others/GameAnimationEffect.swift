@@ -24,12 +24,12 @@ public struct GameAnimationEffect: Codable {
 public extension GameAnimationEffect {
     
     /// Returns all the game animation effects.
-    static var all: [GameAnimationEffect]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.animationEffects)
-    }
+//    static var all: [GameAnimationEffect]? {
+//        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.animationEffects)
+//    }
     
-    static func get(id: Int, name: String) -> GameAnimationEffect? {
-        let animationEffect = GameAnimationEffect.all?.first(where: { $0.name == name && $0.id == id })
-        return animationEffect
-    }
+//    static func get(id: Int, name: String) -> GameAnimationEffect? {
+//        let animationEffect = GameAnimationEffect.all?.first(where: { $0.name == name && $0.id == id })
+//        return animationEffect
+//    }
 }

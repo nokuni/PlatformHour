@@ -58,6 +58,23 @@ public final class GameScene: SKScene {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+        guard let touch = touches.first else { return }
+        
+        let location = touch.location(in: self)
+        let touchedNodes = nodes(at: location)
+        
+        guard !touchedNodes.isEmpty else { return }
+        
+        for touchedNode in touchedNodes {
+            if let name = touchedNode.name {
+                switch name {
+                case "Conversation Box":
+                    core?.hud?.passLine()
+                default:
+                    ()
+                }
+            }
+        }
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

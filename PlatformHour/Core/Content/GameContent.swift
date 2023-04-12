@@ -244,11 +244,9 @@ public extension GameContent {
         npcObjectNode.physicsBody?.affectedByGravity = false
         scene.addChildSafely(npcObjectNode)
         
-        let animation = animation.animate(node: npcObjectNode, identifier: .specialIdle, filteringMode: .nearest, timeInterval: 0.1)
+        let animation = animation.animate(node: npcObjectNode, identifier: .idle, filteringMode: .nearest, timeInterval: 0.1)
         
         npcObjectNode.run(SKAction.repeatForever(animation))
-        
-        //animation.addShadowPulseEffect(scene: scene, node: npcObject)
     }
     
     /// Create a trap.
@@ -336,8 +334,8 @@ public extension GameContent {
     
     /// Returns a default setuped object.
     func object(name: String? = nil,
-                       physicsBodySizeTailoring: CGFloat = 0,
-                       collision: Collision) -> PKObjectNode {
+                physicsBodySizeTailoring: CGFloat = 0,
+                collision: Collision) -> PKObjectNode {
         
         let object = PKObjectNode()
         object.name = name
@@ -428,24 +426,29 @@ public extension GameContent {
 
 public extension GameContent {
     
-    /// Create an NPC object.
-    func createNPC(_ npc: GameObject, at coordinate: Coordinate) {
-        let collision = Collision(category: .npc,
+    /// Creates and returns an object node.
+    func createObject(_ object: GameObject, at coordinate: Coordinate) -> PKObjectNode {
+        let collision = Collision(category: .object,
                                   collision: [.allClear],
-                                  contact: [.player])
+                                  contact: [.allClear])
         
-        guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
+        guard let npcPosition = environment.map.tilePosition(from: coordinate) else {
+            return PKObjectNode()
+        }
         
-        let npcObject = environment.objectElement(name: npc.name,
-                                                  physicsBodySizeTailoring: GameConfiguration.sceneConfiguration.objectCollisionSizeTailoring,
-                                                  collision: collision)
+        let objectNode = environment.objectElement(name: object.name,
+                                                   physicsBodySizeTailoring: GameConfiguration.sceneConfiguration.objectCollisionSizeTailoring,
+                                                   collision: collision)
         
-        npcObject.coordinate = coordinate
-        npcObject.animations = npc.animations
-        npcObject.size = environment.map.squareSize
-        npcObject.position = npcPosition
-        npcObject.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(npcObject)
+        objectNode.coordinate = coordinate
+        objectNode.animations = object.animations
+        objectNode.texture = SKTexture(imageNamed: object.image)
+        objectNode.texture?.filteringMode = .nearest
+        objectNode.position = npcPosition
+        objectNode.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(objectNode)
+        
+        return objectNode
     }
 }
 

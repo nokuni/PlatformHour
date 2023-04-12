@@ -17,7 +17,7 @@ public final class GameState {
     public enum Status {
         case inDefault
         case inAction
-        case inDialog
+        case inConversation
         case inCinematic
         case inPause
     }

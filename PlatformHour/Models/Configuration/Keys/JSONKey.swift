@@ -21,16 +21,16 @@ struct JSONKey {
     let trapObjects = "trapObjects.json"
     let collectibleObjects = "collectibleObjects.json"
     let containerObjects = "containerObjects.json"
+    let effectObjects = "effectObjects.json"
     
     // MARK: - Structures
     let structures = "structures.json"
     
     // MARK: - Animations
     let npcAnimations = "npcAnimations.json"
-    let animationEffects = "animationEffects.json"
     
     // MARK: - Other
-    let dialogs = "dialogs.json"
+    let conversations = "conversations.json"
     let characters = "characters.json"
     let controllerButtons = "controllerButtons.json"
     let cinematics = "cinematics.json"

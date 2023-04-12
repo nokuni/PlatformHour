@@ -5,36 +5,71 @@
         "actions": [
             {
                 "id": 0,
-                "objectName": "Spirit",
-                "startingCoordinate": "0514",
+                "objectName": "Empty",
+                "startingCoordinate": "1614",
+                "movement": {
+                    "destinationCoordinate": "0714",
+                    "duration": 8,
+                    "willDisappear": true
+                },
+                "isFollowedByCamera": true
+            },
+            {
+                "id": 1,
+                "objectName": "Circle Effect",
+                "startingCoordinate": "0714",
+                "effect": {
+                    "stateIDIdentifier": "effect",
+                    "repeatCount": 5,
+                    "isRepeatingForever": false
+                },
+                "isFollowedByCamera": false
+            },
+            {
+                "id": 2,
+                "objectName": "Spirit Soul",
+                "startingCoordinate": "0714",
                 "movement": {
                     "destinationCoordinate": "1614",
-                    "willDisappear": false
+                    "duration": 8,
+                    "willDisappear": true
                 },
                 "effect": {
-                    "stateIDIdentifier": "specialIdle",
+                    "stateIDIdentifier": "idle",
                     "isRepeatingForever": true
                 },
                 "isFollowedByCamera": true
-            }
-        ],
-        "dialogCompletion": "Ancient Cavern Intro Dialog"
-    },
-    {
-        "name": "Movement Power Up Cinematic",
-        "category": "onDialog",
-        "actions": [
+            },
             {
-                "id": 0,
-                "objectName": "Spirit",
-                "startingCoordinate": "1612",
+                "id": 3,
+                "objectName": "Spark Effect",
+                "startingCoordinate": "1614",
                 "effect": {
-                    "stateIDIdentifier": "powerUp",
+                    "stateIDIdentifier": "effect",
+                    "repeatCount": 1,
                     "isRepeatingForever": false
                 },
                 "isFollowedByCamera": false
             }
         ],
-        "dialogCompletion": "Movement Power Up Dialog"
+        "conversationCompletion": "Ancient Cavern Intro Conversation"
+    },
+    {
+        "name": "Movement Power Up Cinematic",
+        "category": "onConversation",
+        "actions": [
+            {
+                "id": 0,
+                "objectName": "Power Up Effect",
+                "startingCoordinate": "1614",
+                "effect": {
+                    "stateIDIdentifier": "effect",
+                    "repeatCount": 1,
+                    "isRepeatingForever": false
+                },
+                "isFollowedByCamera": false
+            }
+        ],
+        "conversationCompletion": "Movement Power Up Conversation"
     }
 ]

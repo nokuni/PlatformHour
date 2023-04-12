@@ -52,11 +52,12 @@ public final class ActionLogic {
         player.actions.append(action)
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
-        actionElement.size = GameConfiguration.sceneConfiguration.tileSize * 0.5
+        actionElement.size = GameConfiguration.sceneConfiguration.tileSize * 0.6
         scene.core?.hud?.actionSquares[safe: player.actions.count - 1]?.addChildSafely(actionElement)
         scene.core?.logic?.resolveSequenceOfActions()
     }
-    private func move(on direction: Direction, by movementSpeed: Int) {
+    
+    public func move(on direction: Direction, by movementSpeed: Int) {
         guard let player = scene.player else { return }
         guard !isAnimating else { return }
         guard !player.state.isJumping else { return }
@@ -71,6 +72,7 @@ public final class ActionLogic {
         scene.player?.advanceRoll()
         scene.player?.run()
     }
+    
     private func throwProjectile(_ projectileNode: PKObjectNode) {
         guard let player = scene.player else { return }
         let distanceAmount = CGFloat(player.stats.range)
@@ -137,7 +139,7 @@ public final class ActionLogic {
             moveRight()
         case .inAction:
             addAction(.moveRight)
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -153,7 +155,7 @@ public final class ActionLogic {
             moveLeft()
         case .inAction:
             addAction(.moveLeft)
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -169,7 +171,7 @@ public final class ActionLogic {
             break
         case .inAction:
             addAction(.moveUp)
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -185,7 +187,7 @@ public final class ActionLogic {
             break
         case .inAction:
             addAction(.moveDown)
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -224,8 +226,8 @@ public final class ActionLogic {
             jump()
         case .inAction:
             break
-        case .inDialog:
-            scene.core?.hud?.passDialog()
+        case .inConversation:
+            scene.core?.hud?.passLine()
         case .inCinematic:
             break
         case .inPause:
@@ -245,7 +247,7 @@ public final class ActionLogic {
             attack()
         case .inAction:
             break
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -261,7 +263,7 @@ public final class ActionLogic {
             interact()
         case .inAction:
             break
-        case .inDialog:
+        case .inConversation:
             break
         case .inCinematic:
             break
@@ -343,7 +345,7 @@ public final class ActionLogic {
             ])
         }
         actions.append(SKAction.run {
-            self.scene.core?.animation?.addGravityEffect(on: player.node)
+            self.scene.core?.animation?.addGravityEffect(scene: self.scene, node: player.node)
             self.state.switchOn(newStatus: .inAction)
             self.scene.core?.hud?.addActionSquares()
         })
@@ -381,7 +383,7 @@ public final class ActionLogic {
             if !environment.collisionCoordinates.contains(groundCoordinate) {
                 self.scene.core?.logic?.dropPlayer()
             }
-            self.scene.core?.event?.triggerDialogOnCoordinate()
+            self.scene.core?.event?.triggerConversationOnCoordinate()
             //self.scene.core?.event?.playCinematic()
             if self.isLongPressingDPad {
                 self.move(on: self.direction, by: self.movementSpeed)

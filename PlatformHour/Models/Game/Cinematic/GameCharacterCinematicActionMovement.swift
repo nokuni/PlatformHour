@@ -9,5 +9,6 @@ import Foundation
 
 public struct GameCharacterCinematicActionMovement: Codable {
     public let destinationCoordinate: String
+    public let duration: Double
     public let willDisappear: Bool
 }

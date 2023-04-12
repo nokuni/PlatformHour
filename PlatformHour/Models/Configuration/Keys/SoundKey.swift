@@ -8,7 +8,10 @@
 import Foundation
 
 struct SoundKey {
-    let soundSFXVolume: Float = 0.1
+    
+    // MARK: - Player
     let playerStep = "stepSound.wav"
+    
+    // MARK: - Text
     let textTyping = "TextTypingSound.wav"
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GameCharacterCinematicAction: Codable {
+public struct CinematicAction: Codable {
     public init(id: Int,
                 objectName: String,
                 startingCoordinate: String?,

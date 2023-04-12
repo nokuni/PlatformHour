@@ -89,7 +89,7 @@ public extension GameEnvironment {
         
         let object = PKObjectNode()
         object.name = name
-        object.size = GameConfiguration.sceneConfiguration.tileSize
+        object.size = map.squareSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,

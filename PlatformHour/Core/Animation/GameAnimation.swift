@@ -16,8 +16,7 @@ final public class GameAnimation {
     
     public enum StateID: String, CaseIterable {
         case idle = "idle"
-        case specialIdle = "specialIdle"
-        case powerUp = "powerUp"
+        case effect = "effect"
         case run = "run"
         case runRight = "runRight"
         case runLeft = "runLeft"
@@ -59,28 +58,25 @@ public extension GameAnimation {
     }
     
     /// Add a gravity effect on a node.
-    func addGravityEffect(on node: SKNode) {
-        let gravityEffectNode = SKSpriteNode()
-        gravityEffectNode.name = GameConfiguration.nodeKey.gravityEffect
-        gravityEffectNode.size = GameConfiguration.sceneConfiguration.tileSize
-        node.addChildSafely(gravityEffectNode)
+    func addGravityEffect(scene: GameScene, node: PKObjectNode) {
         
-        let effects = [
-            GameAnimationEffect.get(id: 0, name: "Gravity Effect")?.frames,
-            GameAnimationEffect.get(id: 1, name: "Gravity Effect")?.frames,
-            GameAnimationEffect.get(id: 2, name: "Gravity Effect")?.frames
-        ].compactMap { $0 }
+        let keyName = GameConfiguration.nodeKey.gravityEffect
         
-        let actions = effects.map {
-            SKAction.animate(with: $0, filteringMode: .nearest, timePerFrame: 0.05)
-        }
+        guard let content = scene.core?.content else { return }
+        guard let effectObject = GameObject.getEffect(keyName) else { return }
         
-        guard !actions.isEmpty else { return }
-        guard actions.count == effects.count else { return }
+        let effectNode = content.createObject(effectObject, at: node.coordinate)
+        effectNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
+        effectNode.name = keyName
         
-        let animation = SKAction.sequence(actions)
+        guard !effectNode.animations.isEmpty else { return }
         
-        gravityEffectNode.run(SKAction.repeatForever(animation))
+        let animation = animate(node: effectNode,
+                                identifier: .effect,
+                                filteringMode: .nearest,
+                                timeInterval: 0.05)
+        
+        effectNode.run(SKAction.repeatForever(animation))
     }
     
     /// Scene transition effect.
@@ -137,25 +133,31 @@ public extension GameAnimation {
     }
     
     /// Add a circular smoke effect on a node.
-    func addCircularSmokeEffect(on node: SKNode) {
+    func addCircularSmokeEffect(scene: GameScene, node: PKObjectNode) {
+        
+        let name = "Circular Smoke Effect"
         let tileSize = GameConfiguration.sceneConfiguration.tileSize
-        let animationNode = SKSpriteNode()
-        animationNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
         
-        guard let animationEffect = GameAnimationEffect.get(id: 0, name: "Circular Smoke") else { return }
+        guard let content = scene.core?.content else { return }
+        guard let effectObject = GameObject.getEffect(name) else { return }
         
-        let frames = animationEffect.frames
+        let effectNode = content.createObject(effectObject, at: node.coordinate)
+        effectNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
+        effectNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
         
-        let animation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: 0.05)
+        guard !effectNode.animations.isEmpty else { return }
+        
+        let animation = animate(node: effectNode,
+                                identifier: .effect,
+                                filteringMode: .nearest,
+                                timeInterval: 0.05)
         
         let sequence = SKAction.sequence([
             animation,
             SKAction.removeFromParent()
         ])
         
-        node.addChildSafely(animationNode)
-        
-        animationNode.run(sequence)
+        effectNode.run(sequence)
     }
     
     /// Add a screen shake effect on the scene camera.

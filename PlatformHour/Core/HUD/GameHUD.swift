@@ -21,6 +21,7 @@ public class GameHUD {
     private let layer = SKShapeNode(rectOf: .screen)
     private let contentContainer = SKNode()
     private let actionSequence = SKNode()
+    public let conversationBox = SKSpriteNode()
     
     public var actionSquares: [SKSpriteNode] {
         let actionNodes = actionSequence.childNodes(named: "Action Square")
@@ -38,38 +39,170 @@ public class GameHUD {
     
     public func create() {
         createLayer()
-        createContentContainer()
-        generateContent()
+        addContentContainer()
+        addContent()
     }
     
-    /// Create the HUD layer on the scene.
+    /// Create the layer on the scene.
     private func createLayer() {
         layer.name = "HUD Layer"
         layer.fillColor = .clear
         layer.strokeColor = .clear
         layer.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
-        scene.camera?.addChild(layer)
+        scene.camera?.addChildSafely(layer)
     }
     
-    /// Create the HUD content container on the scene.
-    private func createContentContainer() {
-        layer.addChild(contentContainer)
+    /// Generate a filter over the HUD.
+    private func generateFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
+        guard let camera = scene.camera else { return }
+        let filterNode = SKShapeNode(rectOf: CGSize.screen * 2)
+        filterNode.strokeColor = color
+        filterNode.fillColor = color
+        filterNode.alpha = alpha
+        filterNode.zPosition = GameConfiguration.sceneConfiguration.overOverlayZPosition
+        filterNode.position = camera.position
+        node.addChildSafely(filterNode)
     }
     
-    public func removeContent() {
-        contentContainer.removeAllChildren()
+    // MARK: - Dialog Box
+    
+    /// Pass the current line of text.
+    public func passLine() {
+        if let dialogText = conversationBox.childNode(withName: "Dialog Text") as? PKTypewriterNode {
+            dialogText.hasFinished() ? nextLine() : speedUpLine()
+        }
     }
     
-    // MARK: - Generations
-    
-    /// Generate the content on the HUD layer.
-    public func generateContent() {
-        generateGemScore()
-        generateActionSequenceBar()
+    /// Display the next line of a dialog.
+    public func nextLine() {
+        conversationBox.removeAllChildren()
+        conversationBox.removeFromParent()
+        
+        guard let index = scene.game?.currentConversation?.currentDialogIndex else { return }
+        
+        scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
+        
+        guard let isEndOfLine = scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
+        
+        !isEndOfLine ? addConversationBox() : nextDialog()
     }
     
-    /// Generate the action sequence bar on the HUD.
-    public func generateActionSequenceBar() {
+    /// Display the next dialog.
+    private func nextDialog() {
+        scene.game?.currentConversation?.moveOnNextDialog()
+        guard let isEndOfConversation = scene.game?.currentConversation?.isEndOfConversation else { return }
+        !isEndOfConversation ? addConversationBox() : endConversation()
+    }
+    
+    /// Display the total text of the dialog instrantly.
+    private func speedUpLine() {
+        let dialogText = conversationBox.childNode(withName: "Dialog Text") as? PKTypewriterNode
+        dialogText?.displayAllText()
+        scene.core?.sound.manager.stopRepeatedSFX()
+    }
+    
+    /// Disable the current dialog.
+    private func disableConversation() {
+        if let index = scene.game?.level?.conversations.firstIndex(where: {
+            $0.conversation == scene.game?.currentLevelConversation?.conversation
+        }) {
+            scene.game?.level?.conversations[index].isAvailable = false
+        }
+    }
+    
+    public func resetConversation() {
+        scene.game?.currentLevelConversation = nil
+        scene.game?.currentConversation = nil
+    }
+    
+    private var cinematicAfterConversation: LevelCinematic? {
+        guard let level = scene.game?.level else { return nil }
+        if let cinematicCompletion = scene.game?.currentConversation?.cinematicCompletion {
+            return level.cinematics.first(where: { $0.name == cinematicCompletion })
+        }
+        return nil
+    }
+    
+    /// Ends the current dialog.
+    private func endConversation() {
+        if let cinematicAfterConversation = cinematicAfterConversation {
+            scene.core?.event?.playCinematic(cinematic: cinematicAfterConversation)
+        } else {
+            scene.core?.state.switchOn(newStatus: .inDefault)
+        }
+        disableConversation()
+        resetConversation()
+    }
+}
+
+// MARK: - Pause
+
+public extension GameHUD {
+    
+    /// Create the pause button.
+    private func createPauseButton() {
+        // Create the pause button
+    }
+    
+    /// Create the pause screen.
+    func createPauseScreen() {
+        let pauseNode = SKNode()
+        pauseNode.name = "Pause Screen"
+        scene.addChildSafely(pauseNode)
+        generateFilter(on: pauseNode)
+        createPauseMenu(on: pauseNode)
+    }
+    
+    /// Remove the pause screen.
+    func removePauseScreen() {
+        guard let pauseScreen = scene.childNode(withName: "Pause Screen") else { return }
+        pauseScreen.removeFromParent()
+    }
+    
+    /// Create the pause menu.
+    private func createPauseMenu(on node: SKNode) {
+        guard let camera = scene.camera else { return }
+        let menuNode = SKShapeNode(rectOf: CGSize(width: 250, height: 250))
+        menuNode.fillColor = .white
+        menuNode.position = camera.position
+        node.addChildSafely(menuNode)
+    }
+    
+    /// Pause the HUD.
+    func pause() { layer.isPaused = true }
+    
+    /// Unpause the HUD.
+    func unpause() { layer.isPaused = false }
+}
+
+// MARK: - Updates
+
+public extension GameHUD {
+    
+    /// Update the current gem score.
+    func updateGemScore() {
+        removeGemScore()
+        addGemScore()
+    }
+}
+
+// MARK: - Adds
+
+public extension GameHUD {
+    
+    /// Adds the content container on the layer.
+    private func addContentContainer() {
+        layer.addChildSafely(contentContainer)
+    }
+    
+    /// Adds the content on the content container.
+    func addContent() {
+        addGemScore()
+        addActionSequenceBar()
+    }
+    
+    /// Adds the action sequence bar on the layer.
+    private func addActionSequenceBar() {
         
         actionSequence.name = "Action Sequence"
         contentContainer.addChildSafely(actionSequence)
@@ -89,8 +222,8 @@ public class GameHUD {
         GameConfiguration.assemblyManager.createNodeList(of: sequenceHUD, at: sequencePosition, in: contentContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
     }
     
-    /// Generate the gem score on the HUD.
-    private func generateGemScore() {
+    /// Adds the gem score on the layer.
+    private func addGemScore() {
         
         guard let player = scene.player else { return }
         
@@ -122,8 +255,8 @@ public class GameHUD {
         score.addChildSafely(item)
     }
     
-    /// Add an action square on the action sequence bar.
-    public func addActionSquares() {
+    /// Adds an action square on the action sequence bar.
+    func addActionSquares() {
         guard let player = scene.player else { return }
         
         var actions: [SKSpriteNode] = []
@@ -152,110 +285,96 @@ public class GameHUD {
             self.scene.core?.logic?.enableControls()
         })
     }
+}
+
+// MARK: - Removals
+
+public extension GameHUD {
     
-    /// Generate a filter over the HUD.
-    private func generateFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
-        guard let camera = scene.camera else { return }
-        let filterNode = SKShapeNode(rectOf: CGSize.screen * 2)
-        filterNode.strokeColor = color
-        filterNode.fillColor = color
-        filterNode.alpha = alpha
-        filterNode.zPosition = GameConfiguration.sceneConfiguration.overOverlayZPosition
-        filterNode.position = camera.position
-        node.addChild(filterNode)
+    /// Removes the current content.
+    func removeContent() {
+        contentContainer.removeAllChildren()
     }
     
-    // MARK: - Dialog Box
+    /// Removes the action squares from the action bar.
+    func removeActionSquares() {
+        actionSquares.forEach { $0.removeFromParent() }
+    }
     
-    /// Generate the dialog box.
-    public func generateDialogBox() {
-        let dialogBox = dialogBox
+    /// Removes the gem score from the layer.
+    private func removeGemScore() {
+        let score = layer.childNode(withName: "Score")
+        score?.removeFromParent()
+    }
+}
+
+// MARK: - Dialog
+
+public extension GameHUD {
+    
+    /// Adds the conversation box.
+    func addConversationBox() {
         
-        layer.addChild(dialogBox)
+        configureConversationBox()
         
-        addDialogArrow(node: dialogBox)
+        layer.addChildSafely(conversationBox)
         
-        guard let levelDialog = scene.game?.currentLevelDialog else { return }
-        guard let dialogData = GameDialog.get(levelDialog.dialog) else { return }
+        addConversationArrow(node: conversationBox)
         
-        if scene.game?.currentDialog == nil { scene.game?.currentDialog = dialogData }
+        guard let levelConversation = scene.game?.currentLevelConversation else { return }
+        guard let conversationData = GameConversation.get(levelConversation.conversation) else { return }
         
-        guard let currentDialog = scene.game?.currentDialog else { return }
+        if scene.game?.currentConversation == nil { scene.game?.currentConversation = conversationData }
         
-        guard let dialog = scene.game?.currentDialog else { return }
+        guard let currentConversation = scene.game?.currentConversation else { return }
         
-        let conversation = currentDialog.conversation[dialog.currentDialogIndex]
+        guard let dialog = scene.game?.currentConversation else { return }
         
-        if let conversationCharacter = conversation.character,
+        let dialogs = currentConversation.dialogs[dialog.currentDialogIndex]
+        
+        if let conversationCharacter = dialogs.character,
            let character = GameCharacter.get(conversationCharacter) {
-            addDialogCharacter(conversation, gameCharacter: character, node: dialogBox)
+            addConversationCharacter(dialogs, gameCharacter: character, node: conversationBox)
         }
         
-        let lineIndex = currentDialog.conversation[dialog.currentDialogIndex].currentLineIndex
-        let text = currentDialog.conversation[dialog.currentDialogIndex].lines[lineIndex]
+        let lineIndex = currentConversation.dialogs[dialog.currentDialogIndex].currentLineIndex
+        let text = currentConversation.dialogs[dialog.currentDialogIndex].lines[lineIndex]
         
-        addDialogText(text, node: dialogBox)
+        addConversationText(text, node: conversationBox)
     }
     
-    /// Pass the current dialog.
-    public func passDialog() {
-        guard let dialogBox = layer.childNode(withName: "Dialog Box") else { return }
-        guard let dialogText = dialogBox.childNode(withName: "Dialog Text") as? PKTypewriterNode else { return }
-        dialogText.hasFinished() ? displayNextLine() : speedUpDialog()
-    }
-    
-    /// Display the next line of a dialog.
-    public func displayNextLine() {
-        guard let dialogBox = layer.childNode(withName: "Dialog Box") else { return }
-        dialogBox.removeFromParent()
+    /// Configures the conversation box.
+    private func configureConversationBox() {
         
-        guard let index = scene.game?.currentDialog?.currentDialogIndex else { return }
-        scene.game?.currentDialog?.conversation[index].moveOnNextLine()
-        
-        guard let isEndOfLine = scene.game?.currentDialog?.conversation[index].isEndOfLine else { return }
-        
-        if !isEndOfLine { generateDialogBox() } else { displayNextDialog() }
-    }
-    
-    /// Display the next dialog.
-    private func displayNextDialog() {
-        scene.game?.currentDialog?.moveOnNextDialog()
-        guard let isEndOfDialog = scene.game?.currentDialog?.isEndOfDialog else { return }
-        if !isEndOfDialog { generateDialogBox() } else { endDialog() }
-    }
-    
-    /// Returns a dialog box.
-    private var dialogBox: SKSpriteNode {
         let dialogBoxTexture = SKTexture(imageNamed: "dialogBox")
         dialogBoxTexture.filteringMode = .nearest
+        
         let dialogBoxTextureSize = dialogBoxTexture.size()
         
         let position = layer.cornerPosition(corner: .bottomLeft, padding: EdgeInsets(top: 0, leading: CGSize.screen.width * 0.5, bottom: 100, trailing: 0))
         
-        let dialogBox = SKSpriteNode()
-        dialogBox.name = "Dialog Box"
-        dialogBox.size = dialogBoxTextureSize * 2.5
-        dialogBox.texture = dialogBoxTexture
-        dialogBox.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
-        dialogBox.position = position
+        conversationBox.name = "Conversation Box"
+        conversationBox.size = dialogBoxTextureSize * 2.5
+        conversationBox.texture = dialogBoxTexture
+        conversationBox.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+        conversationBox.position = position
         
-        return dialogBox
     }
     
-    /// Add an animated arrow on the current dialog box.
-    private func addDialogArrow(node: SKNode) {
+    /// Adds an animated arrow on the current conversation box.
+    private func addConversationArrow(node: SKNode) {
         let dialogBoxArrowTexture = SKTexture(imageNamed: "dialogArrow")
         dialogBoxArrowTexture.filteringMode = .nearest
         let dialogBoxTextureArrowSize = dialogBoxArrowTexture.size()
         
-        let position = dialogBox.cornerPosition(corner: .bottomRight, padding: EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 35))
+        let position = conversationBox.cornerPosition(corner: .bottomRight, padding: EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 35))
         
         let arrow = SKSpriteNode()
         arrow.size = dialogBoxTextureArrowSize * 1.5
         arrow.texture = dialogBoxArrowTexture
         arrow.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
         arrow.position = position
-        node.addChild(arrow)
+        node.addChildSafely(arrow)
         
         let animation = SKAction.moveForthAndBack(startPoint: CGPoint(x: arrow.position.x,
                                                                       y: arrow.position.y - 5),
@@ -265,10 +384,10 @@ public class GameHUD {
         arrow.run(SKAction.repeatForever(animation))
     }
     
-    /// Add a character on the current dialog box.
-    private func addDialogCharacter(_ characterDialog: GameCharacterDialog,
-                                    gameCharacter: GameCharacter,
-                                    node: SKNode) {
+    /// Add a character on the current conversation box.
+    private func addConversationCharacter(_ characterDialog: GameCharacterDialog,
+                                          gameCharacter: GameCharacter,
+                                          node: SKNode) {
         let characterTexture = SKTexture(imageNamed: gameCharacter.fullArt)
         characterTexture.filteringMode = .nearest
         let characterTextureSize = characterTexture.size()
@@ -284,100 +403,16 @@ public class GameHUD {
         character.texture = characterTexture
         character.zPosition = -1
         character.position = layer.cornerPosition(corner: corner, padding: padding)
-        node.addChild(character)
+        node.addChildSafely(character)
     }
     
-    /// Add a text on the current dialog box.
-    private func addDialogText(_ text: String, node: SKNode) {
+    /// Add a text on the conversation box.
+    private func addConversationText(_ text: String, node: SKNode) {
         let parameter = TextManager.Paramater(content: text, fontName: "Outline Pixel7 Solid", fontSize: 20, fontColor: .black, lineSpacing: 10, padding: EdgeInsets(top: 25, leading: 25, bottom: 0, trailing: 25))
         let dialogText = PKTypewriterNode(container: node, parameter: parameter)
         dialogText.name = "Dialog Text"
-        node.addChild(dialogText)
+        node.addChildSafely(dialogText)
         dialogText.start()
         scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
     }
-    
-    /// Display the total text of the dialog instrantly.
-    private func speedUpDialog() {
-        guard let dialogBox = layer.childNode(withName: "Dialog Box") else { return }
-        guard let dialogText = dialogBox.childNode(withName: "Dialog Text") as? PKTypewriterNode else { return }
-        dialogText.displayAllText()
-        scene.core?.sound.manager.stopRepeatedSFX()
-    }
-    
-    /// Disable the current dialog.
-    private func disableDialog() {
-        if let index = scene.game?.level?.dialogs.firstIndex(where: {
-            $0.dialog == scene.game?.currentLevelDialog?.dialog
-        }) {
-            scene.game?.level?.dialogs[index].isAvailable = false
-        }
-    }
-    
-    /// Ends the current dialog.
-    private func endDialog() {
-        guard let level = scene.game?.level else { return }
-        if let cinematicCompletion = scene.game?.currentDialog?.cinematicCompletion,
-           let levelCinematic = level.cinematics.first(where: { $0.name == cinematicCompletion }) {
-            scene.core?.event?.playCinematic(cinematic: levelCinematic)
-            scene.game?.currentLevelDialog = nil
-            scene.game?.currentDialog = nil
-        } else {
-            disableDialog()
-            scene.game?.currentLevelDialog = nil
-            scene.game?.currentDialog = nil
-            scene.core?.state.switchOn(newStatus: .inDefault)
-        }
-    }
-    
-    // MARK: - Updates
-    
-    /// Update the current gem score.
-    public func updateGemScore() {
-        let score = layer.childNode(withName: "Score")
-        score?.removeFromParent()
-        generateGemScore()
-    }
-    
-    /// Remove the action squares from the HUD.
-    public func removeActionSquares() {
-        actionSquares.forEach { $0.removeFromParent() }
-    }
-    
-    // MARK: - Pause
-    
-    /// Create the pause button.
-    private func createPauseButton() {
-        
-    }
-    
-    /// Create the pause screen.
-    public func createPauseScreen() {
-        let pauseNode = SKNode()
-        pauseNode.name = "Pause Screen"
-        scene.addChild(pauseNode)
-        generateFilter(on: pauseNode)
-        createPauseMenu(on: pauseNode)
-    }
-    
-    /// Remove the pause screen.
-    public func removePauseScreen() {
-        guard let pauseScreen = scene.childNode(withName: "Pause Screen") else { return }
-        pauseScreen.removeFromParent()
-    }
-    
-    /// Create the pause menu.
-    private func createPauseMenu(on node: SKNode) {
-        guard let camera = scene.camera else { return }
-        let menuNode = SKShapeNode(rectOf: CGSize(width: 250, height: 250))
-        menuNode.fillColor = .white
-        menuNode.position = camera.position
-        node.addChild(menuNode)
-    }
-    
-    /// Pause the HUD.
-    public func pause() { layer.isPaused = true }
-    
-    /// Unpause the HUD.
-    public func unpause() { layer.isPaused = false }
 }

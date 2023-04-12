@@ -16,7 +16,7 @@ public struct GameLevel: Codable {
                 background: LevelBackground,
                 objects: [LevelObject],
                 structures: [LevelStructure],
-                dialogs: [LevelDialog],
+                conversations: [LevelConversation],
                 cinematics: [LevelCinematic]) {
         self.id = id
         self.mapMatrix = mapMatrix
@@ -25,7 +25,7 @@ public struct GameLevel: Codable {
         self.background = background
         self.objects = objects
         self.structures = structures
-        self.dialogs = dialogs
+        self.conversations = conversations
         self.cinematics = cinematics
     }
     
@@ -36,7 +36,7 @@ public struct GameLevel: Codable {
     public let background: LevelBackground
     public let objects: [LevelObject]
     public let structures: [LevelStructure]
-    public var dialogs: [LevelDialog]
+    public var conversations: [LevelConversation]
     public var cinematics: [LevelCinematic]
 }
 

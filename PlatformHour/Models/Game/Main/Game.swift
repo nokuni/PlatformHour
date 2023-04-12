@@ -34,10 +34,10 @@ public final class Game: ObservableObject {
         return Int(currentLevel)
     }
     
-    // MARK: - Dialogs
+    // MARK: - Conversations
     
-    public var currentLevelDialog: LevelDialog?
-    public var currentDialog: GameDialog?
+    public var currentLevelConversation: LevelConversation?
+    public var currentConversation: GameConversation?
     
     // MARK: - Cinematics
     

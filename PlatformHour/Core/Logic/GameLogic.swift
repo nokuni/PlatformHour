@@ -147,7 +147,7 @@ public final class GameLogic {
     private var playerLandAnimation: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         let action = SKAction.run {
-            self.scene.core?.animation?.addCircularSmokeEffect(on: player.node)
+            self.scene.core?.animation?.addCircularSmokeEffect(scene: self.scene, node: player.node)
             self.scene.core?.animation?.addScreenShakeEffect(on: self.scene)
             self.scene.core?.sound.land(scene: self.scene)
         }
@@ -156,12 +156,17 @@ public final class GameLogic {
     
     /// Returns the player land completion animation after the land.
     private var playerLandCompletionAnimation: SKAction {
-        let action = SKAction.run {
+        guard let action = scene.game?.controller?.action else { return SKAction.empty() }
+        let animation = SKAction.run {
             self.scene.player?.state.isJumping = false
             self.scene.core?.state.switchOn(newStatus: .inDefault)
             self.enableControls()
+            if action.isLongPressingDPad {
+                self.scene.player?.node.removeAllActions()
+                self.scene.game?.controller?.action.move(on: action.direction, by: action.movementSpeed)
+            }
         }
-        return action
+        return animation
     }
     
     /// Make the player fall if possible.
@@ -171,7 +176,6 @@ public final class GameLogic {
         let drop = SKAction.sequence([
             fallAnimation(object: player.node, speed: GameConfiguration.playerConfiguration.fallSpeed),
             playerLandAnimation,
-            SKAction.wait(forDuration: 0.5),
             playerLandCompletionAnimation
         ])
         scene.player?.node.run(drop)
@@ -223,7 +227,7 @@ public final class GameLogic {
     public func resolveSequenceOfActions() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
-            let gravityEffect = player.node.childNode(withName: GameConfiguration.nodeKey.gravityEffect)
+            let gravityEffect = scene.childNode(withName: GameConfiguration.nodeKey.gravityEffect)
             gravityEffect?.removeFromParent()
             disableControls()
             performActionSequence()

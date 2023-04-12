@@ -8,33 +8,33 @@
 import Foundation
 import Utility_Toolbox
 
-public struct GameDialog: Codable {
+public struct GameConversation: Codable {
     public init(name: String,
-                category: GameDialog.Category,
-                conversation: [GameCharacterDialog],
+                category: GameConversation.Category,
+                dialogs: [GameCharacterDialog],
                 cinematicCompletion: String? = nil,
                 currentDialogIndex: Int = 0,
-                isEndOfDialog: Bool = false) {
+                isEndOfConversation: Bool = false) {
         self.name = name
         self.category = category
-        self.conversation = conversation
+        self.dialogs = dialogs
         self.cinematicCompletion = cinematicCompletion
         self.currentDialogIndex = currentDialogIndex
-        self.isEndOfDialog = isEndOfDialog
+        self.isEndOfConversation = isEndOfConversation
     }
     
     public let name: String
     public let category: Category
-    public var conversation: [GameCharacterDialog]
+    public var dialogs: [GameCharacterDialog]
     public var cinematicCompletion: String?
     public var currentDialogIndex: Int = 0
-    public var isEndOfDialog: Bool = false
+    public var isEndOfConversation: Bool = false
     
     mutating func moveOnNextDialog() {
-        if conversation.canGoNext(currentDialogIndex) {
+        if dialogs.canGoNext(currentDialogIndex) {
             currentDialogIndex += 1
         } else {
-            isEndOfDialog = true
+            isEndOfConversation = true
         }
     }
     
@@ -48,20 +48,20 @@ public struct GameDialog: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case category
-        case conversation
+        case dialogs
         case cinematicCompletion
     }
 }
 
-public extension GameDialog {
+public extension GameConversation {
     
-    /// Returns all the game dialogs
-    static var all: [GameDialog]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.dialogs)
+    /// Returns all the conversations of the game
+    static var all: [GameConversation]? {
+        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.conversations)
     }
     
-    static func get(_ name: String) -> GameDialog? {
-        let dialog = GameDialog.all?.first(where: { $0.name == name })
+    static func get(_ name: String) -> GameConversation? {
+        let dialog = GameConversation.all?.first(where: { $0.name == name })
         return dialog
     }
 }

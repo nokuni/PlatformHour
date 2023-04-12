@@ -25,7 +25,7 @@ public struct LevelCinematic: Codable {
     
     public enum Category: String, Codable {
         case onStart
-        case onDialog
+        case onConversation
     }
     
     enum CodingKeys: String, CodingKey {

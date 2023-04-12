@@ -91,6 +91,8 @@ public extension GameCore {
         if let cinematic = startingCinematic(scene: scene) {
             scene.core?.event?.playCinematic(cinematic: cinematic)
             hideHUD(scene: scene)
+        } else {
+            showHUD()
         }
     }
     
@@ -100,6 +102,10 @@ public extension GameCore {
         guard let controllerManager = scene.game?.controller?.manager else { return }
         let isVirtualControllerAvailable = !controllerManager.virtualControllerElements.isEmpty
         if isVirtualControllerAvailable { scene.game?.controller?.hideVirtualController() }
+    }
+    
+    private func showHUD() {
+        hud?.addContent()
     }
     
     /// Start the scene transition.

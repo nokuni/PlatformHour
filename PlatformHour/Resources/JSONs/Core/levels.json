@@ -14,7 +14,7 @@
                 "name": "Exit",
                 "category": "important",
                 "coordinate": "1628"
-            },
+            }
         ],
         "structures": [
             {
@@ -24,12 +24,12 @@
                 "coordinate": "1700"
             }
         ],
-        "dialogs": [
+        "conversations": [
             {
-                "dialog": "Ancient Cavern Intro Dialog"
+                "conversation": "Ancient Cavern Intro Conversation"
             },
             {
-                "dialog": "Movement Power Up Dialog"
+                "conversation": "Movement Power Up Conversation"
             }
         ],
         "cinematics": [
@@ -39,7 +39,7 @@
             },
             {
                 "name": "Movement Power Up Cinematic",
-                "category": "onDialog"
+                "category": "onConversation"
             }
         ]
     },
@@ -175,7 +175,7 @@
                 "coordinate": "3000"
             }
         ],
-        "dialogs": [],
+        "conversations": [],
         "cinematics": []
     },
     {
@@ -200,7 +200,7 @@
                 "category": "important",
                 "coordinate": "2915",
                 "sizeGrowth": 1.1
-            },
+            }
         ],
         "structures": [
             {
@@ -231,14 +231,9 @@
                 "innerLayerAmount": 3,
                 "matrix": "1010",
                 "coordinate": "2050"
-            },
-        ],
-        "dialogs": [
-            {
-                "dialog": "Fly Power Up Dialog",
-                "triggerCoordinate": "2913"
             }
         ],
+        "conversations": [],
         "cinematics": []
     }
 ]

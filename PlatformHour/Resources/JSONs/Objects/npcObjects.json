@@ -1,5 +1,16 @@
 [
     {
+        "name": "Empty",
+        "image": "empty",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": true
+        },
+        "animation": [],
+    },
+    {
         "name": "Spirit",
         "image": "spirit0",
         "logic": {
@@ -17,33 +28,28 @@
                     "spirit2",
                     "spirit3"
                 ]
-            },
+            }
+        ],
+    },
+    {
+        "name": "Spirit Soul",
+        "image": "spiritSoulForm0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": false
+        },
+        "animation": [
             {
-                "identifier": "specialIdle",
+                "identifier": "idle",
                 "frames": [
                     "spiritSoulForm0",
                     "spiritSoulForm1",
-                    "spiritSoulForm2"
-                ]
-            },
-            {
-                "identifier": "powerUp",
-                "frames": [
-                    "powerUp0",
-                    "powerUp1",
-                    "powerUp2",
-                    "powerUp3",
-                    "powerUp4",
-                    "powerUp5",
-                    "spark0",
-                    "spark1",
-                    "spark2",
-                    "spark3",
-                    "spark4",
-                    "spark5",
-                    "spark6"
+                    "spiritSoulForm2",
+                    "spiritSoulForm3"
                 ]
             }
-        ],
+        ]
     },
 ]

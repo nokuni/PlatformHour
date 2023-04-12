@@ -76,6 +76,18 @@ public extension GameObject {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.containerObjects)
     }
     
+    /// Returns container objects of the game.
+    static var effects: [GameObject]? {
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.effectObjects)
+    }
+    
+    /// Returns all objects of the game.
+    static var all: [GameObject] {
+        let objects = [importants, npcs, enemies, collectibles, traps, containers, effects].compactMap { $0 }
+        let joinedObjects = objects.joined().map { $0 }
+        return joinedObjects
+    }
+    
     // MARK: - Gets
     
     /// Returns an important object by giving its name.
@@ -124,6 +136,18 @@ public extension GameObject {
             $0.name == name
         })
         return container
+    }
+    
+    /// Returns an effect object by giving its name.
+    static func getEffect(_ name: String) -> GameObject? {
+        let effect = GameObject.effects?.first(where: { $0.name == name })
+        return effect
+    }
+    
+    /// Returns an object by giving its name.
+    static func get(_ name: String) -> GameObject? {
+        let object = GameObject.all.first(where: { $0.name == name })
+        return object
     }
     
     // MARK: - Values

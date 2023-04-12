@@ -16,13 +16,13 @@ final public class GameSound {
     
     /// Play a step sound.
     public func step() {
-        try? manager.playSFX(name: GameConfiguration.soundKey.playerStep, volume: 0.1)
+        try? manager.playSFX(name: GameConfiguration.soundKey.playerStep, volume: GameConfiguration.sceneConfiguration.soundSFXVolume)
     }
     
     /// Play a landing sound.
     public func land(scene: GameScene) {
         if let landSound = scene.game?.world?.playerLandSound {
-            try? manager.playSFX(name: landSound, volume: 0.1)
+            try? manager.playSFX(name: landSound, volume: GameConfiguration.sceneConfiguration.soundSFXVolume)
         }
     }
     

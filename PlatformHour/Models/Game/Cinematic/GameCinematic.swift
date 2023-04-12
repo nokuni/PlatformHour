@@ -11,24 +11,31 @@ import Utility_Toolbox
 public struct GameCinematic: Codable {
     public init(name: String,
                 category: GameCinematic.Category,
-                actions: [GameCharacterCinematicAction],
-                dialogCompletion: String? = nil) {
+                actions: [CinematicAction],
+                conversationCompletion: String? = nil) {
         self.name = name
         self.category = category
         self.actions = actions
-        self.dialogCompletion = dialogCompletion
+        self.conversationCompletion = conversationCompletion
     }
     
     public let name: String
     public let category: Category
-    public let actions: [GameCharacterCinematicAction]
-    public var dialogCompletion: String?
+    public let actions: [CinematicAction]
+    public var conversationCompletion: String?
     
     public enum Category: String, Codable {
         case onLevelStart
         case onNodeAlteration
         case onPlayerCoordinate
-        case onDialog
+        case onConversation
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case category
+        case actions
+        case conversationCompletion
     }
 }
 
