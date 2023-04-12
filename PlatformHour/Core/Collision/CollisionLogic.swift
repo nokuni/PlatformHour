@@ -32,9 +32,9 @@ public final class CollisionLogic {
             }
             scene.player?.bag.append(collectibleData)
             scene.core?.hud?.updateGemScore()
-            scene.core?.animation?.destroyThenAnimate(scene: scene,
-                                                      node: object,
-                                                      timeInterval: 0.1)
+            scene.core?.animation?.delayedDestroy(scene: scene,
+                                                  node: object,
+                                                  timeInterval: 0.1)
         }
     }
     

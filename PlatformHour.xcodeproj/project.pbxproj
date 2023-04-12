@@ -264,51 +264,29 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		961946592996834D000859C8 /* Display */ = {
+		961946592996834D000859C8 /* HUD */ = {
 			isa = PBXGroup;
 			children = (
 				96EE96B829900E2B00273A9D /* GameHUD.swift */,
 			);
-			path = Display;
+			path = HUD;
 			sourceTree = "<group>";
 		};
 		9619465A29968361000859C8 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				96EE96B4298FF9BB00273A9D /* GameState.swift */,
 				96EE969A298FB1A000273A9D /* GameLogic.swift */,
-				96FE6313298C1E1600B2C614 /* CollisionLogic.swift */,
 				96540535298C27FB00620E76 /* ActionLogic.swift */,
-				964E7E4929C0FE5E003CE54B /* GameEvent.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
 		};
-		9619465B29968381000859C8 /* Essential */ = {
-			isa = PBXGroup;
-			children = (
-				96FE62AF298BAFAD00B2C614 /* GameCollision.swift */,
-				9654052B298C249600620E76 /* GameCamera.swift */,
-			);
-			path = Essential;
-			sourceTree = "<group>";
-		};
-		9619465C299683A6000859C8 /* Objects */ = {
-			isa = PBXGroup;
-			children = (
-				9654052F298C263E00620E76 /* GameEnvironment.swift */,
-				96540531298C270100620E76 /* GameContent.swift */,
-			);
-			path = Objects;
-			sourceTree = "<group>";
-		};
-		9619465D299683C6000859C8 /* Miscellaneous */ = {
+		9619465D299683C6000859C8 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
 				96FE62B4298BCF0B00B2C614 /* GameAnimation.swift */,
-				96EE96A5298FCE9E00273A9D /* GameSound.swift */,
 			);
-			path = Miscellaneous;
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		9625A9FD29E43F7B0089F309 /* Dialog */ = {
@@ -370,6 +348,63 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		964435BE29E6C78B00812B7A /* Collision */ = {
+			isa = PBXGroup;
+			children = (
+				96FE6313298C1E1600B2C614 /* CollisionLogic.swift */,
+				96FE62AF298BAFAD00B2C614 /* GameCollision.swift */,
+			);
+			path = Collision;
+			sourceTree = "<group>";
+		};
+		964435BF29E6C7A200812B7A /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				96EE96A5298FCE9E00273A9D /* GameSound.swift */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
+		964435C029E6C7C200812B7A /* State */ = {
+			isa = PBXGroup;
+			children = (
+				96EE96B4298FF9BB00273A9D /* GameState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		964435C129E6C7CB00812B7A /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				964E7E4929C0FE5E003CE54B /* GameEvent.swift */,
+			);
+			path = Event;
+			sourceTree = "<group>";
+		};
+		964435C229E6C7FC00812B7A /* Environment */ = {
+			isa = PBXGroup;
+			children = (
+				9654052F298C263E00620E76 /* GameEnvironment.swift */,
+			);
+			path = Environment;
+			sourceTree = "<group>";
+		};
+		964435C329E6C80600812B7A /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				96540531298C270100620E76 /* GameContent.swift */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
+		964435C429E6C81600812B7A /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				9654052B298C249600620E76 /* GameCamera.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
 		964E7E4D29C1FC6A003CE54B /* JSONs */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,12 +442,17 @@
 		9654052A298C248700620E76 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				9619465D299683C6000859C8 /* Miscellaneous */,
+				964435C429E6C81600812B7A /* Camera */,
+				964435C329E6C80600812B7A /* Content */,
+				964435C229E6C7FC00812B7A /* Environment */,
+				964435C129E6C7CB00812B7A /* Event */,
+				964435C029E6C7C200812B7A /* State */,
+				964435BF29E6C7A200812B7A /* Sound */,
+				964435BE29E6C78B00812B7A /* Collision */,
+				9619465D299683C6000859C8 /* Animation */,
 				9619465829968325000859C8 /* Controllers */,
-				9619465C299683A6000859C8 /* Objects */,
-				9619465B29968381000859C8 /* Essential */,
 				9619465A29968361000859C8 /* Logic */,
-				961946592996834D000859C8 /* Display */,
+				961946592996834D000859C8 /* HUD */,
 			);
 			path = Core;
 			sourceTree = "<group>";

@@ -29,15 +29,15 @@ final public class GameEnvironment {
 
 // MARK: - Informations
 
-extension GameEnvironment {
+public extension GameEnvironment {
     /// Current map.
-    public var mapMatrix: Matrix {
+    var mapMatrix: Matrix {
         guard let matrix = scene.game?.level?.mapMatrix.matrix else { return .zero }
         return Matrix(row: matrix.row, column: matrix.column)
     }
     
     /// Limits on the current map.
-    public var mapLimits: (top: Int?, right: Int?, bottom: Int?, left: Int?) {
+    var mapLimits: (top: Int?, right: Int?, bottom: Int?, left: Int?) {
         let playerCoordinate = scene.game?.level?.playerCoordinate.coordinate
         
         let top = 4
@@ -54,12 +54,12 @@ extension GameEnvironment {
     }
     
     /// Death limit of the current map.
-    public var deathLimit: Int {
+    var deathLimit: Int {
         mapMatrix.row - 1
     }
     
     /// Returns all tiles and objects on the current map.
-    public var allElements: [SKSpriteNode] {
+    var allElements: [SKSpriteNode] {
         let allTiles = map.tiles
         let allObjects = map.objects
         let allElements = allTiles + allObjects
@@ -67,23 +67,23 @@ extension GameEnvironment {
     }
     
     /// Returns coordinates from the objects on the current map.
-    public var collisionCoordinates: [Coordinate] {
+    var collisionCoordinates: [Coordinate] {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
         return coordinates
     }
     
     /// Returns true there is a collision with an object at a coordinate, false otherwise.
-    public func isCollidingWithObject(at coordinate: Coordinate) -> Bool {
+    func isCollidingWithObject(at coordinate: Coordinate) -> Bool {
         collisionCoordinates.contains(coordinate)
     }
 }
 
 // MARK: - Elements
 
-extension GameEnvironment {
+public extension GameEnvironment {
     /// Returns an unconfigured object node.
-    public func objectElement(name: String? = nil,
+    func objectElement(name: String? = nil,
                               physicsBodySizeTailoring: CGFloat = 0,
                               collision: Collision) -> PKObjectNode {
         
@@ -100,7 +100,7 @@ extension GameEnvironment {
     }
     
     /// Returns an object node configured for structures.
-    public var structureObjectElement: PKObjectNode {
+    var structureObjectElement: PKObjectNode {
         let collision = Collision(category: .structure,
                                   collision: [.player, .object, .playerProjectile, .enemyProjectile],
                                   contact: [.player, .object, .playerProjectile, .enemyProjectile])
@@ -169,7 +169,7 @@ extension GameEnvironment {
 
 // MARK: - Creations
 
-extension GameEnvironment {
+public extension GameEnvironment {
     /// Generate the current map.
     private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.sceneConfiguration.tileSize,
@@ -198,7 +198,7 @@ extension GameEnvironment {
     }
     
     /// Generate an animated pop up controller button.
-    public func createPopUpButton(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
+    func createPopUpButton(buttonSymbol: ControllerManager.ButtonSymbol, position: CGPoint) {
         
         let popUpButton = SKNode()
         popUpButton.name = GameConfiguration.nodeKey.popUpButton
@@ -221,10 +221,10 @@ extension GameEnvironment {
 
 // MARK: - Miscellaneous
 
-extension GameEnvironment {
+public extension GameEnvironment {
     /// Pause the current map.
-    public func pause() { map.isPaused = true }
+    func pause() { map.isPaused = true }
     
     /// Unpause the current map.
-    public func unpause() { map.isPaused = false }
+    func unpause() { map.isPaused = false }
 }

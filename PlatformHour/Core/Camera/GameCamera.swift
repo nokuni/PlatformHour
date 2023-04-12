@@ -26,11 +26,18 @@ final public class GameCamera {
     
     private let zoom = GameConfiguration.sceneConfiguration.cameraZoom
     private let catchUpDelay: CGFloat = GameConfiguration.sceneConfiguration.cameraCatchUpDelay
+}
+
+// MARK: - Configurations
+
+extension GameCamera {
     
+    /// Returns the value to reposition the camera.
     public var adjustement: CGFloat {
         GameConfiguration.sceneConfiguration.cameraAdjustement
     }
     
+    /// Returns the current position of the followed node.
     private var position : CGPoint {
         guard let followedObject = followedObject else { return .zero }
         let adjustedPosition = CGPoint(x: followedObject.position.x,
@@ -47,7 +54,7 @@ final public class GameCamera {
     }
     
     /// Set the limit of the camera.
-    private func setCameraLimit() {
+    private func limitOnBounds() {
         
         guard let topLimit = environment.mapLimits.top else { return }
         guard let rightLimit = environment.mapLimits.right else { return }
@@ -76,11 +83,16 @@ final public class GameCamera {
             camera.scene.camera?.run(SKAction.moveTo(y: maxCameraPosition.y, duration: GameConfiguration.sceneConfiguration.cameraCatchUpDelay))
         }
     }
+}
+
+// MARK: - Actions
+
+extension GameCamera {
     
     /// Follow the current selected object.
     public func follow() {
         guard isUpdatingMovement else { return }
         camera.move(to: position, catchUpDelay: catchUpDelay)
-        setCameraLimit()
+        limitOnBounds()
     }
 }

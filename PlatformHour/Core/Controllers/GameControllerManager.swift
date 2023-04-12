@@ -24,9 +24,14 @@ final public class GameControllerManager {
     public var action: ActionLogic
     
     public var manager: ControllerManager?
+}
+
+// MARK: - Setups
+
+public extension GameControllerManager {
     
     /// Setup the actions on the gamepad controller
-    public func setupActions() {
+    func setupActions() {
         manager?.action = ControllerManager.ControllerAction()
         
         // Cross
@@ -60,15 +65,20 @@ final public class GameControllerManager {
         manager?.observeControllers()
     }
     
-    /// Hide buttons from virtual controller.
-    public func hideVirtualController() {
-        manager?.disconnectVirtualController()
-        manager?.virtualControllerElements = []
-        manager?.connectVirtualController()
-    }
-    
     /// Setup the virtual controller.
     private func setupVirtualController() {
         manager?.virtualControllerElements = [.directionPad, .buttonA, .buttonB, .buttonX, .buttonY]
+    }
+}
+
+// MARK: - Actions
+
+public extension GameControllerManager {
+    
+    /// Hide buttons from virtual controller.
+    func hideVirtualController() {
+        manager?.disconnectVirtualController()
+        manager?.virtualControllerElements = []
+        manager?.connectVirtualController()
     }
 }

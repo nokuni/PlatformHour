@@ -24,24 +24,18 @@ final public class GameAnimation {
         case hit = "hit"
         case death = "death"
     }
-    
-    /// Shake the screen.
-    public func shakeScreen(scene: GameScene) {
-        guard let camera = scene.camera else { return }
-        let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
-        SKAction.animate(startCompletion: {
-            scene.core?.gameCamera?.isUpdatingMovement = false
-        }, action: shake, node: camera) {
-            scene.core?.gameCamera?.isUpdatingMovement = true
-        }
-    }
+}
+
+// MARK: - Effects
+
+public extension GameAnimation {
     
     /// Add a pulsing animation on a node.
-    public func addShadowPulseEffect(scene: GameScene,
-                                     node: SKSpriteNode,
-                                     growth: CGFloat = 1.1,
-                                     scaling: CGFloat = 1.1,
-                                     duration: TimeInterval = 0.5) {
+    func addShadowPulseEffect(scene: GameScene,
+                              node: SKSpriteNode,
+                              growth: CGFloat = 1.1,
+                              scaling: CGFloat = 1.1,
+                              duration: TimeInterval = 0.5) {
         let shadow = SKSpriteNode()
         shadow.size = node.size * growth
         shadow.texture = node.texture
@@ -65,7 +59,7 @@ final public class GameAnimation {
     }
     
     /// Add a gravity effect on a node.
-    public func addGravityEffect(on node: SKNode) {
+    func addGravityEffect(on node: SKNode) {
         let gravityEffectNode = SKSpriteNode()
         gravityEffectNode.name = GameConfiguration.nodeKey.gravityEffect
         gravityEffectNode.size = GameConfiguration.sceneConfiguration.tileSize
@@ -90,11 +84,11 @@ final public class GameAnimation {
     }
     
     /// Scene transition effect.
-    public func sceneTransitionEffect(scene: GameScene,
-                                      effectAction: SKAction,
-                                      isFadeIn: Bool = true,
-                                      isShowingTitle: Bool = true,
-                                      completion: (() -> Void)?) {
+    func sceneTransitionEffect(scene: GameScene,
+                               effectAction: SKAction,
+                               isFadeIn: Bool = true,
+                               isShowingTitle: Bool = true,
+                               completion: (() -> Void)?) {
         scene.isUserInteractionEnabled = false
         let effectNode = SKShapeNode(rectOf: scene.size * 3)
         effectNode.alpha = isFadeIn ? 1 : 0
@@ -119,7 +113,8 @@ final public class GameAnimation {
         effectNode.run(sequence)
     }
     
-    public func titleTransitionEffect(scene: GameScene) {
+    /// Title transition effect on the scene.
+    func titleTransitionEffect(scene: GameScene) {
         guard let world = scene.game?.world else { return }
         let textManager = TextManager()
         let attributedText = textManager.attributedText(parameter: .init(content: world.name, fontName: "Daydream", fontSize: 40, fontColor: .white, strokeWidth: -10, strokeColor: .black))
@@ -141,8 +136,8 @@ final public class GameAnimation {
         titleNode.run(sequence)
     }
     
-    /// Circular smoke animation.
-    public func circularSmoke(on node: SKNode) {
+    /// Add a circular smoke effect on a node.
+    func addCircularSmokeEffect(on node: SKNode) {
         let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let animationNode = SKSpriteNode()
         animationNode.size = CGSize(width: tileSize.width * 2, height: tileSize.height)
@@ -163,7 +158,20 @@ final public class GameAnimation {
         animationNode.run(sequence)
     }
     
-    public func orbSplitEffect(scene: GameScene, on position: CGPoint) {
+    /// Add a screen shake effect on the scene camera.
+    func addScreenShakeEffect(on scene: GameScene) {
+        guard let camera = scene.camera else { return }
+        let shake = SKAction.shake(duration: 0.1, amplitudeX: 25, amplitudeY: 25)
+        SKAction.animate(startCompletion: {
+            scene.core?.gameCamera?.isUpdatingMovement = false
+        }, action: shake, node: camera) {
+            scene.core?.gameCamera?.isUpdatingMovement = true
+        }
+    }
+    
+#warning("Effect not used")
+    /// Add an orb split effect at a position on the scene.
+    func orbSplitEffect(scene: GameScene, on position: CGPoint) {
         let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let positions = [
             CGPoint(x: position.x, y: position.y + tileSize.height),
@@ -201,12 +209,69 @@ final public class GameAnimation {
             orb.run(sequenceAnimation)
         }
     }
+}
+
+// MARK: - State ID animations
+
+public extension GameAnimation {
     
-    /// Remove a node then animate the removal.
-    public func destroyThenAnimate(scene: GameScene,
-                                   node: PKObjectNode,
-                                   timeInterval: TimeInterval = 0.05,
-                                   actionAfter: (() -> Void)? = nil) {
+    /// Animate a node with a state identifier.
+    func animate(node: PKObjectNode,
+                 identifier: StateID,
+                 filteringMode: SKTextureFilteringMode = .linear,
+                 timeInterval: TimeInterval = 0.05) -> SKAction {
+        guard node.animation(from: identifier.rawValue) != nil else { return SKAction.empty() }
+        let animation = node.animatedAction(with: identifier.rawValue,
+                                            filteringMode: filteringMode,
+                                            timeInterval: timeInterval)
+        return animation
+    }
+    
+    /// Animate a node with an idle state identifier.
+    func idle(node: PKObjectNode,
+              filteringMode: SKTextureFilteringMode = .linear,
+              timeInterval: TimeInterval = 0.05) {
+        let action = animate(node: node,
+                             identifier: .idle,
+                             filteringMode: filteringMode,
+                             timeInterval: timeInterval)
+        
+        node.run(SKAction.repeatForever(action))
+    }
+    
+    /// Animate a node with a hit state identifier.
+    func hit(node: PKObjectNode,
+             filteringMode: SKTextureFilteringMode = .linear,
+             timeInterval: TimeInterval = 0.05) {
+        node.run(animate(node: node,
+                         identifier: .hit,
+                         filteringMode: filteringMode,
+                         timeInterval: timeInterval))
+    }
+    
+    /// Animate a node with an death state identifier.
+    func destroy(node: PKObjectNode,
+                 filteringMode: SKTextureFilteringMode = .linear,
+                 timeInterval: TimeInterval = 0.05,
+                 actionAfter: (() -> Void)? = nil) {
+        guard node.animation(from: StateID.death.rawValue) != nil else { return }
+        
+        let sequence = SKAction.sequence([
+            animate(node: node,
+                    identifier: .death,
+                    filteringMode: filteringMode,
+                    timeInterval: timeInterval),
+            SKAction.removeFromParent(),
+        ])
+        
+        SKAction.animate(action: sequence, node: node, endCompletion: actionAfter)
+    }
+    
+    /// Remove a node then animate with its death state.
+    func delayedDestroy(scene: GameScene,
+                        node: PKObjectNode,
+                        timeInterval: TimeInterval = 0.05,
+                        actionAfter: (() -> Void)? = nil) {
         let animatedNode = PKObjectNode()
         animatedNode.size = node.size
         animatedNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
@@ -226,57 +291,5 @@ final public class GameAnimation {
         SKAction.animate(action: sequence, node: animatedNode, endCompletion: actionAfter)
         
         node.removeFromParent()
-    }
-    
-    /// Animate a node with a state identifier.
-    public func animate(node: PKObjectNode,
-                        identifier: StateID,
-                        filteringMode: SKTextureFilteringMode = .linear,
-                        timeInterval: TimeInterval = 0.05) -> SKAction {
-        guard node.animation(from: identifier.rawValue) != nil else { return SKAction.empty() }
-        let animation = node.animatedAction(with: identifier.rawValue,
-                                            filteringMode: filteringMode,
-                                            timeInterval: timeInterval)
-        return animation
-    }
-    
-    /// Animate a node with an idle state identifier.
-    public func idle(node: PKObjectNode,
-                     filteringMode: SKTextureFilteringMode = .linear,
-                     timeInterval: TimeInterval = 0.05) {
-        let action = animate(node: node,
-                             identifier: .idle,
-                             filteringMode: filteringMode,
-                             timeInterval: timeInterval)
-        
-        node.run(SKAction.repeatForever(action))
-    }
-    
-    /// Animate a node with a hit state identifier.
-    public func hit(node: PKObjectNode,
-                    filteringMode: SKTextureFilteringMode = .linear,
-                    timeInterval: TimeInterval = 0.05) {
-        node.run(animate(node: node,
-                         identifier: .hit,
-                         filteringMode: filteringMode,
-                         timeInterval: timeInterval))
-    }
-    
-    /// Animate a node with an death state identifier.
-    public func destroy(node: PKObjectNode,
-                        filteringMode: SKTextureFilteringMode = .linear,
-                        timeInterval: TimeInterval = 0.05,
-                        actionAfter: (() -> Void)? = nil) {
-        guard node.animation(from: StateID.death.rawValue) != nil else { return }
-        
-        let sequence = SKAction.sequence([
-            animate(node: node,
-                    identifier: .death,
-                    filteringMode: filteringMode,
-                    timeInterval: timeInterval),
-            SKAction.removeFromParent(),
-        ])
-        
-        SKAction.animate(action: sequence, node: node, endCompletion: actionAfter)
     }
 }

@@ -50,9 +50,9 @@ public final class GameLogic {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
             objectNode.physicsBody?.collisionBitMask = .zero
-            scene.core?.animation?.destroyThenAnimate(scene: scene,
-                                                      node: objectNode,
-                                                      timeInterval: 0.1)
+            scene.core?.animation?.delayedDestroy(scene: scene,
+                                                  node: objectNode,
+                                                  timeInterval: 0.1)
         }
     }
     
@@ -147,8 +147,8 @@ public final class GameLogic {
     private var playerLandAnimation: SKAction {
         guard let player = scene.player else { return SKAction.empty() }
         let action = SKAction.run {
-            self.scene.core?.animation?.circularSmoke(on: player.node)
-            self.scene.core?.animation?.shakeScreen(scene: self.scene)
+            self.scene.core?.animation?.addCircularSmokeEffect(on: player.node)
+            self.scene.core?.animation?.addScreenShakeEffect(on: self.scene)
             self.scene.core?.sound.land(scene: self.scene)
         }
         return action
@@ -185,7 +185,7 @@ public final class GameLogic {
         let drop = SKAction.sequence([
             fallAnimation(object: trapObject, speed: 500),
             SKAction.run {
-                self.scene.core?.animation?.destroyThenAnimate(scene: self.scene, node: trapObject, timeInterval: 0.1) {
+                self.scene.core?.animation?.delayedDestroy(scene: self.scene, node: trapObject, timeInterval: 0.1) {
                     self.scene.core?.content?.createLevelTrap(levelTrap)
                 }
             }

@@ -42,7 +42,7 @@ final public class GameContent {
 
 // MARK: - Level Generations
 
-extension GameContent {
+public extension GameContent {
     
     /// Generate the player on the current level.
     private func generateLevelPlayer() {
@@ -101,7 +101,7 @@ extension GameContent {
     }
     
     /// Generate the level exit on the current level.
-    public func generateLevelExit() {
+    func generateLevelExit() {
         guard let level = scene.game?.level else { return }
         guard let exit = level.exit else { return }
         guard let exitData = GameObject.getImportant(GameConfiguration.nodeKey.exit) else { return }
@@ -126,7 +126,7 @@ extension GameContent {
     }
     
     /// Generate the NPCs on the current level.
-    public func generateLevelNPCs() {
+    func generateLevelNPCs() {
         if let level = scene.game?.level {
             for npc in level.objects(category: .npc) {
                 createLevelNPC(npc)
@@ -135,7 +135,7 @@ extension GameContent {
     }
     
     /// Generate the traps on the current level.
-    public func generateLevelTraps() {
+    func generateLevelTraps() {
         if let level = scene.game?.level {
             for trap in level.objects(category: .trap) {
                 createLevelTrap(trap)
@@ -155,7 +155,7 @@ extension GameContent {
 
 // MARK: - Level Creations
 
-extension GameContent {
+public extension GameContent {
     
     /// Create a level container.
     private func createLevelContainer(_ levelContainer: LevelObject) {
@@ -220,7 +220,7 @@ extension GameContent {
     }
     
     /// Create a level NPC.
-    public func createLevelNPC(_ levelNPC: LevelObject) {
+    func createLevelNPC(_ levelNPC: LevelObject) {
         guard let npcData = GameObject.getNPC(levelNPC.name) else { return }
         
         let collision = Collision(category: .npc,
@@ -252,7 +252,7 @@ extension GameContent {
     }
     
     /// Create a trap.
-    public func createLevelTrap(_ levelTrap: LevelObject) {
+    func createLevelTrap(_ levelTrap: LevelObject) {
         guard let trapData = GameObject.getTrap(levelTrap.name) else { return }
         
         let collision = Collision(category: .enemy,
@@ -332,10 +332,10 @@ extension GameContent {
 
 // MARK: - Objects
 
-extension GameContent {
+public extension GameContent {
     
     /// Returns a default setuped object.
-    public func object(name: String? = nil,
+    func object(name: String? = nil,
                        physicsBodySizeTailoring: CGFloat = 0,
                        collision: Collision) -> PKObjectNode {
         
@@ -352,7 +352,7 @@ extension GameContent {
     }
     
     /// Returns an object setuped to be a player projectile.
-    public var projectileNode: PKObjectNode {
+    var projectileNode: PKObjectNode {
         guard let player = scene.player else { return PKObjectNode() }
         let currentRoll = player.currentRoll.rawValue
         
@@ -383,7 +383,7 @@ extension GameContent {
 
 // MARK: Configurations
 
-extension GameContent {
+public extension GameContent {
     
     /// Configure the player object.
     private func configurePlayer() {
@@ -426,10 +426,10 @@ extension GameContent {
 
 // MARK: - Creations
 
-extension GameContent {
+public extension GameContent {
     
     /// Create an NPC object.
-    public func createNPC(_ npc: GameObject, at coordinate: Coordinate) {
+    func createNPC(_ npc: GameObject, at coordinate: Coordinate) {
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
@@ -451,22 +451,22 @@ extension GameContent {
 
 // MARK: - Miscellaneous
 
-extension GameContent {
+public extension GameContent {
     
     /// Pause the generated content.
-    public func pause() {
+    func pause() {
         /*container.isPaused = true*/
     }
     
     /// Unpause the generated content.
-    public func unpause() {
+    func unpause() {
         /*container.isPaused = false*/
     }
 }
 
 // MARK: - Object Adds
 
-extension GameContent {
+public extension GameContent {
     
     /// Add a fixed intinerary movement to an enemy.
     private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
