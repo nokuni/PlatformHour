@@ -60,6 +60,8 @@ public final class GameLogic {
         guard let player = scene.player else { return }
         if isDestroyed(player.node) {
             player.death(scene: scene)
+            scene.core?.hud?.removeContent()
+            scene.game?.controller?.disable()
             scene.core?.animation?.sceneTransitionEffect(scene: scene,
                                                          effectAction: SKAction.fadeIn(withDuration: 2),
                                                          isFadeIn: false,
@@ -160,7 +162,7 @@ public final class GameLogic {
         let animation = SKAction.run {
             self.scene.player?.state.isJumping = false
             self.scene.core?.state.switchOn(newStatus: .inDefault)
-            self.enableControls()
+            self.scene.game?.controller?.action.enable()
             if action.isLongPressingDPad {
                 self.scene.player?.node.removeAllActions()
                 self.scene.game?.controller?.action.move(on: action.direction, by: action.movementSpeed)
@@ -229,7 +231,7 @@ public final class GameLogic {
         if player.actions.count == player.currentRoll.rawValue {
             let gravityEffect = scene.childNode(withName: GameConfiguration.nodeKey.gravityEffect)
             gravityEffect?.removeFromParent()
-            disableControls()
+            scene.game?.controller?.action.disable()
             performActionSequence()
         }
     }
@@ -270,20 +272,6 @@ public final class GameLogic {
                 player.state.hasProjectileTurningBack = false
             }
         }
-    }
-    
-    // MARK: - Controls
-    
-    /// Disable the controls on the scene.
-    public func disableControls() {
-        scene.game?.controller?.manager?.action = nil
-        scene.isUserInteractionEnabled = false
-    }
-    
-    /// Enable the controls on the scene.
-    public func enableControls() {
-        scene.game?.controller?.setupActions()
-        scene.isUserInteractionEnabled = true
     }
     
     // MARK: - Miscellaneous

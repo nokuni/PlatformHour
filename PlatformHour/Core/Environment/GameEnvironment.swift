@@ -45,10 +45,10 @@ public extension GameEnvironment {
         let bottom = mapMatrix.row - 6
         let left = playerCoordinate?.y
         
-//        let leftBoundaryLimit: Int = 8
-//        let rightBoundaryLimit: Int = 51
-//        let topBoundaryLimit: Int = 4
-//        let bottomBoundaryLimit: Int = 34
+        //        let leftBoundaryLimit: Int = 8
+        //        let rightBoundaryLimit: Int = 51
+        //        let topBoundaryLimit: Int = 4
+        //        let bottomBoundaryLimit: Int = 34
         
         return (top, right, bottom, left)
     }
@@ -84,12 +84,12 @@ public extension GameEnvironment {
 public extension GameEnvironment {
     /// Returns an unconfigured object node.
     func objectElement(name: String? = nil,
-                              physicsBodySizeTailoring: CGFloat = 0,
-                              collision: Collision) -> PKObjectNode {
+                       physicsBodySizeTailoring: CGFloat = 0,
+                       collision: Collision) -> PKObjectNode {
         
-        let object = PKObjectNode()
+        let texture = SKTexture()
+        let object = PKObjectNode(texture: texture, size: map.squareSize)
         object.name = name
-        object.size = map.squareSize
         
         object.applyPhysicsBody(
             size: object.size + physicsBodySizeTailoring,
@@ -174,7 +174,8 @@ public extension GameEnvironment {
     private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.sceneConfiguration.tileSize,
                         matrix: mapMatrix)
-        let texture = SKTexture(imageNamed: "leadSquare")
+        map.zPosition = GameConfiguration.sceneConfiguration.mapZPosition
+        let texture = SKTexture(imageNamed: GameConfiguration.imageKey.mapSquare)
         texture.filteringMode = .nearest
         map.drawTexture(texture)
         scene.addChildSafely(map)
@@ -185,16 +186,24 @@ public extension GameEnvironment {
         if let level = scene.game?.level {
             backgroundContainer.name = GameConfiguration.nodeKey.background
             scene.addChildSafely(backgroundContainer)
-            let tileSize = GameConfiguration.sceneConfiguration.tileSize
-            let centerPosition = map.centerPosition
-            let adjustement = GameConfiguration.sceneConfiguration.tileSize.height * CGFloat(level.background.adjustement)
-            let background = SKSpriteNode(imageNamed: level.background.image)
-            background.texture?.filteringMode = .nearest
-            background.size = CGSize(width: tileSize.width * CGFloat(map.matrix.column),
-                                     height: tileSize.width * CGFloat(map.matrix.row - level.background.adjustement))
-            background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
+            let background = background(level: level)
             backgroundContainer.addChildSafely(background)
         }
+    }
+    
+    /// Returns the level background.
+    private func background(level: GameLevel) -> SKSpriteNode {
+        let centerPosition = map.centerPosition
+        let adjustement = map.squareSize.height * CGFloat(level.background.adjustement)
+        let background = SKSpriteNode(imageNamed: level.background.image)
+        background.blendMode = .replace
+        background.texture?.filteringMode = .nearest
+        background.texture?.preload { }
+        background.size = CGSize(width: map.squareSize.width * CGFloat(map.matrix.column),
+                                 height: map.squareSize.width * CGFloat(map.matrix.row - level.background.adjustement))
+        background.zPosition = GameConfiguration.sceneConfiguration.backgroundZPosition
+        background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)
+        return background
     }
     
     /// Generate an animated pop up controller button.
@@ -212,7 +221,6 @@ public extension GameEnvironment {
         popUpButton.addChildSafely(button)
         
         if let sprites = controllerButtons(buttonSymbol) {
-            print(sprites)
             let action = SKAction.animate(with: sprites, filteringMode: .nearest, timePerFrame: 0.5)
             button.run(SKAction.repeatForever(action))
         }

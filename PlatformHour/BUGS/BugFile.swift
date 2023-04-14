@@ -7,12 +7,18 @@
 
 import SwiftUI
 
+// MARK: - Disturbance
+
+// When there is multiple inputs at the same time, the actions are added very fastly.
+
 // MARK: Bugs
+
+// 😀
 
 // MARK: - Feedbacks:
 
-// the game controller inputs are too much faster than the action sequence.
+// 😀
 
-// Explain more the power system on the intro conversation (and setup it later).
+// MARK: - Improvements
 
-// Changes a bit the intro text.
+// Click up effect on dialog tap.

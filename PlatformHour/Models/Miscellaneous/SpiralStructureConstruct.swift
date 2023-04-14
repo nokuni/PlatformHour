@@ -23,33 +23,33 @@ public class SpiralStructureConstruct {
     
     public var outlineCorner: SpiralStructurePattern.CornerPattern? {
         guard let patterns = StructurePattern.get(outline)?.corners else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let cornerPattern = SpiralStructurePattern.CornerPattern(
-            topLeft: SKTexture.filtered(patterns[0], by: .nearest),
-            topRight: SKTexture.filtered(patterns[1], by: .nearest),
-            bottomRight: SKTexture.filtered(patterns[2], by: .nearest),
-            bottomLeft: SKTexture.filtered(patterns[3], by: .nearest)
+            topLeft: textures[0],
+            topRight: textures[1],
+            bottomRight: textures[2],
+            bottomLeft: textures[3]
         )
         return cornerPattern
     }
     public var outlineBorder: SpiralStructurePattern.BorderPattern? {
         guard let patterns = StructurePattern.get(outline)?.borders else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let borderPattern = SpiralStructurePattern.BorderPattern(
-            top: [
-                SKTexture.filtered(patterns[0], by: .nearest),
-              SKTexture.filtered(patterns[1], by: .nearest),
-              SKTexture.filtered(patterns[2], by: .nearest)
-            ],
-            right: [
-              SKTexture.filtered(patterns[3], by: .nearest)
-            ],
-            bottom: [
-              SKTexture.filtered(patterns[4], by: .nearest),
-              SKTexture.filtered(patterns[5], by: .nearest),
-              SKTexture.filtered(patterns[6], by: .nearest)
-            ],
-            left: [
-              SKTexture.filtered(patterns[7], by: .nearest)
-            ]
+            top: [textures[0], textures[1], textures[2]],
+            right: [textures[3]],
+            bottom: [textures[4], textures[5], textures[6]],
+            left: [textures[7]]
         )
         return borderPattern
     }
@@ -57,34 +57,34 @@ public class SpiralStructureConstruct {
     public var firstLayerCorner: SpiralStructurePattern.CornerPattern? {
         guard let firstLayer = firstLayer else { return nil }
         guard let patterns = StructurePattern.get(firstLayer)?.corners else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let cornerPattern = SpiralStructurePattern.CornerPattern(
-            topLeft: SKTexture.filtered(patterns[0], by: .nearest),
-            topRight: SKTexture.filtered(patterns[1], by: .nearest),
-            bottomRight: SKTexture.filtered(patterns[2], by: .nearest),
-            bottomLeft: SKTexture.filtered(patterns[3], by: .nearest)
+            topLeft: textures[0],
+            topRight: textures[1],
+            bottomRight: textures[2],
+            bottomLeft: textures[3]
         )
         return cornerPattern
     }
     public var firstLayerBorder: SpiralStructurePattern.BorderPattern? {
         guard let firstLayer = firstLayer else { return nil }
         guard let patterns = StructurePattern.get(firstLayer)?.borders else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let borderPattern = SpiralStructurePattern.BorderPattern(
-            top: [
-                SKTexture.filtered(patterns[0], by: .nearest),
-              SKTexture.filtered(patterns[1], by: .nearest),
-              SKTexture.filtered(patterns[2], by: .nearest)
-            ],
-            right: [
-              SKTexture.filtered(patterns[3], by: .nearest)
-            ],
-            bottom: [
-              SKTexture.filtered(patterns[4], by: .nearest),
-              SKTexture.filtered(patterns[5], by: .nearest),
-              SKTexture.filtered(patterns[6], by: .nearest)
-            ],
-            left: [
-              SKTexture.filtered(patterns[7], by: .nearest)
-            ]
+            top: [textures[0], textures[1], textures[2]],
+            right: [textures[3]],
+            bottom: [textures[4], textures[5], textures[6]],
+            left: [textures[7]]
         )
         return borderPattern
     }
@@ -92,30 +92,34 @@ public class SpiralStructureConstruct {
     public var innerLayerCorner: SpiralStructurePattern.CornerPattern? {
         guard let innerLayer = innerLayer else { return nil }
         guard let patterns = StructurePattern.get(innerLayer)?.corners else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let cornerPattern = SpiralStructurePattern.CornerPattern(
-            topLeft: SKTexture.filtered(patterns[0], by: .nearest),
-            topRight: SKTexture.filtered(patterns[1], by: .nearest),
-            bottomRight: SKTexture.filtered(patterns[2], by: .nearest),
-            bottomLeft: SKTexture.filtered(patterns[3], by: .nearest)
+            topLeft: textures[0],
+            topRight: textures[1],
+            bottomRight: textures[2],
+            bottomLeft: textures[3]
         )
         return cornerPattern
     }
     public var innerLayerBorder: SpiralStructurePattern.BorderPattern? {
         guard let innerLayer = innerLayer else { return nil }
         guard let patterns = StructurePattern.get(innerLayer)?.borders else { return nil }
+        let atlas = SKTextureAtlas(named: "CavernGrounds")
+        let textures = patterns.map { atlas.textureNamed($0) }
+        textures.forEach {
+            $0.filteringMode = .nearest
+            $0.preload { }
+        }
         let borderPattern = SpiralStructurePattern.BorderPattern(
-            top: [
-                SKTexture.filtered(patterns[0], by: .nearest)
-            ],
-            right: [
-              SKTexture.filtered(patterns[1], by: .nearest)
-            ],
-            bottom: [
-              SKTexture.filtered(patterns[2], by: .nearest)
-            ],
-            left: [
-              SKTexture.filtered(patterns[3], by: .nearest)
-            ]
+            top: [textures[0]],
+            right: [textures[1]],
+            bottom: [textures[2]],
+            left: [textures[3]]
         )
         return borderPattern
     }

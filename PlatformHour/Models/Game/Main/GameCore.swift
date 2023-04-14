@@ -67,6 +67,12 @@ public extension GameCore {
         
         playBackgroundSound(scene: scene)
         
+        hud?.removeContent()
+        
+        setupControllers(scene: scene)
+        
+        scene.game?.controller?.disable()
+        
         start(scene: scene)
     }
     
@@ -76,7 +82,8 @@ public extension GameCore {
     }
     
     /// Instantiate the game controllers on the scene.
-    private func setupControllers(scene: GameScene) {
+    func setupControllers(scene: GameScene) {
+        guard scene.game?.controller == nil else { return }
         scene.game?.controller = GameControllerManager(scene: scene, state: state)
     }
     
@@ -89,33 +96,20 @@ public extension GameCore {
     /// Launchs the starting level cinematic.
     private func launchStartingCinematic(scene: GameScene) {
         if let cinematic = startingCinematic(scene: scene) {
-            scene.core?.event?.playCinematic(cinematic: cinematic)
-            hideHUD(scene: scene)
+            scene.game?.controller?.disable()
+            scene.core?.event?.startCinematic(levelCinematic: cinematic)
         } else {
-            showHUD()
+            scene.game?.controller?.enable()
+            scene.core?.hud?.addContent()
         }
-    }
-    
-    /// Hide the visible HUD elements on the screen.
-    private func hideHUD(scene: GameScene) {
-        hud?.removeContent()
-        guard let controllerManager = scene.game?.controller?.manager else { return }
-        let isVirtualControllerAvailable = !controllerManager.virtualControllerElements.isEmpty
-        if isVirtualControllerAvailable { scene.game?.controller?.hideVirtualController() }
-    }
-    
-    private func showHUD() {
-        hud?.addContent()
     }
     
     /// Start the scene transition.
     private func start(scene: GameScene) {
-        hideHUD(scene: scene)
         animation?.sceneTransitionEffect(scene: scene,
                                          effectAction: SKAction.fadeOut(withDuration: 2),
                                          isFadeIn: true,
                                          isShowingTitle: startingCinematic(scene: scene) == nil) {
-            self.setupControllers(scene: scene)
             self.launchStartingCinematic(scene: scene)
         }
     }

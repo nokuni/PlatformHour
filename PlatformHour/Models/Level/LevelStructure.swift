@@ -8,11 +8,13 @@
 import Foundation
 
 public struct LevelStructure: Codable {
-    public init(outline: String,
+    public init(atlasName: String,
+                outline: String,
                 firstLayer: String? = nil,
                 innerLayer: String? = nil,
                 innerLayerAmount: Int? = nil,
                 matrix: String, coordinate: String) {
+        self.atlasName = atlasName
         self.outline = outline
         self.firstLayer = firstLayer
         self.innerLayer = innerLayer
@@ -21,6 +23,7 @@ public struct LevelStructure: Codable {
         self.coordinate = coordinate
     }
     
+    public let atlasName: String
     public let outline: String
     public let firstLayer: String?
     public let innerLayer: String?
@@ -29,6 +32,7 @@ public struct LevelStructure: Codable {
     public let coordinate: String
     
     enum CodingKeys: String, CodingKey {
+        case atlasName
         case outline
         case firstLayer
         case innerLayer

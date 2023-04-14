@@ -317,7 +317,6 @@ public extension GameContent {
             enemyNode.physicsBody?.allowsRotation = false
             enemyNode.physicsBody?.affectedByGravity = false
             
-            print("Enemy added")
             scene.addChildSafely(enemyNode)
             
             if let runAnimation = enemyData.animation(stateID: .run),

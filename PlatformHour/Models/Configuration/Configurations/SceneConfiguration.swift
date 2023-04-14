@@ -11,6 +11,7 @@ import SwiftUI
 struct SceneConfiguration {
     
     // MARK: - ZPositions
+    let mapZPosition: CGFloat = 0
     let backgroundZPosition: CGFloat = 1
     let sceneryZPosition: CGFloat = 2
     let NPCZPosition: CGFloat = 3
@@ -24,7 +25,7 @@ struct SceneConfiguration {
     
     // MARK: - Camera
     let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25
-    let cameraCatchUpDelay: CGFloat = 0
+    let cameraCatchUpDelay: CGFloat = 0.05
     let cameraAdjustement: CGFloat = UIDevice.isOnPhone ?
     (CGSize.screen.height * 0.2) :
     (CGSize.screen.height * 0.3)
@@ -38,5 +39,12 @@ struct SceneConfiguration {
     var objectCollisionSizeTailoring: CGFloat { -tileSize.width * 0.5 }
     
     // MARK: - Sound
-    let soundSFXVolume: Float = 0.1
+    let soundStepVolume: Float = 0.2
+    let soundFallVolume: Float = 0.3
+    let soundBackgroundVolume: Float = 0.1
+    
+    // MARK: - Text
+    
+    let titleFont: String = "Daydream"
+    let textFont: String = "Outline Pixel7 Solid"
 }

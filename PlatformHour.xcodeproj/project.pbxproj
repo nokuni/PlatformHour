@@ -35,6 +35,7 @@
 		964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */; };
 		964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */; };
 		964435C629E6F81A00812B7A /* effectObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 964435C529E6F81900812B7A /* effectObjects.json */; };
+		964435D429E9C82200812B7A /* CavernGrounds.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 964435D329E9C82200812B7A /* CavernGrounds.atlas */; };
 		964626BB29CF6F9E00A872A5 /* SpiralStructureConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */; };
 		964626BD29CF6FDA00A872A5 /* SpiralStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
@@ -132,6 +133,7 @@
 		964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionMovement.swift; sourceTree = "<group>"; };
 		964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionEffect.swift; sourceTree = "<group>"; };
 		964435C529E6F81900812B7A /* effectObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = effectObjects.json; sourceTree = "<group>"; };
+		964435D329E9C82200812B7A /* CavernGrounds.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = CavernGrounds.atlas; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructureConstruct.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
@@ -670,6 +672,7 @@
 		96EE96A4298FCE5000273A9D /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				964435D329E9C82200812B7A /* CavernGrounds.atlas */,
 				962A0CC429891901004DB446 /* Assets.xcassets */,
 			);
 			path = Images;
@@ -807,6 +810,7 @@
 				96D60EF529D8A88F00D2C1C3 /* ChimeraBellsJ.wav in Resources */,
 				96D60EF129D8A88F00D2C1C3 /* ChimeraBellsD.wav in Resources */,
 				9601D6C329E1F020006624C6 /* npcObjects.json in Resources */,
+				964435D429E9C82200812B7A /* CavernGrounds.atlas in Resources */,
 				9601D6B629E1D038006624C6 /* collectibleObjects.json in Resources */,
 				96D60EF329D8A88F00D2C1C3 /* ChimeraBellsL.wav in Resources */,
 				9619466429968F0C000859C8 /* worlds.json in Resources */,

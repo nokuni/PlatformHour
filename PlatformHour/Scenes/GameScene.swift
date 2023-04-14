@@ -17,7 +17,7 @@ public final class GameScene: SKScene {
     public var core: GameCore?
     
     public func launch() {
-        setup(configuration: .init(backgroundColor: .white))
+        setup(configuration: .init(backgroundColor: .white, isIgnoringSiblingOrder: true))
         player = Player()
         game?.loadSave()
         game = Game.shared
@@ -27,7 +27,7 @@ public final class GameScene: SKScene {
     
     public override func didMove(to view: SKView) {
         launch()
-        core?.gameCamera?.camera.gesture(view)
+        //core?.gameCamera?.camera.gesture(view)
     }
     
     public override func update(_ currentTime: TimeInterval) {
@@ -57,24 +57,7 @@ public final class GameScene: SKScene {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        guard let touch = touches.first else { return }
-        
-        let location = touch.location(in: self)
-        let touchedNodes = nodes(at: location)
-        
-        guard !touchedNodes.isEmpty else { return }
-        
-        for touchedNode in touchedNodes {
-            if let name = touchedNode.name {
-                switch name {
-                case "Conversation Box":
-                    core?.hud?.passLine()
-                default:
-                    ()
-                }
-            }
-        }
+        core?.hud?.passLine()
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

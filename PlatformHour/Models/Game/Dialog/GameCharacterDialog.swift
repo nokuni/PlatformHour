@@ -9,19 +9,19 @@ import Foundation
 
 public struct GameCharacterDialog: Codable {
     public init(character: String,
-                spot: GameCharacterDialog.Spot,
+                side: Side,
                 lines: [String],
                 currentLineIndex: Int = 0,
                 isEndOfLine: Bool = false) {
         self.character = character
-        self.spot = spot
+        self.side = side
         self.lines = lines
         self.currentLineIndex = currentLineIndex
         self.isEndOfLine = isEndOfLine
     }
     
     public let character: String?
-    public let spot: Spot
+    public let side: Side
     public let lines: [String]
     public var currentLineIndex: Int = 0
     public var isEndOfLine: Bool = false
@@ -34,7 +34,7 @@ public struct GameCharacterDialog: Codable {
         }
     }
     
-    public enum Spot: String, Codable {
+    public enum Side: String, Codable {
         case left
         case right
         case none
@@ -42,7 +42,7 @@ public struct GameCharacterDialog: Codable {
     
     enum CodingKeys: String, CodingKey {
         case character
-        case spot
+        case side
         case lines
     }
 }

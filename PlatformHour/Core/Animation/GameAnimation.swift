@@ -85,7 +85,6 @@ public extension GameAnimation {
                                isFadeIn: Bool = true,
                                isShowingTitle: Bool = true,
                                completion: (() -> Void)?) {
-        scene.isUserInteractionEnabled = false
         let effectNode = SKShapeNode(rectOf: scene.size * 3)
         effectNode.alpha = isFadeIn ? 1 : 0
         effectNode.fillColor = .black
@@ -94,7 +93,12 @@ public extension GameAnimation {
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)
         let showTitleAction = SKAction.sequence([
-            SKAction.run { self.titleTransitionEffect(scene: scene) },
+            SKAction.run {
+                self.titleTransitionEffect(scene: scene) {
+                    scene.game?.controller?.enable()
+                    scene.core?.hud?.addContent()
+                }
+            },
             SKAction.wait(forDuration: 4)
         ])
         let completionAction = SKAction.run {
@@ -110,16 +114,20 @@ public extension GameAnimation {
     }
     
     /// Title transition effect on the scene.
-    func titleTransitionEffect(scene: GameScene) {
-        guard let world = scene.game?.world else { return }
+    func titleTransitionEffect(scene: GameScene, completion: (() -> Void)?) {
+        guard let level = scene.game?.level else { return }
         let textManager = TextManager()
-        let attributedText = textManager.attributedText(parameter: .init(content: world.name, fontName: "Daydream", fontSize: 40, fontColor: .white, strokeWidth: -10, strokeColor: .black))
+        let paramater = TextManager.Paramater(content: level.name,
+                                              fontName: GameConfiguration.sceneConfiguration.titleFont,
+                                              fontSize: 40,
+                                              fontColor: .white,
+                                              strokeWidth: -10,
+                                              strokeColor: .black)
+        let attributedText = textManager.attributedText(parameter: paramater)
         
         let titleNode = SKLabelNode(attributedText: attributedText)
         titleNode.alpha = 0
-        titleNode.fontName = "Daydream"
-        titleNode.fontSize = 40
-        titleNode.fontColor = .white
+        titleNode.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
         titleNode.position = scene.camera?.position ?? .zero
         scene.addChildSafely(titleNode)
         
@@ -129,7 +137,11 @@ public extension GameAnimation {
             SKAction.removeFromParent()
         ])
         
-        titleNode.run(sequence)
+        SKAction.animate(startCompletion: scene.game?.controller?.disable,
+                         action: sequence,
+                         node: titleNode) {
+            completion?()
+        }
     }
     
     /// Add a circular smoke effect on a node.

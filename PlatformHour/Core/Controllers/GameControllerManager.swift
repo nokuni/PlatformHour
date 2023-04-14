@@ -13,14 +13,11 @@ final public class GameControllerManager {
     
     public init(scene: GameScene, state: GameState) {
         self.scene = scene
-        self.state = state
-        self.action = ActionLogic(scene: scene, state: state)
-        print("Game Controller initialized ...")
+        self.action = ActionLogic(scene: scene)
         setupControllers()
     }
     
     public var scene: GameScene
-    public var state: GameState
     public var action: ActionLogic
     
     public var manager: ControllerManager?
@@ -47,8 +44,8 @@ public extension GameControllerManager {
                                                                   release: nil)
         
         // Triangle
-        manager?.action?.buttonY = ControllerManager.ButtonAction(press: action.actionY,
-                                                                  release: nil)
+        manager?.action?.buttonY = ControllerManager.ButtonAction(press: nil,
+                                                                  release: action.actionY)
         
         manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadAction,
                                                              rightPress: action.rightPadAction,
@@ -58,7 +55,7 @@ public extension GameControllerManager {
     }
     
     /// Setup the controllers
-    private func setupControllers() {
+    func setupControllers() {
         manager = ControllerManager(scene: scene)
         setupVirtualController()
         setupActions()
@@ -75,10 +72,17 @@ public extension GameControllerManager {
 
 public extension GameControllerManager {
     
-    /// Hide buttons from virtual controller.
-    func hideVirtualController() {
+    /// Disconnect the virtual controller, remove all controller observers and disable touch events.
+    func disable() {
+        manager?.disableVirtualController()
         manager?.disconnectVirtualController()
-        manager?.virtualControllerElements = []
+        scene.isUserInteractionEnabled = false
+    }
+    
+    /// Disconnect the virtual controller, remove all controller observers and disable touch events.
+    func enable() {
+        manager?.enableVirtualController()
         manager?.connectVirtualController()
+        scene.isUserInteractionEnabled = true
     }
 }

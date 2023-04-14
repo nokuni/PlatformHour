@@ -82,7 +82,6 @@ final public class GameCollision {
         guard let object = second.body.node as? PKObjectNode else { return }
         guard object.name == GameConfiguration.nodeKey.exit else { return }
         if manager.isColliding(first, with: second) {
-            print(object.coordinate)
             scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
             scene.player?.interactionStatus = .onExit
         }

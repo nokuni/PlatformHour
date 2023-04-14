@@ -8,15 +8,25 @@
 import Foundation
 
 struct NodeKey {
-    let popUpButton = "Pop up button"
-    let number = "Number"
-    let player = "Player"
-    let playerArrow = "Player Arrow"
-    let playerProjectile = "Player Projectile"
-    let statue = "Statue"
-    let pillar = "Pillar"
-    let exit = "Exit"
+    
+    // MARK: - Environment
+    
     let background = "Background"
+    let popUpButton = "Pop up button"
+    
+    // MARK: - Objects
+    let player = "Player"
+    let playerProjectile = "Player Projectile"
+    let exit = "Exit"
+    
+    // MARK: - Animation
     let gravityEffect = "Gravity Effect"
+    
+    // MARK: - HUD
     let playerAction = "Player Action"
+    let actionSquare = "Action Square"
+    let conversationBox = "Conversation Box"
+    
+    // MARK: - Text
+    let dialogText = "Dialog Text"
 }

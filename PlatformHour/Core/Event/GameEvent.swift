@@ -22,17 +22,19 @@ public final class GameEvent {
         guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
             return
         }
-        print("popUpButton removed")
         popUpButton.removeFromParent()
         scene.player?.interactionStatus = .none
     }
     
     /// Load the next level of the game.
     public func loadNextLevel() {
+        scene.core?.event?.dismissButtonPopUp()
+        scene.core?.hud?.removeContent()
+        scene.game?.controller?.disable()
         scene.core?.animation?.sceneTransitionEffect(scene: scene,
                                                      effectAction: SKAction.fadeIn(withDuration: 2),
                                                      isFadeIn: false,
-                                                     isShowingTitle: true,
+                                                     isShowingTitle: false,
                                                      completion: {
             self.scene.game?.setupNextLevel()
             self.restartLevel()
@@ -56,9 +58,6 @@ public final class GameEvent {
         scene.addChildSafely(timerNode)
         timerNode.start()
     }
-    
-    
-    // MARK: - Triggers
     
     // MARK: - Updates
     
@@ -110,26 +109,33 @@ public final class GameEvent {
     // MARK: - Cinematics
     
     /// Play a level cinematic.
-    public func playCinematic(cinematic: LevelCinematic) {
-        guard let level = scene.game?.level else { return }
-        guard let player = scene.player else { return }
-        guard cinematic.isAvailable else { return }
+    public func startCinematic(levelCinematic: LevelCinematic) {
+        guard levelCinematic.isAvailable else { return }
         
-        scene.game?.currentLevelCinematic = cinematic
+        scene.game?.currentLevelCinematic = levelCinematic
         scene.core?.state.switchOn(newStatus: .inCinematic)
-        if let cinematicData = GameCinematic.get(cinematic.name) {
-            let actions: [(SKAction, PKObjectNode)] = cinematicData.actions.compactMap {
+        playCinematicSequence(levelCinematic: levelCinematic)
+    }
+    
+    private func playCinematicSequence(levelCinematic: LevelCinematic) {
+        if let cinematic = GameCinematic.get(levelCinematic.name) {
+            let actions: [(SKAction, PKObjectNode)] = cinematic.actions.compactMap {
                 cinematicNodeAction(action: $0)
             }
             SKAction.nodesSequence(sequence: actions, endCompletion: {
-                if let conversation = cinematicData.conversationCompletion,
-                   let levelConversation = level.conversations.first(where: {
-                       $0.conversation == conversation
-                   }) {
-                    self.playConversation(levelConversation: levelConversation)
-                    self.scene.core?.gameCamera?.followedObject = player.node
-                }
+                self.cinematicSequence(cinematic: cinematic)
             })
+        }
+    }
+    
+    private func cinematicSequence(cinematic: GameCinematic) {
+        guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
+        if let conversation = cinematic.conversationCompletion,
+           let levelConversation = level.conversations.first(where: { $0.conversation == conversation }) {
+            self.playConversation(levelConversation: levelConversation)
+            self.scene.core?.gameCamera?.followedObject = player.node
+            self.scene.isUserInteractionEnabled = true
         }
     }
     
@@ -258,7 +264,7 @@ extension GameEvent {
         
         guard let cinematic = level.cinematics.first(where: { $0.triggerCoordinate?.coordinate == player.node.coordinate }) else { return }
         
-        playCinematic(cinematic: cinematic)
+        startCinematic(levelCinematic: cinematic)
     }
     
     /// Trigger an interaction pop up when the player is on specific coordinate.

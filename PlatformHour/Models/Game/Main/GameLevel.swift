@@ -10,6 +10,7 @@ import PlayfulKit
 
 public struct GameLevel: Codable {
     public init(id: Int,
+                name: String,
                 mapMatrix: String,
                 playerCoordinate: String,
                 musics: [String],
@@ -19,6 +20,7 @@ public struct GameLevel: Codable {
                 conversations: [LevelConversation],
                 cinematics: [LevelCinematic]) {
         self.id = id
+        self.name = name
         self.mapMatrix = mapMatrix
         self.playerCoordinate = playerCoordinate
         self.musics = musics
@@ -30,6 +32,7 @@ public struct GameLevel: Codable {
     }
     
     public let id: Int
+    public let name: String
     public let mapMatrix: String
     public let playerCoordinate: String
     public let musics: [String]

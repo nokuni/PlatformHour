@@ -5,21 +5,21 @@
         "dialogs": [
             {
                 "character": "Blue Spirit",
-                "spot": "right",
+                "side": "right",
                 "lines": [
                     "Finally free !"
                 ]
             },
             {
                 "character": "Dice",
-                "spot": "left",
+                "side": "left",
                 "lines": [
                     "..."
                 ]
             },
             {
                 "character": "Blue Spirit",
-                "spot": "right",
+                "side": "right",
                 "lines": [
                     "...",
                     "Oh no ! I did not pay attention ! This body is not a mage...neither a human.",
@@ -28,19 +28,19 @@
             },
             {
                 "character": "Dice",
-                "spot": "left",
+                "side": "left",
                 "lines": [
                     "..."
                 ]
             },
             {
                 "character": "Blue Spirit",
-                "spot": "right",
+                "side": "right",
                 "lines": [
                     "if you are now my host, it means you have a soul. But a dice does not have one. What happens to you ?",
                     "Well ... for now, we need to leave this place.",
-                    "I can't do anything without my host and right now, my powers are limited.",
-                    "I can only give you the power to move but it's enough to escape.",
+                    "I can't do anything without a... capable host.",
+                    "However, I can make you move.",
                     "Close your eyes ... Ah ! That's true, you are dice."
                 ]
             }
@@ -52,15 +52,9 @@
         "category": "onCinematic",
         "dialogs": [
             {
-                "spot": "none",
+                "side": "none",
                 "lines": [
-                    "You have the power to move now !"
-                ]
-            },
-            {
-                "spot": "none",
-                "lines": [
-                    "Press the left or right directional buttons to move. Try it !"
+                    "You have the power to move now !\nPress the left or right directional buttons to move."
                 ]
             }
         ]
@@ -71,7 +65,7 @@
         "dialogs": [
             {
                 "character": "Blue Spirit",
-                "spot": "right",
+                "side": "right",
                 "lines": [
                     "See ! That is my first line in the world of Paracia !",
                     "Right there ! Watch that crystal !"
@@ -79,7 +73,7 @@
             },
             {
                 "character": "Dice",
-                "spot": "left",
+                "side": "left",
                 "lines": [
                     "... ?"
                 ]

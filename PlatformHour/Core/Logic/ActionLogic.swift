@@ -11,12 +11,9 @@ import Utility_Toolbox
 
 public final class ActionLogic {
     
-    public init(scene: GameScene, state: GameState) {
+    public init(scene: GameScene) {
         self.scene = scene
-        self.state = state
     }
-    
-    public var state: GameState
     
     public enum Direction: String, CaseIterable {
         case none
@@ -134,6 +131,7 @@ public final class ActionLogic {
     
     /// Trigger right pad actions.
     public func rightPadAction() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             moveRight()
@@ -150,6 +148,7 @@ public final class ActionLogic {
     
     /// Trigger left pad actions.
     public func leftPadAction() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             moveLeft()
@@ -166,6 +165,7 @@ public final class ActionLogic {
     
     /// Trigger up pad actions.
     public func upPadAction() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             break
@@ -182,6 +182,7 @@ public final class ActionLogic {
     
     /// Trigger down pad actions.
     public func downPadAction() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             break
@@ -221,6 +222,7 @@ public final class ActionLogic {
     
     /// Trigger button A actions.
     public func actionA() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             jump()
@@ -242,6 +244,7 @@ public final class ActionLogic {
     
     /// Trigger button X actions.
     public func actionX() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             attack()
@@ -258,6 +261,7 @@ public final class ActionLogic {
     
     /// Trigger button Y actions.
     public func actionY() {
+        guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
             interact()
@@ -284,7 +288,7 @@ public final class ActionLogic {
         
         let action = jumpAction(player: player)
         
-        scene.core?.logic?.disableControls()
+        scene.game?.controller?.action.disable()
         player.state.isJumping = true
         player.node.run(action)
     }
@@ -315,17 +319,29 @@ public final class ActionLogic {
     // MARK: - Miscellaneous
     
     public func pause() {
+        guard let state = scene.core?.state else { return }
         scene.core?.content?.pause()
         state.switchOn(newStatus: .inPause)
         scene.core?.hud?.createPauseScreen()
     }
     
     public func unPause() {
+        guard let state = scene.core?.state else { return }
         if state.status == .inPause {
             scene.core?.content?.unpause()
             state.switchOnPreviousStatus()
             scene.core?.hud?.removePauseScreen()
         }
+    }
+    
+    public func disable() {
+        scene.game?.controller?.manager?.action = nil
+        scene.isUserInteractionEnabled = false
+    }
+    
+    public func enable() {
+        scene.game?.controller?.setupActions()
+        scene.isUserInteractionEnabled = true
     }
     
     // MARK: - Animations
@@ -344,16 +360,19 @@ public final class ActionLogic {
                 SKAction.move(to: $0, duration: 0.2)
             ])
         }
+        
         actions.append(SKAction.run {
             self.scene.core?.animation?.addGravityEffect(scene: self.scene, node: player.node)
-            self.state.switchOn(newStatus: .inAction)
+            self.scene.core?.state.switchOn(newStatus: .inAction)
             self.scene.core?.hud?.addActionSquares()
         })
+        
         let floatingSequence = SKAction.sequence([
             SKAction.moveBy(x: 0, y: -5, duration: 1),
             SKAction.moveBy(x: 0, y: 5, duration: 1)
         ])
         let floatingAnimation = SKAction.repeatForever(floatingSequence)
+        
         actions.append(floatingAnimation)
         
         let jumpSequence = SKAction.sequence(actions)

@@ -22,6 +22,7 @@ public class GameHUD {
     private let contentContainer = SKNode()
     private let actionSequence = SKNode()
     public let conversationBox = SKSpriteNode()
+    public let gemScore = SKNode()
     
     public var actionSquares: [SKSpriteNode] {
         let actionNodes = actionSequence.childNodes(named: "Action Square")
@@ -126,9 +127,13 @@ public class GameHUD {
     /// Ends the current dialog.
     private func endConversation() {
         if let cinematicAfterConversation = cinematicAfterConversation {
-            scene.core?.event?.playCinematic(cinematic: cinematicAfterConversation)
+            scene.core?.event?.startCinematic(levelCinematic: cinematicAfterConversation)
         } else {
             scene.core?.state.switchOn(newStatus: .inDefault)
+            scene.core?.animation?.titleTransitionEffect(scene: scene) {
+                self.scene.game?.controller?.enable()
+                self.scene.core?.hud?.addContent()
+            }
         }
         disableConversation()
         resetConversation()
@@ -197,6 +202,7 @@ public extension GameHUD {
     
     /// Adds the content on the content container.
     func addContent() {
+        removeContent()
         addGemScore()
         addActionSequenceBar()
     }
@@ -227,32 +233,29 @@ public extension GameHUD {
         
         guard let player = scene.player else { return }
         
-        let score = SKNode()
-        score.name = "Score"
-        score.setScale(0.8)
-        score.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
-        contentContainer.addChildSafely(score)
+        gemScore.setScale(0.8)
+        gemScore.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 40, bottom: 0, trailing: 0))
+        contentContainer.addChildSafely(gemScore)
         
-        let xLetter = SKSpriteNode(imageNamed: "xLetter")
-        xLetter.texture?.filteringMode = .nearest
-        xLetter.size = GameConfiguration.sceneConfiguration.tileSize
-        xLetter.position = CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width / 2, y: 0)
-        score.addChildSafely(xLetter)
+        let xMarkNode = SKSpriteNode(imageNamed: GameConfiguration.imageKey.xMark)
+        xMarkNode.texture?.filteringMode = .nearest
+        xMarkNode.size = GameConfiguration.sceneConfiguration.tileSize
+        xMarkNode.position = CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width / 2, y: 0)
+        gemScore.addChildSafely(xMarkNode)
         
-        player.bag.count.intoSprites(with: "indicator",
+        player.bag.count.intoSprites(with: GameConfiguration.imageKey.indicator,
                                      filteringMode: .nearest,
                                      spacing: 0.5,
                                      of: GameConfiguration.sceneConfiguration.tileSize,
                                      at: CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width * 1.5,
                                                  y: 0),
-                                     on: score)
+                                     on: gemScore)
         
-        let item = SKSpriteNode(imageNamed: "hudGem")
-        item.name = "Orb"
+        let item = SKSpriteNode(imageNamed: GameConfiguration.imageKey.hudBlueGem)
         item.texture?.filteringMode = .nearest
         item.size = GameConfiguration.sceneConfiguration.tileSize
         item.position = .zero
-        score.addChildSafely(item)
+        gemScore.addChildSafely(item)
     }
     
     /// Adds an action square on the action sequence bar.
@@ -263,7 +266,7 @@ public extension GameHUD {
         
         for index in 0..<player.currentRoll.rawValue {
             let action = SKSpriteNode(imageNamed: GameConfiguration.imageKey.actionSquare)
-            action.name = "Action Square \(index)"
+            action.name = "\(GameConfiguration.nodeKey.actionSquare) \(index)"
             action.texture?.filteringMode = .nearest
             action.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
             action.size = GameConfiguration.sceneConfiguration.tileSize
@@ -282,7 +285,7 @@ public extension GameHUD {
         let parameter = AssemblyManager.Parameter(axes: .horizontal, adjustement: .leading, horizontalSpacing: 1, verticalSpacing: 1, columns: 6)
         
         GameConfiguration.assemblyManager.createNodeCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
-            self.scene.core?.logic?.enableControls()
+            self.scene.game?.controller?.action.enable()
         })
     }
 }
@@ -303,8 +306,8 @@ public extension GameHUD {
     
     /// Removes the gem score from the layer.
     private func removeGemScore() {
-        let score = layer.childNode(withName: "Score")
-        score?.removeFromParent()
+        gemScore.removeAllChildren()
+        gemScore.removeFromParent()
     }
 }
 
@@ -315,12 +318,6 @@ public extension GameHUD {
     /// Adds the conversation box.
     func addConversationBox() {
         
-        configureConversationBox()
-        
-        layer.addChildSafely(conversationBox)
-        
-        addConversationArrow(node: conversationBox)
-        
         guard let levelConversation = scene.game?.currentLevelConversation else { return }
         guard let conversationData = GameConversation.get(levelConversation.conversation) else { return }
         
@@ -330,35 +327,46 @@ public extension GameHUD {
         
         guard let dialog = scene.game?.currentConversation else { return }
         
-        let dialogs = currentConversation.dialogs[dialog.currentDialogIndex]
+        let dialogCharacter = currentConversation.dialogs[dialog.currentDialogIndex]
         
-        if let conversationCharacter = dialogs.character,
+        configureConversationBox(dialogCharacter: dialogCharacter)
+        
+        layer.addChildSafely(conversationBox)
+        
+        addConversationArrow(node: conversationBox)
+        
+        if let conversationCharacter = dialogCharacter.character,
            let character = GameCharacter.get(conversationCharacter) {
-            addConversationCharacter(dialogs, gameCharacter: character, node: conversationBox)
+            addConversationCharacter(dialogCharacter, gameCharacter: character, node: conversationBox)
         }
         
         let lineIndex = currentConversation.dialogs[dialog.currentDialogIndex].currentLineIndex
         let text = currentConversation.dialogs[dialog.currentDialogIndex].lines[lineIndex]
         
         addConversationText(text, node: conversationBox)
+        
+        addSpeakerName(dialogCharacter, text: dialogCharacter.character ?? "???", node: conversationBox)
     }
     
     /// Configures the conversation box.
-    private func configureConversationBox() {
+    private func configureConversationBox(dialogCharacter: GameCharacterDialog) {
         
-        let dialogBoxTexture = SKTexture(imageNamed: "dialogBox")
+        let dialogBoxImage = dialogCharacter.side == .right ?
+        GameConfiguration.imageKey.dialogBoxRight :
+        GameConfiguration.imageKey.dialogBoxLeft
+        
+        let dialogBoxTexture = SKTexture(imageNamed: dialogBoxImage)
         dialogBoxTexture.filteringMode = .nearest
         
         let dialogBoxTextureSize = dialogBoxTexture.size()
         
         let position = layer.cornerPosition(corner: .bottomLeft, padding: EdgeInsets(top: 0, leading: CGSize.screen.width * 0.5, bottom: 100, trailing: 0))
         
-        conversationBox.name = "Conversation Box"
+        conversationBox.name = GameConfiguration.nodeKey.conversationBox
         conversationBox.size = dialogBoxTextureSize * 2.5
         conversationBox.texture = dialogBoxTexture
         conversationBox.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
         conversationBox.position = position
-        
     }
     
     /// Adds an animated arrow on the current conversation box.
@@ -392,11 +400,11 @@ public extension GameHUD {
         characterTexture.filteringMode = .nearest
         let characterTextureSize = characterTexture.size()
         
-        let padding = characterDialog.spot == .right ?
+        let padding = characterDialog.side == .right ?
         EdgeInsets(top: 50, leading: 0, bottom: 0, trailing:  150) :
         EdgeInsets(top: 50, leading: 150, bottom: 0, trailing:  0)
         
-        let corner: SKNode.QuadrilateralCorner = characterDialog.spot == .right ? .topRight : .topLeft
+        let corner: SKNode.QuadrilateralCorner = characterDialog.side == .right ? .topRight : .topLeft
         
         let character = SKSpriteNode()
         character.size = characterTextureSize * 6
@@ -408,11 +416,40 @@ public extension GameHUD {
     
     /// Add a text on the conversation box.
     private func addConversationText(_ text: String, node: SKNode) {
-        let parameter = TextManager.Paramater(content: text, fontName: "Outline Pixel7 Solid", fontSize: 20, fontColor: .black, lineSpacing: 10, padding: EdgeInsets(top: 25, leading: 25, bottom: 0, trailing: 25))
+        let padding = EdgeInsets(top: 45, leading: 25, bottom: 0, trailing: 25)
+        let parameter = TextManager.Paramater(content: text,
+                                              fontName: GameConfiguration.sceneConfiguration.textFont,
+                                              fontSize: 20,
+                                              fontColor: .black,
+                                              lineSpacing: 5,
+                                              padding: padding)
         let dialogText = PKTypewriterNode(container: node, parameter: parameter)
         dialogText.name = "Dialog Text"
         node.addChildSafely(dialogText)
         dialogText.start()
         scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
+    }
+    
+    /// Add the speaker name to the conversation box.
+    private func addSpeakerName(_ characterDialog: GameCharacterDialog, text: String, node: SKNode) {
+        let textManager = TextManager()
+        
+        let parameter = TextManager.Paramater(content: text,
+                                              fontName: GameConfiguration.sceneConfiguration.titleFont,
+                                              fontSize: 10,
+                                              fontColor: .white,
+                                              horizontalAlignmentMode: .center)
+        
+        let padding = characterDialog.side == .right ?
+        EdgeInsets(top: 140, leading: 0, bottom: 0, trailing:  135) :
+        EdgeInsets(top: 140, leading: 135, bottom: 0, trailing:  0)
+        
+        let corner: SKNode.QuadrilateralCorner = characterDialog.side == .right ? .topRight : .topLeft
+        
+        let attributedText = textManager.attributedText(parameter: parameter)
+        let dialogText = SKLabelNode(attributedText: attributedText)
+        dialogText.name = "Dialog Text"
+        dialogText.position = layer.cornerPosition(corner: corner, padding: padding)
+        node.addChildSafely(dialogText)
     }
 }

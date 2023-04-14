@@ -21,7 +21,7 @@ final public class GameCamera {
     public var environment: GameEnvironment
     
     public var camera: CameraManager
-    public var isUpdatingMovement: Bool = true
+    public var isUpdatingMovement: Bool = false
     public var followedObject: PKObjectNode?
     
     private let zoom = GameConfiguration.sceneConfiguration.cameraZoom

@@ -1,11 +1,12 @@
 [
     {
         "id": 0,
+        "name": "Crystal Room",
         "mapMatrix": "2030",
         "playerCoordinate": "1614",
         "musics": ["cavernBS.wav", "cavernBS_2.wav"],
         "background": {
-            "image": "introCavernBackground",
+            "image": "crystalRoomBackground",
             "adjustement": 2
         },
         "objects": [
@@ -18,6 +19,7 @@
         ],
         "structures": [
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "matrix": "0330",
@@ -45,6 +47,7 @@
     },
     {
         "id": 1,
+        "name": "Cavernous Depths",
         "mapMatrix": "4060",
         "playerCoordinate": "2908",
         "musics": [
@@ -52,7 +55,7 @@
             "cavernBS_2.wav"
         ],
         "background": {
-            "image": "cavernBackground",
+            "image": "cavernousDepthsBackground",
             "adjustement": 5
         },
         "objects": [
@@ -167,6 +170,7 @@
         ],
         "structures": [
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "innerLayer": "Cavern Inner Layer",
@@ -180,11 +184,12 @@
     },
     {
         "id": 2,
+        "name": "Bright Bottom",
         "mapMatrix": "4060",
         "playerCoordinate": "2908",
         "musics": ["cavern_power_BS.wav"],
         "background": {
-            "image": "cavernBackground2",
+            "image": "brightBottomBackground",
             "adjustement": 5
         },
         "objects": [
@@ -204,6 +209,7 @@
         ],
         "structures": [
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "innerLayer": "Cavern Inner Layer",
@@ -212,11 +218,13 @@
                 "coordinate": "3000"
             },
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "matrix": "0210",
                 "coordinate": "2830"
             },
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "innerLayer": "Cavern Inner Layer",
@@ -225,6 +233,7 @@
                 "coordinate": "2540"
             },
             {
+                "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "innerLayer": "Cavern Inner Layer",
