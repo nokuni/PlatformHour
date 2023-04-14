@@ -47,108 +47,71 @@ public extension GameContent {
     /// Generate the player on the current level.
     private func generateLevelPlayer() {
         configurePlayer()
-        if let player = scene.player {
-            scene.addChildSafely(player.node)
-        }
+        guard let player = scene.player else { return }
+        scene.addChildSafely(player.node)
     }
     
     /// Generate the enemies on the current level.
     private func generateLevelEnemies() {
-        if let level = scene.game?.level {
-            for enemy in level.objects(category: .enemy) {
-                createLevelEnemy(enemy)
-            }
+        guard let level = scene.game?.level else { return }
+        for enemy in level.objects(category: .enemy) {
+            createLevelEnemy(enemy)
         }
     }
     
     /// Generate the structures on the current level.
     private func generateLevelStructures() {
         guard let level = scene.game?.level else { return }
-        
         for structure in level.structures {
-            
-            let construct = SpiralStructureConstruct(outline: structure.outline,
-                                                     firstLayer: structure.firstLayer,
-                                                     innerLayer: structure.innerLayer)
-            
-            let outlinePattern = construct.outlinePattern
-            let firstLayerPattern = construct.firstLayerPattern
-            let innerPatterns = construct.innerPatterns(structure: structure)
-            
-            var patterns = [outlinePattern, firstLayerPattern]
-            patterns.append(contentsOf: innerPatterns)
-            
-            let safePatterns = patterns.compactMap { $0 }
-            
-            let mapStructure = SpiralStructurePattern.Structure(patterns: safePatterns)
-            
-            let pattern = SpiralStructurePattern(map: environment.map,
-                                                 matrix: structure.matrix.matrix,
-                                                 coordinate: structure.coordinate.coordinate,
-                                                 object: environment.structureObjectElement,
-                                                 structure: mapStructure)
-            pattern.create()
+            createLevelStructure(structure: structure)
         }
     }
     
     /// Generate the gems on the current level.
     private func generateLevelCollectibles() {
-        if let level = scene.game?.level {
-            for collectible in level.objects(category: .collectible) {
-                createLevelCollectible(collectible)
-            }
+        guard let level = scene.game?.level else { return }
+        for collectible in level.objects(category: .collectible) {
+            createLevelCollectible(collectible)
         }
     }
     
     /// Generate the level exit on the current level.
-    func generateLevelExit() {
+    private func generateLevelExit() {
         guard let level = scene.game?.level else { return }
-        guard let exit = level.exit else { return }
-        guard let exitData = GameObject.getImportant(GameConfiguration.nodeKey.exit) else { return }
+        guard let levelExit = level.exit else { return }
+        guard let exitObject = GameObject.getImportant(GameConfiguration.nodeKey.exit) else { return }
         
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
-        let coordinate = exit.coordinate.coordinate
-        
-        guard let exitPosition = environment.map.tilePosition(from: coordinate) else { return }
-        
         let exitNode = environment.objectElement(name: GameConfiguration.nodeKey.exit,
                                                  physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                  collision: collision)
-        exitNode.coordinate = coordinate
-        exitNode.texture = SKTexture(imageNamed: exitData.image)
-        exitNode.texture?.filteringMode = .nearest
-        exitNode.position = exitPosition
-        exitNode.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(exitNode)
+        createLevelObject(node: exitNode, levelObject: levelExit, gameObject: exitObject)
     }
     
     /// Generate the NPCs on the current level.
-    func generateLevelNPCs() {
-        if let level = scene.game?.level {
-            for npc in level.objects(category: .npc) {
-                createLevelNPC(npc)
-            }
+    private func generateLevelNPCs() {
+        guard let level = scene.game?.level else { return }
+        for npc in level.objects(category: .npc) {
+            createLevelNPC(npc)
         }
     }
     
     /// Generate the traps on the current level.
-    func generateLevelTraps() {
-        if let level = scene.game?.level {
-            for trap in level.objects(category: .trap) {
-                createLevelTrap(trap)
-            }
+    private func generateLevelTraps() {
+        guard let level = scene.game?.level else { return }
+        for trap in level.objects(category: .trap) {
+            createLevelTrap(trap)
         }
     }
     
     /// Generate an containers on the current level.
     private func generateLevelContainers() {
-        if let level = scene.game?.level {
-            for container in level.objects(category: .container) {
-                createLevelContainer(container)
-            }
+        guard let level = scene.game?.level else { return }
+        for container in level.objects(category: .container) {
+            createLevelContainer(container)
         }
     }
 }
@@ -191,58 +154,36 @@ public extension GameContent {
     
     /// Create a level collectible.
     private func createLevelCollectible(_ levelCollectible: LevelObject) {
+        guard let collectibleObject = GameObject.getCollectible(levelCollectible.name) else { return }
         
-        if let collectibleData = GameObject.getCollectible(levelCollectible.name) {
-            
-            guard let position = environment.map.tilePosition(from: levelCollectible.coordinate.coordinate) else {
-                return
-            }
-            
-            let collision = Collision(category: .item,
-                                      collision: [.structure],
-                                      contact: [.player])
-            
-            let itemNode = environment.objectElement(name: collectibleData.name,
-                                                     physicsBodySizeTailoring: -(GameConfiguration.sceneConfiguration.tileSize.width / 2),
-                                                     collision: collision)
-            
-            itemNode.texture = SKTexture(imageNamed: collectibleData.image)
-            itemNode.texture?.filteringMode = .nearest
-            itemNode.animations = collectibleData.animations
-            itemNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
-            itemNode.position = position
-            itemNode.physicsBody?.isDynamic = false
-            itemNode.physicsBody?.affectedByGravity = false
-            scene.addChildSafely(itemNode)
-            
-            animation.idle(node: itemNode, filteringMode: .nearest, timeInterval: 0.1)
-        }
+        let collision = Collision(category: .item,
+                                  collision: [.structure],
+                                  contact: [.player])
+        
+        let collectibleNode = environment.objectElement(name: collectibleObject.name,
+                                                        physicsBodySizeTailoring: -(GameConfiguration.sceneConfiguration.tileSize.width / 2),
+                                                        collision: collision)
+        
+        createLevelObject(node: collectibleNode,
+                          levelObject: levelCollectible,
+                          gameObject: collectibleObject)
+        
+        animation.idle(node: collectibleNode, filteringMode: .nearest, timeInterval: 0.1)
     }
     
     /// Create a level NPC.
-    func createLevelNPC(_ levelNPC: LevelObject) {
-        guard let npcData = GameObject.getNPC(levelNPC.name) else { return }
+    private func createLevelNPC(_ levelNPC: LevelObject) {
+        guard let npcObject = GameObject.getNPC(levelNPC.name) else { return }
         
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
                                   contact: [.player])
         
-        let coordinate = levelNPC.coordinate.coordinate
-        
-        guard let npcPosition = environment.map.tilePosition(from: coordinate) else { return }
-        
         let npcObjectNode = environment.objectElement(name: levelNPC.name,
                                                       physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                       collision: collision)
         
-        npcObjectNode.animations = npcData.animations
-        npcObjectNode.coordinate = coordinate
-        npcObjectNode.size = environment.map.squareSize * CGFloat(levelNPC.sizeGrowth)
-        npcObjectNode.texture = SKTexture(imageNamed: npcData.image)
-        npcObjectNode.texture?.filteringMode = .nearest
-        npcObjectNode.position = npcPosition
-        npcObjectNode.physicsBody?.affectedByGravity = false
-        scene.addChildSafely(npcObjectNode)
+        createLevelObject(node: npcObjectNode, levelObject: levelNPC, gameObject: npcObject)
         
         let animation = animation.animate(node: npcObjectNode, identifier: .idle, filteringMode: .nearest, timeInterval: 0.1)
         
@@ -324,6 +265,48 @@ public extension GameContent {
                 addEnemyItinerary(enemy: enemyNode, itinerary: itinerary, frames: runAnimation.frames)
             }
         }
+    }
+    
+    /// Create a level structure.
+    private func createLevelStructure(structure: LevelStructure) {
+        let construct = SpiralStructureConstruct(outline: structure.outline,
+                                                 firstLayer: structure.firstLayer,
+                                                 innerLayer: structure.innerLayer)
+        
+        let outlinePattern = construct.outlinePattern
+        let firstLayerPattern = construct.firstLayerPattern
+        let innerPatterns = construct.innerPatterns(structure: structure)
+        
+        var patterns = [outlinePattern, firstLayerPattern]
+        patterns.append(contentsOf: innerPatterns)
+        
+        let safePatterns = patterns.compactMap { $0 }
+        
+        let mapStructure = SpiralStructurePattern.Structure(patterns: safePatterns)
+        
+        let pattern = SpiralStructurePattern(map: environment.map,
+                                             matrix: structure.matrix.matrix,
+                                             coordinate: structure.coordinate.coordinate,
+                                             object: environment.structureObjectElement,
+                                             structure: mapStructure)
+        pattern.create()
+    }
+    
+    /// Create level object
+    private func createLevelObject(node: PKObjectNode, levelObject: LevelObject, gameObject: GameObject) {
+        let coordinate = levelObject.coordinate.coordinate
+        
+        guard let position = environment.map.tilePosition(from: coordinate) else { return }
+        
+        node.animations = gameObject.animations
+        node.coordinate = coordinate
+        node.size = environment.map.squareSize * CGFloat(levelObject.sizeGrowth)
+        node.texture = SKTexture(imageNamed: gameObject.image)
+        node.texture?.filteringMode = .nearest
+        node.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
+        node.position = position
+        node.physicsBody?.affectedByGravity = false
+        scene.addChildSafely(node)
     }
 }
 

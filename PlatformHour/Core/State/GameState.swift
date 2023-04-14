@@ -21,15 +21,21 @@ public final class GameState {
         case inCinematic
         case inPause
     }
+}
+
+// MARK: - Updates
+
+public extension GameState {
     
-    public func switchOn(newStatus: Status) {
+    /// Switch the current game state to a new one.
+    func switchOn(newStatus: Status) {
         previousStatus = status
         status = newStatus
     }
     
-    public func switchOnPreviousStatus() {
-        if let previousStatus = previousStatus {
-            status = previousStatus
-        }
+    /// Switch the current game state to the previous one.
+    func switchOnPreviousStatus() {
+        guard let previousStatus = previousStatus else { return }
+        status = previousStatus
     }
 }

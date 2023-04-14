@@ -81,6 +81,8 @@ public class Player {
     
     public var state = PlayerState()
     
+    public var isAnimating: Bool { node.hasActions() }
+    
     public var interactionStatus: PlayerInteractionStatus = .none
     public var actions: [SequenceAction] = []
     

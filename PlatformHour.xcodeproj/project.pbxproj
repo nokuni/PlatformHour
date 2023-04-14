@@ -36,6 +36,7 @@
 		964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */; };
 		964435C629E6F81A00812B7A /* effectObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 964435C529E6F81900812B7A /* effectObjects.json */; };
 		964435D429E9C82200812B7A /* CavernGrounds.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 964435D329E9C82200812B7A /* CavernGrounds.atlas */; };
+		964435D629E9F8B900812B7A /* ActionLogicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435D529E9F8B900812B7A /* ActionLogicConfiguration.swift */; };
 		964626BB29CF6F9E00A872A5 /* SpiralStructureConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */; };
 		964626BD29CF6FDA00A872A5 /* SpiralStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
@@ -134,6 +135,7 @@
 		964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionEffect.swift; sourceTree = "<group>"; };
 		964435C529E6F81900812B7A /* effectObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = effectObjects.json; sourceTree = "<group>"; };
 		964435D329E9C82200812B7A /* CavernGrounds.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = CavernGrounds.atlas; sourceTree = "<group>"; };
+		964435D529E9F8B900812B7A /* ActionLogicConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionLogicConfiguration.swift; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructureConstruct.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 		9601D6B829E1D0F6006624C6 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				964435D529E9F8B900812B7A /* ActionLogicConfiguration.swift */,
 				9625A9FB29E30D810089F309 /* GameAnimationEffect.swift */,
 			);
 			path = Others;
@@ -330,7 +333,7 @@
 		962A0CBF29891900004DB446 /* PlatformHour */ = {
 			isa = PBXGroup;
 			children = (
-				96EE96BA2990143500273A9D /* BUGS */,
+				96EE96BA2990143500273A9D /* Unused */,
 				96EE9699298EB1F500273A9D /* App */,
 				96EE9696298EB14C00273A9D /* Supporting Files */,
 				9654052A298C248700620E76 /* Core */,
@@ -678,12 +681,12 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
-		96EE96BA2990143500273A9D /* BUGS */ = {
+		96EE96BA2990143500273A9D /* Unused */ = {
 			isa = PBXGroup;
 			children = (
 				96EE96BB2990143F00273A9D /* BugFile.swift */,
 			);
-			path = BUGS;
+			path = Unused;
 			sourceTree = "<group>";
 		};
 		96FE62A2298AE57600B2C614 /* Game Characters */ = {
@@ -869,6 +872,7 @@
 				96540532298C270100620E76 /* GameContent.swift in Sources */,
 				964E7E6829C462D3003CE54B /* GameConfiguration.swift in Sources */,
 				96D60F1929DF640B00D2C1C3 /* StructurePattern.swift in Sources */,
+				964435D629E9F8B900812B7A /* ActionLogicConfiguration.swift in Sources */,
 				964E7E5329C26092003CE54B /* GameObjectAnimation.swift in Sources */,
 				96540522298C21F800620E76 /* GameObject.swift in Sources */,
 				964E7E5C29C46240003CE54B /* SoundKey.swift in Sources */,

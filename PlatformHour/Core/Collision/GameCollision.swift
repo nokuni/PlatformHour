@@ -56,36 +56,11 @@ final public class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
     }
-    
-    /// When the player projectile collides with a structure.
-    private func projectileTouchStructure(_ first: CollisionManager.NodeBody,
-                                          with second: CollisionManager.NodeBody) {
-        guard let projectile = first.body.node as? PKObjectNode else { return }
-        if manager.isColliding(first, with: second) {
-            projectile.removeAllActions()
-            scene.player?.state.hasProjectileTurningBack = true
-        }
-    }
-    
-    /// When the player collides with a collectible.
-    private func playerTouchCollectible(_ first: CollisionManager.NodeBody,
-                                        with second: CollisionManager.NodeBody) {
-        guard let object = second.body.node as? PKObjectNode else { return }
-        if manager.isColliding(first, with: second) {
-            collisionLogic.pickUpCollectible(object: object)
-        }
-    }
-    
-    /// When the player is on the coordinate of the exit.
-    private func playerOnExit(_ first: CollisionManager.NodeBody,
-                              with second: CollisionManager.NodeBody) {
-        guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameConfiguration.nodeKey.exit else { return }
-        if manager.isColliding(first, with: second) {
-            scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
-            scene.player?.interactionStatus = .onExit
-        }
-    }
+}
+
+// MARK: - Touchs
+
+public extension GameCollision {
     
     /// When the player collides with the ground of a structure.
     private func playerTouchGround(_ first: CollisionManager.NodeBody,
@@ -110,6 +85,41 @@ final public class GameCollision {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
         if manager.isColliding(first, with: second) {
             collisionLogic.playerDropOnEnemy(enemyNode)
+        }
+    }
+    
+    /// When the player projectile collides with a structure.
+    private func projectileTouchStructure(_ first: CollisionManager.NodeBody,
+                                          with second: CollisionManager.NodeBody) {
+        guard let projectile = first.body.node as? PKObjectNode else { return }
+        if manager.isColliding(first, with: second) {
+            projectile.removeAllActions()
+            scene.player?.state.hasProjectileTurningBack = true
+        }
+    }
+    
+    /// When the player collides with a collectible.
+    private func playerTouchCollectible(_ first: CollisionManager.NodeBody,
+                                        with second: CollisionManager.NodeBody) {
+        guard let object = second.body.node as? PKObjectNode else { return }
+        if manager.isColliding(first, with: second) {
+            collisionLogic.pickUpCollectible(object: object)
+        }
+    }
+}
+
+// MARK: - Coordinates
+
+public extension GameCollision {
+    
+    /// When the player is on the coordinate of the exit.
+    private func playerOnExit(_ first: CollisionManager.NodeBody,
+                              with second: CollisionManager.NodeBody) {
+        guard let object = second.body.node as? PKObjectNode else { return }
+        guard object.name == GameConfiguration.nodeKey.exit else { return }
+        if manager.isColliding(first, with: second) {
+            scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
+            scene.player?.interactionStatus = .onExit
         }
     }
 }

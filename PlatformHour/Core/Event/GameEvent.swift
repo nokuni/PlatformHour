@@ -16,100 +16,71 @@ public final class GameEvent {
     }
     
     public var scene: GameScene
+}
+
+// MARK: - Triggers
+
+public extension GameEvent {
     
-    /// Dismiss the current pop up button.
-    public func dismissButtonPopUp() {
-        guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
-            return
+    /// Trigger a level conversation on when the player is on a specific coordinate.
+    func triggerConversationOnCoordinate() {
+        guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
+        
+        if let levelConversation = level.conversations.first(where: {
+            $0.triggerCoordinate?.coordinate == player.node.coordinate
+        }) {
+            playConversation(levelConversation: levelConversation)
         }
-        popUpButton.removeFromParent()
-        scene.player?.interactionStatus = .none
     }
     
-    /// Load the next level of the game.
-    public func loadNextLevel() {
-        scene.core?.event?.dismissButtonPopUp()
-        scene.core?.hud?.removeContent()
-        scene.game?.controller?.disable()
-        scene.core?.animation?.sceneTransitionEffect(scene: scene,
-                                                     effectAction: SKAction.fadeIn(withDuration: 2),
-                                                     isFadeIn: false,
-                                                     isShowingTitle: false,
-                                                     completion: {
-            self.scene.game?.setupNextLevel()
-            self.restartLevel()
-        })
+    /// Trigger a level cinematic when the player is on a specific coordinate.
+    func triggerCinematicOnCoordinate() {
+        guard let level = scene.game?.level else { return }
+        guard let player = scene.player else { return }
+        
+        guard let cinematic = level.cinematics.first(where: { $0.triggerCoordinate?.coordinate == player.node.coordinate }) else { return }
+        
+        startCinematic(levelCinematic: cinematic)
     }
     
-    /// Restart the current level of the game.
-    public func restartLevel(delayedBy seconds: Double = 0) {
-        let configuration = PKTimerNode.TimerConfiguration(countdown: seconds,
-                                                           counter: 1,
-                                                           timeInterval: 1,
-                                                           actionOnLaunch: nil,
-                                                           actionOnGoing: nil,
-                                                           actionOnEnd: {
-            self.scene.removeAllActions()
-            self.scene.removeAllChildren()
-            self.scene.launch()
-        },
-                                                           isRepeating: true)
-        let timerNode = PKTimerNode(configuration: configuration)
-        scene.addChildSafely(timerNode)
-        timerNode.start()
+    /// Trigger an interaction pop up when the player is on specific coordinate.
+    func triggerInteractionPopUp(at coordinate: Coordinate) {
+        guard let environment = scene.core?.environment else { return }
+        if let position = environment.map.tilePosition(from: coordinate) {
+            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.sceneConfiguration.tileSize.height * 2))
+            environment.createPopUpButton(buttonSymbol: .y, position: buttonPosition)
+        }
     }
     
-    // MARK: - Updates
-    
-    /// Updates player coordinate
-    public func updatePlayerCoordinate() {
+    /// Trigger the player death fall.
+    func triggerPlayerDeathFall() {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
-        
-        let element = environment.allElements.first { $0.contains(player.node.position) }
-        
-        if let tileElement = element as? PKTileNode {
-            player.node.coordinate = tileElement.coordinate
+        guard player.node.coordinate.x >= environment.deathLimit else {
+            return
         }
         
-        if let objectElement = element as? PKObjectNode {
-            player.node.coordinate = objectElement.coordinate
+        player.state.isDead = true
+        
+        if player.state.isDead {
+            player.state.isDead = false
+            scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                         effectAction: SKAction.fadeIn(withDuration: 2),
+                                                         isFadeIn: false,
+                                                         isShowingTitle: false) {
+                self.restartLevel()
+            }
         }
     }
+}
+
+// MARK: - Cinematics
+
+public extension GameEvent {
     
-    //    public func updatePlatformCoordinates() {
-    //        guard let environment = scene.core?.environment else { return }
-    //        let platform = environment.map.objects.first { $0.name == "Platform" }
-    //        guard let platform = platform else { return }
-    //
-    //        let element = environment.allElements.first {
-    //            $0.contains(platform.position)
-    //        }
-    //
-    //        if let tileElement = element as? PKTileNode {
-    //            platform.coordinate = tileElement.coordinate
-    //        }
-    //
-    //        if let objectElement = element as? PKObjectNode {
-    //            platform.coordinate = objectElement.coordinate
-    //        }
-    //    }
-    
-    // MARK: - Conversations
-    
-    /// Play the current conversation.
-    public func playConversation(levelConversation: LevelConversation) {
-        guard levelConversation.isAvailable else { return }
-        
-        scene.game?.currentLevelConversation = levelConversation
-        scene.core?.state.switchOn(newStatus: .inConversation)
-        scene.core?.hud?.addConversationBox()
-    }
-    
-    // MARK: - Cinematics
-    
-    /// Play a level cinematic.
-    public func startCinematic(levelCinematic: LevelCinematic) {
+    /// Start a level cinematic.
+    func startCinematic(levelCinematic: LevelCinematic) {
         guard levelCinematic.isAvailable else { return }
         
         scene.game?.currentLevelCinematic = levelCinematic
@@ -117,6 +88,7 @@ public final class GameEvent {
         playCinematicSequence(levelCinematic: levelCinematic)
     }
     
+    /// Play a level cinematic sequence
     private func playCinematicSequence(levelCinematic: LevelCinematic) {
         if let cinematic = GameCinematic.get(levelCinematic.name) {
             let actions: [(SKAction, PKObjectNode)] = cinematic.actions.compactMap {
@@ -128,6 +100,7 @@ public final class GameEvent {
         }
     }
     
+    /// The cinematic sequence.
     private func cinematicSequence(cinematic: GameCinematic) {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
@@ -241,59 +214,84 @@ public final class GameEvent {
     }
 }
 
-// MARK: - Triggers
+// MARK: - Conversations
 
-extension GameEvent {
+public extension GameEvent {
     
-    /// Trigger a level conversation on when the player is on a specific coordinate.
-    public func triggerConversationOnCoordinate() {
-        guard let level = scene.game?.level else { return }
-        guard let player = scene.player else { return }
+    /// Play the current conversation.
+    func playConversation(levelConversation: LevelConversation) {
+        guard levelConversation.isAvailable else { return }
         
-        if let levelConversation = level.conversations.first(where: {
-            $0.triggerCoordinate?.coordinate == player.node.coordinate
-        }) {
-            playConversation(levelConversation: levelConversation)
+        scene.game?.currentLevelConversation = levelConversation
+        scene.core?.state.switchOn(newStatus: .inConversation)
+        scene.core?.hud?.addConversationBox()
+    }
+}
+
+// MARK: - Updates
+
+public extension GameEvent {
+    
+    /// Updates player coordinate
+    func updatePlayerCoordinate() {
+        guard let player = scene.player else { return }
+        guard let environment = scene.core?.environment else { return }
+        
+        let element = environment.allElements.first { $0.contains(player.node.position) }
+        
+        if let tileElement = element as? PKTileNode {
+            player.node.coordinate = tileElement.coordinate
+        }
+        
+        if let objectElement = element as? PKObjectNode {
+            player.node.coordinate = objectElement.coordinate
         }
     }
     
-    /// Trigger a level cinematic when the player is on a specific coordinate.
-    public func triggerCinematicOnCoordinate() {
-        guard let level = scene.game?.level else { return }
-        guard let player = scene.player else { return }
-        
-        guard let cinematic = level.cinematics.first(where: { $0.triggerCoordinate?.coordinate == player.node.coordinate }) else { return }
-        
-        startCinematic(levelCinematic: cinematic)
-    }
-    
-    /// Trigger an interaction pop up when the player is on specific coordinate.
-    public func triggerInteractionPopUp(at coordinate: Coordinate) {
-        guard let environment = scene.core?.environment else { return }
-        if let position = environment.map.tilePosition(from: coordinate) {
-            let buttonPosition = CGPoint(x: position.x, y: position.y + (GameConfiguration.sceneConfiguration.tileSize.height * 2))
-            environment.createPopUpButton(buttonSymbol: .y, position: buttonPosition)
-        }
-    }
-    
-    /// Trigger the player death fall.
-    public func triggerPlayerDeathFall() {
-        guard let player = scene.player else { return }
-        guard let environment = scene.core?.environment else { return }
-        guard player.node.coordinate.x >= environment.deathLimit else {
+    /// Dismiss the current pop up button.
+    func dismissButtonPopUp() {
+        guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
             return
         }
-        
-        player.state.isDead = true
-        
-        if player.state.isDead {
-            player.state.isDead = false
-            scene.core?.animation?.sceneTransitionEffect(scene: scene,
-                                                         effectAction: SKAction.fadeIn(withDuration: 2),
-                                                         isFadeIn: false,
-                                                         isShowingTitle: false) {
-                self.restartLevel()
-            }
-        }
+        popUpButton.removeFromParent()
+        scene.player?.interactionStatus = .none
+    }
+}
+
+// MARK: - Levels
+
+public extension GameEvent {
+    
+    /// Load the next level of the game.
+    func loadNextLevel() {
+        scene.core?.event?.dismissButtonPopUp()
+        scene.core?.hud?.removeContent()
+        scene.game?.controller?.disable()
+        scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                     effectAction: SKAction.fadeIn(withDuration: 2),
+                                                     isFadeIn: false,
+                                                     isShowingTitle: false,
+                                                     completion: {
+            self.scene.game?.setupNextLevel()
+            self.restartLevel()
+        })
+    }
+    
+    /// Restart the current level of the game.
+    func restartLevel(delayedBy seconds: Double = 0) {
+        let configuration = PKTimerNode.TimerConfiguration(countdown: seconds,
+                                                           counter: 1,
+                                                           timeInterval: 1,
+                                                           actionOnLaunch: nil,
+                                                           actionOnGoing: nil,
+                                                           actionOnEnd: {
+            self.scene.removeAllActions()
+            self.scene.removeAllChildren()
+            self.scene.launch()
+        },
+                                                           isRepeating: true)
+        let timerNode = PKTimerNode(configuration: configuration)
+        scene.addChildSafely(timerNode)
+        timerNode.start()
     }
 }
