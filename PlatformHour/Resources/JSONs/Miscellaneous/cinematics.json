@@ -64,7 +64,7 @@
                 "startingCoordinate": "1614",
                 "effect": {
                     "stateIDIdentifier": "effect",
-                    "repeatCount": 1,
+                    "repeatCount": 3,
                     "isRepeatingForever": false
                 },
                 "isFollowedByCamera": false

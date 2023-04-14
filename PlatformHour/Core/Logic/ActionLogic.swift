@@ -244,8 +244,11 @@ public extension ActionLogic {
         }
         
         actions.append(SKAction.run {
-            self.scene.core?.animation?.addGravityEffect(scene: self.scene, node: player.node)
-            self.scene.core?.state.switchOn(newStatus: .inAction)
+            self.scene.core?.animation?.addObjectEffect(keyName: GameConfiguration.nodeKey.sparkEffect,
+                                                        scene: self.scene,
+                                                        node: player.node,
+                                                        timeInterval: 0.1,
+                                                        isRepeatingForever: true)
             self.scene.core?.hud?.addActionSquares()
         })
         

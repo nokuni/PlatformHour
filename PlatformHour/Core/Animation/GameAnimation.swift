@@ -57,15 +57,17 @@ public extension GameAnimation {
         shadow.run(SKAction.repeatForever(animation))
     }
     
-    /// Add a gravity effect on a node.
-    func addGravityEffect(scene: GameScene, node: PKObjectNode) {
-        
-        let keyName = GameConfiguration.nodeKey.gravityEffect
-        
+    /// Adds an object effect on a node.
+    func addObjectEffect(keyName: String,
+                         scene: GameScene,
+                         node: PKObjectNode,
+                         timeInterval: TimeInterval = 0.05,
+                         repeatCount: Int = 1,
+                         isRepeatingForever: Bool = false) {
         guard let content = scene.core?.content else { return }
         guard let effectObject = GameObject.getEffect(keyName) else { return }
         
-        let effectNode = content.createObject(effectObject, at: node.coordinate)
+        let effectNode = content.createObject(effectObject, node: node)
         effectNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
         effectNode.name = keyName
         
@@ -74,9 +76,13 @@ public extension GameAnimation {
         let animation = animate(node: effectNode,
                                 identifier: .effect,
                                 filteringMode: .nearest,
-                                timeInterval: 0.05)
-        
-        effectNode.run(SKAction.repeatForever(animation))
+                                timeInterval: timeInterval)
+        switch true {
+        case isRepeatingForever:
+            effectNode.run(SKAction.repeatForever(animation))
+        default:
+            effectNode.run(SKAction.repeat(animation, count: repeatCount))
+        }
     }
     
     /// Scene transition effect.

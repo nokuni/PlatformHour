@@ -21,6 +21,7 @@ struct NodeKey {
     
     // MARK: - Animation
     let gravityEffect = "Gravity Effect"
+    let sparkEffect = "Spark Effect"
     
     // MARK: - HUD
     let playerAction = "Player Action"

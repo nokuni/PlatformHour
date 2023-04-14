@@ -285,6 +285,7 @@ public extension GameHUD {
         let parameter = AssemblyManager.Parameter(axes: .horizontal, adjustement: .leading, horizontalSpacing: 1, verticalSpacing: 1, columns: 6)
         
         GameConfiguration.assemblyManager.createNodeCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
+            self.scene.core?.state.switchOn(newStatus: .inAction)
             self.scene.game?.controller?.action.enable()
         })
     }

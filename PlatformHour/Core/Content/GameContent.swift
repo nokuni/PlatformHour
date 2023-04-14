@@ -432,6 +432,25 @@ public extension GameContent {
         
         return objectNode
     }
+    
+    /// Creates and returns an object node.
+    func createObject(_ object: GameObject, node: PKObjectNode) -> PKObjectNode {
+        let collision = Collision(category: .object,
+                                  collision: [.allClear],
+                                  contact: [.allClear])
+        
+        let objectNode = environment.objectElement(name: object.name,
+                                                   physicsBodySizeTailoring: GameConfiguration.sceneConfiguration.objectCollisionSizeTailoring,
+                                                   collision: collision)
+        
+        objectNode.animations = object.animations
+        objectNode.texture = SKTexture(imageNamed: object.image)
+        objectNode.texture?.filteringMode = .nearest
+        objectNode.physicsBody?.affectedByGravity = false
+        node.addChildSafely(objectNode)
+        
+        return objectNode
+    }
 }
 
 // MARK: - Miscellaneous

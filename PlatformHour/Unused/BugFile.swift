@@ -14,7 +14,7 @@ import SwiftUI
 // MARK: Bugs
 
 // 😀
-// actions arrows does not display sometimes when in action sequence.
+// actions arrows does not display sometimes when in action sequence (inconsistent).
 
 // MARK: - Feedbacks:
 

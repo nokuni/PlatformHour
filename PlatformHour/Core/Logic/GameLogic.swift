@@ -67,8 +67,6 @@ public extension GameLogic {
     func resolveSequenceOfActions() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
-            let gravityEffect = scene.childNode(withName: GameConfiguration.nodeKey.gravityEffect)
-            gravityEffect?.removeFromParent()
             scene.game?.controller?.action.disable()
             performActionSequence()
         }
@@ -94,6 +92,8 @@ public extension GameLogic {
         guard let player = scene.player else { return }
         player.actions.removeAll()
         self.scene.core?.hud?.removeActionSquares()
+        let sparkEffect = player.node.childNode(withName: GameConfiguration.nodeKey.sparkEffect)
+        sparkEffect?.removeFromParent()
     }
 }
 
