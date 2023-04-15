@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct GameCharacterDialog: Codable {
-    public init(character: String,
+struct GameCharacterDialog: Codable {
+    init(character: String,
                 side: Side,
                 lines: [String],
                 currentLineIndex: Int = 0,
@@ -20,11 +20,11 @@ public struct GameCharacterDialog: Codable {
         self.isEndOfLine = isEndOfLine
     }
     
-    public let character: String?
-    public let side: Side
-    public let lines: [String]
-    public var currentLineIndex: Int = 0
-    public var isEndOfLine: Bool = false
+    let character: String?
+    let side: Side
+    let lines: [String]
+    var currentLineIndex: Int = 0
+    var isEndOfLine: Bool = false
     
     mutating func moveOnNextLine() {
         if lines.canGoNext(currentLineIndex) {
@@ -34,7 +34,7 @@ public struct GameCharacterDialog: Codable {
         }
     }
     
-    public enum Side: String, Codable {
+    enum Side: String, Codable {
         case left
         case right
         case none

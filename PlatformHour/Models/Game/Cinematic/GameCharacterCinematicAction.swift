@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct CinematicAction: Codable {
-    public init(id: Int,
+struct CinematicAction: Codable {
+    init(id: Int,
                 objectName: String,
                 startingCoordinate: String?,
                 movement: GameCharacterCinematicActionMovement,
@@ -22,12 +22,12 @@ public struct CinematicAction: Codable {
         self.isFollowedByCamera = isFollowedByCamera
     }
     
-    public let id: Int
-    public let objectName: String
-    public let startingCoordinate: String?
-    public let movement: GameCharacterCinematicActionMovement?
-    public let effect: GameCharacterCinematicActionEffect?
-    public let isFollowedByCamera: Bool
+    let id: Int
+    let objectName: String
+    let startingCoordinate: String?
+    let movement: GameCharacterCinematicActionMovement?
+    let effect: GameCharacterCinematicActionEffect?
+    let isFollowedByCamera: Bool
     
     enum CodingKeys: String, CodingKey {
         case id

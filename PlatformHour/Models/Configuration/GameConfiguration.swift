@@ -7,7 +7,7 @@
 
 import PlayfulKit
 
-public struct GameConfiguration {
+struct GameConfiguration {
     
     // MARK: Keys
     static let soundKey = SoundKey()

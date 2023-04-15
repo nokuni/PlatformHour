@@ -8,21 +8,21 @@
 import SpriteKit
 import PlayfulKit
 
-final public class GameCamera {
+final class GameCamera {
     
-    public init(scene: GameScene, environment: GameEnvironment) {
+    init(scene: GameScene, environment: GameEnvironment) {
         self.scene = scene
         self.environment = environment
         camera = CameraManager(scene: scene)
         configure()
     }
     
-    public var scene: GameScene
-    public var environment: GameEnvironment
+    var scene: GameScene
+    var environment: GameEnvironment
     
-    public var camera: CameraManager
-    public var isUpdatingMovement: Bool = false
-    public var followedObject: PKObjectNode?
+    var camera: CameraManager
+    var isUpdatingMovement: Bool = false
+    var followedObject: PKObjectNode?
     
     private let zoom = GameConfiguration.sceneConfiguration.cameraZoom
     private let catchUpDelay: CGFloat = GameConfiguration.sceneConfiguration.cameraCatchUpDelay
@@ -33,7 +33,7 @@ final public class GameCamera {
 extension GameCamera {
     
     /// Returns the value to reposition the camera.
-    public var adjustement: CGFloat {
+    var adjustement: CGFloat {
         GameConfiguration.sceneConfiguration.cameraAdjustement
     }
     
@@ -63,7 +63,7 @@ extension GameCamera {
         
         let minimumCoordinate = Coordinate(x: topLimit, y: leftLimit)
         let maximumCoordinate = Coordinate(x: bottomLimit, y: rightLimit)
-
+        
         guard let minCameraPosition = environment.map.tilePosition(from: minimumCoordinate) else { return }
         guard let maxCameraPosition = environment.map.tilePosition(from: maximumCoordinate) else { return }
         
@@ -90,7 +90,7 @@ extension GameCamera {
 extension GameCamera {
     
     /// Follow the current selected object.
-    public func follow() {
+    func follow() {
         guard isUpdatingMovement else { return }
         camera.move(to: position, catchUpDelay: catchUpDelay)
         limitOnBounds()

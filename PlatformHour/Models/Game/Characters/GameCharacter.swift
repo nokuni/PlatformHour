@@ -7,15 +7,15 @@
 
 import Foundation
 
-public struct GameCharacter: Codable {
+struct GameCharacter: Codable {
     
-    public init(name: String, fullArt: String) {
+    init(name: String, fullArt: String) {
         self.name = name
         self.fullArt = fullArt
     }
     
-    public let name: String
-    public let fullArt: String
+    let name: String
+    let fullArt: String
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -23,7 +23,7 @@ public struct GameCharacter: Codable {
     }
 }
 
-public extension GameCharacter {
+extension GameCharacter {
     
     /// Returns all the game characters of the game.
     static var all: [GameCharacter]? {

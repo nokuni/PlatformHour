@@ -7,21 +7,21 @@
 
 import Foundation
 
-public struct GameAnimationEffect: Codable {
+struct GameAnimationEffect: Codable {
     
-    public init(id: Int, name: String, frames: [String]) {
+    init(id: Int, name: String, frames: [String]) {
         self.id = id
         self.name = name
         self.frames = frames
     }
     
-    public let id: Int
-    public let name: String
-    public let frames: [String]
+    let id: Int
+    let name: String
+    let frames: [String]
 }
 
 
-public extension GameAnimationEffect {
+extension GameAnimationEffect {
     
     /// Returns all the game animation effects.
 //    static var all: [GameAnimationEffect]? {

@@ -8,13 +8,13 @@
 import SpriteKit
 import PlayfulKit
 
-public class SpiralStructurePattern {
+class SpiralStructurePattern {
     
-    public init(map: PKMapNode,
-                matrix: Matrix,
-                coordinate: Coordinate,
-                object: PKObjectNode,
-                structure: Structure) {
+    init(map: PKMapNode,
+         matrix: Matrix,
+         coordinate: Coordinate,
+         object: PKObjectNode,
+         structure: Structure) {
         self.map = map
         self.matrix = matrix
         self.coordinate = coordinate
@@ -22,66 +22,36 @@ public class SpiralStructurePattern {
         self.structure = structure
     }
     
-    public var map: PKMapNode
-    public var matrix: Matrix
-    public var coordinate: Coordinate
-    public var object: PKObjectNode
-    public var structure: Structure
+    var map: PKMapNode
+    var matrix: Matrix
+    var coordinate: Coordinate
+    var object: PKObjectNode
+    var structure: Structure
     
-    public struct CornerPattern {
-        public init(topLeft: SKTexture,
-                    topRight: SKTexture,
-                    bottomRight: SKTexture,
-                    bottomLeft: SKTexture) {
-            self.topLeft = topLeft
-            self.topRight = topRight
-            self.bottomRight = bottomRight
-            self.bottomLeft = bottomLeft
-        }
-        
-        public let topLeft: SKTexture
-        public let topRight: SKTexture
-        public let bottomRight: SKTexture
-        public let bottomLeft: SKTexture
+    struct CornerPattern {
+        let topLeft: SKTexture
+        let topRight: SKTexture
+        let bottomRight: SKTexture
+        let bottomLeft: SKTexture
     }
     
-    public struct BorderPattern {
-        public init(top: [SKTexture],
-                    right: [SKTexture],
-                    bottom: [SKTexture],
-                    left: [SKTexture]) {
-            self.top = top
-            self.right = right
-            self.bottom = bottom
-            self.left = left
-        }
-        
-        public let top: [SKTexture]
-        public let right: [SKTexture]
-        public let bottom: [SKTexture]
-        public let left: [SKTexture]
+    struct BorderPattern {
+        let top: [SKTexture]
+        let right: [SKTexture]
+        let bottom: [SKTexture]
+        let left: [SKTexture]
     }
     
-    public struct Pattern {
-        public init(cornerPattern: SpiralStructurePattern.CornerPattern,
-                    borderPattern: SpiralStructurePattern.BorderPattern) {
-            self.cornerPattern = cornerPattern
-            self.borderPattern = borderPattern
-        }
-        
+    struct Pattern {
         let cornerPattern: CornerPattern
         let borderPattern: BorderPattern
     }
     
-    public struct Structure {
-        public init(patterns: [SpiralStructurePattern.Pattern]) {
-            self.patterns = patterns
-        }
-        
-        public let patterns: [Pattern]
+    struct Structure {
+        let patterns: [Pattern]
     }
     
-    public func create() {
+    func create() {
         
         guard isPatternPossible else { return }
         

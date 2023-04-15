@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct StructurePattern: Codable {
+struct StructurePattern: Codable {
     
     public init(name: String, corners: [String], borders: [String]) {
         self.name = name
@@ -20,7 +20,7 @@ public struct StructurePattern: Codable {
     var borders: [String]
 }
 
-public extension StructurePattern {
+extension StructurePattern {
     
     static var all: [StructurePattern]? {
         try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.structures)

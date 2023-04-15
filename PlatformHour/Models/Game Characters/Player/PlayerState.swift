@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct PlayerState {
-    public init(hasProjectileTurningBack: Bool = false,
+struct PlayerState {
+    init(hasProjectileTurningBack: Bool = false,
                 isJumping: Bool = false,
                 isDead: Bool = false) {
         self.hasProjectileTurningBack = hasProjectileTurningBack
@@ -16,7 +16,7 @@ public struct PlayerState {
         self.isDead = isDead
     }
     
-    public var hasProjectileTurningBack: Bool
-    public var isJumping: Bool
-    public var isDead: Bool
+    var hasProjectileTurningBack: Bool
+    var isJumping: Bool
+    var isDead: Bool
 }

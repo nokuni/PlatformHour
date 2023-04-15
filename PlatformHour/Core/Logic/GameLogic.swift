@@ -9,18 +9,18 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-public final class GameLogic {
+final class GameLogic {
     
-    public init(scene: GameScene, environment: GameEnvironment) {
+    init(scene: GameScene, environment: GameEnvironment) {
         self.scene = scene
         self.environment = environment
     }
     
-    public var scene: GameScene
-    public var environment: GameEnvironment
+    var scene: GameScene
+    var environment: GameEnvironment
     
     // Projectiles
-    public func projectileFollowPlayer() {
+    func projectileFollowPlayer() {
         guard let player = scene.player else { return }
         guard let projectile = scene.childNode(withName: GameConfiguration.nodeKey.playerProjectile) else {
             return
@@ -38,7 +38,7 @@ public final class GameLogic {
 
 // MARK: - Player Action Sequence
 
-public extension GameLogic {
+extension GameLogic {
     
     /// Returns the sequence of action the player has to perform.
     private var actionSequenceAction: [SKAction] {
@@ -99,7 +99,7 @@ public extension GameLogic {
 
 // MARK: - Falls
 
-public extension GameLogic {
+extension GameLogic {
     /// Returns the coordinate where an object is supposed to stop falling.
     private func fallCoordinate(object: PKObjectNode) -> Coordinate {
         
@@ -193,7 +193,7 @@ public extension GameLogic {
 
 // MARK: - Combat
 
-public extension GameLogic {
+extension GameLogic {
     
     /// Damage an object with a projectile.
     func damageObject(_ objectNode: PKObjectNode, with projectileNode: PKObjectNode) {
@@ -273,7 +273,7 @@ public extension GameLogic {
 
 // MARK: - Miscellaneous
 
-public extension GameLogic {
+extension GameLogic {
     
     /// Returns a level element indexed by his ID.
     func indexedLevelObject<Element: LevelProtocol>(object: PKObjectNode,

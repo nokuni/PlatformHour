@@ -9,23 +9,23 @@ import SpriteKit
 import GameController
 import PlayfulKit
 
-final public class GameControllerManager {
+final class GameControllerManager {
     
-    public init(scene: GameScene, state: GameState) {
+    init(scene: GameScene, state: GameState) {
         self.scene = scene
         self.action = ActionLogic(scene: scene)
         setupControllers()
     }
     
-    public var scene: GameScene
-    public var action: ActionLogic
+    var scene: GameScene
+    var action: ActionLogic
     
-    public var manager: ControllerManager?
+    var manager: ControllerManager?
 }
 
 // MARK: - Setups
 
-public extension GameControllerManager {
+extension GameControllerManager {
     
     /// Setup the actions on the gamepad controller
     func setupActions() {
@@ -70,7 +70,7 @@ public extension GameControllerManager {
 
 // MARK: - Actions
 
-public extension GameControllerManager {
+extension GameControllerManager {
     
     /// Disconnect the virtual controller, remove all controller observers and disable touch events.
     func disable() {

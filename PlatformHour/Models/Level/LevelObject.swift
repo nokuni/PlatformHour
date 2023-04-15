@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct LevelObject: Codable, LevelProtocol {
-    public init(id: Int,
+struct LevelObject: Codable, LevelProtocol {
+    init(id: Int,
                 name: String,
                 coordinate: String,
                 category: Category,
@@ -21,15 +21,15 @@ public struct LevelObject: Codable, LevelProtocol {
         self.itinerary = itinerary
     }
     
-    public let id: Int
-    public let name: String
-    public let category: Category
-    public let coordinate: String
-    public let itinerary: Int?
+    let id: Int
+    let name: String
+    let category: Category
+    let coordinate: String
+    let itinerary: Int?
     
-    public let sizeGrowth: Double = 1
+    let sizeGrowth: Double = 1
     
-    public enum Category: String, Codable {
+    enum Category: String, Codable {
         case player
         case important
         case npc

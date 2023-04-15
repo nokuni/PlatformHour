@@ -65,3 +65,27 @@ import SwiftUI
 //                                          node: dice.node,
 //                                          widthTailoring: (GameConfiguration.worldConfiguration.tileSize.width / 16) * 4)
 //    }
+
+/// Adds a health bar to the player.
+/*func addHealthBar(amount: CGFloat,
+ node: PKObjectNode,
+ widthTailoring: CGFloat = 0) {
+ let tileSize = GameConfiguration.worldConfiguration.tileSize
+ 
+ let bar = SKSpriteNode(imageNamed: "healthBar")
+ bar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
+ bar.texture?.filteringMode = .nearest
+ 
+ let underBar = SKSpriteNode(imageNamed: "emptyBar")
+ underBar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
+ underBar.texture?.filteringMode = .nearest
+ 
+ let configuration = PKProgressBarNode.ImageConfiguration(amount: amount,
+ sprite: bar,
+ underSprite: underBar)
+ let progressBar = PKProgressBarNode(imageConfiguration: configuration)
+ progressBar.name = "Health Bar"
+ progressBar.position = CGPoint(x: 0, y: node.frame.size.height / 2)
+ 
+ node.addChildSafely(progressBar)
+ }*/

@@ -9,17 +9,17 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-public struct GameCore {
-    public init(state: GameState = GameState(),
-                animation: GameAnimation? = nil,
-                sound: GameSound = GameSound(),
-                event: GameEvent? = nil,
-                hud: GameHUD? = nil,
-                environment: GameEnvironment? = nil,
-                logic: GameLogic? = nil,
-                collision: GameCollision? = nil,
-                gameCamera: GameCamera? = nil,
-                content: GameContent? = nil) {
+struct GameCore {
+    init(state: GameState = GameState(),
+         animation: GameAnimation? = nil,
+         sound: GameSound = GameSound(),
+         event: GameEvent? = nil,
+         hud: GameHUD? = nil,
+         environment: GameEnvironment? = nil,
+         logic: GameLogic? = nil,
+         collision: GameCollision? = nil,
+         gameCamera: GameCamera? = nil,
+         content: GameContent? = nil) {
         self.state = state
         self.animation = animation
         self.sound = sound
@@ -32,19 +32,19 @@ public struct GameCore {
         self.content = content
     }
     
-    public var state: GameState
-    public var animation: GameAnimation?
-    public var sound: GameSound
-    public var event: GameEvent?
-    public var hud: GameHUD?
-    public var environment: GameEnvironment?
-    public var logic: GameLogic?
-    public var collision: GameCollision?
-    public var gameCamera: GameCamera?
-    public var content: GameContent?
+    var state: GameState
+    var animation: GameAnimation?
+    var sound: GameSound
+    var event: GameEvent?
+    var hud: GameHUD?
+    var environment: GameEnvironment?
+    var logic: GameLogic?
+    var collision: GameCollision?
+    var gameCamera: GameCamera?
+    var content: GameContent?
 }
 
-public extension GameCore {
+extension GameCore {
     
     /// Setup the scene.
     mutating func setup(scene: GameScene) {

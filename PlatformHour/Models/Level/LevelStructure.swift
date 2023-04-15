@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct LevelStructure: Codable {
-    public init(atlasName: String,
+struct LevelStructure: Codable {
+    init(atlasName: String,
                 outline: String,
                 firstLayer: String? = nil,
                 innerLayer: String? = nil,
@@ -23,13 +23,13 @@ public struct LevelStructure: Codable {
         self.coordinate = coordinate
     }
     
-    public let atlasName: String
-    public let outline: String
-    public let firstLayer: String?
-    public let innerLayer: String?
-    public let innerLayerAmount: Int?
-    public let matrix: String
-    public let coordinate: String
+    let atlasName: String
+    let outline: String
+    let firstLayer: String?
+    let innerLayer: String?
+    let innerLayerAmount: Int?
+    let matrix: String
+    let coordinate: String
     
     enum CodingKeys: String, CodingKey {
         case atlasName

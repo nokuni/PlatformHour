@@ -8,9 +8,9 @@
 import Foundation
 import PlayfulKit
 
-public struct GameObject: Codable {
+struct GameObject: Codable {
     
-    public init(name: String,
+    init(name: String,
                 image: String,
                 logic: GameObjectLogic,
                 animation: [GameObjectAnimation],
@@ -24,20 +24,20 @@ public struct GameObject: Codable {
         self.coordinate = coordinate
     }
     
-    public let name: String
-    public let image: String
-    public var logic: GameObjectLogic
-    public var animation: [GameObjectAnimation]
-    public let sound: String?
+    let name: String
+    let image: String
+    var logic: GameObjectLogic
+    var animation: [GameObjectAnimation]
+    let sound: String?
     
-    public var coordinate: Coordinate = Coordinate.zero
+    var coordinate: Coordinate = Coordinate.zero
     
     enum CodingKeys: String, CodingKey {
         case name, image, logic, animation, sound
     }
 }
 
-public extension GameObject {
+extension GameObject {
     
     // MARK: - Data
     

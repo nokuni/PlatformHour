@@ -9,9 +9,9 @@ import SwiftUI
 import PlayfulKit
 import Utility_Toolbox
 
-public final class Game: ObservableObject {
+final class Game: ObservableObject {
     
-    public init() {
+    init() {
         loadSave()
     }
     
@@ -19,35 +19,35 @@ public final class Game: ObservableObject {
     
     static let shared = Game()
     
-    public var saveManager = SaveManager(container: PersistenceController.shared.container)
-    public var controller: GameControllerManager?
+    var saveManager = SaveManager(container: PersistenceController.shared.container)
+    var controller: GameControllerManager?
     
     // MARK: - Worlds
     
-    public var world: GameWorld?
+    var world: GameWorld?
     
     // MARK: - Levels
     
-    public var level: GameLevel?
-    public var levelIndex: Int {
+    var level: GameLevel?
+    var levelIndex: Int {
         guard let currentLevel = saves.first?.level else { return 0 }
         return Int(currentLevel)
     }
     
     // MARK: - Conversations
     
-    public var currentLevelConversation: LevelConversation?
-    public var currentConversation: GameConversation?
+    var currentLevelConversation: LevelConversation?
+    var currentConversation: GameConversation?
     
     // MARK: - Cinematics
     
-    public var currentLevelCinematic: LevelCinematic?
-    public var currentCinematic: GameCinematic?
+    var currentLevelCinematic: LevelCinematic?
+    var currentCinematic: GameCinematic?
     
     // MARK: - Save
     
     /// Load the game save.
-    public func loadSave() {
+    func loadSave() {
         fetchSaves()
         createSave()
         world = GameWorld.get(GameConfiguration.startingWorldID)
@@ -76,7 +76,7 @@ public final class Game: ObservableObject {
     private func save() { try? saveManager.save() }
     
     /// Save the progress on next game level.
-    public func setupNextLevel() {
+    func setupNextLevel() {
         guard !saves.isEmpty else { return }
         saves[0].level += 1
         save()

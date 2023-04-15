@@ -7,14 +7,14 @@
 
 import SpriteKit
 
-public final class GameState {
+final class GameState {
     
-    public init() { }
+    init() { }
     
-    public var status: Status = .inDefault
-    public var previousStatus: Status?
+    var status: Status = .inDefault
+    var previousStatus: Status?
     
-    public enum Status {
+    enum Status {
         case inDefault
         case inAction
         case inConversation
@@ -25,7 +25,7 @@ public final class GameState {
 
 // MARK: - Updates
 
-public extension GameState {
+extension GameState {
     
     /// Switch the current game state to a new one.
     func switchOn(newStatus: Status) {

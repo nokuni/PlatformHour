@@ -8,17 +8,17 @@
 import Foundation
 import PlayfulKit
 
-public struct GameLevel: Codable {
-    public init(id: Int,
-                name: String,
-                mapMatrix: String,
-                playerCoordinate: String,
-                musics: [String],
-                background: LevelBackground,
-                objects: [LevelObject],
-                structures: [LevelStructure],
-                conversations: [LevelConversation],
-                cinematics: [LevelCinematic]) {
+struct GameLevel: Codable {
+    init(id: Int,
+         name: String,
+         mapMatrix: String,
+         playerCoordinate: String,
+         musics: [String],
+         background: LevelBackground,
+         objects: [LevelObject],
+         structures: [LevelStructure],
+         conversations: [LevelConversation],
+         cinematics: [LevelCinematic]) {
         self.id = id
         self.name = name
         self.mapMatrix = mapMatrix
@@ -31,19 +31,19 @@ public struct GameLevel: Codable {
         self.cinematics = cinematics
     }
     
-    public let id: Int
-    public let name: String
-    public let mapMatrix: String
-    public let playerCoordinate: String
-    public let musics: [String]
-    public let background: LevelBackground
-    public let objects: [LevelObject]
-    public let structures: [LevelStructure]
-    public var conversations: [LevelConversation]
-    public var cinematics: [LevelCinematic]
+    let id: Int
+    let name: String
+    let mapMatrix: String
+    let playerCoordinate: String
+    let musics: [String]
+    let background: LevelBackground
+    let objects: [LevelObject]
+    let structures: [LevelStructure]
+    var conversations: [LevelConversation]
+    var cinematics: [LevelCinematic]
 }
 
-public extension GameLevel {
+extension GameLevel {
     
     /// Returns all the game levels.
     static var all: [GameLevel]? {

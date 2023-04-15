@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct LevelCinematic: Codable {
-    public init(name: String,
+struct LevelCinematic: Codable {
+    init(name: String,
                 triggerCoordinate: String,
                 category: Category,
                 isAvailable: Bool = true) {
@@ -18,12 +18,12 @@ public struct LevelCinematic: Codable {
         self.isAvailable = isAvailable
     }
     
-    public let name: String
-    public let triggerCoordinate: String?
-    public let category: Category
-    public var isAvailable: Bool = true
+    let name: String
+    let triggerCoordinate: String?
+    let category: Category
+    var isAvailable: Bool = true
     
-    public enum Category: String, Codable {
+    enum Category: String, Codable {
         case onStart
         case onConversation
     }

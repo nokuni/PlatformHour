@@ -10,21 +10,21 @@ import PlayfulKit
 import Utility_Toolbox
 import SwiftUI
 
-public class GameHUD {
-    public init(scene: GameScene) {
+final class GameHUD {
+    init(scene: GameScene) {
         self.scene = scene
         create()
     }
     
-    public var scene: GameScene
+    var scene: GameScene
     
     private let layer = SKShapeNode(rectOf: .screen)
     private let contentContainer = SKNode()
     private let actionSequence = SKNode()
-    public let conversationBox = SKSpriteNode()
-    public let gemScore = SKNode()
+    let conversationBox = SKSpriteNode()
+    let gemScore = SKNode()
     
-    public var actionSquares: [SKSpriteNode] {
+    var actionSquares: [SKSpriteNode] {
         let actionNodes = actionSequence.childNodes(named: "Action Square")
         let actions = actionNodes.compactMap { $0 as? SKSpriteNode }
         return actions
@@ -38,7 +38,7 @@ public class GameHUD {
     
     // MARK: - Creation/Removal
     
-    public func create() {
+    func create() {
         createLayer()
         addContentContainer()
         addContent()
@@ -68,14 +68,14 @@ public class GameHUD {
     // MARK: - Dialog Box
     
     /// Pass the current line of text.
-    public func passLine() {
+    func passLine() {
         if let dialogText = conversationBox.childNode(withName: "Dialog Text") as? PKTypewriterNode {
             dialogText.hasFinished() ? nextLine() : speedUpLine()
         }
     }
     
     /// Display the next line of a dialog.
-    public func nextLine() {
+    func nextLine() {
         conversationBox.removeAllChildren()
         conversationBox.removeFromParent()
         
@@ -111,7 +111,7 @@ public class GameHUD {
         }
     }
     
-    public func resetConversation() {
+    func resetConversation() {
         scene.game?.currentLevelConversation = nil
         scene.game?.currentConversation = nil
     }
@@ -142,7 +142,7 @@ public class GameHUD {
 
 // MARK: - Pause
 
-public extension GameHUD {
+extension GameHUD {
     
     /// Create the pause button.
     private func createPauseButton() {
@@ -182,7 +182,7 @@ public extension GameHUD {
 
 // MARK: - Updates
 
-public extension GameHUD {
+extension GameHUD {
     
     /// Update the current gem score.
     func updateGemScore() {
@@ -193,7 +193,7 @@ public extension GameHUD {
 
 // MARK: - Adds
 
-public extension GameHUD {
+extension GameHUD {
     
     /// Adds the content container on the layer.
     private func addContentContainer() {
@@ -293,7 +293,7 @@ public extension GameHUD {
 
 // MARK: - Removals
 
-public extension GameHUD {
+extension GameHUD {
     
     /// Removes the current content.
     func removeContent() {
@@ -314,7 +314,7 @@ public extension GameHUD {
 
 // MARK: - Dialog
 
-public extension GameHUD {
+extension GameHUD {
     
     /// Adds the conversation box.
     func addConversationBox() {

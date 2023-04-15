@@ -9,20 +9,20 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameCollision {
+final class GameCollision {
     
-    public init(scene: GameScene) {
+    init(scene: GameScene) {
         self.scene = scene
         self.collisionLogic = CollisionLogic(scene: scene)
     }
     
-    public var scene: GameScene
-    public var collisionLogic: CollisionLogic
+    var scene: GameScene
+    var collisionLogic: CollisionLogic
     
-    public var manager = CollisionManager()
+    var manager = CollisionManager()
     
     /// All collisions on the current scene.
-    public func all(firstBody: SKPhysicsBody, secondBody: SKPhysicsBody) {
+    func all(firstBody: SKPhysicsBody, secondBody: SKPhysicsBody) {
         
         projectileTouchStructure(
             CollisionManager.NodeBody(body: firstBody,
@@ -60,7 +60,7 @@ final public class GameCollision {
 
 // MARK: - Touchs
 
-public extension GameCollision {
+extension GameCollision {
     
     /// When the player collides with the ground of a structure.
     private func playerTouchGround(_ first: CollisionManager.NodeBody,
@@ -110,7 +110,7 @@ public extension GameCollision {
 
 // MARK: - Coordinates
 
-public extension GameCollision {
+extension GameCollision {
     
     /// When the player is on the coordinate of the exit.
     private func playerOnExit(_ first: CollisionManager.NodeBody,

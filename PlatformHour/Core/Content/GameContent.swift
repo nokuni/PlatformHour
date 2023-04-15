@@ -10,12 +10,12 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameContent {
+final class GameContent {
     
-    public init(scene: GameScene,
-                environment: GameEnvironment,
-                animation: GameAnimation,
-                logic: GameLogic) {
+    init(scene: GameScene,
+         environment: GameEnvironment,
+         animation: GameAnimation,
+         logic: GameLogic) {
         self.scene = scene
         self.environment = environment
         self.animation = animation
@@ -23,10 +23,10 @@ final public class GameContent {
         generate()
     }
     
-    public var scene: GameScene
-    public var environment: GameEnvironment
-    public var animation: GameAnimation
-    public var logic: GameLogic
+    var scene: GameScene
+    var environment: GameEnvironment
+    var animation: GameAnimation
+    var logic: GameLogic
     
     private func generate() {
         generateLevelStructures()
@@ -42,7 +42,7 @@ final public class GameContent {
 
 // MARK: - Level Generations
 
-public extension GameContent {
+private extension GameContent {
     
     /// Generate the player on the current level.
     private func generateLevelPlayer() {
@@ -118,7 +118,7 @@ public extension GameContent {
 
 // MARK: - Level Creations
 
-public extension GameContent {
+extension GameContent {
     
     /// Create a level container.
     private func createLevelContainer(_ levelContainer: LevelObject) {
@@ -312,7 +312,7 @@ public extension GameContent {
 
 // MARK: - Objects
 
-public extension GameContent {
+extension GameContent {
     
     /// Returns a default setuped object.
     func object(name: String? = nil,
@@ -363,25 +363,25 @@ public extension GameContent {
 
 // MARK: Configurations
 
-public extension GameContent {
+private extension GameContent {
     
     /// Configure the player object.
     private func configurePlayer() {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
-        guard let playerData = player.dataObject else { return }
+        guard let playerObject = player.object else { return }
         
         let collision = Collision(category: .player,
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
         
-        player.node = object(name: playerData.name,
+        player.node = object(name: playerObject.name,
                              collision: collision)
         
-        player.node.logic = LogicBody(health: playerData.logic.health,
-                                      damage: playerData.logic.damage,
-                                      isDestructible: playerData.logic.isDestructible,
-                                      isIntangible: playerData.logic.isIntangible)
+        player.node.logic = LogicBody(health: playerObject.logic.health,
+                                      damage: playerObject.logic.damage,
+                                      isDestructible: playerObject.logic.isDestructible,
+                                      isIntangible: playerObject.logic.isIntangible)
         
         player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         player.node.physicsBody?.friction = 0
@@ -406,7 +406,7 @@ public extension GameContent {
 
 // MARK: - Creations
 
-public extension GameContent {
+extension GameContent {
     
     /// Creates and returns an object node.
     func createObject(_ object: GameObject, at coordinate: Coordinate) -> PKObjectNode {
@@ -455,7 +455,7 @@ public extension GameContent {
 
 // MARK: - Miscellaneous
 
-public extension GameContent {
+extension GameContent {
     
     /// Pause the generated content.
     func pause() {
@@ -470,7 +470,7 @@ public extension GameContent {
 
 // MARK: - Object Adds
 
-public extension GameContent {
+private extension GameContent {
     
     /// Add a fixed intinerary movement to an enemy.
     private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
@@ -494,28 +494,4 @@ public extension GameContent {
         
         enemy.run(groupedAnimations)
     }
-    
-    /// Adds a health bar to the player.
-    /*func addHealthBar(amount: CGFloat,
-     node: PKObjectNode,
-     widthTailoring: CGFloat = 0) {
-     let tileSize = GameConfiguration.worldConfiguration.tileSize
-     
-     let bar = SKSpriteNode(imageNamed: "healthBar")
-     bar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
-     bar.texture?.filteringMode = .nearest
-     
-     let underBar = SKSpriteNode(imageNamed: "emptyBar")
-     underBar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
-     underBar.texture?.filteringMode = .nearest
-     
-     let configuration = PKProgressBarNode.ImageConfiguration(amount: amount,
-     sprite: bar,
-     underSprite: underBar)
-     let progressBar = PKProgressBarNode(imageConfiguration: configuration)
-     progressBar.name = "Health Bar"
-     progressBar.position = CGPoint(x: 0, y: node.frame.size.height / 2)
-     
-     node.addChildSafely(progressBar)
-     }*/
 }

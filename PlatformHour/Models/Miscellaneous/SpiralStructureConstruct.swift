@@ -7,9 +7,9 @@
 
 import SpriteKit
 
-public class SpiralStructureConstruct {
+class SpiralStructureConstruct {
     
-    public init(outline: String,
+    init(outline: String,
          firstLayer: String?,
          innerLayer: String?) {
         self.outline = outline
@@ -17,11 +17,11 @@ public class SpiralStructureConstruct {
         self.innerLayer = innerLayer
     }
     
-    public let outline: String
-    public let firstLayer: String?
-    public let innerLayer: String?
+    let outline: String
+    let firstLayer: String?
+    let innerLayer: String?
     
-    public var outlineCorner: SpiralStructurePattern.CornerPattern? {
+    var outlineCorner: SpiralStructurePattern.CornerPattern? {
         guard let patterns = StructurePattern.get(outline)?.corners else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
         let textures = patterns.map { atlas.textureNamed($0) }
@@ -37,7 +37,7 @@ public class SpiralStructureConstruct {
         )
         return cornerPattern
     }
-    public var outlineBorder: SpiralStructurePattern.BorderPattern? {
+    var outlineBorder: SpiralStructurePattern.BorderPattern? {
         guard let patterns = StructurePattern.get(outline)?.borders else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
         let textures = patterns.map { atlas.textureNamed($0) }
@@ -54,7 +54,7 @@ public class SpiralStructureConstruct {
         return borderPattern
     }
     
-    public var firstLayerCorner: SpiralStructurePattern.CornerPattern? {
+    var firstLayerCorner: SpiralStructurePattern.CornerPattern? {
         guard let firstLayer = firstLayer else { return nil }
         guard let patterns = StructurePattern.get(firstLayer)?.corners else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
@@ -71,7 +71,7 @@ public class SpiralStructureConstruct {
         )
         return cornerPattern
     }
-    public var firstLayerBorder: SpiralStructurePattern.BorderPattern? {
+    var firstLayerBorder: SpiralStructurePattern.BorderPattern? {
         guard let firstLayer = firstLayer else { return nil }
         guard let patterns = StructurePattern.get(firstLayer)?.borders else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
@@ -89,7 +89,7 @@ public class SpiralStructureConstruct {
         return borderPattern
     }
     
-    public var innerLayerCorner: SpiralStructurePattern.CornerPattern? {
+    var innerLayerCorner: SpiralStructurePattern.CornerPattern? {
         guard let innerLayer = innerLayer else { return nil }
         guard let patterns = StructurePattern.get(innerLayer)?.corners else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
@@ -106,7 +106,7 @@ public class SpiralStructureConstruct {
         )
         return cornerPattern
     }
-    public var innerLayerBorder: SpiralStructurePattern.BorderPattern? {
+    var innerLayerBorder: SpiralStructurePattern.BorderPattern? {
         guard let innerLayer = innerLayer else { return nil }
         guard let patterns = StructurePattern.get(innerLayer)?.borders else { return nil }
         let atlas = SKTextureAtlas(named: "CavernGrounds")
@@ -124,21 +124,21 @@ public class SpiralStructureConstruct {
         return borderPattern
     }
     
-    public var outlinePattern: SpiralStructurePattern.Pattern? {
+    var outlinePattern: SpiralStructurePattern.Pattern? {
         guard let outlineCorner = self.outlineCorner else { return nil }
         guard let outlineBorder = self.outlineBorder else { return nil }
         let outlinePattern = SpiralStructurePattern.Pattern(cornerPattern: outlineCorner, borderPattern: outlineBorder)
         return outlinePattern
     }
     
-    public var firstLayerPattern: SpiralStructurePattern.Pattern? {
+    var firstLayerPattern: SpiralStructurePattern.Pattern? {
         guard let firstLayerCorner = self.firstLayerCorner else { return nil }
         guard let firstLayerBorder = self.firstLayerBorder else { return nil }
         let firstLayerPattern = SpiralStructurePattern.Pattern(cornerPattern: firstLayerCorner, borderPattern: firstLayerBorder)
         return firstLayerPattern
     }
     
-    public func innerPatterns(structure: LevelStructure) -> [SpiralStructurePattern.Pattern] {
+    func innerPatterns(structure: LevelStructure) -> [SpiralStructurePattern.Pattern] {
         guard let innerLayerCorner = self.innerLayerCorner else { return [] }
         guard let innerLayerBorder = self.innerLayerBorder else { return [] }
         

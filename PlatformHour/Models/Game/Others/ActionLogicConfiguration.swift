@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct ActionLogicConfiguration {
-    public init(timer: Timer? = nil,
+struct ActionLogicConfiguration {
+    init(timer: Timer? = nil,
                 direction: ActionLogicConfiguration.Direction = .none,
                 movementSpeed: Int = 0,
                 isLongPressingDPad: Bool = false) {
@@ -19,7 +19,7 @@ public struct ActionLogicConfiguration {
     }
     
     
-    public enum Direction: String, CaseIterable {
+    enum Direction: String, CaseIterable {
         case none
         case up
         case down
@@ -27,12 +27,16 @@ public struct ActionLogicConfiguration {
         case left
     }
     
-    public var timer: Timer?
-    public var direction: Direction = .none
-    public var movementSpeed: Int = 0
-    public var isLongPressingDPad: Bool = false
+    var timer: Timer?
+    var direction: Direction = .none
+    var movementSpeed: Int = 0
+    var isLongPressingDPad: Bool = false
     
-    public func isAttacking(scene: GameScene) -> Bool {
+    func isAttacking(scene: GameScene) -> Bool {
         scene.isExistingChildNode(named: GameConfiguration.nodeKey.playerProjectile)
+    }
+    
+    func isEnabled(scene: GameScene) -> Bool {
+        scene.game?.controller?.manager?.action != nil
     }
 }

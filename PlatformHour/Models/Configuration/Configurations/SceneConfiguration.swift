@@ -47,4 +47,8 @@ struct SceneConfiguration {
     
     let titleFont: String = "Daydream"
     let textFont: String = "Outline Pixel7 Solid"
+    
+    // MARK: - Logic
+    
+    let addActionDelay: CGFloat = 0.1
 }

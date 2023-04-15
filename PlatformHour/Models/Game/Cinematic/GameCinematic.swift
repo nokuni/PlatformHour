@@ -8,8 +8,8 @@
 import Foundation
 import Utility_Toolbox
 
-public struct GameCinematic: Codable {
-    public init(name: String,
+struct GameCinematic: Codable {
+    init(name: String,
                 category: GameCinematic.Category,
                 actions: [CinematicAction],
                 conversationCompletion: String? = nil) {
@@ -19,12 +19,12 @@ public struct GameCinematic: Codable {
         self.conversationCompletion = conversationCompletion
     }
     
-    public let name: String
-    public let category: Category
-    public let actions: [CinematicAction]
-    public var conversationCompletion: String?
+    let name: String
+    let category: Category
+    let actions: [CinematicAction]
+    var conversationCompletion: String?
     
-    public enum Category: String, Codable {
+    enum Category: String, Codable {
         case onLevelStart
         case onNodeAlteration
         case onPlayerCoordinate
@@ -39,7 +39,7 @@ public struct GameCinematic: Codable {
     }
 }
 
-public extension GameCinematic {
+extension GameCinematic {
     
     /// Returns all the game cinematics.
     static var all: [GameCinematic]? {

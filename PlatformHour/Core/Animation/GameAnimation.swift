@@ -10,11 +10,11 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameAnimation {
+final class GameAnimation {
     
-    public init() { }
+    init() { }
     
-    public enum StateID: String, CaseIterable {
+    enum StateID: String, CaseIterable {
         case idle = "idle"
         case effect = "effect"
         case run = "run"
@@ -27,7 +27,7 @@ final public class GameAnimation {
 
 // MARK: - Effects
 
-public extension GameAnimation {
+extension GameAnimation {
     
     /// Add a pulsing animation on a node.
     func addShadowPulseEffect(scene: GameScene,
@@ -233,7 +233,7 @@ public extension GameAnimation {
 
 // MARK: - State ID animations
 
-public extension GameAnimation {
+extension GameAnimation {
     
     /// Animate a node with a state identifier.
     func animate(node: PKObjectNode,

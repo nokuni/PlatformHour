@@ -10,13 +10,13 @@ import GameController
 import PlayfulKit
 import Utility_Toolbox
 
-public final class GameScene: SKScene {
+final class GameScene: SKScene {
     
-    public var player: Player?
-    public var game: Game?
-    public var core: GameCore?
+    var player: Player?
+    var game: Game?
+    var core: GameCore?
     
-    public func launch() {
+    func launch() {
         setup(configuration: .init(backgroundColor: .white, isIgnoringSiblingOrder: true))
         player = Player()
         game?.loadSave()
@@ -25,12 +25,12 @@ public final class GameScene: SKScene {
         core?.setup(scene: self)
     }
     
-    public override func didMove(to view: SKView) {
+    override func didMove(to view: SKView) {
         launch()
         //core?.gameCamera?.camera.gesture(view)
     }
     
-    public override func update(_ currentTime: TimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         core?.gameCamera?.follow()
         core?.logic?.projectileFollowPlayer()
         core?.event?.updatePlayerCoordinate()
@@ -38,7 +38,7 @@ public final class GameScene: SKScene {
         core?.event?.triggerPlayerDeathFall()
     }
     
-    public func didBegin(_ contact: SKPhysicsContact) {
+    private func didBegin(_ contact: SKPhysicsContact) {
         
         guard let collision = core?.collision else { return }
         
@@ -56,11 +56,11 @@ public final class GameScene: SKScene {
         collision.all(firstBody: firstBody, secondBody: secondBody)
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         core?.hud?.passLine()
     }
     
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
     }
 }

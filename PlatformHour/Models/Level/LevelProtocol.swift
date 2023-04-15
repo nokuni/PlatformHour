@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol LevelProtocol {
+protocol LevelProtocol {
     var id: Int { get }
     var name: String { get }
     var coordinate: String { get }

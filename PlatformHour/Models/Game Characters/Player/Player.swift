@@ -8,12 +8,22 @@
 import SpriteKit
 import PlayfulKit
 
-public class Player {
+final class Player {
     
-    public var orientation: Orientation = .right
-    public var node = PKObjectNode()
+    var orientation: Orientation = .right
+    var currentRoll: Roll = .one
+    var interactionStatus: PlayerInteractionStatus = .none
     
-    public enum Roll: Int, CaseIterable {
+    var node = PKObjectNode()
+    var object = GameObject.player
+    var state = PlayerState()
+    var stats = Stats(range: GameConfiguration.playerConfiguration.range,
+                      attackSpeed: GameConfiguration.playerConfiguration.attackSpeed)
+    
+    var actions: [SequenceAction] = []
+    var bag: [GameObject] = []
+    
+    enum Roll: Int, CaseIterable {
         case one = 1
         case two = 2
         case three = 3
@@ -21,13 +31,15 @@ public class Player {
         case five = 5
         case six = 6
     }
-    public enum Orientation {
+    
+    enum Orientation {
         case right
         case left
         case up
         case down
     }
-    public enum SequenceAction {
+    
+    enum SequenceAction {
         case none
         case moveRight
         case moveLeft
@@ -65,46 +77,52 @@ public class Player {
         }
     }
     
-    public struct Stats {
-        public init(range: CGFloat, attackSpeed: CGFloat) {
-            self.range = range
-            self.attackSpeed = attackSpeed
-        }
-        
-        public var range: CGFloat
-        public var attackSpeed: CGFloat
-    }
-    
-    public var currentRoll: Roll = .one
-    public var stats = Stats(range: GameConfiguration.playerConfiguration.range,
-                             attackSpeed: GameConfiguration.playerConfiguration.attackSpeed)
-    
-    public var state = PlayerState()
-    
-    public var isAnimating: Bool { node.hasActions() }
-    
-    public var interactionStatus: PlayerInteractionStatus = .none
-    public var actions: [SequenceAction] = []
-    
-    public var bag: [GameObject] = []
-    
-    public var dataObject = GameObject.player
+    var isAnimating: Bool { node.hasActions() }
 }
 
-public extension Player {
+// MARK: - Health
+
+extension Player {
     
-    var sprite: String? {
-        let currentRollValue = currentRoll.rawValue
-        return dataObject?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
+    /// Returns the current health of the player.
+    var currentHealth: Int {
+        guard let logic = object?.logic else { return 0 }
+        let health = logic.health - node.logic.healthLost
+        return health
     }
     
+    /// Returns the current bar health of the player.
+    var currentBarHealth: CGFloat {
+        guard let logic = object?.logic else { return 0 }
+        let health = CGFloat(currentHealth) / CGFloat(logic.health)
+        return health
+    }
+}
+
+// MARK: - Sprites
+
+extension Player {
+    
+    /// Returns the current sprite image of the dice.
+    var sprite: String? {
+        let currentRollValue = currentRoll.rawValue
+        return object?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
+    }
+    
+    /// Returns the animation frame images of an stateID animation.
     func frames(stateID: GameAnimation.StateID) -> [String]? {
         let currentRollValue = currentRoll.rawValue
-        let animation = dataObject?.animations.first(where: { $0.identifier == stateID.rawValue })
+        let animation = object?.animations.first(where: { $0.identifier == stateID.rawValue })
         let frames = animation?.frames.replacingOccurences(character: "#", newCharacter: "\(currentRollValue)")
         return frames
     }
+}
+
+// MARK: - Animations
+
+extension Player {
     
+    /// Returns the player run duration.
     var runDuration: Double {
         let rightRunFrames = frames(stateID: .runRight)
         guard let framesCount = rightRunFrames?.count else { return 0 }
@@ -112,19 +130,7 @@ public extension Player {
         return duration
     }
     
-    var currentHealth: Int {
-        guard let logic = dataObject?.logic else { return 0 }
-        let health = logic.health - node.logic.healthLost
-        return health
-    }
-    
-    var currentBarHealth: CGFloat {
-        guard let logic = dataObject?.logic else { return 0 }
-        let health = CGFloat(currentHealth) / CGFloat(logic.health)
-        return health
-    }
-    
-    // MARK: - Actions
+    /// Returns a knockback animation.
     private func knockedBack(by enemy: PKObjectNode) -> SKAction {
         let tileSize = GameConfiguration.sceneConfiguration.tileSize
         let knockBack = enemy.xScale > 0 ?
@@ -132,8 +138,13 @@ public extension Player {
         SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
         return knockBack
     }
+}
+
+// MARK: - Actions
+
+extension Player {
     
-    // MARK: - Animations
+    /// Play the run action animation.
     func run() {
         guard let rightRunFrames = frames(stateID: .runRight) else { return }
         guard let leftRunFrames = frames(stateID: .runLeft) else { return }
@@ -142,6 +153,7 @@ public extension Player {
         SKAction.animate(action: action, node: node, endCompletion: nil)
     }
     
+    /// Play the death action animation.
     func death(scene: GameScene) {
         guard let deathFrames = frames(stateID: .death) else { return }
         let animationNode = SKSpriteNode()
@@ -162,6 +174,7 @@ public extension Player {
                          node: animationNode)
     }
     
+    /// Play the hit action animation.
     func hitted(scene: GameScene, by enemy: PKObjectNode, completion: (() -> Void)?) {
         guard let hitFrames = frames(stateID: .hit) else { return }
         let hitAnimation = SKAction.animate(with: hitFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.hitTimePerFrame)
@@ -173,8 +186,7 @@ public extension Player {
         }
     }
     
-    // MARK: - Logic
-    
+    /// Advance the current roll of the dice.
     func advanceRoll() {
         guard let lastRoll = Roll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {

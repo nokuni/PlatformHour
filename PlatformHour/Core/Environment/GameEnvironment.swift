@@ -10,16 +10,16 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-final public class GameEnvironment {
+final class GameEnvironment {
     
-    public init(scene: GameScene) {
+    init(scene: GameScene) {
         self.scene = scene
         generate()
     }
     
-    public var scene: GameScene
-    public var map = PKMapNode()
-    public var backgroundContainer = SKNode()
+    var scene: GameScene
+    var map = PKMapNode()
+    var backgroundContainer = SKNode()
     
     private func generate() {
         createMap()
@@ -29,7 +29,7 @@ final public class GameEnvironment {
 
 // MARK: - Informations
 
-public extension GameEnvironment {
+extension GameEnvironment {
     /// Current map.
     var mapMatrix: Matrix {
         guard let matrix = scene.game?.level?.mapMatrix.matrix else { return .zero }
@@ -81,7 +81,7 @@ public extension GameEnvironment {
 
 // MARK: - Elements
 
-public extension GameEnvironment {
+extension GameEnvironment {
     /// Returns an unconfigured object node.
     func objectElement(name: String? = nil,
                        physicsBodySizeTailoring: CGFloat = 0,
@@ -169,7 +169,7 @@ public extension GameEnvironment {
 
 // MARK: - Creations
 
-public extension GameEnvironment {
+extension GameEnvironment {
     /// Generate the current map.
     private func createMap() {
         map = PKMapNode(squareSize: GameConfiguration.sceneConfiguration.tileSize,
@@ -229,7 +229,7 @@ public extension GameEnvironment {
 
 // MARK: - Miscellaneous
 
-public extension GameEnvironment {
+extension GameEnvironment {
     /// Pause the current map.
     func pause() { map.isPaused = true }
     

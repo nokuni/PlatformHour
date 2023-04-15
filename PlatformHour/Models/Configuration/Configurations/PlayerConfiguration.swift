@@ -7,19 +7,19 @@
 
 import Foundation
 
-public struct PlayerConfiguration {
+struct PlayerConfiguration {
     
-    public init() { }
+    init() { }
     
     // MARK: - Stats
-    public let range: CGFloat = 5
-    public let attackSpeed: CGFloat = 0.5
-    public let movementSpeed: Int = 1
-    public let jumpValue: CGFloat = 1
-    public let fallSpeed: CGFloat = 1000
+    let range: CGFloat = 5
+    let attackSpeed: CGFloat = 0.5
+    let movementSpeed: Int = 1
+    let jumpValue: CGFloat = 1
+    let fallSpeed: CGFloat = 1000
     
     // MARK: - Frames
-    public let runTimePerFrame: TimeInterval = 0.04
-    public let hitTimePerFrame: TimeInterval = 0.05
-    public let deathTimePerFrame: TimeInterval = 0.05
+    let runTimePerFrame: TimeInterval = 0.04
+    let hitTimePerFrame: TimeInterval = 0.05
+    let deathTimePerFrame: TimeInterval = 0.05
 }

@@ -8,23 +8,23 @@
 import SpriteKit
 import PlayfulKit
 
-public final class CollisionLogic {
+final class CollisionLogic {
     
-    public init(scene: GameScene) {
+    init(scene: GameScene) {
         self.scene = scene
     }
     
-    public var scene: GameScene
+    var scene: GameScene
     
     /// When the player projectile hit an object.
-    public func projectileHitObject(_ projectileNode: PKObjectNode, objectNode: PKObjectNode) {
+    func projectileHitObject(_ projectileNode: PKObjectNode, objectNode: PKObjectNode) {
         scene.core?.logic?.damageObject(objectNode, with: projectileNode)
         projectileNode.removeAllActions()
         scene.player?.state.hasProjectileTurningBack = true
     }
     
     /// When the player pick up an item.
-    public func pickUpCollectible(object: PKObjectNode) {
+    func pickUpCollectible(object: PKObjectNode) {
         if let objectName = object.name,
            let collectibleData = GameObject.getCollectible(objectName) {
             if let collectibleSound = collectibleData.sound {
@@ -39,7 +39,7 @@ public final class CollisionLogic {
     }
     
     /// When the player drop on the head of an enemy.
-    public func playerDropOnEnemy(_ enemyNode: PKObjectNode) {
+    func playerDropOnEnemy(_ enemyNode: PKObjectNode) {
         guard let player = scene.player else { return }
         if player.state.isJumping {
             scene.core?.logic?.instantDestroy(enemyNode)
@@ -47,7 +47,7 @@ public final class CollisionLogic {
     }
     
     /// When an enemy hit the player.
-    public func enemyHitPlayer(_ enemyNode: PKObjectNode) {
+    func enemyHitPlayer(_ enemyNode: PKObjectNode) {
         //        guard let player = scene.player else { return }
         //        guard let environment = scene.core?.environment else { return }
         self.scene.core?.logic?.damagePlayer(with: enemyNode)
@@ -66,7 +66,7 @@ public final class CollisionLogic {
     }
     
     /// When the player land on a structure.
-    public func landOnGround() {
+    func landOnGround() {
         guard let player = scene.player else { return }
         
         if player.state.isJumping {

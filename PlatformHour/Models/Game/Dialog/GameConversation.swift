@@ -8,8 +8,8 @@
 import Foundation
 import Utility_Toolbox
 
-public struct GameConversation: Codable {
-    public init(name: String,
+struct GameConversation: Codable {
+    init(name: String,
                 category: GameConversation.Category,
                 dialogs: [GameCharacterDialog],
                 cinematicCompletion: String? = nil,
@@ -23,12 +23,12 @@ public struct GameConversation: Codable {
         self.isEndOfConversation = isEndOfConversation
     }
     
-    public let name: String
-    public let category: Category
-    public var dialogs: [GameCharacterDialog]
-    public var cinematicCompletion: String?
-    public var currentDialogIndex: Int = 0
-    public var isEndOfConversation: Bool = false
+    let name: String
+    let category: Category
+    var dialogs: [GameCharacterDialog]
+    var cinematicCompletion: String?
+    var currentDialogIndex: Int = 0
+    var isEndOfConversation: Bool = false
     
     mutating func moveOnNextDialog() {
         if dialogs.canGoNext(currentDialogIndex) {
@@ -38,7 +38,7 @@ public struct GameConversation: Codable {
         }
     }
     
-    public enum Category: String, Codable {
+    enum Category: String, Codable {
         case onLevelStart
         case onNodeAlteration
         case onPlayerCoordinate
@@ -53,7 +53,7 @@ public struct GameConversation: Codable {
     }
 }
 
-public extension GameConversation {
+extension GameConversation {
     
     /// Returns all the conversations of the game
     static var all: [GameConversation]? {

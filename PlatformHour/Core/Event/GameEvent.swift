@@ -9,18 +9,18 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-public final class GameEvent {
+final class GameEvent {
     
-    public init(scene: GameScene) {
+    init(scene: GameScene) {
         self.scene = scene
     }
     
-    public var scene: GameScene
+    var scene: GameScene
 }
 
 // MARK: - Triggers
 
-public extension GameEvent {
+extension GameEvent {
     
     /// Trigger a level conversation on when the player is on a specific coordinate.
     func triggerConversationOnCoordinate() {
@@ -77,7 +77,7 @@ public extension GameEvent {
 
 // MARK: - Cinematics
 
-public extension GameEvent {
+extension GameEvent {
     
     /// Start a level cinematic.
     func startCinematic(levelCinematic: LevelCinematic) {
@@ -216,7 +216,7 @@ public extension GameEvent {
 
 // MARK: - Conversations
 
-public extension GameEvent {
+extension GameEvent {
     
     /// Play the current conversation.
     func playConversation(levelConversation: LevelConversation) {
@@ -230,7 +230,7 @@ public extension GameEvent {
 
 // MARK: - Updates
 
-public extension GameEvent {
+extension GameEvent {
     
     /// Updates player coordinate
     func updatePlayerCoordinate() {
@@ -260,7 +260,7 @@ public extension GameEvent {
 
 // MARK: - Levels
 
-public extension GameEvent {
+extension GameEvent {
     
     /// Load the next level of the game.
     func loadNextLevel() {

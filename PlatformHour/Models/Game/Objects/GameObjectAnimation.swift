@@ -7,13 +7,13 @@
 
 import Foundation
 
-public struct GameObjectAnimation: Codable {
+struct GameObjectAnimation: Codable {
     
-    public init(identifier: String, frames: [String]) {
+    init(identifier: String, frames: [String]) {
         self.identifier = identifier
         self.frames = frames
     }
     
-    public var identifier: String
-    public var frames: [String]
+    var identifier: String
+    var frames: [String]
 }

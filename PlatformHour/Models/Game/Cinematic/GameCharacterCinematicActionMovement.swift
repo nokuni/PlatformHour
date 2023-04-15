@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct GameCharacterCinematicActionMovement: Codable {
-    public let destinationCoordinate: String
-    public let duration: Double
-    public let willDisappear: Bool
+struct GameCharacterCinematicActionMovement: Codable {
+    let destinationCoordinate: String
+    let duration: Double
+    let willDisappear: Bool
 }

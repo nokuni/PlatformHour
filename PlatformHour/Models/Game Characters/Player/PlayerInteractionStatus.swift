@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum PlayerInteractionStatus {
+enum PlayerInteractionStatus {
     case none
     case onExit
 }

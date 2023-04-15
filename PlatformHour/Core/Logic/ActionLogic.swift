@@ -9,23 +9,24 @@ import SpriteKit
 import PlayfulKit
 import Utility_Toolbox
 
-public final class ActionLogic {
+final class ActionLogic {
     
-    public init(scene: GameScene) {
+    init(scene: GameScene) {
         self.scene = scene
     }
     
-    public var scene: GameScene
+    var scene: GameScene
     
-    public var configuration = ActionLogicConfiguration()
+    var configuration = ActionLogicConfiguration()
 }
 
 // MARK: - Directional Actions
 
-public extension ActionLogic {
+extension ActionLogic {
     
     /// Trigger right pad actions.
     func rightPadAction() {
+        guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
@@ -43,6 +44,7 @@ public extension ActionLogic {
     
     /// Trigger left pad actions.
     func leftPadAction() {
+        guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
@@ -60,6 +62,7 @@ public extension ActionLogic {
     
     /// Trigger up pad actions.
     func upPadAction() {
+        guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
@@ -77,6 +80,7 @@ public extension ActionLogic {
     
     /// Trigger down pad actions.
     func downPadAction() {
+        guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
@@ -119,7 +123,7 @@ public extension ActionLogic {
 
 // MARK: - Button Actions
 
-public extension ActionLogic {
+extension ActionLogic {
     
     /// Trigger button A actions.
     func actionA() {
@@ -225,7 +229,7 @@ public extension ActionLogic {
 
 // MARK: - Animations
 
-public extension ActionLogic {
+private extension ActionLogic {
     
     /// Returns the jump animation.
     private func jumpAction(player: Player) -> SKAction {
@@ -300,21 +304,51 @@ public extension ActionLogic {
     }
 }
 
-// MARK: - Underlying Actions/Animations
+// MARK: - Action Sequence
 
-public extension ActionLogic {
+private extension ActionLogic {
     
     /// Adds an action to the action sequence.
     private func addSequenceAction(_ action: Player.SequenceAction) {
-        guard let player = scene.player else { return }
-        guard player.actions.count < player.currentRoll.rawValue else { return }
-        player.actions.append(action)
+        disable()
+        addPlayerAction(action)
+        addActionElement(action)
+        scene.core?.logic?.resolveSequenceOfActions()
+    }
+    
+    /// Returns an action element.
+    private func actionElement(_ action: Player.SequenceAction) -> SKSpriteNode {
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
         actionElement.size = GameConfiguration.sceneConfiguration.tileSize * 0.6
-        scene.core?.hud?.actionSquares[safe: player.actions.count - 1]?.addChildSafely(actionElement)
-        scene.core?.logic?.resolveSequenceOfActions()
+        return actionElement
     }
+    
+    /// Adds an action to the action sequence.
+    private func addPlayerAction(_ action: Player.SequenceAction) {
+        guard let player = scene.player else { return }
+        guard player.actions.count < player.currentRoll.rawValue else { return }
+        player.actions.append(action)
+    }
+    
+    /// Adds an action element to the action sequence.
+    private func addActionElement(_ action: Player.SequenceAction) {
+        guard let player = scene.player else { return }
+        let actionElement = actionElement(action)
+        let index = player.actions.count - 1
+        let actionSquare = scene.core?.hud?.actionSquares[safe: index]
+        let animation = SKAction.sequence([
+            SKAction.run { actionSquare?.addChildSafely(actionElement) },
+            SKAction.wait(forDuration: GameConfiguration.sceneConfiguration.addActionDelay),
+            SKAction.run { self.enable() }
+        ])
+        actionSquare?.run(animation)
+    }
+}
+
+// MARK: - Underlying Actions/Animations
+
+extension ActionLogic {
     
     /// Moves the player.
     func move(on direction: ActionLogicConfiguration.Direction, by movementSpeed: Int) {
@@ -397,7 +431,7 @@ public extension ActionLogic {
 
 // MARK: - Miscellaneous
 
-public extension ActionLogic {
+extension ActionLogic {
     
     /// Pause the game.
     func pause() {

@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct GameCharacterCinematicActionEffect: Codable {
-    public let stateIDIdentifier: String
-    public let repeatCount: Int?
-    public let isRepeatingForever: Bool
+struct GameCharacterCinematicActionEffect: Codable {
+    let stateIDIdentifier: String
+    let repeatCount: Int?
+    let isRepeatingForever: Bool
 }

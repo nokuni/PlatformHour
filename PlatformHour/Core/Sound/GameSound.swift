@@ -8,17 +8,17 @@
 import SpriteKit
 import PlayfulKit
 
-final public class GameSound {
+final class GameSound {
     
-    public init() { }
+    init() { }
     
-    public let manager = SoundManager()
+    let manager = SoundManager()
     
 }
 
 // MARK: - SFX
 
-public extension GameSound {
+extension GameSound {
     
     /// Play a step sound.
     func step() {
@@ -35,7 +35,7 @@ public extension GameSound {
 
 // MARK: - Music
 
-public extension GameSound {
+extension GameSound {
     
     /// Play background musics..
     func playBackgroundMusics(scene: GameScene) {

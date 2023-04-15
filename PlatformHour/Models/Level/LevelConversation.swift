@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct LevelConversation: Codable {
-    public init(conversation: String,
+struct LevelConversation: Codable {
+    init(conversation: String,
                 triggerCoordinate: String,
                 isAvailable: Bool = true) {
         self.conversation = conversation
@@ -16,9 +16,9 @@ public struct LevelConversation: Codable {
         self.isAvailable = isAvailable
     }
     
-    public let conversation: String
-    public let triggerCoordinate: String?
-    public var isAvailable: Bool = true
+    let conversation: String
+    let triggerCoordinate: String?
+    var isAvailable: Bool = true
     
     enum CodingKeys: String, CodingKey {
         case conversation
