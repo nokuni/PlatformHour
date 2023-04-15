@@ -216,7 +216,7 @@ extension GameEnvironment {
         let button = SKSpriteNode()
         button.size = GameConfiguration.sceneConfiguration.tileSize
         button.setScale(0.6)
-        button.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
+        button.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
         button.position = position
         popUpButton.addChildSafely(button)
         

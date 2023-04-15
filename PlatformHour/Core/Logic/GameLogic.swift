@@ -67,7 +67,7 @@ extension GameLogic {
     func resolveSequenceOfActions() {
         guard let player = scene.player else { return }
         if player.actions.count == player.currentRoll.rawValue {
-            scene.game?.controller?.action.disable()
+            scene.game?.controller?.disable()
             performActionSequence()
         }
     }
@@ -94,6 +94,8 @@ extension GameLogic {
         self.scene.core?.hud?.removeActionSquares()
         let sparkEffect = player.node.childNode(withName: GameConfiguration.nodeKey.sparkEffect)
         sparkEffect?.removeFromParent()
+        player.consumeEnergy(amount: 1)
+        scene.core?.hud?.updateEnergy()
     }
 }
 
@@ -152,7 +154,7 @@ extension GameLogic {
         let animation = SKAction.run {
             self.scene.player?.state.isJumping = false
             self.scene.core?.state.switchOn(newStatus: .inDefault)
-            self.scene.game?.controller?.action.enable()
+            self.scene.game?.controller?.enable()
             if action.configuration.isLongPressingDPad {
                 self.scene.player?.node.removeAllActions()
                 self.scene.game?.controller?.action.move(on: action.configuration.direction, by: action.configuration.movementSpeed)

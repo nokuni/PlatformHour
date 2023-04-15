@@ -9,7 +9,7 @@
                 "startingCoordinate": "1614",
                 "movement": {
                     "destinationCoordinate": "0714",
-                    "duration": 8,
+                    "duration": 5,
                     "willDisappear": true
                 },
                 "isFollowedByCamera": true
@@ -31,7 +31,7 @@
                 "startingCoordinate": "0714",
                 "movement": {
                     "destinationCoordinate": "1614",
-                    "duration": 8,
+                    "duration": 5,
                     "willDisappear": true
                 },
                 "effect": {
@@ -71,5 +71,40 @@
             }
         ],
         "conversationCompletion": "Movement Power Up Conversation"
-    }
+    },
+    {
+        "name": "First Crystal Forward Focus Cinematic",
+        "category": "onLevelStart",
+        "actions": [
+            {
+                "id": 0,
+                "objectName": "Empty",
+                "startingCoordinate": "2908",
+                "movement": {
+                    "destinationCoordinate": "2915",
+                    "duration": 5,
+                    "willDisappear": true
+                },
+                "isFollowedByCamera": true
+            },
+        ],
+        "conversationCompletion": "First Crystal Intro Conversation"
+    },
+    {
+        "name": "First Crystal Backward Focus Cinematic",
+        "category": "onConversation",
+        "actions": [
+            {
+                "id": 0,
+                "objectName": "Empty",
+                "startingCoordinate": "2915",
+                "movement": {
+                    "destinationCoordinate": "2908",
+                    "duration": 2,
+                    "willDisappear": true
+                },
+                "isFollowedByCamera": true
+            },
+        ]
+    },
 ]

@@ -18,9 +18,11 @@ struct ImageKey {
     let xMark = "xMark"
     let indicator = "indicator"
     let hudBlueGem = "hudBlueGem"
-    let dialogBoxRight = "dialogBoxRight"
-    let dialogBoxLeft = "dialogBoxLeft"
+    let conversationBoxRight = "conversationBoxRight"
+    let conversationBoxLeft = "conversationBoxLeft"
+    let emptyEnergyCharger = "emptyEnergyCharger"
+    let fullEnergyCharger = "fullEnergyCharger"
     
     // MARK: - Environment
-    let mapSquare = "testSquare"
+    let mapSquare = "mapSquare"
 }

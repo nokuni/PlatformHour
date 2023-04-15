@@ -33,7 +33,7 @@ final class GameContent {
         generateLevelCollectibles()
         generateLevelTraps()
         generateLevelContainers()
-        generateLevelExit()
+        generateLevelImportants()
         generateLevelNPCs()
         generateLevelEnemies()
         generateLevelPlayer()
@@ -75,20 +75,12 @@ private extension GameContent {
         }
     }
     
-    /// Generate the level exit on the current level.
-    private func generateLevelExit() {
+    /// Generate the level important objects on the current level.
+    private func generateLevelImportants() {
         guard let level = scene.game?.level else { return }
-        guard let levelExit = level.exit else { return }
-        guard let exitObject = GameObject.getImportant(GameConfiguration.nodeKey.exit) else { return }
-        
-        let collision = Collision(category: .npc,
-                                  collision: [.allClear],
-                                  contact: [.player])
-        
-        let exitNode = environment.objectElement(name: GameConfiguration.nodeKey.exit,
-                                                 physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
-                                                 collision: collision)
-        createLevelObject(node: exitNode, levelObject: levelExit, gameObject: exitObject)
+        for important in level.objects(category: .important) {
+            createLevelImportant(important)
+        }
     }
     
     /// Generate the NPCs on the current level.
@@ -185,9 +177,7 @@ extension GameContent {
         
         createLevelObject(node: npcObjectNode, levelObject: levelNPC, gameObject: npcObject)
         
-        let animation = animation.animate(node: npcObjectNode, identifier: .idle, filteringMode: .nearest, timeInterval: 0.1)
-        
-        npcObjectNode.run(SKAction.repeatForever(animation))
+        levelObjectAnimation(node: npcObjectNode, identifier: .idle, isRepeatingForever: true)
     }
     
     /// Create a trap.
@@ -226,6 +216,24 @@ extension GameContent {
         scene.addChildSafely(trapNode)
         
         logic.dropTrap(trapObject: trapNode)
+    }
+    
+    private func createLevelImportant(_ levelImportant: LevelObject) {
+        guard let importantObject = GameObject.getImportant(levelImportant.name) else { return }
+        
+        let collision = Collision(category: .npc,
+                                  collision: [.allClear],
+                                  contact: [.player])
+        
+        let importantObjectNode = environment.objectElement(name: levelImportant.name,
+                                                            physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                            collision: collision)
+        
+        createLevelObject(node: importantObjectNode,
+                          levelObject: levelImportant,
+                          gameObject: importantObject)
+        
+        levelObjectAnimation(node: importantObjectNode, identifier: .idle, isRepeatingForever: true)
     }
     
     /// Create an enemy.
@@ -300,10 +308,16 @@ extension GameContent {
         
         node.animations = gameObject.animations
         node.coordinate = coordinate
-        node.size = environment.map.squareSize * CGFloat(levelObject.sizeGrowth)
+        if let sizeGrowth = levelObject.sizeGrowth {
+            node.size = environment.map.squareSize * sizeGrowth
+        }
         node.texture = SKTexture(imageNamed: gameObject.image)
         node.texture?.filteringMode = .nearest
-        node.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
+        
+        node.zPosition = levelObject.sizeGrowth == nil ?
+        GameConfiguration.sceneConfiguration.objectZPosition :
+        GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition
+        
         node.position = position
         node.physicsBody?.affectedByGravity = false
         scene.addChildSafely(node)
@@ -401,6 +415,21 @@ private extension GameContent {
             player.node.texture = SKTexture(imageNamed: sprite)
             player.node.texture?.filteringMode = .nearest
         }
+    }
+    
+    private func levelObjectAnimation(node: PKObjectNode,
+                                      identifier: GameAnimation.StateID,
+                                      timeInterval: TimeInterval = 0.1,
+                                      repeatCount: Int = 1,
+                                      isRepeatingForever: Bool = false) {
+        let animation = animation.animate(node: node,
+                                          identifier: identifier,
+                                          filteringMode: .nearest,
+                                          timeInterval: timeInterval)
+        
+        guard !node.animations.isEmpty else { return }
+        
+        SKAction.repeating(action: animation, node: node, count: repeatCount, isRepeatingForever: isRepeatingForever)
     }
 }
 

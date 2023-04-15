@@ -18,6 +18,7 @@ struct NodeKey {
     let player = "Player"
     let playerProjectile = "Player Projectile"
     let exit = "Exit"
+    let blueCrystal = "Blue Crystal"
     
     // MARK: - Animation
     let gravityEffect = "Gravity Effect"
@@ -28,6 +29,7 @@ struct NodeKey {
     let actionSquare = "Action Square"
     let conversationBox = "Conversation Box"
     
-    // MARK: - Text
-    let dialogText = "Dialog Text"
+    // MARK: - Conversation
+    let conversationText = "Conversation Text"
+    let firstCrystalTakeConversation = "First Crystal Take Conversation"
 }

@@ -296,13 +296,13 @@
 			path = Animation;
 			sourceTree = "<group>";
 		};
-		9625A9FD29E43F7B0089F309 /* Dialog */ = {
+		9625A9FD29E43F7B0089F309 /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
 				96D60F2C29E02D3500D2C1C3 /* GameConversation.swift */,
 				96D60F3729E05F1F00D2C1C3 /* GameCharacterDialog.swift */,
 			);
-			path = Dialog;
+			path = Conversation;
 			sourceTree = "<group>";
 		};
 		9625A9FE29E43F800089F309 /* Cinematic */ = {
@@ -548,7 +548,7 @@
 			children = (
 				9601D6BA29E1D11E006624C6 /* Main */,
 				9625A9FE29E43F800089F309 /* Cinematic */,
-				9625A9FD29E43F7B0089F309 /* Dialog */,
+				9625A9FD29E43F7B0089F309 /* Conversation */,
 				9601D6B729E1D0E2006624C6 /* Objects */,
 				9601D6B829E1D0F6006624C6 /* Others */,
 				9601D6B929E1D103006624C6 /* Characters */,
@@ -612,16 +612,6 @@
 				9625A9F929E306C40089F309 /* cinematics.json */,
 			);
 			path = Miscellaneous;
-			sourceTree = "<group>";
-		};
-		96D60F3D29E17BDE00D2C1C3 /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				96FE62A0298AD81A00B2C614 /* Player.swift */,
-				964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */,
-				96D60F1629DF60B000D2C1C3 /* PlayerState.swift */,
-			);
-			path = Player;
 			sourceTree = "<group>";
 		};
 		96EE967A298D8DDB00273A9D /* Resources */ = {
@@ -694,7 +684,9 @@
 		96FE62A2298AE57600B2C614 /* Game Characters */ = {
 			isa = PBXGroup;
 			children = (
-				96D60F3D29E17BDE00D2C1C3 /* Player */,
+				96FE62A0298AD81A00B2C614 /* Player.swift */,
+				964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */,
+				96D60F1629DF60B000D2C1C3 /* PlayerState.swift */,
 				964435D729EAA3D400812B7A /* Stats.swift */,
 			);
 			path = "Game Characters";

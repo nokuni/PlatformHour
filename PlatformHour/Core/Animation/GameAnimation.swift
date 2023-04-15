@@ -63,7 +63,8 @@ extension GameAnimation {
                          node: PKObjectNode,
                          timeInterval: TimeInterval = 0.05,
                          repeatCount: Int = 1,
-                         isRepeatingForever: Bool = false) {
+                         isRepeatingForever: Bool = false,
+                         completion: (() -> Void)? = nil) {
         guard let content = scene.core?.content else { return }
         guard let effectObject = GameObject.getEffect(keyName) else { return }
         
@@ -81,7 +82,11 @@ extension GameAnimation {
         case isRepeatingForever:
             effectNode.run(SKAction.repeatForever(animation))
         default:
-            effectNode.run(SKAction.repeat(animation, count: repeatCount))
+            SKAction.animate(action: SKAction.repeat(animation, count: repeatCount),
+                             node: effectNode) {
+                effectNode.removeFromParent()
+                completion?()
+            }
         }
     }
     
@@ -95,7 +100,7 @@ extension GameAnimation {
         effectNode.alpha = isFadeIn ? 1 : 0
         effectNode.fillColor = .black
         effectNode.strokeColor = .black
-        effectNode.zPosition = GameConfiguration.sceneConfiguration.overlayZPosition
+        effectNode.zPosition = GameConfiguration.sceneConfiguration.screenFilterZPosition
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)
         let showTitleAction = SKAction.sequence([
@@ -122,6 +127,9 @@ extension GameAnimation {
     /// Title transition effect on the scene.
     func titleTransitionEffect(scene: GameScene, completion: (() -> Void)?) {
         guard let level = scene.game?.level else { return }
+        guard let game = scene.game else { return }
+        guard !game.hasTitleBeenDisplayed else { return }
+        
         let textManager = TextManager()
         let paramater = TextManager.Paramater(content: level.name,
                                               fontName: GameConfiguration.sceneConfiguration.titleFont,
@@ -133,7 +141,7 @@ extension GameAnimation {
         
         let titleNode = SKLabelNode(attributedText: attributedText)
         titleNode.alpha = 0
-        titleNode.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
+        titleNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
         titleNode.position = scene.camera?.position ?? .zero
         scene.addChildSafely(titleNode)
         
@@ -143,9 +151,10 @@ extension GameAnimation {
             SKAction.removeFromParent()
         ])
         
-        SKAction.animate(startCompletion: scene.game?.controller?.disable,
-                         action: sequence,
-                         node: titleNode) {
+        scene.game?.controller?.disable()
+        
+        SKAction.animate(action: sequence, node: titleNode) {
+            scene.game?.hasTitleBeenDisplayed = true
             completion?()
         }
     }
@@ -186,47 +195,6 @@ extension GameAnimation {
             scene.core?.gameCamera?.isUpdatingMovement = false
         }, action: shake, node: camera) {
             scene.core?.gameCamera?.isUpdatingMovement = true
-        }
-    }
-    
-#warning("Effect not used")
-    /// Add an orb split effect at a position on the scene.
-    func orbSplitEffect(scene: GameScene, on position: CGPoint) {
-        let tileSize = GameConfiguration.sceneConfiguration.tileSize
-        let positions = [
-            CGPoint(x: position.x, y: position.y + tileSize.height),
-            CGPoint(x: position.x + tileSize.width, y: position.y + tileSize.height),
-            CGPoint(x: position.x + tileSize.width, y: position.y),
-            CGPoint(x: position.x + tileSize.width, y: position.y - tileSize.height),
-            CGPoint(x: position.x, y: position.y - tileSize.height),
-            CGPoint(x: position.x - tileSize.width, y: position.y - tileSize.height),
-            CGPoint(x: position.x - tileSize.width, y: position.y),
-            CGPoint(x: position.x - tileSize.width, y: position.y + tileSize.height),
-        ]
-        for pos in positions {
-            let orb = SKSpriteNode(imageNamed: "orb0")
-            orb.size = tileSize
-            orb.texture?.filteringMode = .nearest
-            orb.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
-            orb.position = position
-            scene.addChildSafely(orb)
-            
-            let scale = SKAction.scaleUpAndDown(from: 0.1,
-                                                with: 0.05,
-                                                to: 1,
-                                                with: 0.05,
-                                                during: 0,
-                                                repeating: 10)
-            let fade = SKAction.fadeOut(withDuration: 0.5)
-            let move = SKAction.move(to: pos, duration: 0.5)
-            let groupAnimation = SKAction.group([scale, fade, move])
-            
-            let sequenceAnimation = SKAction.sequence([
-                groupAnimation,
-                SKAction.removeFromParent()
-            ])
-            
-            orb.run(sequenceAnimation)
         }
     }
 }

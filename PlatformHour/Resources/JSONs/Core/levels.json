@@ -118,54 +118,6 @@
                 "name": "Rock",
                 "category": "trap",
                 "coordinate": "1650"
-            },
-            {
-                "id": 0,
-                "name": "Blue Gem A",
-                "category": "collectible",
-                "coordinate": "2917"
-            },
-            {
-                "id": 1,
-                "name": "Blue Gem S",
-                "category": "collectible",
-                "coordinate": "2918"
-            },
-            {
-                "id": 2,
-                "name": "Blue Gem D",
-                "category": "collectible",
-                "coordinate": "2927"
-            },
-            {
-                "id": 3,
-                "name": "Blue Gem F",
-                "category": "collectible",
-                "coordinate": "2928"
-            },
-            {
-                "id": 4,
-                "name": "Blue Gem G",
-                "category": "collectible",
-                "coordinate": "2937"
-            },
-            {
-                "id": 5,
-                "name": "Blue Gem H",
-                "category": "collectible",
-                "coordinate": "2938"
-            },
-            {
-                "id": 6,
-                "name": "Blue Gem J",
-                "category": "collectible",
-                "coordinate": "2947"
-            },
-            {
-                "id": 7,
-                "name": "Blue Gem K",
-                "category": "collectible",
-                "coordinate": "2948"
             }
         ],
         "structures": [
@@ -204,7 +156,21 @@
                 "name": "Blue Crystal",
                 "category": "important",
                 "coordinate": "2915",
-                "sizeGrowth": 1.1
+                "sizeGrowth": 2
+            },
+            {
+                "id": 2,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2734",
+                "sizeGrowth": 2
+            },
+            {
+                "id": 3,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2444",
+                "sizeGrowth": 2
             }
         ],
         "structures": [
@@ -242,7 +208,23 @@
                 "coordinate": "2050"
             }
         ],
-        "conversations": [],
-        "cinematics": []
+        "conversations": [
+            {
+                "conversation": "First Crystal Intro Conversation"
+            },
+            {
+                "conversation": "First Crystal Take Conversation"
+            },
+        ],
+        "cinematics": [
+            {
+                "name": "First Crystal Forward Focus Cinematic",
+                "category": "onStart"
+            },
+            {
+                "name": "First Crystal Backward Focus Cinematic",
+                "category": "onConversation"
+            },
+        ]
     }
 ]

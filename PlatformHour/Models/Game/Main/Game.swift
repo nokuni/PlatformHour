@@ -44,6 +44,8 @@ final class Game: ObservableObject {
     var currentLevelCinematic: LevelCinematic?
     var currentCinematic: GameCinematic?
     
+    var hasTitleBeenDisplayed: Bool = false
+    
     // MARK: - Save
     
     /// Load the game save.

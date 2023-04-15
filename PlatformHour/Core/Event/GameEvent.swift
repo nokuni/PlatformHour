@@ -104,12 +104,21 @@ extension GameEvent {
     private func cinematicSequence(cinematic: GameCinematic) {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
+        
         if let conversation = cinematic.conversationCompletion,
            let levelConversation = level.conversations.first(where: { $0.conversation == conversation }) {
-            self.playConversation(levelConversation: levelConversation)
-            self.scene.core?.gameCamera?.followedObject = player.node
-            self.scene.isUserInteractionEnabled = true
+            playConversation(levelConversation: levelConversation)
+        } else {
+            scene.core?.gameCamera?.followedObject = player.node
+            scene.core?.state.switchOn(newStatus: .inDefault)
+            scene.core?.animation?.titleTransitionEffect(scene: scene) {
+                self.scene.game?.controller?.enable()
+                self.scene.core?.hud?.addContent()
+            }
         }
+        
+        disableCinematic()
+        resetCinematic()
     }
     
     /// Returns the object and the action of the cinematic sequence.
@@ -198,7 +207,7 @@ extension GameEvent {
         guard let startingCoordinate = action.startingCoordinate?.coordinate else { return nil }
         
         let objectNode = scene.core?.content?.createObject(object, at: startingCoordinate)
-        objectNode?.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+        objectNode?.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
         objectNode?.alpha = 0
         
         return objectNode
@@ -212,6 +221,11 @@ extension GameEvent {
             scene.game?.level?.cinematics[index].isAvailable = false
         }
     }
+    
+    private func resetCinematic() {
+        scene.game?.currentLevelCinematic = nil
+        scene.game?.currentCinematic = nil
+    }
 }
 
 // MARK: - Conversations
@@ -222,6 +236,9 @@ extension GameEvent {
     func playConversation(levelConversation: LevelConversation) {
         guard levelConversation.isAvailable else { return }
         
+        hideButtonPopUp()
+        scene.core?.hud?.removeContent()
+        scene.game?.controller?.disable(isUserInteractionEnabled: true)
         scene.game?.currentLevelConversation = levelConversation
         scene.core?.state.switchOn(newStatus: .inConversation)
         scene.core?.hud?.addConversationBox()
@@ -256,26 +273,27 @@ extension GameEvent {
         popUpButton.removeFromParent()
         scene.player?.interactionStatus = .none
     }
+    
+    /// Hide the current pop up button.
+    func hideButtonPopUp() {
+        guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
+            return
+        }
+        popUpButton.alpha = 0
+    }
+    
+    /// Hide the current pop up button.
+    func showButtonPopUp() {
+        guard let popUpButton = scene.childNode(withName: GameConfiguration.nodeKey.popUpButton) else {
+            return
+        }
+        popUpButton.alpha = 1
+    }
 }
 
 // MARK: - Levels
 
 extension GameEvent {
-    
-    /// Load the next level of the game.
-    func loadNextLevel() {
-        scene.core?.event?.dismissButtonPopUp()
-        scene.core?.hud?.removeContent()
-        scene.game?.controller?.disable()
-        scene.core?.animation?.sceneTransitionEffect(scene: scene,
-                                                     effectAction: SKAction.fadeIn(withDuration: 2),
-                                                     isFadeIn: false,
-                                                     isShowingTitle: false,
-                                                     completion: {
-            self.scene.game?.setupNextLevel()
-            self.restartLevel()
-        })
-    }
     
     /// Restart the current level of the game.
     func restartLevel(delayedBy seconds: Double = 0) {
@@ -293,5 +311,47 @@ extension GameEvent {
         let timerNode = PKTimerNode(configuration: configuration)
         scene.addChildSafely(timerNode)
         timerNode.start()
+    }
+}
+
+// MARK: - Interactions
+
+
+extension GameEvent {
+    
+    /// Load the next level of the game.
+    func loadNextLevel() {
+        scene.game?.hasTitleBeenDisplayed = false
+        scene.core?.event?.dismissButtonPopUp()
+        scene.core?.hud?.removeContent()
+        scene.game?.controller?.disable()
+        scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                     effectAction: SKAction.fadeIn(withDuration: 2),
+                                                     isFadeIn: false,
+                                                     isShowingTitle: false,
+                                                     completion: {
+            self.scene.game?.setupNextLevel()
+            self.restartLevel()
+        })
+    }
+    
+    /// Activates a blus crystal power.
+    func activateBlueCrystal() {
+        guard let player = scene.player else { return }
+        guard let level = scene.game?.level else { return }
+        scene.game?.controller?.action.disable()
+        scene.core?.animation?.addObjectEffect(keyName: GameConfiguration.nodeKey.sparkEffect,
+                                               scene: scene,
+                                               node: player.node,
+                                               timeInterval: 0.1) {
+            if let levelConversation = level.conversations.first(where: {
+                $0.conversation == GameConfiguration.nodeKey.firstCrystalTakeConversation
+            }) {
+                player.gainEnergy(amount: 1)
+                self.scene.core?.hud?.updateEnergy()
+                self.scene.game?.controller?.action.enable()
+                self.playConversation(levelConversation: levelConversation)
+            }
+        }
     }
 }

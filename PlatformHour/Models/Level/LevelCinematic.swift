@@ -8,16 +8,6 @@
 import Foundation
 
 struct LevelCinematic: Codable {
-    init(name: String,
-                triggerCoordinate: String,
-                category: Category,
-                isAvailable: Bool = true) {
-        self.name = name
-        self.triggerCoordinate = triggerCoordinate
-        self.category = category
-        self.isAvailable = isAvailable
-    }
-    
     let name: String
     let triggerCoordinate: String?
     let category: Category

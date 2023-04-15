@@ -8,21 +8,6 @@
 import Foundation
 
 struct LevelStructure: Codable {
-    init(atlasName: String,
-                outline: String,
-                firstLayer: String? = nil,
-                innerLayer: String? = nil,
-                innerLayerAmount: Int? = nil,
-                matrix: String, coordinate: String) {
-        self.atlasName = atlasName
-        self.outline = outline
-        self.firstLayer = firstLayer
-        self.innerLayer = innerLayer
-        self.innerLayerAmount = innerLayerAmount
-        self.matrix = matrix
-        self.coordinate = coordinate
-    }
-    
     let atlasName: String
     let outline: String
     let firstLayer: String?

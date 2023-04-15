@@ -60,22 +60,33 @@
         ]
     },
     {
-        "name": "Fly Power Up Dialog",
-        "category": "onPlayerCoordinate",
+        "name": "First Crystal Intro Conversation",
+        "category": "onCinematic",
         "dialogs": [
             {
                 "character": "Blue Spirit",
                 "side": "right",
                 "lines": [
-                    "See ! That is my first line in the world of Paracia !",
-                    "Right there ! Watch that crystal !"
+                    "Oh ! Watch ! An active blue crystal !",
+                    "I can recover some energy with that !",
+                    "I'm too weak to fully absorb it but it's a start.",
+                    "Come closer and touch it. I will do the rest."
                 ]
-            },
+            }
+        ],
+        "cinematicCompletion": "First Crystal Backward Focus Cinematic"
+    },
+    {
+        "name": "First Crystal Take Conversation",
+        "category": "onObject",
+        "dialogs": [
             {
-                "character": "Dice",
-                "side": "left",
+                "character": "Blue Spirit",
+                "side": "right",
                 "lines": [
-                    "... ?"
+                    "I haven't felt this for a long time !",
+                    "So good... I'm full right now.",
+                    "We can keep moving right now."
                 ]
             }
         ]

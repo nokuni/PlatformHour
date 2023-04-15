@@ -192,6 +192,7 @@ extension ActionLogic {
         guard !player.state.isJumping else { return }
         guard player.interactionStatus == .none else { return }
         guard !player.isAnimating else { return }
+        guard player.energy > 0 else { return }
         
         let action = jumpAction(player: player)
         
@@ -223,6 +224,8 @@ extension ActionLogic {
             ()
         case .onExit:
             scene.core?.event?.loadNextLevel()
+        case .onBlueCrystal:
+            scene.core?.event?.activateBlueCrystal()
         }
     }
 }
@@ -310,7 +313,6 @@ private extension ActionLogic {
     
     /// Adds an action to the action sequence.
     private func addSequenceAction(_ action: Player.SequenceAction) {
-        disable()
         addPlayerAction(action)
         addActionElement(action)
         scene.core?.logic?.resolveSequenceOfActions()
@@ -320,6 +322,7 @@ private extension ActionLogic {
     private func actionElement(_ action: Player.SequenceAction) -> SKSpriteNode {
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
+        actionElement.zPosition = GameConfiguration.sceneConfiguration.overElementHUDZPosition
         actionElement.size = GameConfiguration.sceneConfiguration.tileSize * 0.6
         return actionElement
     }

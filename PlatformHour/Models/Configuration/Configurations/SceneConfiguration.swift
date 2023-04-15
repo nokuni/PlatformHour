@@ -13,15 +13,17 @@ struct SceneConfiguration {
     // MARK: - ZPositions
     let mapZPosition: CGFloat = 0
     let backgroundZPosition: CGFloat = 1
-    let sceneryZPosition: CGFloat = 2
-    let NPCZPosition: CGFloat = 3
-    let objectZPosition: CGFloat = 4
-    let playerZPosition: CGFloat = 4
-    let animationZPosition: CGFloat = 5
-    let hudZPosition: CGFloat = 6
-    let elementHUDZPosition: CGFloat = 7
-    let overlayZPosition: CGFloat = 8
-    let overOverlayZPosition: CGFloat = 9
+    let betweenBackAndSceneZPosition: CGFloat = 2
+    let sceneryZPosition: CGFloat = 3
+    let NPCZPosition: CGFloat = 4
+    let objectZPosition: CGFloat = 5
+    let playerZPosition: CGFloat = 6
+    let animationZPosition: CGFloat = 7
+    let hudLayerZPosition: CGFloat = 8
+    let hudZPosition: CGFloat = 9
+    let elementHUDZPosition: CGFloat = 10
+    let overElementHUDZPosition: CGFloat = 11
+    let screenFilterZPosition: CGFloat = 12
     
     // MARK: - Camera
     let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25

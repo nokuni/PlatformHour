@@ -73,16 +73,22 @@ extension GameControllerManager {
 extension GameControllerManager {
     
     /// Disconnect the virtual controller, remove all controller observers and disable touch events.
-    func disable() {
-        manager?.disableVirtualController()
-        manager?.disconnectVirtualController()
-        scene.isUserInteractionEnabled = false
+    func disable(isUserInteractionEnabled: Bool = false) {
+        guard let manager = manager else { return }
+        guard manager.isVirtualControllerEnabled else { return }
+        
+        manager.disableVirtualController()
+        manager.disconnectVirtualController()
+        scene.isUserInteractionEnabled = isUserInteractionEnabled
     }
     
     /// Disconnect the virtual controller, remove all controller observers and disable touch events.
-    func enable() {
-        manager?.enableVirtualController()
-        manager?.connectVirtualController()
-        scene.isUserInteractionEnabled = true
+    func enable(isUserInteractionEnabled: Bool = true) {
+        guard let manager = manager else { return }
+        guard !manager.isVirtualControllerEnabled else { return }
+        
+        manager.enableVirtualController()
+        manager.connectVirtualController()
+        scene.isUserInteractionEnabled = isUserInteractionEnabled
     }
 }

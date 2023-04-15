@@ -41,6 +41,11 @@ final class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
         
+        playerOnBlueCrystal(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
+        )
+        
         playerTouchGround(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.structure.rawValue)
@@ -120,6 +125,17 @@ extension GameCollision {
         if manager.isColliding(first, with: second) {
             scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
             scene.player?.interactionStatus = .onExit
+        }
+    }
+    
+    /// When the player is on the coordinate of a blue crystal.
+    private func playerOnBlueCrystal(_ first: CollisionManager.NodeBody,
+                                     with second: CollisionManager.NodeBody) {
+        guard let object = second.body.node as? PKObjectNode else { return }
+        guard object.name == GameConfiguration.nodeKey.blueCrystal else { return }
+        if manager.isColliding(first, with: second) {
+            scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
+            scene.player?.interactionStatus = .onBlueCrystal
         }
     }
 }

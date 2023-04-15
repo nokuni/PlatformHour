@@ -8,26 +8,12 @@
 import Foundation
 
 struct LevelObject: Codable, LevelProtocol {
-    init(id: Int,
-                name: String,
-                coordinate: String,
-                category: Category,
-                itinerary: Int,
-                sizeGrowth: Double) {
-        self.id = id
-        self.name = name
-        self.category = category
-        self.coordinate = coordinate
-        self.itinerary = itinerary
-    }
-    
     let id: Int
     let name: String
     let category: Category
     let coordinate: String
     let itinerary: Int?
-    
-    let sizeGrowth: Double = 1
+    let sizeGrowth: Double?
     
     enum Category: String, Codable {
         case player

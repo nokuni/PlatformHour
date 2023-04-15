@@ -20,18 +20,18 @@ final class GameHUD {
     
     private let layer = SKShapeNode(rectOf: .screen)
     private let contentContainer = SKNode()
-    private let actionSequence = SKNode()
     let conversationBox = SKSpriteNode()
+    let energyCharger = SKSpriteNode()
     let gemScore = SKNode()
     
     var actionSquares: [SKSpriteNode] {
-        let actionNodes = actionSequence.childNodes(named: "Action Square")
+        let actionNodes = layer.childNodes(named: "Action Square")
         let actions = actionNodes.compactMap { $0 as? SKSpriteNode }
         return actions
     }
     
     private var actionSequenceHUDConstraints: EdgeInsets {
-        let leading = (layer.frame.width / 2) - (GameConfiguration.sceneConfiguration.tileSize.width * 3) + (GameConfiguration.sceneConfiguration.tileSize.width / 2)
+        let leading = GameConfiguration.sceneConfiguration.tileSize.width * 3
         let constraints = EdgeInsets(top: 40, leading: leading, bottom: 0, trailing: 0)
         return constraints
     }
@@ -49,7 +49,7 @@ final class GameHUD {
         layer.name = "HUD Layer"
         layer.fillColor = .clear
         layer.strokeColor = .clear
-        layer.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+        layer.zPosition = GameConfiguration.sceneConfiguration.hudLayerZPosition
         scene.camera?.addChildSafely(layer)
     }
     
@@ -60,17 +60,17 @@ final class GameHUD {
         filterNode.strokeColor = color
         filterNode.fillColor = color
         filterNode.alpha = alpha
-        filterNode.zPosition = GameConfiguration.sceneConfiguration.overOverlayZPosition
+        filterNode.zPosition = GameConfiguration.sceneConfiguration.screenFilterZPosition
         filterNode.position = camera.position
         node.addChildSafely(filterNode)
     }
     
-    // MARK: - Dialog Box
+    // MARK: - Conversation Box
     
     /// Pass the current line of text.
     func passLine() {
-        if let dialogText = conversationBox.childNode(withName: "Dialog Text") as? PKTypewriterNode {
-            dialogText.hasFinished() ? nextLine() : speedUpLine()
+        if let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode {
+            conversationText.hasFinished() ? nextLine() : speedUpLine()
         }
     }
     
@@ -97,8 +97,8 @@ final class GameHUD {
     
     /// Display the total text of the dialog instrantly.
     private func speedUpLine() {
-        let dialogText = conversationBox.childNode(withName: "Dialog Text") as? PKTypewriterNode
-        dialogText?.displayAllText()
+        let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode
+        conversationText?.displayAllText()
         scene.core?.sound.manager.stopRepeatedSFX()
     }
     
@@ -111,7 +111,7 @@ final class GameHUD {
         }
     }
     
-    func resetConversation() {
+    private func resetConversation() {
         scene.game?.currentLevelConversation = nil
         scene.game?.currentConversation = nil
     }
@@ -126,17 +126,25 @@ final class GameHUD {
     
     /// Ends the current dialog.
     private func endConversation() {
+        guard let game = scene.game else { return }
         if let cinematicAfterConversation = cinematicAfterConversation {
             scene.core?.event?.startCinematic(levelCinematic: cinematicAfterConversation)
         } else {
             scene.core?.state.switchOn(newStatus: .inDefault)
+            if game.hasTitleBeenDisplayed { endConversationCompletion() }
             scene.core?.animation?.titleTransitionEffect(scene: scene) {
-                self.scene.game?.controller?.enable()
-                self.scene.core?.hud?.addContent()
+                self.endConversationCompletion()
             }
         }
         disableConversation()
         resetConversation()
+    }
+    
+    private func endConversationCompletion() {
+        guard let player = scene.player else { return }
+        scene.game?.controller?.enable()
+        scene.core?.hud?.addContent()
+        scene.core?.gameCamera?.followedObject = player.node
     }
 }
 
@@ -184,10 +192,16 @@ extension GameHUD {
 
 extension GameHUD {
     
-    /// Update the current gem score.
+    /// Updates the current gem score.
     func updateGemScore() {
         removeGemScore()
         addGemScore()
+    }
+    
+    /// Updates the current energy amount.
+    func updateEnergy() {
+        removeEnergyCharger()
+        addEnergyCharger()
     }
 }
 
@@ -203,29 +217,8 @@ extension GameHUD {
     /// Adds the content on the content container.
     func addContent() {
         removeContent()
-        addGemScore()
-        addActionSequenceBar()
-    }
-    
-    /// Adds the action sequence bar on the layer.
-    private func addActionSequenceBar() {
-        
-        actionSequence.name = "Action Sequence"
-        contentContainer.addChildSafely(actionSequence)
-        
-        let sequenceImages = ["sequenceSpace0", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace1", "sequenceSpace2"]
-        var sequenceHUD: [SKSpriteNode] = []
-        
-        for image in sequenceImages {
-            let hud = SKSpriteNode(imageNamed: image)
-            hud.texture?.filteringMode = .nearest
-            hud.size = GameConfiguration.sceneConfiguration.tileSize
-            sequenceHUD.append(hud)
-        }
-        
-        let sequencePosition = layer.cornerPosition(corner: .topLeft, padding: actionSequenceHUDConstraints)
-        
-        GameConfiguration.assemblyManager.createNodeList(of: sequenceHUD, at: sequencePosition, in: contentContainer, axes: .horizontal, adjustement: .leading, spacing: 1)
+        addEnergyCharger()
+        //addGemScore()
     }
     
     /// Adds the gem score on the layer.
@@ -258,36 +251,65 @@ extension GameHUD {
         gemScore.addChildSafely(item)
     }
     
+    /// Adds the energy charger.
+    private func addEnergyCharger() {
+        guard let player = scene.player else { return }
+        
+        let image = "energy\(player.maxEnergy)Charged\(player.energy)"
+        let images = ["\(image)0", "\(image)1", "\(image)2", "\(image)3"]
+        
+        energyCharger.size = GameConfiguration.sceneConfiguration.tileSize
+        energyCharger.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
+        energyCharger.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 60, bottom: 0, trailing: 0))
+        
+        let animation = SKAction.animate(with: images, filteringMode: .nearest, timePerFrame: 0.2)
+        
+        energyCharger.run(SKAction.repeatForever(animation))
+        
+        contentContainer.addChildSafely(energyCharger)
+    }
+    
     /// Adds an action square on the action sequence bar.
     func addActionSquares() {
         guard let player = scene.player else { return }
         
-        var actions: [SKSpriteNode] = []
+        var actionSquares: [SKSpriteNode] = []
         
         for index in 0..<player.currentRoll.rawValue {
-            let action = SKSpriteNode(imageNamed: GameConfiguration.imageKey.actionSquare)
-            action.name = "\(GameConfiguration.nodeKey.actionSquare) \(index)"
-            action.texture?.filteringMode = .nearest
-            action.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
-            action.size = GameConfiguration.sceneConfiguration.tileSize
+            let actionSquare = actionSquare(index: index)
             let animation = SKAction.sequence([
                 SKAction.scale(by: 1.1, duration: 0.1),
                 SKAction.scale(by: 0.9, duration: 0.1),
                 SKAction.scale(by: 1, duration: 0.1)
             ])
-            action.run(animation)
+            actionSquare.run(animation)
             
-            actions.append(action)
+            actionSquares.append(actionSquare)
         }
         
         let position = layer.cornerPosition(corner: .topLeft, padding: actionSequenceHUDConstraints)
         
         let parameter = AssemblyManager.Parameter(axes: .horizontal, adjustement: .leading, horizontalSpacing: 1, verticalSpacing: 1, columns: 6)
         
-        GameConfiguration.assemblyManager.createNodeCollectionWithDelay(of: actions, at: position, in: actionSequence, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
-            self.scene.core?.state.switchOn(newStatus: .inAction)
-            self.scene.game?.controller?.action.enable()
+        GameConfiguration.assemblyManager.createNodeCollectionWithDelay(of: actionSquares, at: position, in: layer, parameter: parameter, delay: 0.1, actionOnGoing: nil, actionOnEnd: {
+            self.endOfActionSquaresAnimation()
         })
+    }
+    
+    /// Action squares animation completion logic.
+    private func endOfActionSquaresAnimation() {
+        scene.core?.state.switchOn(newStatus: .inAction)
+        scene.game?.controller?.action.enable()
+    }
+    
+    /// Returns an action square.
+    private func actionSquare(index: Int) -> SKSpriteNode {
+        let actionSquare = SKSpriteNode(imageNamed: GameConfiguration.imageKey.actionSquare)
+        actionSquare.name = "\(GameConfiguration.nodeKey.actionSquare) \(index)"
+        actionSquare.texture?.filteringMode = .nearest
+        actionSquare.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
+        actionSquare.size = GameConfiguration.sceneConfiguration.tileSize
+        return actionSquare
     }
 }
 
@@ -310,9 +332,15 @@ extension GameHUD {
         gemScore.removeAllChildren()
         gemScore.removeFromParent()
     }
+    
+    /// Removes the energy charger from the layer.
+    private func removeEnergyCharger() {
+        energyCharger.removeAllChildren()
+        energyCharger.removeFromParent()
+    }
 }
 
-// MARK: - Dialog
+// MARK: - Conversation
 
 extension GameHUD {
     
@@ -353,8 +381,8 @@ extension GameHUD {
     private func configureConversationBox(dialogCharacter: GameCharacterDialog) {
         
         let dialogBoxImage = dialogCharacter.side == .right ?
-        GameConfiguration.imageKey.dialogBoxRight :
-        GameConfiguration.imageKey.dialogBoxLeft
+        GameConfiguration.imageKey.conversationBoxRight :
+        GameConfiguration.imageKey.conversationBoxLeft
         
         let dialogBoxTexture = SKTexture(imageNamed: dialogBoxImage)
         dialogBoxTexture.filteringMode = .nearest
@@ -425,7 +453,7 @@ extension GameHUD {
                                               lineSpacing: 5,
                                               padding: padding)
         let dialogText = PKTypewriterNode(container: node, parameter: parameter)
-        dialogText.name = "Dialog Text"
+        dialogText.name = GameConfiguration.nodeKey.conversationText
         node.addChildSafely(dialogText)
         dialogText.start()
         scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
@@ -449,7 +477,7 @@ extension GameHUD {
         
         let attributedText = textManager.attributedText(parameter: parameter)
         let dialogText = SKLabelNode(attributedText: attributedText)
-        dialogText.name = "Dialog Text"
+        dialogText.name = GameConfiguration.nodeKey.conversationText
         dialogText.position = layer.cornerPosition(corner: corner, padding: padding)
         node.addChildSafely(dialogText)
     }

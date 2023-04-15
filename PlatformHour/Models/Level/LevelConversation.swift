@@ -8,14 +8,6 @@
 import Foundation
 
 struct LevelConversation: Codable {
-    init(conversation: String,
-                triggerCoordinate: String,
-                isAvailable: Bool = true) {
-        self.conversation = conversation
-        self.triggerCoordinate = triggerCoordinate
-        self.isAvailable = isAvailable
-    }
-    
     let conversation: String
     let triggerCoordinate: String?
     var isAvailable: Bool = true
