@@ -9,20 +9,6 @@ import Foundation
 import Utility_Toolbox
 
 struct GameConversation: Codable {
-    init(name: String,
-                category: GameConversation.Category,
-                dialogs: [GameCharacterDialog],
-                cinematicCompletion: String? = nil,
-                currentDialogIndex: Int = 0,
-                isEndOfConversation: Bool = false) {
-        self.name = name
-        self.category = category
-        self.dialogs = dialogs
-        self.cinematicCompletion = cinematicCompletion
-        self.currentDialogIndex = currentDialogIndex
-        self.isEndOfConversation = isEndOfConversation
-    }
-    
     let name: String
     let category: Category
     var dialogs: [GameCharacterDialog]

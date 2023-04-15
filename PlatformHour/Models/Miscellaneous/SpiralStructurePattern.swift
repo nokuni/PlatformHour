@@ -8,7 +8,7 @@
 import SpriteKit
 import PlayfulKit
 
-class SpiralStructurePattern {
+final class SpiralStructurePattern {
     
     init(map: PKMapNode,
          matrix: Matrix,

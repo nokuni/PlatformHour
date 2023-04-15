@@ -8,16 +8,6 @@
 import Foundation
 
 struct ActionLogicConfiguration {
-    init(timer: Timer? = nil,
-                direction: ActionLogicConfiguration.Direction = .none,
-                movementSpeed: Int = 0,
-                isLongPressingDPad: Bool = false) {
-        self.timer = timer
-        self.direction = direction
-        self.movementSpeed = movementSpeed
-        self.isLongPressingDPad = isLongPressingDPad
-    }
-    
     
     enum Direction: String, CaseIterable {
         case none
@@ -27,7 +17,7 @@ struct ActionLogicConfiguration {
         case left
     }
     
-    var timer: Timer?
+    var timer: Timer? = nil
     var direction: Direction = .none
     var movementSpeed: Int = 0
     var isLongPressingDPad: Bool = false

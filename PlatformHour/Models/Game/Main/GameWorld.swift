@@ -9,16 +9,6 @@ import Foundation
 import PlayfulKit
 
 struct GameWorld: Codable {
-    init(id: Int,
-                name: String,
-                levelIDs: [Int],
-                playerLandSound: String) {
-        self.id = id
-        self.name = name
-        self.levelIDs = levelIDs
-        self.playerLandSound = playerLandSound
-    }
-    
     let id: Int
     let name: String
     let levelIDs: [Int]

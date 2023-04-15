@@ -9,21 +9,6 @@ import Foundation
 import PlayfulKit
 
 struct GameObject: Codable {
-    
-    init(name: String,
-                image: String,
-                logic: GameObjectLogic,
-                animation: [GameObjectAnimation],
-                sound: String,
-                coordinate: Coordinate = Coordinate.zero) {
-        self.name = name
-        self.image = image
-        self.logic = logic
-        self.animation = animation
-        self.sound = sound
-        self.coordinate = coordinate
-    }
-    
     let name: String
     let image: String
     var logic: GameObjectLogic

@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-class SpiralStructureConstruct {
+final class SpiralStructureConstruct {
     
     init(outline: String,
          firstLayer: String?,

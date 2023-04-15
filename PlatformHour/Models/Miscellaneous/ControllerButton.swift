@@ -8,17 +8,6 @@
 import Foundation
 
 struct ControllerButton: Codable {
-    init(pressedSprite: String,
-                releasedSprite: String,
-                category: ControllerButton.Category,
-                product: ControllerButton.Product) {
-        self.pressedSprite = pressedSprite
-        self.releasedSprite = releasedSprite
-        self.category = category
-        self.product = product
-    }
-    
-    
     let pressedSprite: String
     let releasedSprite: String
     let category: Category

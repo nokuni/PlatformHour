@@ -9,15 +9,6 @@ import Foundation
 import Utility_Toolbox
 
 struct GameCinematic: Codable {
-    init(name: String,
-                category: GameCinematic.Category,
-                actions: [CinematicAction],
-                conversationCompletion: String? = nil) {
-        self.name = name
-        self.category = category
-        self.actions = actions
-        self.conversationCompletion = conversationCompletion
-    }
     
     let name: String
     let category: Category

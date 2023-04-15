@@ -10,31 +10,9 @@ import PlayfulKit
 import Utility_Toolbox
 
 struct GameCore {
-    init(state: GameState = GameState(),
-         animation: GameAnimation? = nil,
-         sound: GameSound = GameSound(),
-         event: GameEvent? = nil,
-         hud: GameHUD? = nil,
-         environment: GameEnvironment? = nil,
-         logic: GameLogic? = nil,
-         collision: GameCollision? = nil,
-         gameCamera: GameCamera? = nil,
-         content: GameContent? = nil) {
-        self.state = state
-        self.animation = animation
-        self.sound = sound
-        self.event = event
-        self.hud = hud
-        self.environment = environment
-        self.logic = logic
-        self.collision = collision
-        self.gameCamera = gameCamera
-        self.content = content
-    }
-    
-    var state: GameState
+    var state: GameState = GameState()
     var animation: GameAnimation?
-    var sound: GameSound
+    var sound: GameSound = GameSound()
     var event: GameEvent?
     var hud: GameHUD?
     var environment: GameEnvironment?

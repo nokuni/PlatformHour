@@ -19,6 +19,7 @@ import SwiftUI
 // MARK: - Feedbacks:
 
 // 😀
+// Add more SFX for effects.
 
 // MARK: - Improvements
 

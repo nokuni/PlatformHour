@@ -8,12 +8,6 @@
 import Foundation
 
 struct GameObjectAnimation: Codable {
-    
-    init(identifier: String, frames: [String]) {
-        self.identifier = identifier
-        self.frames = frames
-    }
-    
     var identifier: String
     var frames: [String]
 }

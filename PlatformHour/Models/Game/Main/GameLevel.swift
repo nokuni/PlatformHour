@@ -9,28 +9,6 @@ import Foundation
 import PlayfulKit
 
 struct GameLevel: Codable {
-    init(id: Int,
-         name: String,
-         mapMatrix: String,
-         playerCoordinate: String,
-         musics: [String],
-         background: LevelBackground,
-         objects: [LevelObject],
-         structures: [LevelStructure],
-         conversations: [LevelConversation],
-         cinematics: [LevelCinematic]) {
-        self.id = id
-        self.name = name
-        self.mapMatrix = mapMatrix
-        self.playerCoordinate = playerCoordinate
-        self.musics = musics
-        self.background = background
-        self.objects = objects
-        self.structures = structures
-        self.conversations = conversations
-        self.cinematics = cinematics
-    }
-    
     let id: Int
     let name: String
     let mapMatrix: String

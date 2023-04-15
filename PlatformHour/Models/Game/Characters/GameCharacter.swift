@@ -8,12 +8,6 @@
 import Foundation
 
 struct GameCharacter: Codable {
-    
-    init(name: String, fullArt: String) {
-        self.name = name
-        self.fullArt = fullArt
-    }
-    
     let name: String
     let fullArt: String
     

@@ -8,17 +8,6 @@
 import Foundation
 
 struct GameCharacterDialog: Codable {
-    init(character: String,
-                side: Side,
-                lines: [String],
-                currentLineIndex: Int = 0,
-                isEndOfLine: Bool = false) {
-        self.character = character
-        self.side = side
-        self.lines = lines
-        self.currentLineIndex = currentLineIndex
-        self.isEndOfLine = isEndOfLine
-    }
     
     let character: String?
     let side: Side
