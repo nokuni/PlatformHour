@@ -352,39 +352,33 @@ extension GameHUD {
         
         if scene.game?.currentConversation == nil { scene.game?.currentConversation = conversationData }
         
-        guard let currentConversation = scene.game?.currentConversation else { return }
+        guard let conversation = scene.game?.currentConversation else { return }
         
-        guard let dialog = scene.game?.currentConversation else { return }
+        let dialog = conversation.dialogs[conversation.currentDialogIndex]
         
-        let dialogCharacter = currentConversation.dialogs[dialog.currentDialogIndex]
-        
-        configureConversationBox(dialogCharacter: dialogCharacter)
+        configureConversationBox(dialog: dialog)
         
         layer.addChildSafely(conversationBox)
         
         addConversationArrow(node: conversationBox)
         
-        if let conversationCharacter = dialogCharacter.character,
+        if let conversationCharacter = dialog.character,
            let character = GameCharacter.get(conversationCharacter) {
-            addConversationCharacter(dialogCharacter, gameCharacter: character, node: conversationBox)
+            addConversationCharacter(dialog, gameCharacter: character, node: conversationBox)
         }
         
-        let lineIndex = currentConversation.dialogs[dialog.currentDialogIndex].currentLineIndex
-        let text = currentConversation.dialogs[dialog.currentDialogIndex].lines[lineIndex]
+        let lineIndex = conversation.dialogs[conversation.currentDialogIndex].currentLineIndex
+        let text = conversation.dialogs[conversation.currentDialogIndex].lines[lineIndex]
         
         addConversationText(text, node: conversationBox)
         
-        addSpeakerName(dialogCharacter, text: dialogCharacter.character ?? "???", node: conversationBox)
+        addSpeakerName(dialog, text: dialog.character ?? "???", node: conversationBox)
     }
     
     /// Configures the conversation box.
-    private func configureConversationBox(dialogCharacter: GameCharacterDialog) {
+    private func configureConversationBox(dialog: GameDialog) {
         
-        let dialogBoxImage = dialogCharacter.side == .right ?
-        GameConfiguration.imageKey.conversationBoxRight :
-        GameConfiguration.imageKey.conversationBoxLeft
-        
-        let dialogBoxTexture = SKTexture(imageNamed: dialogBoxImage)
+        let dialogBoxTexture = SKTexture(imageNamed: GameConfiguration.imageKey.conversationBox)
         dialogBoxTexture.filteringMode = .nearest
         
         let dialogBoxTextureSize = dialogBoxTexture.size()
@@ -422,33 +416,29 @@ extension GameHUD {
     }
     
     /// Add a character on the current conversation box.
-    private func addConversationCharacter(_ characterDialog: GameCharacterDialog,
+    private func addConversationCharacter(_ dialog: GameDialog,
                                           gameCharacter: GameCharacter,
                                           node: SKNode) {
         let characterTexture = SKTexture(imageNamed: gameCharacter.fullArt)
         characterTexture.filteringMode = .nearest
         let characterTextureSize = characterTexture.size()
         
-        let padding = characterDialog.side == .right ?
-        EdgeInsets(top: 50, leading: 0, bottom: 0, trailing:  150) :
-        EdgeInsets(top: 50, leading: 150, bottom: 0, trailing:  0)
-        
-        let corner: SKNode.QuadrilateralCorner = characterDialog.side == .right ? .topRight : .topLeft
+        let padding = EdgeInsets(top: 80, leading: 60, bottom: 0, trailing:  0)
         
         let character = SKSpriteNode()
-        character.size = characterTextureSize * 6
+        character.size = characterTextureSize * 2.5
         character.texture = characterTexture
-        character.zPosition = -1
-        character.position = layer.cornerPosition(corner: corner, padding: padding)
+        character.zPosition = conversationBox.zPosition + 1
+        character.position = conversationBox.cornerPosition(corner: .topLeft, padding: padding)
         node.addChildSafely(character)
     }
     
     /// Add a text on the conversation box.
     private func addConversationText(_ text: String, node: SKNode) {
-        let padding = EdgeInsets(top: 45, leading: 25, bottom: 0, trailing: 25)
+        let padding = EdgeInsets(top: 45, leading: 130, bottom: 0, trailing: 30)
         let parameter = TextManager.Paramater(content: text,
                                               fontName: GameConfiguration.sceneConfiguration.textFont,
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               fontColor: .black,
                                               lineSpacing: 5,
                                               padding: padding)
@@ -460,7 +450,7 @@ extension GameHUD {
     }
     
     /// Add the speaker name to the conversation box.
-    private func addSpeakerName(_ characterDialog: GameCharacterDialog, text: String, node: SKNode) {
+    private func addSpeakerName(_ dialog: GameDialog, text: String, node: SKNode) {
         let textManager = TextManager()
         
         let parameter = TextManager.Paramater(content: text,
@@ -469,16 +459,13 @@ extension GameHUD {
                                               fontColor: .white,
                                               horizontalAlignmentMode: .center)
         
-        let padding = characterDialog.side == .right ?
-        EdgeInsets(top: 140, leading: 0, bottom: 0, trailing:  135) :
-        EdgeInsets(top: 140, leading: 135, bottom: 0, trailing:  0)
-        
-        let corner: SKNode.QuadrilateralCorner = characterDialog.side == .right ? .topRight : .topLeft
+        let padding =  EdgeInsets(top: 16, leading: 70, bottom: 0, trailing:  0)
         
         let attributedText = textManager.attributedText(parameter: parameter)
         let dialogText = SKLabelNode(attributedText: attributedText)
         dialogText.name = GameConfiguration.nodeKey.conversationText
-        dialogText.position = layer.cornerPosition(corner: corner, padding: padding)
+        dialogText.zPosition = conversationBox.zPosition + 1
+        dialogText.position = conversationBox.cornerPosition(corner: .topLeft, padding: padding)
         node.addChildSafely(dialogText)
     }
 }

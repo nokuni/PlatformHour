@@ -21,6 +21,13 @@ final class GameControllerManager {
     var action: ActionLogic
     
     var manager: ControllerManager?
+    var controllerButtonState: ControllerButtonState = .none
+    
+    enum ControllerButtonState {
+        case pressed
+        case released
+        case none
+    }
 }
 
 // MARK: - Setups
@@ -47,10 +54,10 @@ extension GameControllerManager {
         manager?.action?.buttonY = ControllerManager.ButtonAction(press: nil,
                                                                   release: action.actionY)
         
-        manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadAction,
-                                                             rightPress: action.rightPadAction,
-                                                             upPress: action.upPadAction,
-                                                             downPress: action.downPadAction,
+        manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadActionPress,
+                                                             rightPress: action.rightPadActionPress,
+                                                             upPress: action.upPadActionPress,
+                                                             downPress: action.downPadActionPress,
                                                              release: action.releaseDPad)
     }
     

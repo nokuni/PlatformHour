@@ -5,45 +5,59 @@
         "dialogs": [
             {
                 "character": "Blue Spirit",
-                "side": "right",
                 "lines": [
-                    "Finally free !"
+                    "Finally free !",
+                    "I was waiting so long for a body to come in this place...",
+                    "Thanks for saving me young ma..."
                 ]
             },
             {
                 "character": "Dice",
-                "side": "left",
                 "lines": [
                     "..."
                 ]
             },
             {
                 "character": "Blue Spirit",
-                "side": "right",
                 "lines": [
                     "...",
-                    "Oh no ! I did not pay attention ! This body is not a mage...neither a human.",
-                    "It's a... dice ? What a dice is doing here ?"
+                    "Oh no ! I did not pay attention ! You are not a mage, neither a human...",
+                    "You are a... dice ? What a dice is doing here ?"
                 ]
             },
             {
                 "character": "Dice",
-                "side": "left",
                 "lines": [
                     "..."
                 ]
             },
             {
                 "character": "Blue Spirit",
-                "side": "right",
                 "lines": [
-                    "if you are now my host, it means you have a soul. But a dice does not have one. What happens to you ?",
-                    "Well ... for now, we need to leave this place.",
-                    "I can't do anything without a... capable host.",
-                    "However, I can make you move.",
+                    "Oh I did not present myself, I'm a crystal spirit.",
+                    "I do not have any memories, the only thing I know is...",
+                    "...my role is to assist young mage in their process of learning magic.",
+                    "It's been a long time I did not see any forms of life.",
+                    "But you are here... If I succeeded to attach myself to you, it means you have soul.",
+                    "How is it possible ? What happened to you ?"
+                ]
+            },
+            {
+                "character": "Dice",
+                "lines": [
+                    "..."
+                ]
+            },
+            {
+                "character": "Blue Spirit",
+                "lines": [
+                    "Well... I don't known myself what happened to me.",
+                    "For now, we need to leave this place. We need informations.",
+                    "It seems you can't do anything, that's not a problem.",
+                    "Even with my limited powers, I can make you move.",
                     "Close your eyes ... Ah ! That's true, you are dice."
                 ]
-            }
+            },
         ],
         "cinematicCompletion": "Movement Power Up Cinematic"
     },
@@ -52,9 +66,9 @@
         "category": "onCinematic",
         "dialogs": [
             {
-                "side": "none",
+                "character": "Blue Spirit",
                 "lines": [
-                    "You have the power to move now !\nPress the left or right directional buttons to move."
+                    "Now you can move ! I hope you know how to roll because I don't."
                 ]
             }
         ]
@@ -65,10 +79,10 @@
         "dialogs": [
             {
                 "character": "Blue Spirit",
-                "side": "right",
                 "lines": [
                     "Oh ! Watch ! An active blue crystal !",
-                    "I can recover some energy with that !",
+                    "I can absorb some energy with that !",
+                    "We may need it later.",
                     "I'm too weak to fully absorb it but it's a start.",
                     "Come closer and touch it. I will do the rest."
                 ]
@@ -82,11 +96,13 @@
         "dialogs": [
             {
                 "character": "Blue Spirit",
-                "side": "right",
                 "lines": [
                     "I haven't felt this for a long time !",
-                    "So good... I'm full right now.",
-                    "We can keep moving right now."
+                    "it looks like our path is going to be harder and harder.",
+                    "With that energy, I can make you fly for a limited time.",
+                    "Be careful, It will consume my energy, so you need to charge it up again.",
+                    "And... I don't know how your body works since you are dice.",
+                    "I would say... Just try !"
                 ]
             }
         ]

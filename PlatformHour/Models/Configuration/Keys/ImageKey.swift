@@ -18,8 +18,7 @@ struct ImageKey {
     let xMark = "xMark"
     let indicator = "indicator"
     let hudBlueGem = "hudBlueGem"
-    let conversationBoxRight = "conversationBoxRight"
-    let conversationBoxLeft = "conversationBoxLeft"
+    let conversationBox = "conversationBox"
     let emptyEnergyCharger = "emptyEnergyCharger"
     let fullEnergyCharger = "fullEnergyCharger"
     

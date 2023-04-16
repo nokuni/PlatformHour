@@ -23,6 +23,7 @@ struct NodeKey {
     // MARK: - Animation
     let gravityEffect = "Gravity Effect"
     let sparkEffect = "Spark Effect"
+    let spiritRefillEffect = "Spirit Refill Effect"
     
     // MARK: - HUD
     let playerAction = "Player Action"

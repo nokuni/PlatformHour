@@ -9,17 +9,21 @@ import SwiftUI
 
 // MARK: - Disturbance
 
-// When there is multiple inputs at the same time, the actions are added very fastly.
-
 // MARK: Bugs
 
 // 😀
 // actions arrows does not display sometimes when in action sequence (inconsistent).
+// Reposition conversation box and his elements
 
 // MARK: - Feedbacks:
 
 // 😀
 // Add more SFX for effects.
+// Add haptics:
+/* - When adding action on sequence.
+   - When dying.
+   - When falling.
+*/
 
 // MARK: - Improvements
 

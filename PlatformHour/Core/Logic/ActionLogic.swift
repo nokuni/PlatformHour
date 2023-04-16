@@ -24,13 +24,32 @@ final class ActionLogic {
 
 extension ActionLogic {
     
-    /// Trigger right pad actions.
-    func rightPadAction() {
+    /// Trigger right pad actions on press.
+    func rightPadActionPress() {
+        guard configuration.isEnabled(scene: scene) else { return }
+        guard let state = scene.core?.state else { return }
+        configuration.direction = .right
+        switch state.status {
+        case .inDefault:
+            moveRight()
+        case .inAction:
+            break
+        case .inConversation:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
+            break
+        }
+    }
+    
+    /// Trigger right pad actions on release.
+    func rightPadActionRelease() {
         guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
-            moveRight()
+            break
         case .inAction:
             addSequenceAction(.moveRight)
         case .inConversation:
@@ -42,13 +61,32 @@ extension ActionLogic {
         }
     }
     
-    /// Trigger left pad actions.
-    func leftPadAction() {
+    /// Trigger left pad actions on press.
+    func leftPadActionPress() {
+        guard configuration.isEnabled(scene: scene) else { return }
+        guard let state = scene.core?.state else { return }
+        configuration.direction = .left
+        switch state.status {
+        case .inDefault:
+            moveLeft()
+        case .inAction:
+            break
+        case .inConversation:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
+            break
+        }
+    }
+    
+    /// Trigger left pad actions on release
+    func leftPadActionRelease() {
         guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
-            moveLeft()
+            break
         case .inAction:
             addSequenceAction(.moveLeft)
         case .inConversation:
@@ -60,8 +98,27 @@ extension ActionLogic {
         }
     }
     
-    /// Trigger up pad actions.
-    func upPadAction() {
+    /// Trigger up pad actions on press.
+    func upPadActionPress() {
+        guard configuration.isEnabled(scene: scene) else { return }
+        guard let state = scene.core?.state else { return }
+        configuration.direction = .up
+        switch state.status {
+        case .inDefault:
+            break
+        case .inAction:
+            break
+        case .inConversation:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
+            break
+        }
+    }
+    
+    /// Trigger up pad actions on release.
+    func upPadActionRelease() {
         guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
@@ -79,7 +136,26 @@ extension ActionLogic {
     }
     
     /// Trigger down pad actions.
-    func downPadAction() {
+    func downPadActionPress() {
+        guard configuration.isEnabled(scene: scene) else { return }
+        guard let state = scene.core?.state else { return }
+        configuration.direction = .down
+        switch state.status {
+        case .inDefault:
+            break
+        case .inAction:
+            break
+        case .inConversation:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
+            break
+        }
+    }
+    
+    /// Trigger down pad actions on release.
+    func downPadActionRelease() {
         guard configuration.isEnabled(scene: scene) else { return }
         guard let state = scene.core?.state else { return }
         switch state.status {
@@ -183,7 +259,30 @@ extension ActionLogic {
     
     /// Release the Dpad.
     func releaseDPad() {
-        configuration.isLongPressingDPad = false
+        guard let state = scene.core?.state else { return }
+        switch state.status {
+        case .inDefault:
+            configuration.isLongPressingDPad = false
+        case .inAction:
+            switch configuration.direction {
+            case .none:
+                break
+            case .up:
+                upPadActionRelease()
+            case .down:
+                downPadActionRelease()
+            case .right:
+                rightPadActionRelease()
+            case .left:
+                leftPadActionRelease()
+            }
+        case .inConversation:
+            break
+        case .inCinematic:
+            break
+        case .inPause:
+            break
+        }
     }
     
     /// Jump.

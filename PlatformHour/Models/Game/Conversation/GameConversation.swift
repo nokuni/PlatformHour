@@ -11,7 +11,7 @@ import Utility_Toolbox
 struct GameConversation: Codable {
     let name: String
     let category: Category
-    var dialogs: [GameCharacterDialog]
+    var dialogs: [GameDialog]
     var cinematicCompletion: String?
     var currentDialogIndex: Int = 0
     var isEndOfConversation: Bool = false

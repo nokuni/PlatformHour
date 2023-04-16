@@ -19,6 +19,7 @@
             "isDestructible": false,
             "isIntangible": true
         },
+        "specialAnimation": "shadowPulse",
         "animation": []
     },
 ]

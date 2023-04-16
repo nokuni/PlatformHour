@@ -88,7 +88,7 @@
 		96D60F3229E0400100D2C1C3 /* conversations.json in Resources */ = {isa = PBXBuildFile; fileRef = 96D60F3129E0400100D2C1C3 /* conversations.json */; };
 		96D60F3429E04F9600D2C1C3 /* characters.json in Resources */ = {isa = PBXBuildFile; fileRef = 96D60F3329E04F9600D2C1C3 /* characters.json */; };
 		96D60F3629E0544300D2C1C3 /* GameCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60F3529E0544300D2C1C3 /* GameCharacter.swift */; };
-		96D60F3829E05F1F00D2C1C3 /* GameCharacterDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60F3729E05F1F00D2C1C3 /* GameCharacterDialog.swift */; };
+		96D60F3829E05F1F00D2C1C3 /* GameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60F3729E05F1F00D2C1C3 /* GameDialog.swift */; };
 		96D60F3A29E171B000D2C1C3 /* LevelBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D60F3929E171B000D2C1C3 /* LevelBackground.swift */; };
 		96D60F4229E19AB700D2C1C3 /* TextTypingSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60F4129E19AB700D2C1C3 /* TextTypingSound.wav */; };
 		96D60F4429E19E0E00D2C1C3 /* Water Music.wav in Resources */ = {isa = PBXBuildFile; fileRef = 96D60F4329E19E0E00D2C1C3 /* Water Music.wav */; };
@@ -188,7 +188,7 @@
 		96D60F3129E0400100D2C1C3 /* conversations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = conversations.json; sourceTree = "<group>"; };
 		96D60F3329E04F9600D2C1C3 /* characters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = characters.json; sourceTree = "<group>"; };
 		96D60F3529E0544300D2C1C3 /* GameCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacter.swift; sourceTree = "<group>"; };
-		96D60F3729E05F1F00D2C1C3 /* GameCharacterDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterDialog.swift; sourceTree = "<group>"; };
+		96D60F3729E05F1F00D2C1C3 /* GameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDialog.swift; sourceTree = "<group>"; };
 		96D60F3929E171B000D2C1C3 /* LevelBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelBackground.swift; sourceTree = "<group>"; };
 		96D60F4129E19AB700D2C1C3 /* TextTypingSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = TextTypingSound.wav; sourceTree = "<group>"; };
 		96D60F4329E19E0E00D2C1C3 /* Water Music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Water Music.wav"; sourceTree = "<group>"; };
@@ -297,7 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				96D60F2C29E02D3500D2C1C3 /* GameConversation.swift */,
-				96D60F3729E05F1F00D2C1C3 /* GameCharacterDialog.swift */,
+				96D60F3729E05F1F00D2C1C3 /* GameDialog.swift */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -407,6 +407,15 @@
 				9654052B298C249600620E76 /* GameCamera.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		964435D929EB605300812B7A /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				962A0CC029891900004DB446 /* PlatformHourApp.swift */,
+				962A0CC229891900004DB446 /* ContentView.swift */,
+			);
+			path = Launch;
 			sourceTree = "<group>";
 		};
 		964E7E4D29C1FC6A003CE54B /* JSONs */ = {
@@ -634,8 +643,7 @@
 			isa = PBXGroup;
 			children = (
 				96B7F80529B53560001584E3 /* Save */,
-				962A0CC229891900004DB446 /* ContentView.swift */,
-				962A0CC029891900004DB446 /* PlatformHourApp.swift */,
+				964435D929EB605300812B7A /* Launch */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -872,7 +880,7 @@
 				96D60F2D29E02D3500D2C1C3 /* GameConversation.swift in Sources */,
 				96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */,
 				964E7E5E29C4624E003CE54B /* NodeKey.swift in Sources */,
-				96D60F3829E05F1F00D2C1C3 /* GameCharacterDialog.swift in Sources */,
+				96D60F3829E05F1F00D2C1C3 /* GameDialog.swift in Sources */,
 				9601D6BF29E1EE59006624C6 /* LevelProtocol.swift in Sources */,
 				96B7F80A29B535D6001584E3 /* PlatformHour.xcdatamodeld in Sources */,
 				964E7E6029C4626B003CE54B /* ImageKey.swift in Sources */,

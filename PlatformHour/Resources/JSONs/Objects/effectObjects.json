@@ -148,4 +148,26 @@
             }
         ],
     },
+    {
+        "name": "Spirit Refill Effect",
+        "image": "spiritCharge0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": true
+        },
+        "animation": [
+            {
+                "identifier": "effect",
+                "frames": [
+                    "spiritCharge0",
+                    "spiritCharge1",
+                    "spiritCharge2",
+                    "spiritCharge3",
+                    "spiritCharge4"
+                ]
+            }
+        ],
+    },
 ]

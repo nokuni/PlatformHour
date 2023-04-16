@@ -340,9 +340,10 @@ extension GameEvent {
         guard let player = scene.player else { return }
         guard let level = scene.game?.level else { return }
         scene.game?.controller?.action.disable()
-        scene.core?.animation?.addObjectEffect(keyName: GameConfiguration.nodeKey.sparkEffect,
+        scene.core?.animation?.addObjectEffect(keyName: GameConfiguration.nodeKey.spiritRefillEffect,
                                                scene: scene,
                                                node: player.node,
+                                               growth: 1.5,
                                                timeInterval: 0.1) {
             if let levelConversation = level.conversations.first(where: {
                 $0.conversation == GameConfiguration.nodeKey.firstCrystalTakeConversation

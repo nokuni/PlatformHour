@@ -1,5 +1,5 @@
 //
-//  GameCharacterDialog.swift
+//  GameDialog.swift
 //  PlatformHour
 //
 //  Created by Maertens Yann-Christophe on 07/04/23.
@@ -7,10 +7,9 @@
 
 import Foundation
 
-struct GameCharacterDialog: Codable {
+struct GameDialog: Codable {
     
     let character: String?
-    let side: Side
     let lines: [String]
     var currentLineIndex: Int = 0
     var isEndOfLine: Bool = false
@@ -23,15 +22,8 @@ struct GameCharacterDialog: Codable {
         }
     }
     
-    enum Side: String, Codable {
-        case left
-        case right
-        case none
-    }
-    
     enum CodingKeys: String, CodingKey {
         case character
-        case side
         case lines
     }
 }

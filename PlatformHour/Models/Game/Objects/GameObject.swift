@@ -13,12 +13,22 @@ struct GameObject: Codable {
     let image: String
     var logic: GameObjectLogic
     var animation: [GameObjectAnimation]
+    var specialAnimation: SpecialAnimation?
     let sound: String?
     
     var coordinate: Coordinate = Coordinate.zero
     
+    enum SpecialAnimation: String, Codable {
+        case shadowPulse
+    }
+    
     enum CodingKeys: String, CodingKey {
-        case name, image, logic, animation, sound
+        case name
+        case image
+        case logic
+        case animation
+        case specialAnimation
+        case sound
     }
 }
 

@@ -321,6 +321,13 @@ extension GameContent {
         node.position = position
         node.physicsBody?.affectedByGravity = false
         scene.addChildSafely(node)
+        
+        if let specialAnimation = gameObject.specialAnimation {
+            switch specialAnimation {
+            case .shadowPulse:
+                animation.addShadowPulseEffect(scene: scene, node: node, duration: 1)
+            }
+        }
     }
 }
 

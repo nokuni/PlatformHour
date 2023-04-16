@@ -39,6 +39,7 @@ extension GameAnimation {
         shadow.size = node.size * growth
         shadow.texture = node.texture
         shadow.texture?.filteringMode = .nearest
+        shadow.zPosition = node.zPosition - 1
         shadow.position = node.position
         
         scene.addChildSafely(shadow)
@@ -47,13 +48,13 @@ extension GameAnimation {
             SKAction.scale(to: scaling, duration: duration),
             SKAction.fadeOut(withDuration: duration),
         ])
-        
+
         let animation = SKAction.sequence([
             scaleUpAndFadeOut,
             SKAction.scale(to: 1, duration: 0),
             SKAction.fadeIn(withDuration: 0)
         ])
-        
+
         shadow.run(SKAction.repeatForever(animation))
     }
     
@@ -61,6 +62,7 @@ extension GameAnimation {
     func addObjectEffect(keyName: String,
                          scene: GameScene,
                          node: PKObjectNode,
+                         growth: CGFloat = 1,
                          timeInterval: TimeInterval = 0.05,
                          repeatCount: Int = 1,
                          isRepeatingForever: Bool = false,
@@ -69,6 +71,7 @@ extension GameAnimation {
         guard let effectObject = GameObject.getEffect(keyName) else { return }
         
         let effectNode = content.createObject(effectObject, node: node)
+        effectNode.size = effectNode.size * growth
         effectNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
         effectNode.name = keyName
         
