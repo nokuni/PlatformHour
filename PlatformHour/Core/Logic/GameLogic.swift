@@ -57,7 +57,14 @@ extension GameLogic {
         let positions = coordinates.compactMap { environment.map.tilePosition(from: $0) }
         
         let moves = positions.map {
-            SKAction.move(to: $0, duration: 0.2)
+            SKAction.sequence([
+                SKAction.move(to: $0, duration: 0.2),
+                SKAction.run {
+                    player.rollUp()
+                    player.updateDiceSprite()
+                },
+                SKAction.wait(forDuration: 0.4)
+            ])
         }
         
         return moves
@@ -102,6 +109,7 @@ extension GameLogic {
 // MARK: - Falls
 
 extension GameLogic {
+    
     /// Returns the coordinate where an object is supposed to stop falling.
     private func fallCoordinate(object: PKObjectNode) -> Coordinate {
         

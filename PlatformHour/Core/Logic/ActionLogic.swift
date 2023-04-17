@@ -382,7 +382,9 @@ private extension ActionLogic {
             SKAction.move(to: destinationPosition, duration: player.runDuration),
             endOfMoveAction(groundCoordinate: groundCoordinate)
         ])
-        return !environment.collisionCoordinates.contains(destinationCoordinate) ? sequence : SKAction.empty()
+        let isColliding = environment.collisionCoordinates.contains(destinationCoordinate)
+        if !isColliding { scene.player?.rollUp() }
+        return isColliding ? SKAction.empty() : sequence
     }
     
     /// Returns the end of the move animation.
@@ -465,7 +467,6 @@ extension ActionLogic {
         changeOrientation(direction: self.configuration.direction)
         self.configuration.movementSpeed = movementSpeed
         moveSequence(by: self.configuration.movementSpeed)
-        scene.player?.advanceRoll()
         scene.player?.run()
     }
     

@@ -200,12 +200,27 @@ extension Player {
     }
     
     /// Advance the current roll of the dice.
-    func advanceRoll() {
+    func rollUp() {
         guard let lastRoll = Roll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {
-            currentRoll.next()
+            currentRoll = currentRoll.next()
         } else {
             currentRoll = .one
         }
+    }
+    
+    /// Advance the current roll of the dice.
+    func rollDown() {
+        guard let firstRoll = Roll.allCases.first?.rawValue else { return }
+        if currentRoll.rawValue > firstRoll {
+            currentRoll = currentRoll.previous()
+        } else {
+            currentRoll = .one
+        }
+    }
+    
+    func updateDiceSprite() {
+        node.texture = SKTexture(imageNamed: "player\(currentRoll.rawValue)Idle")
+        node.texture?.filteringMode = .nearest
     }
 }

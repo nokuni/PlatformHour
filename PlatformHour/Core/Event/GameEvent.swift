@@ -57,14 +57,14 @@ extension GameEvent {
     func triggerPlayerDeathFall() {
         guard let player = scene.player else { return }
         guard let environment = scene.core?.environment else { return }
-        guard player.node.coordinate.x >= environment.deathLimit else {
-            return
-        }
+        guard player.node.coordinate.x >= environment.deathLimit else { return }
         
         player.state.isDead = true
         
         if player.state.isDead {
             player.state.isDead = false
+            scene.core?.hud?.removeContent()
+            scene.game?.controller?.disable()
             scene.core?.animation?.sceneTransitionEffect(scene: scene,
                                                          effectAction: SKAction.fadeIn(withDuration: 2),
                                                          isFadeIn: false,
@@ -348,11 +348,11 @@ extension GameEvent {
             if let levelConversation = level.conversations.first(where: {
                 $0.conversation == GameConfiguration.nodeKey.firstCrystalTakeConversation
             }) {
-                player.gainEnergy(amount: 1)
-                self.scene.core?.hud?.updateEnergy()
-                self.scene.game?.controller?.action.enable()
                 self.playConversation(levelConversation: levelConversation)
             }
+            player.gainEnergy(amount: 1)
+            self.scene.core?.hud?.updateEnergy()
+            self.scene.game?.controller?.action.enable()
         }
     }
 }

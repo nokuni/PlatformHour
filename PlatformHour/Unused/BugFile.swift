@@ -28,6 +28,7 @@ import SwiftUI
 // MARK: - Improvements
 
 // Click up effect on conversation tap.
+// Stop the HUD spirit animation when he has no energy and animate when he has.
 
 // MARK: - Unused Code
 

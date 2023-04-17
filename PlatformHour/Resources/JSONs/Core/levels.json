@@ -226,5 +226,90 @@
                 "category": "onConversation"
             },
         ]
+    },
+    {
+        "id": 3,
+        "name": "Light Hollow",
+        "mapMatrix": "4060",
+        "playerCoordinate": "2908",
+        "musics": ["cavern_power_BS.wav"],
+        "background": {
+            "image": "lightHollowBackground",
+            "adjustement": 5
+        },
+        "objects": [
+            {
+                "id": 0,
+                "name": "Exit",
+                "category": "important",
+                "coordinate": "1957"
+            },
+            {
+                "id": 1,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2915",
+                "sizeGrowth": 2
+            },
+            {
+                "id": 2,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2926",
+                "sizeGrowth": 2
+            },
+            {
+                "id": 2,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2945",
+                "sizeGrowth": 2
+            }
+        ],
+        "structures": [
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "innerLayer": "Cavern Inner Layer",
+                "innerLayerAmount": 5,
+                "matrix": "1019",
+                "coordinate": "3000"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "innerLayer": "Cavern Inner Layer",
+                "innerLayerAmount": 5,
+                "matrix": "1011",
+                "coordinate": "3021"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "innerLayer": "Cavern Inner Layer",
+                "innerLayerAmount": 5,
+                "matrix": "1020",
+                "coordinate": "3036"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0407",
+                "coordinate": "2445"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0407",
+                "coordinate": "2435"
+            },
+        ],
+        "conversations": [],
+        "cinematics": []
     }
 ]
