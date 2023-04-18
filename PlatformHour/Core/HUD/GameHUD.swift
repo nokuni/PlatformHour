@@ -44,15 +44,6 @@ final class GameHUD {
         addContent()
     }
     
-    /// Create the layer on the scene.
-    private func createLayer() {
-        layer.name = "HUD Layer"
-        layer.fillColor = .clear
-        layer.strokeColor = .clear
-        layer.zPosition = GameConfiguration.sceneConfiguration.hudLayerZPosition
-        scene.camera?.addChildSafely(layer)
-    }
-    
     /// Generate a filter over the HUD.
     private func generateFilter(color: UIColor = .black, alpha: CGFloat = 0.7, on node: SKNode) {
         guard let camera = scene.camera else { return }
@@ -63,88 +54,6 @@ final class GameHUD {
         filterNode.zPosition = GameConfiguration.sceneConfiguration.screenFilterZPosition
         filterNode.position = camera.position
         node.addChildSafely(filterNode)
-    }
-    
-    // MARK: - Conversation Box
-    
-    /// Pass the current line of text.
-    func passLine() {
-        if let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode {
-            conversationText.hasFinished() ? nextLine() : speedUpLine()
-        }
-    }
-    
-    /// Display the next line of a dialog.
-    func nextLine() {
-        conversationBox.removeAllChildren()
-        conversationBox.removeFromParent()
-        
-        guard let index = scene.game?.currentConversation?.currentDialogIndex else { return }
-        
-        scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
-        
-        guard let isEndOfLine = scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
-        
-        !isEndOfLine ? addConversationBox() : nextDialog()
-    }
-    
-    /// Display the next dialog.
-    private func nextDialog() {
-        scene.game?.currentConversation?.moveOnNextDialog()
-        guard let isEndOfConversation = scene.game?.currentConversation?.isEndOfConversation else { return }
-        !isEndOfConversation ? addConversationBox() : endConversation()
-    }
-    
-    /// Display the total text of the dialog instrantly.
-    private func speedUpLine() {
-        let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode
-        conversationText?.displayAllText()
-        scene.core?.sound.manager.stopRepeatedSFX()
-    }
-    
-    /// Disable the current dialog.
-    private func disableConversation() {
-        if let index = scene.game?.level?.conversations.firstIndex(where: {
-            $0.conversation == scene.game?.currentLevelConversation?.conversation
-        }) {
-            scene.game?.level?.conversations[index].isAvailable = false
-        }
-    }
-    
-    private func resetConversation() {
-        scene.game?.currentLevelConversation = nil
-        scene.game?.currentConversation = nil
-    }
-    
-    private var cinematicAfterConversation: LevelCinematic? {
-        guard let level = scene.game?.level else { return nil }
-        if let cinematicCompletion = scene.game?.currentConversation?.cinematicCompletion {
-            return level.cinematics.first(where: { $0.name == cinematicCompletion })
-        }
-        return nil
-    }
-    
-    /// Ends the current dialog.
-    private func endConversation() {
-        guard let game = scene.game else { return }
-        if let cinematicAfterConversation = cinematicAfterConversation {
-            scene.core?.event?.startCinematic(levelCinematic: cinematicAfterConversation)
-        } else {
-            scene.core?.state.switchOn(newStatus: .inDefault)
-            if game.hasTitleBeenDisplayed { endConversationCompletion() }
-            scene.core?.animation?.titleTransitionEffect(scene: scene) {
-                self.endConversationCompletion()
-            }
-        }
-        disableConversation()
-        resetConversation()
-    }
-    
-    private func endConversationCompletion() {
-        guard let player = scene.player else { return }
-        scene.game?.controller?.enable()
-        scene.core?.hud?.addContent()
-        scene.core?.gameCamera?.followedObject = player.node
     }
 }
 
@@ -188,6 +97,8 @@ extension GameHUD {
     func unpause() { layer.isPaused = false }
 }
 
+// MARK: - Create
+
 // MARK: - Updates
 
 extension GameHUD {
@@ -205,9 +116,17 @@ extension GameHUD {
     }
 }
 
-// MARK: - Adds
+// MARK: - Create/Adds
 
 extension GameHUD {
+
+    /// Create the layer on the scene.
+    private func createLayer() {
+        layer.fillColor = .clear
+        layer.strokeColor = .clear
+        layer.zPosition = GameConfiguration.sceneConfiguration.hudLayerZPosition
+        scene.camera?.addChildSafely(layer)
+    }
     
     /// Adds the content container on the layer.
     private func addContentContainer() {
@@ -326,6 +245,11 @@ extension GameHUD {
     func removeActionSquares() {
         actionSquares.forEach { $0.removeFromParent() }
     }
+
+    private func removeConversationBox() {
+        conversationBox.removeAllChildren()
+        conversationBox.removeFromParent()
+    }
     
     /// Removes the gem score from the layer.
     private func removeGemScore() {
@@ -340,7 +264,7 @@ extension GameHUD {
     }
 }
 
-// MARK: - Conversation
+// MARK: - Conversation Box
 
 extension GameHUD {
     
@@ -467,5 +391,92 @@ extension GameHUD {
         dialogText.zPosition = conversationBox.zPosition + 1
         dialogText.position = conversationBox.cornerPosition(corner: .topLeft, padding: padding)
         node.addChildSafely(dialogText)
+    }
+}
+
+// MARK: - Conversation Logic
+
+extension GameHUD {
+
+    /// Pass the current line of text.
+    func passLine() {
+        if let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode {
+            conversationText.hasFinished() ? nextLine() : speedUpLine()
+        }
+    }
+
+    /// Display the next line of a dialog.
+    func nextLine() {
+        removeConversationBox()
+
+        guard let index = scene.game?.currentConversation?.currentDialogIndex else { return }
+
+        scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
+
+        guard let isEndOfLine = scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
+
+        !isEndOfLine ? addConversationBox() : nextDialog()
+    }
+
+    /// Display the next dialog.
+    private func nextDialog() {
+        scene.game?.currentConversation?.moveOnNextDialog()
+        guard let isEndOfConversation = scene.game?.currentConversation?.isEndOfConversation else { return }
+        !isEndOfConversation ? addConversationBox() : endConversation()
+    }
+
+    /// Display the total text of the dialog instrantly.
+    private func speedUpLine() {
+        let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode
+        conversationText?.displayAllText()
+        scene.core?.sound.manager.stopRepeatedSFX()
+    }
+
+    /// Disable the current dialog.
+    private func disableConversation() {
+        if let index = scene.game?.level?.conversations.firstIndex(where: {
+            $0.conversation == scene.game?.currentLevelConversation?.conversation
+        }) {
+            scene.game?.level?.conversations[index].isAvailable = false
+        }
+    }
+
+    /// Reset the current conversation.
+    private func resetConversation() {
+        scene.game?.currentLevelConversation = nil
+        scene.game?.currentConversation = nil
+    }
+
+    /// Returns the cinematic after the conversation.
+    private var cinematicAfterConversation: LevelCinematic? {
+        guard let level = scene.game?.level else { return nil }
+        if let cinematicCompletion = scene.game?.currentConversation?.cinematicCompletion {
+            return level.cinematics.first(where: { $0.name == cinematicCompletion })
+        }
+        return nil
+    }
+
+    /// Ends the current dialog.
+    private func endConversation() {
+        guard let game = scene.game else { return }
+        if let cinematicAfterConversation = cinematicAfterConversation {
+            scene.core?.event?.startCinematic(levelCinematic: cinematicAfterConversation)
+        } else {
+            scene.core?.state.switchOn(newStatus: .inDefault)
+            if game.hasTitleBeenDisplayed { endConversationCompletion() }
+            scene.core?.animation?.titleTransitionEffect(scene: scene) {
+                self.endConversationCompletion()
+            }
+        }
+        disableConversation()
+        resetConversation()
+    }
+
+    /// Completion on the end of the conversation
+    private func endConversationCompletion() {
+        guard let player = scene.player else { return }
+        scene.game?.controller?.enable()
+        scene.core?.hud?.addContent()
+        scene.core?.gameCamera?.followedObject = player.node
     }
 }

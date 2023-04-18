@@ -1,34 +1,11 @@
 //
-//  BugFile.swift
+//  UnusedCode.swift
 //  PlatformHour
 //
-//  Created by Maertens Yann-Christophe on 05/02/23.
+//  Created by Yann Christophe MAERTENS on 17/04/2023.
 //
 
-import SwiftUI
-
-// MARK: - Disturbance
-
-// MARK: Bugs
-
-// 😀
-// actions arrows does not display sometimes when in action sequence (inconsistent).
-// Reposition conversation box and his elements
-
-// MARK: - Feedbacks:
-
-// 😀
-// Add more SFX for effects.
-// Add haptics:
-/* - When adding action on sequence.
-   - When dying.
-   - When falling.
-*/
-
-// MARK: - Improvements
-
-// Click up effect on conversation tap.
-// Stop the HUD spirit animation when he has no energy and animate when he has.
+import Foundation
 
 // MARK: - Unused Code
 
@@ -77,70 +54,70 @@ import SwiftUI
  node: PKObjectNode,
  widthTailoring: CGFloat = 0) {
  let tileSize = GameConfiguration.worldConfiguration.tileSize
- 
+
  let bar = SKSpriteNode(imageNamed: "healthBar")
  bar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
  bar.texture?.filteringMode = .nearest
- 
+
  let underBar = SKSpriteNode(imageNamed: "emptyBar")
  underBar.size = CGSize(width: tileSize.width - widthTailoring, height: tileSize.height)
  underBar.texture?.filteringMode = .nearest
- 
+
  let configuration = PKProgressBarNode.ImageConfiguration(amount: amount,
  sprite: bar,
  underSprite: underBar)
  let progressBar = PKProgressBarNode(imageConfiguration: configuration)
  progressBar.name = "Health Bar"
  progressBar.position = CGPoint(x: 0, y: node.frame.size.height / 2)
- 
+
  node.addChildSafely(progressBar)
  }*/
 
 /// Add an orb split effect at a position on the scene.
 /*func orbSplitEffect(scene: GameScene, on position: CGPoint) {
-    let tileSize = GameConfiguration.sceneConfiguration.tileSize
-    let positions = [
-        CGPoint(x: position.x, y: position.y + tileSize.height),
-        CGPoint(x: position.x + tileSize.width, y: position.y + tileSize.height),
-        CGPoint(x: position.x + tileSize.width, y: position.y),
-        CGPoint(x: position.x + tileSize.width, y: position.y - tileSize.height),
-        CGPoint(x: position.x, y: position.y - tileSize.height),
-        CGPoint(x: position.x - tileSize.width, y: position.y - tileSize.height),
-        CGPoint(x: position.x - tileSize.width, y: position.y),
-        CGPoint(x: position.x - tileSize.width, y: position.y + tileSize.height),
-    ]
-    for pos in positions {
-        let orb = SKSpriteNode(imageNamed: "orb0")
-        orb.size = tileSize
-        orb.texture?.filteringMode = .nearest
-        orb.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
-        orb.position = position
-        scene.addChildSafely(orb)
-        
-        let scale = SKAction.scaleUpAndDown(from: 0.1,
-                                            with: 0.05,
-                                            to: 1,
-                                            with: 0.05,
-                                            during: 0,
-                                            repeating: 10)
-        let fade = SKAction.fadeOut(withDuration: 0.5)
-        let move = SKAction.move(to: pos, duration: 0.5)
-        let groupAnimation = SKAction.group([scale, fade, move])
-        
-        let sequenceAnimation = SKAction.sequence([
-            groupAnimation,
-            SKAction.removeFromParent()
-        ])
-        
-        orb.run(sequenceAnimation)
-    }
-}*/
+ let tileSize = GameConfiguration.sceneConfiguration.tileSize
+ let positions = [
+ CGPoint(x: position.x, y: position.y + tileSize.height),
+ CGPoint(x: position.x + tileSize.width, y: position.y + tileSize.height),
+ CGPoint(x: position.x + tileSize.width, y: position.y),
+ CGPoint(x: position.x + tileSize.width, y: position.y - tileSize.height),
+ CGPoint(x: position.x, y: position.y - tileSize.height),
+ CGPoint(x: position.x - tileSize.width, y: position.y - tileSize.height),
+ CGPoint(x: position.x - tileSize.width, y: position.y),
+ CGPoint(x: position.x - tileSize.width, y: position.y + tileSize.height),
+ ]
+ for pos in positions {
+ let orb = SKSpriteNode(imageNamed: "orb0")
+ orb.size = tileSize
+ orb.texture?.filteringMode = .nearest
+ orb.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+ orb.position = position
+ scene.addChildSafely(orb)
+
+ let scale = SKAction.scaleUpAndDown(from: 0.1,
+ with: 0.05,
+ to: 1,
+ with: 0.05,
+ during: 0,
+ repeating: 10)
+ let fade = SKAction.fadeOut(withDuration: 0.5)
+ let move = SKAction.move(to: pos, duration: 0.5)
+ let groupAnimation = SKAction.group([scale, fade, move])
+
+ let sequenceAnimation = SKAction.sequence([
+ groupAnimation,
+ SKAction.removeFromParent()
+ ])
+
+ orb.run(sequenceAnimation)
+ }
+ }*/
 
 /*
  {
-     "id": 0,
-     "name": "Blue Gem A",
-     "category": "collectible",
-     "coordinate": "2917"
+ "id": 0,
+ "name": "Blue Gem A",
+ "category": "collectible",
+ "coordinate": "2917"
  },
  */

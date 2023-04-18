@@ -20,7 +20,7 @@ final class ActionLogic {
     var configuration = ActionLogicConfiguration()
 }
 
-// MARK: - Directional Actions
+// MARK: - DPad Actions
 
 extension ActionLogic {
     
