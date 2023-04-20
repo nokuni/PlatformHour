@@ -1,6 +1,6 @@
 [
     {
-        "name": "Enemy Slime",
+        "name": "Slime Enemy",
         "image": "slimeRun0",
         "logic": {
             "health": 1,

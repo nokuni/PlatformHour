@@ -121,3 +121,20 @@ import Foundation
  "coordinate": "2917"
  },
  */
+
+/*
+ //        guard let player = scene.player else { return }
+ //        guard let environment = scene.core?.environment else { return }
+ //        player.hitted(scene: scene, by: enemyNode) {
+ //            if let playerCoordinate = self.scene.player?.node.coordinate {
+ //                let groundCoordinate = Coordinate(x: playerCoordinate.x + 1, y: playerCoordinate.y)
+ //                if !environment.isCollidingWithObject(at: groundCoordinate) {
+ //                    self.scene.core?.logic?.dropPlayer()
+ //                }
+ //                self.scene.core?.logic?.endSequenceAction()
+ //                self.scene.core?.logic?.damagePlayer(with: enemyNode)
+ //                self.scene.player?.state = .normal
+ //                self.scene.core?.logic?.enableControls()
+ //            }
+ //        }
+ */

@@ -107,8 +107,11 @@ extension Player {
     
     func consumeEnergy(amount: Int) {
         guard energy > 0 else { return }
-        guard (energy - amount) >= 0 else { return }
-        energy -= amount
+        if (energy - amount) <= 0 { energy = 0 } else { energy -= amount }
+    }
+    
+    var isOutOfEnergy: Bool {
+        energy <= 0
     }
 }
 
@@ -172,6 +175,15 @@ extension Player {
         SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
         return knockBack
     }
+    
+    /// Returns a knockback animation.
+    private func knockedBack(by enemy: PKObjectNode, onRight: Bool = true) -> SKAction {
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
+        let knockBack = onRight ?
+        SKAction.move(to: CGPoint(x: node.position.x + (tileSize.width * 2), y: node.position.y), duration: 0.1) :
+        SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
+        return knockBack
+    }
 }
 
 // MARK: - Actions
@@ -188,9 +200,12 @@ extension Player {
         updateBarrierOnRun()
     }
     
+    /// Update the barrier sprite on run
     func updateBarrierOnRun() {
         guard let barrier = node.childNode(withName: "Barrier") as? SKSpriteNode else { return }
-        let frames = orientation == .right ? ["barrierRunRight", "barrierRunMid", "barrierRunLeft", "barrierIdle", "barrierRunRight", "barrierRunMid", "barrierRunLeft", "barrierIdle"] : ["barrierRunLeft", "barrierRunMid", "barrierRunRight", "barrierIdle", "barrierRunLeft", "barrierRunMid", "barrierRunRight", "barrierIdle"]
+        guard let barrierRunRightFrames = frames(stateID: .barrierRight) else { return }
+        guard let barrierRunLeftFrames = frames(stateID: .barrierLeft) else { return }
+        let frames = orientation == .right ? barrierRunRightFrames : barrierRunLeftFrames
         let animation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
         barrier.run(animation)
     }
@@ -217,11 +232,28 @@ extension Player {
                          node: animationNode)
     }
     
+    /// Play the hitted animation.
+    func hitted() {
+        let configuration = PKTimerNode.TimerConfiguration(countdown: 10, counter: 1, timeInterval: 0.05, actionOnGoing: {
+            self.node.alpha = self.node.alpha >= 1 ? 0 : 1
+        })
+        let timerNode = PKTimerNode(configuration: configuration)
+        node.addChildSafely(timerNode)
+        timerNode.start()
+    }
+    
     /// Play the hit action animation.
-    func hitted(scene: GameScene, by enemy: PKObjectNode, completion: (() -> Void)?) {
+    func knockBackHitted(scene: GameScene,
+                         by enemy: PKObjectNode,
+                         canChooseDirection: Bool = true,
+                         onRight: Bool = true,
+                         completion: (() -> Void)? = nil) {
         guard let hitFrames = frames(stateID: .hit) else { return }
         let hitAnimation = SKAction.animate(with: hitFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.hitTimePerFrame)
-        let knockBackAnimation = knockedBack(by: enemy)
+        let knockBackAnimation =
+        canChooseDirection ?
+        knockedBack(by: enemy, onRight: onRight) :
+        knockedBack(by: enemy)
         let groupedAnimation = SKAction.group([hitAnimation, knockBackAnimation])
         node.removeAllActions()
         SKAction.animate(action: groupedAnimation, node: node) {

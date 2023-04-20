@@ -54,5 +54,31 @@
                 "playerDeath3"
             ]
         },
+        {
+            "identifier": "barrierRight",
+            "frames": [
+                "barrierRunRight",
+                "barrierRunMid",
+                "barrierRunLeft",
+                "barrierIdle",
+                "barrierRunRight",
+                "barrierRunMid",
+                "barrierRunLeft",
+                "barrierIdle"
+            ]
+        },
+        {
+            "identifier": "barrierLeft",
+            "frames": [
+                "barrierRunLeft",
+                "barrierRunMid",
+                "barrierRunRight",
+                "barrierIdle",
+                "barrierRunLeft",
+                "barrierRunMid",
+                "barrierRunRight",
+                "barrierIdle"
+            ]
+        },
     ]
 }

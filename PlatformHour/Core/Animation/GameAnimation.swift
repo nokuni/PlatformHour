@@ -20,6 +20,8 @@ final class GameAnimation {
         case run = "run"
         case runRight = "runRight"
         case runLeft = "runLeft"
+        case barrierRight = "barrierRight"
+        case barrierLeft = "barrierLeft"
         case hit = "hit"
         case death = "death"
     }

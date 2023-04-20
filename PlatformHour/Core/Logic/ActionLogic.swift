@@ -389,26 +389,23 @@ private extension ActionLogic {
     
     /// Returns the end of the move animation.
     private func endOfMoveAction(groundCoordinate: Coordinate) -> SKAction {
-        guard let environment = scene.core?.environment else { return SKAction.empty() }
-        
-        let action = SKAction.run {
-            self.scene.core?.sound.step()
-            self.scene.player?.node.removeAllActions()
-            if !environment.collisionCoordinates.contains(groundCoordinate) {
-                self.scene.core?.logic?.dropPlayer()
-            }
-            self.scene.core?.event?.triggerConversationOnCoordinate()
-            //self.scene.core?.event?.playCinematic()
-            if self.scene.player!.energy == 0 {
-                self.scene.player?.node.logic.healthLost = 1
-                self.scene.core?.logic?.playerDestroy()
-            }
-            if self.configuration.isLongPressingDPad {
-                self.move(on: self.configuration.direction, by: self.configuration.movementSpeed)
-            }
+        return SKAction.run { self.endOfMoveCompletion(groundCoordinate: groundCoordinate) }
+    }
+    
+    /// The completion logic at the end of the movement.
+    private func endOfMoveCompletion(groundCoordinate: Coordinate) {
+        guard let environment = scene.core?.environment else { return }
+        scene.core?.sound.step()
+        scene.player?.node.removeAllActions()
+        if !environment.collisionCoordinates.contains(groundCoordinate) {
+            scene.core?.logic?.dropPlayer()
         }
-        
-        return action
+        scene.core?.event?.triggerConversationOnCoordinate()
+        scene.core?.event?.triggerCinematicOnCoordinate()
+        scene.core?.logic?.playerDestroy()
+        if configuration.isLongPressingDPad {
+            move(on: configuration.direction, by: configuration.movementSpeed)
+        }
     }
 }
 

@@ -1,10 +1,10 @@
 [
     {
-        "name": "Rock",
+        "name": "Rock Trap",
         "image": "rock",
         "logic": {
             "health": 1,
-            "damage": 1,
+            "damage": 5,
             "isDestructible": true,
             "isIntangible": false
         },

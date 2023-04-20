@@ -194,23 +194,25 @@ extension GameLogic {
     
     /// Make a trap fall repeateadly.
     func dropTrap(trapObject: PKObjectNode) {
-        guard let level = scene.game?.level else { return }
-        guard let levelTrap = LevelObject.indexedObjectNode(object: trapObject, data: level.objects(category: .trap)) else { return }
-        
         let drop = SKAction.sequence([
             fallAnimation(object: trapObject, speed: 500),
-            SKAction.run {
-                self.scene.core?.animation?.delayedDestroy(scene: self.scene, node: trapObject, timeInterval: 0.1) {
-                    self.scene.core?.content?.createLevelTrap(levelTrap)
-                }
-            }
+            SKAction.run { self.trapCompletion(trapObject: trapObject) }
         ])
         
         trapObject.run(drop)
     }
+    
+    /// Trap completion.
+    func trapCompletion(trapObject: PKObjectNode) {
+        guard let level = scene.game?.level else { return }
+        guard let levelTrap = LevelObject.indexedObjectNode(object: trapObject, data: level.objects(category: .trap)) else { return }
+        scene.core?.animation?.delayedDestroy(scene: scene, node: trapObject, timeInterval: 0.1) {
+            self.scene.core?.content?.createLevelTrap(levelTrap)
+        }
+    }
 }
 
-// MARK: - Combat
+// MARK: - Overall Combat
 
 extension GameLogic {
     
@@ -219,13 +221,6 @@ extension GameLogic {
         guard objectNode.logic.isDestructible else { return }
         objectNode.logic.healthLost += projectileNode.logic.damage
         damage(objectNode)
-    }
-    
-    /// Damage player.
-    func damagePlayer(with enemyNode: PKObjectNode) {
-        guard let player = scene.player else { return }
-        player.node.logic.healthLost += enemyNode.logic.damage
-        playerDestroy()
     }
     
     /// Returns true is an object is destroyed, false otherwise.
@@ -243,23 +238,6 @@ extension GameLogic {
             scene.core?.animation?.delayedDestroy(scene: scene,
                                                   node: objectNode,
                                                   timeInterval: 0.1)
-        }
-    }
-    
-    /// Destroy the player.
-    func playerDestroy() {
-        guard let player = scene.player else { return }
-        if isDestroyed(player.node) {
-            player.state.isDead = true
-            player.death(scene: scene)
-            scene.core?.hud?.removeContent()
-            scene.game?.controller?.disable()
-            scene.core?.animation?.sceneTransitionEffect(scene: scene,
-                                                         effectAction: SKAction.fadeIn(withDuration: 2),
-                                                         isFadeIn: false,
-                                                         isShowingTitle: false) {
-                self.scene.core?.event?.restartLevel()
-            }
         }
     }
     
@@ -288,5 +266,35 @@ extension GameLogic {
     private func damage(_ objectNode: PKObjectNode) {
         hit(objectNode)
         destroy(objectNode)
+    }
+}
+
+// MARK: - Player Combat
+
+extension GameLogic {
+    
+    /// Damage player.
+    func damagePlayer(with enemyNode: PKObjectNode) {
+        guard let player = scene.player else { return }
+        player.consumeEnergy(amount: enemyNode.logic.damage)
+        scene.core?.hud?.updateEnergy()
+        playerDestroy()
+    }
+    
+    /// Destroy the player.
+    func playerDestroy() {
+        guard let player = scene.player else { return }
+        if player.isOutOfEnergy {
+            player.state.isDead = true
+            player.death(scene: scene)
+            scene.core?.hud?.removeContent()
+            scene.game?.controller?.disable()
+            scene.core?.animation?.sceneTransitionEffect(scene: scene,
+                                                         effectAction: SKAction.fadeIn(withDuration: 2),
+                                                         isFadeIn: false,
+                                                         isShowingTitle: false) {
+                self.scene.core?.event?.restartLevel()
+            }
+        }
     }
 }

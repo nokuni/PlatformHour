@@ -46,23 +46,10 @@ final class CollisionLogic {
         }
     }
     
-    /// When an enemy hit the player.
-    func enemyHitPlayer(_ enemyNode: PKObjectNode) {
-        //        guard let player = scene.player else { return }
-        //        guard let environment = scene.core?.environment else { return }
-        self.scene.core?.logic?.damagePlayer(with: enemyNode)
-        //        player.hitted(scene: scene, by: enemyNode) {
-        //            if let playerCoordinate = self.scene.player?.node.coordinate {
-        //                let groundCoordinate = Coordinate(x: playerCoordinate.x + 1, y: playerCoordinate.y)
-        //                if !environment.isCollidingWithObject(at: groundCoordinate) {
-        //                    self.scene.core?.logic?.dropPlayer()
-        //                }
-        //                self.scene.core?.logic?.endSequenceAction()
-        //                self.scene.core?.logic?.damagePlayer(with: enemyNode)
-        //                self.scene.player?.state = .normal
-        //                self.scene.core?.logic?.enableControls()
-        //            }
-        //        }
+    /// When the player has been hitten by a hostile object.
+    func hostileHitOnPlayer(_ hostileObject: PKObjectNode) {
+        scene.player?.knockBackHitted(scene: scene, by: hostileObject, onRight: false)
+        scene.core?.logic?.damagePlayer(with: hostileObject)
     }
     
     /// When the player touch/move an interactive object, reset his position after a delay.

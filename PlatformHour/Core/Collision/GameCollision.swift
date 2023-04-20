@@ -66,6 +66,11 @@ final class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
         
+        trapTouchPlayer(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
+        )
+        
         playerTouchEnemy(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
@@ -85,12 +90,27 @@ extension GameCollision {
         }
     }
     
-    /// When the player collides with the ground of a structure.
+    /// When the player collides with an enemy.
     private func enemyTouchPlayer(_ first: CollisionManager.NodeBody,
                                   with second: CollisionManager.NodeBody) {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
+        guard let enemyNodeName = enemyNode.name else { return }
+        guard enemyNodeName.contains("Enemy") else { return }
         if manager.isColliding(first, with: second) {
-            collisionLogic.enemyHitPlayer(enemyNode)
+            collisionLogic.hostileHitOnPlayer(enemyNode)
+        }
+    }
+    
+    /// When the player collides with a trap.
+    private func trapTouchPlayer(_ first: CollisionManager.NodeBody,
+                                  with second: CollisionManager.NodeBody) {
+        guard let trapNode = second.body.node as? PKObjectNode else { return }
+        guard let trapNodeName = trapNode.name else { return }
+        guard trapNodeName.contains("Trap") else { return }
+        if manager.isColliding(first, with: second) {
+            trapNode.removeAllActions()
+            collisionLogic.hostileHitOnPlayer(trapNode)
+            scene.core?.logic?.trapCompletion(trapObject: trapNode)
         }
     }
     
