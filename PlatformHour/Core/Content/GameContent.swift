@@ -50,7 +50,8 @@ private extension GameContent {
         configurePlayer()
         guard let player = scene.player else { return }
         scene.addChildSafely(player.node)
-        addPlayerBarrier()
+        guard let currentSave = scene.game?.currentSave else { return }
+        if currentSave.level > 0 { addPlayerBarrier() }
     }
     
     /// Generate the enemies on the current level.
@@ -421,7 +422,7 @@ extension GameContent {
 
 // MARK: Configurations
 
-private extension GameContent {
+extension GameContent {
     
     /// Configure the player object.
     private func configurePlayer() {
@@ -459,15 +460,6 @@ private extension GameContent {
             player.node.texture = SKTexture(imageNamed: sprite)
             player.node.texture?.filteringMode = .nearest
         }
-    }
-    
-    private func addPlayerBarrier() {
-        guard let player = scene.player else { return }
-        let barrierNode = SKSpriteNode(imageNamed: "barrierIdle")
-        barrierNode.name = "Barrier"
-        barrierNode.size = player.node.size
-        barrierNode.texture?.filteringMode = .nearest
-        player.node.addChildSafely(barrierNode)
     }
     
     private func levelObjectAnimation(node: PKObjectNode,
@@ -552,7 +544,7 @@ extension GameContent {
 
 // MARK: - Object Adds
 
-private extension GameContent {
+extension GameContent {
     
     /// Add a fixed intinerary movement to an enemy.
     private func addEnemyItinerary(enemy: PKObjectNode, itinerary: Int, frames: [String]) {
@@ -575,5 +567,15 @@ private extension GameContent {
         let groupedAnimations = SKAction.group([repeatedAnimation, repeatedMovement])
         
         enemy.run(groupedAnimations)
+    }
+    
+    /// Add energy barrier to player.
+    func addPlayerBarrier() {
+        guard let player = scene.player else { return }
+        let barrierNode = SKSpriteNode(imageNamed: "barrierIdle")
+        barrierNode.name = "Barrier"
+        barrierNode.size = player.node.size
+        barrierNode.texture?.filteringMode = .nearest
+        player.node.addChildSafely(barrierNode)
     }
 }

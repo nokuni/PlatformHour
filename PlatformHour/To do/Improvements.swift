@@ -9,7 +9,4 @@ import Foundation
 
 // MARK: - Improvements
 
-// Click up effect on conversation tap.
-// Stop the HUD spirit animation when he has no energy and animate when he has.
-
-// Changes gameplay: you have to cross the level with a limited amount of energy.
+// Increases the conversation text speed (or allow the player to modify it)

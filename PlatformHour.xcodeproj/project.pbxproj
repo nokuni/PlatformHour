@@ -34,6 +34,7 @@
 		962A0D1829892736004DB446 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962A0D1729892736004DB446 /* GameControllerManager.swift */; };
 		962F255229D0B618007D46B7 /* LevelStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255129D0B618007D46B7 /* LevelStructure.swift */; };
 		962F255829D17C51007D46B7 /* enemyObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 962F255729D17C51007D46B7 /* enemyObjects.json */; };
+		9633241A29F1C884002D0795 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633241929F1C884002D0795 /* Todo.swift */; };
 		964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */; };
 		964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */; };
 		964435C629E6F81A00812B7A /* effectObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 964435C529E6F81900812B7A /* effectObjects.json */; };
@@ -137,6 +138,7 @@
 		962A0D1729892736004DB446 /* GameControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerManager.swift; sourceTree = "<group>"; };
 		962F255129D0B618007D46B7 /* LevelStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelStructure.swift; sourceTree = "<group>"; };
 		962F255729D17C51007D46B7 /* enemyObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = enemyObjects.json; sourceTree = "<group>"; };
+		9633241929F1C884002D0795 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionMovement.swift; sourceTree = "<group>"; };
 		964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionEffect.swift; sourceTree = "<group>"; };
 		964435C529E6F81900812B7A /* effectObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = effectObjects.json; sourceTree = "<group>"; };
@@ -694,6 +696,7 @@
 				20C402A429ED3A5000D3411F /* Improvements.swift */,
 				20C402A629ED3A7800D3411F /* Feedbacks.swift */,
 				20C402A829ED3B3B00D3411F /* UnusedCode.swift */,
+				9633241929F1C884002D0795 /* Todo.swift */,
 			);
 			path = "To do";
 			sourceTree = "<group>";
@@ -849,6 +852,7 @@
 				96FE62A1298AD81A00B2C614 /* Player.swift in Sources */,
 				964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */,
 				961946622996894F000859C8 /* GameWorld.swift in Sources */,
+				9633241A29F1C884002D0795 /* Todo.swift in Sources */,
 				964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */,
 				964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */,
 				96EE96A6298FCE9E00273A9D /* GameSound.swift in Sources */,

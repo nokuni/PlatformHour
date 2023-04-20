@@ -31,7 +31,7 @@ final class GameHUD {
     }
     
     private var actionSequenceHUDConstraints: EdgeInsets {
-        let leading = GameConfiguration.sceneConfiguration.tileSize.width * 3
+        let leading = GameConfiguration.sceneConfiguration.tileSize.width * 4
         let constraints = EdgeInsets(top: 40, leading: leading, bottom: 0, trailing: 0)
         return constraints
     }
@@ -425,17 +425,20 @@ extension GameHUD {
         }
     }
     
+    private func conversationPressEffect(completion: (() -> Void)?) {
+        let animation = SKAction.scaleUpAndDown(from: 0.99, with: 0.05, to: 1, with: 0.05)
+        SKAction.animate(action: animation, node: conversationBox) { completion?() }
+    }
+    
     /// Display the next line of a dialog.
     func nextLine() {
-        removeConversationBox()
-        
-        guard let index = scene.game?.currentConversation?.currentDialogIndex else { return }
-        
-        scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
-        
-        guard let isEndOfLine = scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
-        
-        !isEndOfLine ? addConversationBox() : nextDialog()
+        conversationPressEffect {
+            self.removeConversationBox()
+            guard let index = self.scene.game?.currentConversation?.currentDialogIndex else { return }
+            self.scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
+            guard let isEndOfLine = self.scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
+            !isEndOfLine ? self.addConversationBox() : self.nextDialog()
+        }
     }
     
     /// Display the next dialog.

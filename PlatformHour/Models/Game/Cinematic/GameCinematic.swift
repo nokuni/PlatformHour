@@ -14,6 +14,7 @@ struct GameCinematic: Codable {
     let category: Category
     let actions: [CinematicAction]
     var conversationCompletion: String?
+    var specialCompletion: SpecialCompletion?
     
     enum Category: String, Codable {
         case onLevelStart
@@ -22,11 +23,16 @@ struct GameCinematic: Codable {
         case onConversation
     }
     
+    enum SpecialCompletion: String, Codable {
+        case barrierAdding
+    }
+    
     enum CodingKeys: String, CodingKey {
         case name
         case category
         case actions
         case conversationCompletion
+        case specialCompletion
     }
 }
 

@@ -96,13 +96,21 @@ extension GameEvent {
                 cinematicNodeAction(action: $0)
             }
             SKAction.nodesSequence(sequence: actions, endCompletion: {
-                self.cinematicSequence(cinematic: cinematic)
+                self.cinematicEndCompletion(cinematic: cinematic)
             })
         }
     }
     
-    /// The cinematic sequence.
-    private func cinematicSequence(cinematic: GameCinematic) {
+    /// The cinematic completion.
+    private func cinematicEndCompletion(cinematic: GameCinematic) {
+        specialCinematicCompletion(cinematic: cinematic)
+        endCinematic(cinematic: cinematic)
+        disableCinematic()
+        resetCinematic()
+    }
+    
+    /// End current cinematic.
+    private func endCinematic(cinematic: GameCinematic) {
         guard let level = scene.game?.level else { return }
         guard let player = scene.player else { return }
         
@@ -117,9 +125,15 @@ extension GameEvent {
                 self.scene.core?.hud?.addContent()
             }
         }
-        
-        disableCinematic()
-        resetCinematic()
+    }
+    
+    /// Special completions on cinematic
+    private func specialCinematicCompletion(cinematic: GameCinematic) {
+        guard let specialCompletion = cinematic.specialCompletion else { return }
+        switch specialCompletion {
+        case .barrierAdding:
+            scene.core?.content?.addPlayerBarrier()
+        }
     }
     
     /// Returns the object and the action of the cinematic sequence.
@@ -221,6 +235,7 @@ extension GameEvent {
         scene.game?.updateSaves()
     }
     
+    /// Reset the current cinematic.
     private func resetCinematic() {
         scene.game?.currentLevelCinematic = nil
         scene.game?.currentCinematic = nil

@@ -70,7 +70,8 @@
                 "isFollowedByCamera": false
             }
         ],
-        "conversationCompletion": "Movement Power Up Conversation"
+        "conversationCompletion": "Movement Power Up Conversation",
+        "specialCompletion": "barrierAdding"
     },
     {
         "name": "First Crystal Forward Focus Cinematic",
