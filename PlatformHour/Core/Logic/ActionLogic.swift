@@ -399,6 +399,10 @@ private extension ActionLogic {
             }
             self.scene.core?.event?.triggerConversationOnCoordinate()
             //self.scene.core?.event?.playCinematic()
+            if self.scene.player!.energy == 0 {
+                self.scene.player?.node.logic.healthLost = 1
+                self.scene.core?.logic?.playerDestroy()
+            }
             if self.configuration.isLongPressingDPad {
                 self.move(on: self.configuration.direction, by: self.configuration.movementSpeed)
             }
@@ -468,6 +472,8 @@ extension ActionLogic {
         self.configuration.movementSpeed = movementSpeed
         moveSequence(by: self.configuration.movementSpeed)
         scene.player?.run()
+        scene.player?.consumeEnergy(amount: 1)
+        scene.core?.hud?.updateEnergy()
     }
     
     /// Throws a projectile.

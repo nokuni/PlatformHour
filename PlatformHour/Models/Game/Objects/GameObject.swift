@@ -42,6 +42,11 @@ extension GameObject {
     }
     
     /// Returns important objects of the game.
+    static var obstacles: [GameObject]? {
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.obstacleObjects)
+    }
+    
+    /// Returns important objects of the game.
     static var importants: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.importantObjects)
     }
@@ -66,24 +71,32 @@ extension GameObject {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.trapObjects)
     }
     
-    /// Returns container objects of the game.
-    static var containers: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.containerObjects)
+    /// Returns interactive objects of the game.
+    static var interactives: [GameObject]? {
+        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.interactiveObjects)
     }
     
-    /// Returns container objects of the game.
+    /// Returns effect objects of the game.
     static var effects: [GameObject]? {
         return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.effectObjects)
     }
     
     /// Returns all objects of the game.
     static var all: [GameObject] {
-        let objects = [importants, npcs, enemies, collectibles, traps, containers, effects].compactMap { $0 }
+        let objects = [importants, npcs, enemies, collectibles, traps, interactives, effects].compactMap { $0 }
         let joinedObjects = objects.joined().map { $0 }
         return joinedObjects
     }
     
     // MARK: - Gets
+    
+    /// Returns an important object by giving its name.
+    static func getObstacle(_ name: String) -> GameObject? {
+        let obstacle = GameObject.obstacles?.first(where: {
+            $0.name == name
+        })
+        return obstacle
+    }
     
     /// Returns an important object by giving its name.
     static func getImportant(_ name: String) -> GameObject? {
@@ -125,9 +138,9 @@ extension GameObject {
         return trap
     }
     
-    /// Returns a container object by giving its name.
-    static func getContainer(_ name: String) -> GameObject? {
-        let container = GameObject.containers?.first(where: {
+    /// Returns an interactive object by giving its name.
+    static func getInteractive(_ name: String) -> GameObject? {
+        let container = GameObject.interactives?.first(where: {
             $0.name == name
         })
         return container
@@ -145,7 +158,7 @@ extension GameObject {
         return object
     }
     
-    // MARK: - Values
+    // MARK: - Utils
     
     /// Returns the animations of the object.
     var animations: [ObjectAnimation] {

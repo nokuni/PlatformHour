@@ -81,7 +81,8 @@ extension GameEvent {
     
     /// Start a level cinematic.
     func startCinematic(levelCinematic: LevelCinematic) {
-        guard levelCinematic.isAvailable else { return }
+        guard let game = scene.game else { return }
+        guard game.isCinematicAvailable else { return }
         
         scene.game?.currentLevelCinematic = levelCinematic
         scene.core?.state.switchOn(newStatus: .inCinematic)
@@ -215,11 +216,9 @@ extension GameEvent {
     
     /// Disable the current level cinematic. (To not trigger it again.)
     private func disableCinematic() {
-        if let index = scene.game?.level?.cinematics.firstIndex(where: {
-            $0.name == scene.game?.currentLevelCinematic?.name
-        }) {
-            scene.game?.level?.cinematics[index].isAvailable = false
-        }
+        guard let currentLevelCinematic = scene.game?.currentLevelCinematic else { return }
+        scene.game?.saves[0].passedCinematics?.append(currentLevelCinematic.name)
+        scene.game?.updateSaves()
     }
     
     private func resetCinematic() {
@@ -350,7 +349,7 @@ extension GameEvent {
             }) {
                 self.playConversation(levelConversation: levelConversation)
             }
-            player.gainEnergy(amount: 1)
+            player.refillEnergy()
             self.scene.core?.hud?.updateEnergy()
             self.scene.game?.controller?.action.enable()
         }

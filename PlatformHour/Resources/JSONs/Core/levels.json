@@ -242,7 +242,7 @@
                 "id": 0,
                 "name": "Exit",
                 "category": "important",
-                "coordinate": "1957"
+                "coordinate": "1758"
             },
             {
                 "id": 1,
@@ -259,12 +259,33 @@
                 "sizeGrowth": 2
             },
             {
-                "id": 2,
+                "id": 3,
                 "name": "Blue Crystal",
                 "category": "important",
-                "coordinate": "2945",
+                "coordinate": "2954",
                 "sizeGrowth": 2
-            }
+            },
+            {
+                "id": 4,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2349",
+                "sizeGrowth": 2
+            },
+            {
+                "id": 5,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2339",
+                "sizeGrowth": 2
+            },
+            {
+                "id": 6,
+                "name": "Blue Crystal",
+                "category": "important",
+                "coordinate": "2322",
+                "sizeGrowth": 2
+            },
         ],
         "structures": [
             {
@@ -299,14 +320,35 @@
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "matrix": "0407",
-                "coordinate": "2445"
+                "coordinate": "2446"
             },
             {
                 "atlasName": "CavernGrounds",
                 "outline": "Cavern Outline",
                 "firstLayer": "Cavern First Layer",
                 "matrix": "0407",
-                "coordinate": "2435"
+                "coordinate": "2436"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0411",
+                "coordinate": "2421"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0408",
+                "coordinate": "1924"
+            },
+            {
+                "atlasName": "CavernGrounds",
+                "outline": "Cavern Outline",
+                "firstLayer": "Cavern First Layer",
+                "matrix": "0424",
+                "coordinate": "1836"
             },
         ],
         "conversations": [],

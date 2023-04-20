@@ -11,7 +11,6 @@ struct LevelCinematic: Codable {
     let name: String
     let triggerCoordinate: String?
     let category: Category
-    var isAvailable: Bool = true
     
     enum Category: String, Codable {
         case onStart

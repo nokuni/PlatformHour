@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Silver Key",
+        "image": "silverKey0",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": false
+        },
+        "animation": [
+            {
+                "identifier": "idle",
+                "frames": [
+                    "silverKey0",
+                    "silverKey1",
+                    "silverKey2",
+                    "silverKey3"
+                ]
+            }
+        ]
+    },
+]

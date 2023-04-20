@@ -32,7 +32,8 @@ final class GameContent {
         generateLevelStructures()
         generateLevelCollectibles()
         generateLevelTraps()
-        generateLevelContainers()
+        generateLevelObstacles()
+        generateLevelInteractives()
         generateLevelImportants()
         generateLevelNPCs()
         generateLevelEnemies()
@@ -49,6 +50,7 @@ private extension GameContent {
         configurePlayer()
         guard let player = scene.player else { return }
         scene.addChildSafely(player.node)
+        addPlayerBarrier()
     }
     
     /// Generate the enemies on the current level.
@@ -64,6 +66,14 @@ private extension GameContent {
         guard let level = scene.game?.level else { return }
         for structure in level.structures {
             createLevelStructure(structure: structure)
+        }
+    }
+    
+    /// Generate the structures on the current level.
+    private func generateLevelObstacles() {
+        guard let level = scene.game?.level else { return }
+        for obstacle in level.objects(category: .obstacle) {
+            createLevelObstacle(obstacle)
         }
     }
     
@@ -99,11 +109,11 @@ private extension GameContent {
         }
     }
     
-    /// Generate an containers on the current level.
-    private func generateLevelContainers() {
+    /// Generate the interactives objects on the current level.
+    private func generateLevelInteractives() {
         guard let level = scene.game?.level else { return }
-        for container in level.objects(category: .container) {
-            createLevelContainer(container)
+        for interactive in level.objects(category: .interactive) {
+            createLevelInteractive(interactive)
         }
     }
 }
@@ -112,36 +122,24 @@ private extension GameContent {
 
 extension GameContent {
     
-    /// Create a level container.
-    private func createLevelContainer(_ levelContainer: LevelObject) {
-        if let containerData = GameObject.getContainer(levelContainer.name) {
-            
-            let collision = Collision(category: .object,
-                                      collision: [.player, .structure],
-                                      contact: [.playerProjectile, .enemyProjectile])
-            
-            let logic = LogicBody(health: containerData.logic.health,
-                                  damage: containerData.logic.damage,
-                                  isDestructible: containerData.logic.isDestructible,
-                                  isIntangible: containerData.logic.isIntangible)
-            
-            let objectNode = PKObjectNode()
-            objectNode.name = containerData.name
-            objectNode.size = GameConfiguration.sceneConfiguration.tileSize
-            objectNode.zPosition = 2
-            objectNode.applyPhysicsBody(size: GameConfiguration.sceneConfiguration.tileSize, collision: collision)
-            objectNode.physicsBody?.isDynamic = false
-            
-            let texture = SKTexture(imageNamed: containerData.image)
-            texture.filteringMode = .nearest
-            
-            environment.map.addObject(objectNode,
-                                      texture: texture,
-                                      size: environment.map.squareSize,
-                                      logic: logic,
-                                      animations: containerData.animations,
-                                      at: levelContainer.coordinate.coordinate)
-        }
+    /// Create a level interactive.
+    func createLevelInteractive(_ levelInteractive: LevelObject) {
+        guard let interactiveObject = GameObject.getInteractive(levelInteractive.name) else { return }
+        
+        let collision = Collision(category: .object,
+                                  collision: [.player],
+                                  contact: [.npc])
+        
+        let interactiveObjectNode = environment.objectElement(name: "\(levelInteractive.name) \(levelInteractive.id)",
+                                                              physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                              collision: collision)
+        
+        createLevelObject(node: interactiveObjectNode,
+                          zPosition: GameConfiguration.sceneConfiguration.overObjectZPosition,
+                          levelObject: levelInteractive,
+                          gameObject: interactiveObject)
+        
+        levelObjectAnimation(node: interactiveObjectNode, identifier: .idle, isRepeatingForever: true)
     }
     
     /// Create a level collectible.
@@ -157,6 +155,9 @@ extension GameContent {
                                                         collision: collision)
         
         createLevelObject(node: collectibleNode,
+                          zPosition: levelCollectible.sizeGrowth == nil ?
+                          GameConfiguration.sceneConfiguration.objectZPosition :
+                          GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelCollectible,
                           gameObject: collectibleObject)
         
@@ -169,13 +170,18 @@ extension GameContent {
         
         let collision = Collision(category: .npc,
                                   collision: [.allClear],
-                                  contact: [.player])
+                                  contact: [.player, .object])
         
         let npcObjectNode = environment.objectElement(name: levelNPC.name,
                                                       physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
                                                       collision: collision)
         
-        createLevelObject(node: npcObjectNode, levelObject: levelNPC, gameObject: npcObject)
+        createLevelObject(node: npcObjectNode,
+                          zPosition: levelNPC.sizeGrowth == nil ?
+                          GameConfiguration.sceneConfiguration.objectZPosition :
+                          GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
+                          levelObject: levelNPC,
+                          gameObject: npcObject)
         
         levelObjectAnimation(node: npcObjectNode, identifier: .idle, isRepeatingForever: true)
     }
@@ -230,6 +236,9 @@ extension GameContent {
                                                             collision: collision)
         
         createLevelObject(node: importantObjectNode,
+                          zPosition: levelImportant.sizeGrowth == nil ?
+                          GameConfiguration.sceneConfiguration.objectZPosition :
+                          GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelImportant,
                           gameObject: importantObject)
         
@@ -300,11 +309,41 @@ extension GameContent {
         pattern.create()
     }
     
+    /// Create a level obstacle.
+    private func createLevelObstacle(_ levelObstacle: LevelObject) {
+        guard let obstacleObject = GameObject.getObstacle(levelObstacle.name) else { return }
+        
+        let collision = Collision(category: .structure,
+                                  collision: [.player, .object],
+                                  contact: [.player, .object])
+        
+        let obstacleObjectNode = environment.objectElement(name: levelObstacle.name,
+                                                           physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                           collision: collision)
+        
+        createLevelObject(node: obstacleObjectNode,
+                          zPosition: levelObstacle.sizeGrowth == nil ?
+                          GameConfiguration.sceneConfiguration.objectZPosition :
+                          GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
+                          levelObject: levelObstacle,
+                          gameObject: obstacleObject)
+        
+        //levelObjectAnimation(node: obstacleObjectNode, identifier: .idle, isRepeatingForever: true)
+    }
+    
     /// Create level object
-    private func createLevelObject(node: PKObjectNode, levelObject: LevelObject, gameObject: GameObject) {
+    private func createLevelObject(node: PKObjectNode,
+                                   zPosition: CGFloat,
+                                   levelObject: LevelObject,
+                                   gameObject: GameObject) {
         let coordinate = levelObject.coordinate.coordinate
         
         guard let position = environment.map.tilePosition(from: coordinate) else { return }
+        
+        node.logic = LogicBody(health: gameObject.logic.health,
+                               damage: gameObject.logic.damage,
+                               isDestructible: gameObject.logic.isDestructible,
+                               isIntangible: gameObject.logic.isIntangible)
         
         node.animations = gameObject.animations
         node.coordinate = coordinate
@@ -314,9 +353,7 @@ extension GameContent {
         node.texture = SKTexture(imageNamed: gameObject.image)
         node.texture?.filteringMode = .nearest
         
-        node.zPosition = levelObject.sizeGrowth == nil ?
-        GameConfiguration.sceneConfiguration.objectZPosition :
-        GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition
+        node.zPosition = zPosition
         
         node.position = position
         node.physicsBody?.affectedByGravity = false
@@ -422,6 +459,15 @@ private extension GameContent {
             player.node.texture = SKTexture(imageNamed: sprite)
             player.node.texture?.filteringMode = .nearest
         }
+    }
+    
+    private func addPlayerBarrier() {
+        guard let player = scene.player else { return }
+        let barrierNode = SKSpriteNode(imageNamed: "barrierIdle")
+        barrierNode.name = "Barrier"
+        barrierNode.size = player.node.size
+        barrierNode.texture?.filteringMode = .nearest
+        player.node.addChildSafely(barrierNode)
     }
     
     private func levelObjectAnimation(node: PKObjectNode,

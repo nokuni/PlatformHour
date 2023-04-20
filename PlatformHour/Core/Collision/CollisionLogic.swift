@@ -65,6 +65,43 @@ final class CollisionLogic {
         //        }
     }
     
+    /// When the player touch/move an interactive object, reset his position after a delay.
+    func resetInteractiveObjectPosition(object: PKObjectNode) {
+        guard let level = scene.game?.level else { return }
+        guard let indexedObject = LevelObject.indexedObjectNode(object: object, data: level.objects(category: .interactive)) else { return }
+        let timerConfiguration = PKTimerNode.TimerConfiguration(countdown: 2,
+                                                                counter: 1,
+                                                                timeInterval: 1,
+                                                                actionOnEnd: {
+            object.removeFromParent()
+            self.scene.core?.content?.createLevelInteractive(indexedObject)
+            
+        })
+        let timerNode = PKTimerNode(configuration: timerConfiguration)
+        object.addChildSafely(timerNode)
+        timerNode.start()
+    }
+    
+    func keyOpenLock(key: PKObjectNode, lock: PKObjectNode) {
+        let animation = SKAction.sequence([
+            SKAction.run { key.physicsBody = nil },
+            SKAction.move(to: lock.position, duration: 0.5),
+            SKAction.run {
+                key.removeAllChildren()
+                key.removeAllActions()
+                if let image = key.animations.first?.frames.first {
+                    key.texture = SKTexture(imageNamed: image)
+                    key.texture?.filteringMode = .nearest
+                }
+            }
+            //SKAction.scale(to: 0.7, duration: 0.5),
+//            SKAction.fadeOut(withDuration: 0.5),
+//            SKAction.removeFromParent(),
+//            SKAction.run { lock.removeFromParent() }
+        ])
+        key.run(animation)
+    }
+    
     /// When the player land on a structure.
     func landOnGround() {
         guard let player = scene.player else { return }

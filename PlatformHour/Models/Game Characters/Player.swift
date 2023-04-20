@@ -22,8 +22,8 @@ final class Player {
     
     var actions: [SequenceAction] = []
     var bag: [GameObject] = []
-    var energy = 0
-    var maxEnergy = 1
+    var energy = 100
+    var maxEnergy = 100
     
     enum Roll: Int, CaseIterable {
         case one = 1
@@ -100,9 +100,9 @@ extension Player {
         return health
     }
     
-    func gainEnergy(amount: Int) {
+    func refillEnergy() {
         guard energy < maxEnergy else { return }
-        energy += amount
+        energy = maxEnergy
     }
     
     func consumeEnergy(amount: Int) {
@@ -120,6 +120,27 @@ extension Player {
     var sprite: String? {
         let currentRollValue = currentRoll.rawValue
         return object?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
+    }
+    
+    var energyFrames: [String] {
+        var image = ""
+        
+        switch true {
+        case energy == maxEnergy:
+            image = "energyCharged5"
+        case energy >= 80:
+            image = "energyCharged4"
+        case energy >= 50:
+            image = "energyCharged3"
+        case energy >= 20:
+            image = "energyCharged2"
+        case energy > 0:
+            image = "energyCharged1"
+        default:
+            image = "energyCharged0"
+        }
+        
+        return ["\(image)0", "\(image)1", "\(image)2", "\(image)3"]
     }
     
     /// Returns the animation frame images of an stateID animation.
@@ -164,6 +185,14 @@ extension Player {
         let frames = orientation == .right ? rightRunFrames : leftRunFrames
         let action = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
         SKAction.animate(action: action, node: node, endCompletion: nil)
+        updateBarrierOnRun()
+    }
+    
+    func updateBarrierOnRun() {
+        guard let barrier = node.childNode(withName: "Barrier") as? SKSpriteNode else { return }
+        let frames = orientation == .right ? ["barrierRunRight", "barrierRunMid", "barrierRunLeft", "barrierIdle", "barrierRunRight", "barrierRunMid", "barrierRunLeft", "barrierIdle"] : ["barrierRunLeft", "barrierRunMid", "barrierRunRight", "barrierIdle", "barrierRunLeft", "barrierRunMid", "barrierRunRight", "barrierIdle"]
+        let animation = SKAction.animate(with: frames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.runTimePerFrame)
+        barrier.run(animation)
     }
     
     /// Play the death action animation.
@@ -171,6 +200,7 @@ extension Player {
         guard let deathFrames = frames(stateID: .death) else { return }
         let animationNode = SKSpriteNode()
         animationNode.size = GameConfiguration.sceneConfiguration.tileSize
+        animationNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
         animationNode.position = node.position
         scene.addChildSafely(animationNode)
         

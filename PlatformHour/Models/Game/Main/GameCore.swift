@@ -73,7 +73,15 @@ extension GameCore {
     
     /// Launchs the starting level cinematic.
     private func launchStartingCinematic(scene: GameScene) {
-        if let cinematic = startingCinematic(scene: scene) {
+        guard let game = scene.game else { return }
+        
+        guard let cinematic = startingCinematic(scene: scene) else {
+            scene.game?.controller?.enable()
+            scene.core?.hud?.addContent()
+            return
+        }
+        
+        if game.isCinematicAvailable {
             scene.game?.controller?.disable()
             scene.core?.event?.startCinematic(levelCinematic: cinematic)
         } else {

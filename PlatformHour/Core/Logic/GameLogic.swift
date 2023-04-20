@@ -40,6 +40,24 @@ final class GameLogic {
 
 extension GameLogic {
     
+    /// Returns the sequence moves.
+    private func sequenceMoves(coordinates: [Coordinate]) -> [SKAction] {
+        guard let player = scene.player else { return [] }
+        let positions = coordinates.compactMap { environment.map.tilePosition(from: $0) }
+        let moves = positions.map {
+            SKAction.sequence([
+                SKAction.move(to: $0, duration: 0.2),
+                SKAction.run {
+                    player.rollUp()
+                    player.updateDiceSprite()
+                    player.consumeEnergy(amount: 1)
+                    self.scene.core?.hud?.updateEnergy()
+                }
+            ])
+        }
+        return moves
+    }
+    
     /// Returns the sequence of action the player has to perform.
     private var actionSequenceAction: [SKAction] {
         guard let player = scene.player else { return [] }
@@ -54,20 +72,13 @@ extension GameLogic {
             coordinates.append(currentCoordinate)
         }
         
-        let positions = coordinates.compactMap { environment.map.tilePosition(from: $0) }
-        
-        let moves = positions.map {
-            SKAction.sequence([
-                SKAction.move(to: $0, duration: 0.2),
-                SKAction.run {
-                    player.rollUp()
-                    player.updateDiceSprite()
-                },
-                SKAction.wait(forDuration: 0.4)
-            ])
-        }
+        let moves = sequenceMoves(coordinates: coordinates)
         
         return moves
+    }
+    
+    func checkKeyDice() {
+        
     }
     
     /// Resolve the perform of the sequence of actions.
@@ -101,8 +112,6 @@ extension GameLogic {
         self.scene.core?.hud?.removeActionSquares()
         let sparkEffect = player.node.childNode(withName: GameConfiguration.nodeKey.sparkEffect)
         sparkEffect?.removeFromParent()
-        player.consumeEnergy(amount: 1)
-        scene.core?.hud?.updateEnergy()
     }
 }
 
@@ -186,7 +195,7 @@ extension GameLogic {
     /// Make a trap fall repeateadly.
     func dropTrap(trapObject: PKObjectNode) {
         guard let level = scene.game?.level else { return }
-        guard let levelTrap = indexedLevelObject(object: trapObject, data: level.objects(category: .trap)) else { return }
+        guard let levelTrap = LevelObject.indexedObjectNode(object: trapObject, data: level.objects(category: .trap)) else { return }
         
         let drop = SKAction.sequence([
             fallAnimation(object: trapObject, speed: 500),
@@ -238,9 +247,10 @@ extension GameLogic {
     }
     
     /// Destroy the player.
-    private func playerDestroy() {
+    func playerDestroy() {
         guard let player = scene.player else { return }
         if isDestroyed(player.node) {
+            player.state.isDead = true
             player.death(scene: scene)
             scene.core?.hud?.removeContent()
             scene.game?.controller?.disable()
@@ -278,19 +288,5 @@ extension GameLogic {
     private func damage(_ objectNode: PKObjectNode) {
         hit(objectNode)
         destroy(objectNode)
-    }
-}
-
-// MARK: - Miscellaneous
-
-extension GameLogic {
-    
-    /// Returns a level element indexed by his ID.
-    func indexedLevelObject<Element: LevelProtocol>(object: PKObjectNode,
-                                                    data: [Element]) -> Element? {
-        guard let objectName = object.name else { return nil }
-        guard let id = objectName.extractedNumber else { return nil }
-        let element = data.first(where: { $0.id == id })
-        return element
     }
 }

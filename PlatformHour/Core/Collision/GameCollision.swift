@@ -36,6 +36,16 @@ final class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.item.rawValue)
         )
         
+        playerTouchInteractive(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.object.rawValue)
+        )
+        
+        keyTouchLock(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.npc.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.object.rawValue)
+        )
+        
         playerOnExit(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
@@ -109,6 +119,29 @@ extension GameCollision {
         guard let object = second.body.node as? PKObjectNode else { return }
         if manager.isColliding(first, with: second) {
             collisionLogic.pickUpCollectible(object: object)
+        }
+    }
+    
+    /// When the player collides with an interactive object.
+    private func playerTouchInteractive(_ first: CollisionManager.NodeBody,
+                                        with second: CollisionManager.NodeBody) {
+        guard let object = second.body.node as? PKObjectNode else { return }
+        if manager.isColliding(first, with: second) {
+            collisionLogic.resetInteractiveObjectPosition(object: object)
+        }
+    }
+    
+    /// When a key collides with a lock.
+    private func keyTouchLock(_ first: CollisionManager.NodeBody,
+                              with second: CollisionManager.NodeBody) {
+        guard let lock = first.body.node as? PKObjectNode else { return }
+        guard let lockName = lock.name else { return }
+        guard lockName.contains("Lock") else { return }
+        guard let key = second.body.node as? PKObjectNode else { return }
+        guard let keyName = key.name else { return }
+        guard keyName.contains("Key") else { return }
+        if manager.isColliding(first, with: second) {
+            collisionLogic.keyOpenLock(key: key, lock: lock)
         }
     }
 }

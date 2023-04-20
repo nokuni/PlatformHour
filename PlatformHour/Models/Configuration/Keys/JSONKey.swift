@@ -15,12 +15,13 @@ struct JSONKey {
     
     // MARK: Objets
     let playerObject = "playerObject.json"
+    let obstacleObjects = "obstacleObjects.json"
     let importantObjects = "importantObjects.json"
     let npcObjects = "npcObjects.json"
     let enemyObjects = "enemyObjects.json"
     let trapObjects = "trapObjects.json"
     let collectibleObjects = "collectibleObjects.json"
-    let containerObjects = "containerObjects.json"
+    let interactiveObjects = "interactiveObjects.json"
     let effectObjects = "effectObjects.json"
     
     // MARK: - Structures

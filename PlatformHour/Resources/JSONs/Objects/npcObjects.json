@@ -52,4 +52,15 @@
             }
         ]
     },
+    {
+        "name": "Silver Lock",
+        "image": "silverLock",
+        "logic": {
+            "health": 1,
+            "damage": 0,
+            "isDestructible": false,
+            "isIntangible": false
+        },
+        "animation": []
+    },
 ]

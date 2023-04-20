@@ -17,13 +17,14 @@ struct SceneConfiguration {
     let sceneryZPosition: CGFloat = 3
     let NPCZPosition: CGFloat = 4
     let objectZPosition: CGFloat = 5
-    let playerZPosition: CGFloat = 6
-    let animationZPosition: CGFloat = 7
-    let hudLayerZPosition: CGFloat = 8
-    let hudZPosition: CGFloat = 9
-    let elementHUDZPosition: CGFloat = 10
-    let overElementHUDZPosition: CGFloat = 11
-    let screenFilterZPosition: CGFloat = 12
+    let overObjectZPosition: CGFloat = 6
+    let playerZPosition: CGFloat = 7
+    let animationZPosition: CGFloat = 8
+    let hudLayerZPosition: CGFloat = 9
+    let hudZPosition: CGFloat = 10
+    let elementHUDZPosition: CGFloat = 11
+    let overElementHUDZPosition: CGFloat = 12
+    let screenFilterZPosition: CGFloat = 13
     
     // MARK: - Camera
     let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25

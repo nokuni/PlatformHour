@@ -43,10 +43,23 @@ final class Game: ObservableObject {
     
     var currentLevelCinematic: LevelCinematic?
     var currentCinematic: GameCinematic?
+    var isCinematicAvailable: Bool {
+        guard let passedCinematics = saves[saveIndex].passedCinematics else { return false }
+        guard let level = level else { return false }
+        let cinematicNames = level.cinematics.map { $0.name }
+        return !passedCinematics.contains(cinematicNames)
+    }
     
     var hasTitleBeenDisplayed: Bool = false
     
     // MARK: - Save
+    
+    @AppStorage("Save index") var saveIndex: Int = 0
+    
+    /// Get the current save.
+    var currentSave: SaveEntity? {
+        saves.first
+    }
     
     /// Load the game save.
     func loadSave() {
@@ -63,8 +76,8 @@ final class Game: ObservableObject {
         let newSave = SaveEntity(context: saveManager.container.viewContext)
         newSave.id = UUID()
         newSave.level = 0
-        save()
-        fetchSaves()
+        newSave.passedCinematics = [""]
+        updateSaves()
     }
     
     /// Fetch the game save.
@@ -74,13 +87,19 @@ final class Game: ObservableObject {
         }
     }
     
+    /// Update the current game save.
+    func updateSaves() {
+        save()
+        fetchSaves()
+    }
+    
     /// Save the game progress.
     private func save() { try? saveManager.save() }
     
     /// Save the progress on next game level.
     func setupNextLevel() {
         guard !saves.isEmpty else { return }
-        saves[0].level += 1
+        saves[saveIndex].level += 1
         save()
         fetchSaves()
     }

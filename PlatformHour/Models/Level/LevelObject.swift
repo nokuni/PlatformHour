@@ -5,7 +5,7 @@
 //  Created by Maertens Yann-Christophe on 09/04/23.
 //
 
-import Foundation
+import PlayfulKit
 
 struct LevelObject: Codable, LevelProtocol {
     let id: Int
@@ -22,7 +22,8 @@ struct LevelObject: Codable, LevelProtocol {
         case enemy
         case trap
         case collectible
-        case container
+        case interactive
+        case obstacle
     }
     
     enum CodingKeys: String, CodingKey {
@@ -32,5 +33,17 @@ struct LevelObject: Codable, LevelProtocol {
         case coordinate
         case itinerary
         case sizeGrowth
+    }
+}
+
+extension LevelObject {
+    
+    /// Returns a level element indexed by his ID.
+    static func indexedObjectNode<Element: LevelProtocol>(object: PKObjectNode,
+                                                          data: [Element]) -> Element? {
+        guard let objectName = object.name else { return nil }
+        guard let id = objectName.extractedNumber else { return nil }
+        let element = data.first(where: { $0.id == id })
+        return element
     }
 }

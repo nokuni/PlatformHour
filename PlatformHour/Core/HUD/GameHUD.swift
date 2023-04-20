@@ -119,7 +119,7 @@ extension GameHUD {
 // MARK: - Create/Adds
 
 extension GameHUD {
-
+    
     /// Create the layer on the scene.
     private func createLayer() {
         layer.fillColor = .clear
@@ -174,18 +174,38 @@ extension GameHUD {
     private func addEnergyCharger() {
         guard let player = scene.player else { return }
         
-        let image = "energy\(player.maxEnergy)Charged\(player.energy)"
-        let images = ["\(image)0", "\(image)1", "\(image)2", "\(image)3"]
-        
         energyCharger.size = GameConfiguration.sceneConfiguration.tileSize
         energyCharger.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
-        energyCharger.position = layer.cornerPosition(corner: .topLeft, padding: EdgeInsets(top: 40, leading: 60, bottom: 0, trailing: 0))
+        energyCharger.position = layer.cornerPosition(corner: .topLeft,
+                                                      padding: EdgeInsets(top: 40, leading: 60, bottom: 0, trailing: 0))
         
-        let animation = SKAction.animate(with: images, filteringMode: .nearest, timePerFrame: 0.2)
+        let animation = SKAction.animate(with: player.energyFrames,
+                                         filteringMode: .nearest,
+                                         timePerFrame: 0.2)
         
         energyCharger.run(SKAction.repeatForever(animation))
         
         contentContainer.addChildSafely(energyCharger)
+        
+        addEnergyCounter()
+    }
+    
+    private func addEnergyCounter() {
+        guard let player = scene.player else { return }
+        let textManager = TextManager()
+        let paramater = TextManager.Paramater(content: "\(player.energy)",
+                                              fontName: GameConfiguration.sceneConfiguration.titleFont,
+                                              fontSize: 20,
+                                              fontColor: .white,
+                                              strokeWidth: -10,
+                                              strokeColor: .black)
+        let attributedText = textManager.attributedText(parameter: paramater)
+        
+        let energyCounterNode = SKLabelNode(attributedText: attributedText)
+        energyCounterNode.zPosition = GameConfiguration.sceneConfiguration.hudZPosition
+        energyCounterNode.position = CGPoint(x: GameConfiguration.sceneConfiguration.tileSize.width,
+                                             y: 0)
+        energyCharger.addChildSafely(energyCounterNode)
     }
     
     /// Adds an action square on the action sequence bar.
@@ -245,7 +265,7 @@ extension GameHUD {
     func removeActionSquares() {
         actionSquares.forEach { $0.removeFromParent() }
     }
-
+    
     private func removeConversationBox() {
         conversationBox.removeAllChildren()
         conversationBox.removeFromParent()
@@ -397,41 +417,41 @@ extension GameHUD {
 // MARK: - Conversation Logic
 
 extension GameHUD {
-
+    
     /// Pass the current line of text.
     func passLine() {
         if let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode {
             conversationText.hasFinished() ? nextLine() : speedUpLine()
         }
     }
-
+    
     /// Display the next line of a dialog.
     func nextLine() {
         removeConversationBox()
-
+        
         guard let index = scene.game?.currentConversation?.currentDialogIndex else { return }
-
+        
         scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
-
+        
         guard let isEndOfLine = scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
-
+        
         !isEndOfLine ? addConversationBox() : nextDialog()
     }
-
+    
     /// Display the next dialog.
     private func nextDialog() {
         scene.game?.currentConversation?.moveOnNextDialog()
         guard let isEndOfConversation = scene.game?.currentConversation?.isEndOfConversation else { return }
         !isEndOfConversation ? addConversationBox() : endConversation()
     }
-
+    
     /// Display the total text of the dialog instrantly.
     private func speedUpLine() {
         let conversationText = conversationBox.childNode(withName: GameConfiguration.nodeKey.conversationText) as? PKTypewriterNode
         conversationText?.displayAllText()
         scene.core?.sound.manager.stopRepeatedSFX()
     }
-
+    
     /// Disable the current dialog.
     private func disableConversation() {
         if let index = scene.game?.level?.conversations.firstIndex(where: {
@@ -440,13 +460,13 @@ extension GameHUD {
             scene.game?.level?.conversations[index].isAvailable = false
         }
     }
-
+    
     /// Reset the current conversation.
     private func resetConversation() {
         scene.game?.currentLevelConversation = nil
         scene.game?.currentConversation = nil
     }
-
+    
     /// Returns the cinematic after the conversation.
     private var cinematicAfterConversation: LevelCinematic? {
         guard let level = scene.game?.level else { return nil }
@@ -455,7 +475,7 @@ extension GameHUD {
         }
         return nil
     }
-
+    
     /// Ends the current dialog.
     private func endConversation() {
         guard let game = scene.game else { return }
@@ -471,7 +491,7 @@ extension GameHUD {
         disableConversation()
         resetConversation()
     }
-
+    
     /// Completion on the end of the conversation
     private func endConversationCompletion() {
         guard let player = scene.player else { return }

@@ -199,7 +199,7 @@ extension GameEnvironment {
         background.blendMode = .replace
         background.texture?.filteringMode = .nearest
         background.texture?.preload { }
-        background.size = CGSize(width: map.squareSize.width * CGFloat(map.matrix.column),
+        background.size = CGSize(width: map.squareSize.width * CGFloat(map.matrix.column) * 0.98,
                                  height: map.squareSize.width * CGFloat(map.matrix.row - level.background.adjustement))
         background.zPosition = GameConfiguration.sceneConfiguration.backgroundZPosition
         background.position = CGPoint(x: centerPosition.x, y: centerPosition.y + adjustement)

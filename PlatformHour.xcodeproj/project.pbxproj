@@ -11,7 +11,7 @@
 		20C402A729ED3A7800D3411F /* Feedbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C402A629ED3A7800D3411F /* Feedbacks.swift */; };
 		20C402A929ED3B3B00D3411F /* UnusedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C402A829ED3B3B00D3411F /* UnusedCode.swift */; };
 		9601D6B629E1D038006624C6 /* collectibleObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 9601D6B529E1D038006624C6 /* collectibleObjects.json */; };
-		9601D6BC29E1D1C7006624C6 /* containerObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 9601D6BB29E1D1C7006624C6 /* containerObjects.json */; };
+		9601D6BC29E1D1C7006624C6 /* interactiveObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 9601D6BB29E1D1C7006624C6 /* interactiveObjects.json */; };
 		9601D6BF29E1EE59006624C6 /* LevelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9601D6BE29E1EE59006624C6 /* LevelProtocol.swift */; };
 		9601D6C129E1F00E006624C6 /* playerObject.json in Resources */ = {isa = PBXBuildFile; fileRef = 9601D6C029E1F00E006624C6 /* playerObject.json */; };
 		9601D6C329E1F020006624C6 /* npcObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 9601D6C229E1F020006624C6 /* npcObjects.json */; };
@@ -40,6 +40,7 @@
 		964435D429E9C82200812B7A /* CavernGrounds.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 964435D329E9C82200812B7A /* CavernGrounds.atlas */; };
 		964435D629E9F8B900812B7A /* ActionLogicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435D529E9F8B900812B7A /* ActionLogicConfiguration.swift */; };
 		964435D829EAA3D400812B7A /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435D729EAA3D400812B7A /* Stats.swift */; };
+		964435DD29F0050600812B7A /* obstacleObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 964435DC29F0050600812B7A /* obstacleObjects.json */; };
 		964626BB29CF6F9E00A872A5 /* SpiralStructureConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */; };
 		964626BD29CF6FDA00A872A5 /* SpiralStructurePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */; };
 		964E7E4829BE6D5F003CE54B /* PlayerInteractionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */; };
@@ -112,7 +113,7 @@
 		20C402A629ED3A7800D3411F /* Feedbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedbacks.swift; sourceTree = "<group>"; };
 		20C402A829ED3B3B00D3411F /* UnusedCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnusedCode.swift; sourceTree = "<group>"; };
 		9601D6B529E1D038006624C6 /* collectibleObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = collectibleObjects.json; sourceTree = "<group>"; };
-		9601D6BB29E1D1C7006624C6 /* containerObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = containerObjects.json; sourceTree = "<group>"; };
+		9601D6BB29E1D1C7006624C6 /* interactiveObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = interactiveObjects.json; sourceTree = "<group>"; };
 		9601D6BE29E1EE59006624C6 /* LevelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelProtocol.swift; sourceTree = "<group>"; };
 		9601D6C029E1F00E006624C6 /* playerObject.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = playerObject.json; sourceTree = "<group>"; };
 		9601D6C229E1F020006624C6 /* npcObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = npcObjects.json; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 		964435D329E9C82200812B7A /* CavernGrounds.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = CavernGrounds.atlas; sourceTree = "<group>"; };
 		964435D529E9F8B900812B7A /* ActionLogicConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionLogicConfiguration.swift; sourceTree = "<group>"; };
 		964435D729EAA3D400812B7A /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
+		964435DC29F0050600812B7A /* obstacleObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = obstacleObjects.json; sourceTree = "<group>"; };
 		964626BA29CF6F9E00A872A5 /* SpiralStructureConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructureConstruct.swift; sourceTree = "<group>"; };
 		964626BC29CF6FDA00A872A5 /* SpiralStructurePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiralStructurePattern.swift; sourceTree = "<group>"; };
 		964E7E4729BE6D5F003CE54B /* PlayerInteractionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerInteractionStatus.swift; sourceTree = "<group>"; };
@@ -534,10 +536,11 @@
 				96540525298C22EF00620E76 /* importantObjects.json */,
 				96D60F0529D99B6500D2C1C3 /* trapObjects.json */,
 				9601D6B529E1D038006624C6 /* collectibleObjects.json */,
-				9601D6BB29E1D1C7006624C6 /* containerObjects.json */,
+				9601D6BB29E1D1C7006624C6 /* interactiveObjects.json */,
 				9601D6C029E1F00E006624C6 /* playerObject.json */,
 				9601D6C229E1F020006624C6 /* npcObjects.json */,
 				964435C529E6F81900812B7A /* effectObjects.json */,
+				964435DC29F0050600812B7A /* obstacleObjects.json */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -801,8 +804,9 @@
 				96540526298C22EF00620E76 /* importantObjects.json in Resources */,
 				96D60EEE29D8A88F00D2C1C3 /* ChimeraBellsÀ.wav in Resources */,
 				96D60F4229E19AB700D2C1C3 /* TextTypingSound.wav in Resources */,
+				964435DD29F0050600812B7A /* obstacleObjects.json in Resources */,
 				96D60EDB29D85EE000D2C1C3 /* cavernBS_2.wav in Resources */,
-				9601D6BC29E1D1C7006624C6 /* containerObjects.json in Resources */,
+				9601D6BC29E1D1C7006624C6 /* interactiveObjects.json in Resources */,
 				96D60F2B29E02A0E00D2C1C3 /* Outline Pixel7 Solid.ttf in Resources */,
 				9619466A29969407000859C8 /* levels.json in Resources */,
 				962A0CC529891901004DB446 /* Assets.xcassets in Resources */,
