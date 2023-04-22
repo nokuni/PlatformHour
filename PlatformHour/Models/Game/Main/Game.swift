@@ -22,6 +22,8 @@ final class Game: ObservableObject {
     var saveManager = SaveManager(container: PersistenceController.shared.container)
     var controller: GameControllerManager?
     
+    var language = LanguageManager.shared.language
+    
     // MARK: - Worlds
     
     var world: GameWorld?
@@ -38,6 +40,12 @@ final class Game: ObservableObject {
     
     var currentLevelConversation: LevelConversation?
     var currentConversation: GameConversation?
+    var isConversationAvailable: Bool {
+        guard let passedConversations = saves[saveIndex].passedConversations else { return false }
+        guard let level = level else { return false }
+        let conversationNames = level.conversations.map { $0.name }
+        return !passedConversations.contains(conversationNames)
+    }
     
     // MARK: - Cinematics
     
@@ -77,6 +85,7 @@ final class Game: ObservableObject {
         newSave.id = UUID()
         newSave.level = 0
         newSave.passedCinematics = [""]
+        newSave.passedConversations = [""]
         updateSaves()
     }
     

@@ -292,7 +292,7 @@ extension GameHUD {
     func addConversationBox() {
         
         guard let levelConversation = scene.game?.currentLevelConversation else { return }
-        guard let conversationData = GameConversation.get(levelConversation.conversation) else { return }
+        guard let conversationData = GameConversation.get(levelConversation.name) else { return }
         
         if scene.game?.currentConversation == nil { scene.game?.currentConversation = conversationData }
         
@@ -380,7 +380,8 @@ extension GameHUD {
     /// Add a text on the conversation box.
     private func addConversationText(_ text: String, node: SKNode) {
         let padding = EdgeInsets(top: 45, leading: 130, bottom: 0, trailing: 30)
-        let parameter = TextManager.Paramater(content: text,
+        let localizedText = text.localized(Game.shared.language)
+        let parameter = TextManager.Paramater(content: localizedText,
                                               fontName: GameConfiguration.sceneConfiguration.textFont,
                                               fontSize: 18,
                                               fontColor: .black,
@@ -457,11 +458,9 @@ extension GameHUD {
     
     /// Disable the current dialog.
     private func disableConversation() {
-        if let index = scene.game?.level?.conversations.firstIndex(where: {
-            $0.conversation == scene.game?.currentLevelConversation?.conversation
-        }) {
-            scene.game?.level?.conversations[index].isAvailable = false
-        }
+        guard let currentLevelConversation = scene.game?.currentLevelConversation else { return }
+        scene.game?.saves[0].passedConversations?.append(currentLevelConversation.name)
+        scene.game?.updateSaves()
     }
     
     /// Reset the current conversation.

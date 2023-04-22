@@ -67,11 +67,16 @@ final class GameCollision {
         )
         
         trapTouchPlayer(
+            CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.enemy.rawValue),
+            with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.player.rawValue)
+        )
+        
+        playerTouchEnemy(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
         
-        playerTouchEnemy(
+        playerTouchTrap(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.enemy.rawValue)
         )
@@ -90,7 +95,7 @@ extension GameCollision {
         }
     }
     
-    /// When the player collides with an enemy.
+    /// When an enemy collides with the player.
     private func enemyTouchPlayer(_ first: CollisionManager.NodeBody,
                                   with second: CollisionManager.NodeBody) {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
@@ -101,7 +106,7 @@ extension GameCollision {
         }
     }
     
-    /// When the player collides with a trap.
+    /// When a trap collides with the player.
     private func trapTouchPlayer(_ first: CollisionManager.NodeBody,
                                   with second: CollisionManager.NodeBody) {
         guard let trapNode = second.body.node as? PKObjectNode else { return }
@@ -118,8 +123,24 @@ extension GameCollision {
     private func playerTouchEnemy(_ first: CollisionManager.NodeBody,
                                   with second: CollisionManager.NodeBody) {
         guard let enemyNode = second.body.node as? PKObjectNode else { return }
+        guard let enemyNodeName = enemyNode.name else { return }
+        guard enemyNodeName.contains("Enemy") else { return }
         if manager.isColliding(first, with: second) {
             collisionLogic.playerDropOnEnemy(enemyNode)
+        }
+    }
+    
+    /// When the player collides with a trap.
+    private func playerTouchTrap(_ first: CollisionManager.NodeBody,
+                                  with second: CollisionManager.NodeBody) {
+        guard let trapNode = second.body.node as? PKObjectNode else { return }
+        guard let trapNodeName = trapNode.name else { return }
+        guard trapNodeName.contains("Trap") else { return }
+        if manager.isColliding(first, with: second) {
+            scene.core?.animation?.delayedDestroy(scene: scene,
+                                                  node: trapNode,
+                                                  timeInterval: 0.1)
+            collisionLogic.hostileHitOnPlayer(trapNode)
         }
     }
     

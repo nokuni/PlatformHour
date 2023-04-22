@@ -15,5 +15,21 @@
                 "frames": ["rockDeath0", "rockDeath1", "rockDeath2", "rockDeath3", "rockDeath4", "rockDeath5"]
             }
         ]
+    },
+    {
+        "name": "Bubble Trap",
+        "image": "bubble",
+        "logic": {
+            "health": 1,
+            "damage": 5,
+            "isDestructible": true,
+            "isIntangible": false
+        },
+        "animation": [
+            {
+                "identifier": "death",
+                "frames": ["bubbleDeath0", "bubbleDeath1"]
+            }
+        ]
     }
 ]

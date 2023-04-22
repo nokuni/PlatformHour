@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+  PlatformHour
+
+  Created by Maertens Yann-Christophe on 22/04/23.
+  
+*/
+
+"Finally free !" = "Enfin libre !";
+"I was waiting so long for a body to come in this place..." = "J'ai attendu si longtemps qu'une personne vienne dans cet endroit...";
+"Thanks for saving me young ma..." = "Merci de m'avoir sauvé jeune ma...";
+"Oh no ! I did not pay attention ! You are not a mage, neither a human..." = "Oh non ! Je n'ai pas fait attention ! Tu n'es pas un mage, ni un humain...";
+"You are a... dice ? What a dice is doing here ?" = "Tu es un... dé ? Qu'est-ce qu'un dé fait ici ?";
+"Oh I did not present myself, I'm a crystal spirit." = "Oh je ne me suis pas présenté, je suis un esprit de cristal.";
+"I do not have any memories, the only thing I know is..." = "Je n'ai plus de souvenirs, la seule chose dont je me rappelle, c'est...";
+"...my role was to assist young mage in their process of learning magic." = "...que mon role était d'assister les jeunes mages durant leur apprentissage de la magie.";
+"It's been a long time I did not see any forms of life." = "Cela fait longtemps que je n'ai pas vu de formes de vie.";
+"But you are here... If I succeeded to attach myself to you, it means you have soul." = "Mais tu es là... Si j'ai réussi à m'attacher à toi, cela veut dire que tu as une âme.";
+"How is it possible ? What happened to you ?" = "Comment est-ce possible ? Que t'est-il arrivé ?";
+"For now, we need to leave this place to gather some informations." = "Pour l'instant, on a besoin de quitter cet endroit pour réunir quelque informations.";
+"It seems you can't do anything without me." = "Apparemment, tu ne peux pas faire grand chose sans moi.";
+"I can make you move and fly but I can't help you on the directing part. Every soul has his own way." = "Je peux t'aider à bouger et léviter mais pas en ce qui concerne la manoeuvre. Chaque âme a sa personnalité.";
+"You'll have to figure it out." = "Tu auras besoin de le découvrir par toi même.";
+"If I run out of energy, we go bust." = "Si je n'ai plus d'énergie, on est fini.";
+"Let's do it !" = "Allez ! C'est parti !";
+"Now you can move and fly ! I hope you know how to roll because I don't." = "Tu peux bouger et léviter désormais ! J'espère que tu sais comment ça marche parce que moi non.";
+"Oh crap ! Some rocks are falling from the top !" = "Ah mince ! Des rochers tombent du plafond !";
+"This place seems really dangerous but do not worry." = "Cet endroit semble vraiment dangereux, mais ne t'en fais pas.";
+"My energy serves as a barrier too." = "Mon energie sert de barrière aussi.";
+"If you get hurt, you'll loose some energy instead of being crushed." = "Si tu te fais toucher, tu perdras un peu d'énergie au lieu de te faire écraser.";
+"Still try not to spend too much energy, or we will never get out of here." = "Essaye quand même de ne dépenser trop d'énergie, ou nous ne sortirons jamais d'ici.";
+"Oh ! Watch ! An active blue crystal !" = "Oh ! Regarde ! Un cristal actif !";
+"I can refill some energy !" = "Je peux regagner de l'énergie !";
+"Come closer and touch it !" = "Approche toi et touche le !";
+"Now I'm replenished !" = "Je suis plein !";
+"When you see a crystal like that, use it to refill my energy." = "Si tu vois un cristal comme ça, utilise le pour me faire regagner de l'énergie.";
+"And one more thing..." = "Et une chose de plus...";
+"If we run out of energy, we are sure to be redirected directly to the last crystal we touched." = "Si on n'a plus d'énergie, on sera automatiquement rediriger vers le dernier cristal qu'on a touché.";
+"Cool, nah ?" = "Cool, non ?";

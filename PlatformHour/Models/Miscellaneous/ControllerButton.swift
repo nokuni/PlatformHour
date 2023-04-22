@@ -18,6 +18,7 @@ struct ControllerButton: Codable {
         case b
         case x
         case y
+        case menu
     }
     
     enum Product: String, Codable {

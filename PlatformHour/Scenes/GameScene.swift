@@ -35,7 +35,6 @@ final class GameScene: SKScene {
         core?.logic?.projectileFollowPlayer()
         core?.event?.updatePlayerCoordinate()
         //core?.event?.updatePlatformCoordinates()
-        core?.event?.triggerPlayerDeathFall()
     }
     
     private func didBegin(_ contact: SKPhysicsContact) {

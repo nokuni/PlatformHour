@@ -115,7 +115,7 @@ extension GameEvent {
         guard let player = scene.player else { return }
         
         if let conversation = cinematic.conversationCompletion,
-           let levelConversation = level.conversations.first(where: { $0.conversation == conversation }) {
+           let levelConversation = level.conversations.first(where: { $0.name == conversation }) {
             playConversation(levelConversation: levelConversation)
         } else {
             scene.core?.gameCamera?.followedObject = player.node
@@ -248,7 +248,8 @@ extension GameEvent {
     
     /// Play the current conversation.
     func playConversation(levelConversation: LevelConversation) {
-        guard levelConversation.isAvailable else { return }
+        guard let game = scene.game else { return }
+        guard game.isConversationAvailable else { return }
         
         hideButtonPopUp()
         scene.core?.hud?.removeContent()
@@ -360,7 +361,7 @@ extension GameEvent {
                                                growth: 1.5,
                                                timeInterval: 0.1) {
             if let levelConversation = level.conversations.first(where: {
-                $0.conversation == GameConfiguration.nodeKey.firstCrystalTakeConversation
+                $0.name == GameConfiguration.nodeKey.firstCrystalTakeConversation
             }) {
                 self.playConversation(levelConversation: levelConversation)
             }

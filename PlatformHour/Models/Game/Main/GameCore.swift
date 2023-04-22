@@ -22,7 +22,24 @@ struct GameCore {
     var content: GameContent?
 }
 
+// MARK: - Main
+
 extension GameCore {
+    
+    /// Start the scene transition.
+    private func start(scene: GameScene) {
+        animation?.sceneTransitionEffect(scene: scene,
+                                         effectAction: SKAction.fadeOut(withDuration: 2),
+                                         isFadeIn: true,
+                                         isShowingTitle: isShowingLevelTitle(scene: scene)) {
+            self.launchStartingCinematic(scene: scene)
+            self.launchStartingConversation(scene: scene)
+        }
+    }
+    
+    private func isShowingLevelTitle(scene: GameScene) -> Bool {
+        startingCinematic(scene: scene) == nil && startingConversation(scene: scene) == nil
+    }
     
     /// Setup the scene.
     mutating func setup(scene: GameScene) {
@@ -64,6 +81,11 @@ extension GameCore {
         guard scene.game?.controller == nil else { return }
         scene.game?.controller = GameControllerManager(scene: scene, state: state)
     }
+}
+
+// MARK: - Cinematics
+
+extension GameCore {
     
     /// Returns the starting level cinematic.
     private func startingCinematic(scene: GameScene) -> LevelCinematic? {
@@ -74,6 +96,8 @@ extension GameCore {
     /// Launchs the starting level cinematic.
     private func launchStartingCinematic(scene: GameScene) {
         guard let game = scene.game else { return }
+        
+        guard startingConversation(scene: scene) == nil else { return }
         
         guard let cinematic = startingCinematic(scene: scene) else {
             scene.game?.controller?.enable()
@@ -89,14 +113,36 @@ extension GameCore {
             scene.core?.hud?.addContent()
         }
     }
+}
+
+// MARK: - Conversations
+
+extension GameCore {
     
-    /// Start the scene transition.
-    private func start(scene: GameScene) {
-        animation?.sceneTransitionEffect(scene: scene,
-                                         effectAction: SKAction.fadeOut(withDuration: 2),
-                                         isFadeIn: true,
-                                         isShowingTitle: startingCinematic(scene: scene) == nil) {
-            self.launchStartingCinematic(scene: scene)
+    /// Returns the starting level cinematic.
+    private func startingConversation(scene: GameScene) -> LevelConversation? {
+        let conversation = scene.game?.level?.conversations.first(where: { $0.category == .onStart })
+        return conversation
+    }
+    
+    /// Launchs the starting level cinematic.
+    private func launchStartingConversation(scene: GameScene) {
+        guard let game = scene.game else { return }
+        
+        guard startingCinematic(scene: scene) == nil else { return }
+        
+        guard let levelConversation = startingConversation(scene: scene) else {
+            scene.game?.controller?.enable()
+            scene.core?.hud?.addContent()
+            return
+        }
+        
+        if game.isConversationAvailable {
+            scene.game?.controller?.disable()
+            scene.core?.event?.playConversation(levelConversation: levelConversation)
+        } else {
+            scene.game?.controller?.enable()
+            scene.core?.hud?.addContent()
         }
     }
 }

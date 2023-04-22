@@ -8,12 +8,18 @@
 import Foundation
 
 struct LevelConversation: Codable {
-    let conversation: String
+    let name: String
     let triggerCoordinate: String?
-    var isAvailable: Bool = true
+    let category: Category
+    
+    enum Category: String, Codable {
+        case onStart
+        case onCinematic
+    }
     
     enum CodingKeys: String, CodingKey {
-        case conversation
+        case name
         case triggerCoordinate
+        case category
     }
 }

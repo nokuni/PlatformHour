@@ -232,14 +232,30 @@ extension Player {
                          node: animationNode)
     }
     
+    /// Hitted animation.
+    var hitAnimation: SKAction {
+        guard let hitFrames = frames(stateID: .hit) else { return SKAction.empty() }
+        let hitAnimation = SKAction.animate(with: hitFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.hitTimePerFrame)
+        return hitAnimation
+    }
+    
     /// Play the hitted animation.
-    func hitted() {
+    func blinkHit() {
+        guard let barrier = node.childNode(withName: "Barrier") as? SKSpriteNode else { return }
         let configuration = PKTimerNode.TimerConfiguration(countdown: 10, counter: 1, timeInterval: 0.05, actionOnGoing: {
-            self.node.alpha = self.node.alpha >= 1 ? 0 : 1
+            if barrier.color == .white {
+                barrier.color = .red
+            } else {
+                barrier.color = .white
+            }
         })
         let timerNode = PKTimerNode(configuration: configuration)
-        node.addChildSafely(timerNode)
+        barrier.addChildSafely(timerNode)
         timerNode.start()
+    }
+    
+    func hit() {
+        node.run(hitAnimation)
     }
     
     /// Play the hit action animation.
@@ -248,8 +264,6 @@ extension Player {
                          canChooseDirection: Bool = true,
                          onRight: Bool = true,
                          completion: (() -> Void)? = nil) {
-        guard let hitFrames = frames(stateID: .hit) else { return }
-        let hitAnimation = SKAction.animate(with: hitFrames, filteringMode: .nearest, timePerFrame: GameConfiguration.playerConfiguration.hitTimePerFrame)
         let knockBackAnimation =
         canChooseDirection ?
         knockedBack(by: enemy, onRight: onRight) :

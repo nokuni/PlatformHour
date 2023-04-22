@@ -28,10 +28,12 @@
         ],
         "conversations": [
             {
-                "conversation": "Ancient Cavern Intro Conversation"
+                "name": "Ancient Cavern Intro Conversation",
+                "category": "onCinematic"
             },
             {
-                "conversation": "Movement Power Up Conversation"
+                "name": "Movement Power Up Conversation",
+                "category": "onCinematic"
             }
         ],
         "cinematics": [
@@ -69,55 +71,64 @@
                 "id": 0,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1010"
+                "coordinate": "1010",
+                "isFalling": true
             },
             {
                 "id": 1,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1515"
+                "coordinate": "1515",
+                "isFalling": true
             },
             {
                 "id": 2,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1120"
+                "coordinate": "1120",
+                "isFalling": true
             },
             {
                 "id": 3,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1825"
+                "coordinate": "1825",
+                "isFalling": true
             },
             {
                 "id": 4,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1330"
+                "coordinate": "1330",
+                "isFalling": true
             },
             {
                 "id": 5,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1735"
+                "coordinate": "1735",
+                "isFalling": true
             },
             {
                 "id": 6,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "2040"
+                "coordinate": "2040",
+                "isFalling": true
             },
             {
                 "id": 7,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1445"
+                "coordinate": "1445",
+                "isFalling": true
             },
             {
                 "id": 8,
                 "name": "Rock Trap",
                 "category": "trap",
-                "coordinate": "1650"
+                "coordinate": "1650",
+                "isFalling": true
             }
         ],
         "structures": [
@@ -131,7 +142,12 @@
                 "coordinate": "3000"
             }
         ],
-        "conversations": [],
+        "conversations": [
+            {
+                "name": "Energy Barrier Conversation",
+                "category": "onStart"
+            }
+        ],
         "cinematics": []
     },
     {
@@ -156,20 +172,6 @@
                 "name": "Blue Crystal",
                 "category": "important",
                 "coordinate": "2915",
-                "sizeGrowth": 2
-            },
-            {
-                "id": 2,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2734",
-                "sizeGrowth": 2
-            },
-            {
-                "id": 3,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2444",
                 "sizeGrowth": 2
             }
         ],
@@ -210,11 +212,13 @@
         ],
         "conversations": [
             {
-                "conversation": "First Crystal Intro Conversation"
+                "name": "First Crystal Intro Conversation",
+                "category": "onCinematic"
             },
             {
-                "conversation": "First Crystal Take Conversation"
-            },
+                "name": "First Crystal Take Conversation",
+                "category": "onCinematic"
+            }
         ],
         "cinematics": [
             {
@@ -224,7 +228,7 @@
             {
                 "name": "First Crystal Backward Focus Cinematic",
                 "category": "onConversation"
-            },
+            }
         ]
     },
     {
@@ -248,43 +252,43 @@
                 "id": 1,
                 "name": "Blue Crystal",
                 "category": "important",
-                "coordinate": "2915",
-                "sizeGrowth": 2
-            },
-            {
-                "id": 2,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2926",
-                "sizeGrowth": 2
-            },
-            {
-                "id": 3,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2954",
-                "sizeGrowth": 2
-            },
-            {
-                "id": 4,
-                "name": "Blue Crystal",
-                "category": "important",
                 "coordinate": "2349",
                 "sizeGrowth": 2
             },
             {
+                "id": 2,
+                "name": "Bubble Trap",
+                "category": "trap",
+                "coordinate": "2721",
+                "sizeGrowth": 2.5
+            },
+            {
+                "id": 3,
+                "name": "Bubble Trap",
+                "category": "trap",
+                "coordinate": "3035",
+                "sizeGrowth": 2.5
+            },
+            {
+                "id": 4,
+                "name": "Bubble Trap",
+                "category": "trap",
+                "coordinate": "3044",
+                "sizeGrowth": 2.5
+            },
+            {
                 "id": 5,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2339",
-                "sizeGrowth": 2
+                "name": "Bubble Trap",
+                "category": "trap",
+                "coordinate": "2144",
+                "sizeGrowth": 2.5
             },
             {
                 "id": 6,
-                "name": "Blue Crystal",
-                "category": "important",
-                "coordinate": "2322",
-                "sizeGrowth": 2
+                "name": "Bubble Trap",
+                "category": "trap",
+                "coordinate": "2132",
+                "sizeGrowth": 2.5
             },
         ],
         "structures": [
@@ -312,8 +316,8 @@
                 "firstLayer": "Cavern First Layer",
                 "innerLayer": "Cavern Inner Layer",
                 "innerLayerAmount": 5,
-                "matrix": "1020",
-                "coordinate": "3036"
+                "matrix": "1021",
+                "coordinate": "3035"
             },
             {
                 "atlasName": "CavernGrounds",
@@ -349,7 +353,7 @@
                 "firstLayer": "Cavern First Layer",
                 "matrix": "0424",
                 "coordinate": "1836"
-            },
+            }
         ],
         "conversations": [],
         "cinematics": []

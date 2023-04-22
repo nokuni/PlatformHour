@@ -39,20 +39,24 @@ extension GameControllerManager {
         manager?.action = ControllerManager.ControllerAction()
         
         // Cross
-        manager?.action?.buttonA = ControllerManager.ButtonAction(press: action.actionA,
+        manager?.action?.buttonA = ControllerManager.ButtonAction(symbol: .a,
+                                                                  press: action.actionA,
                                                                   release: nil)
-        
+
         // Circle
-        manager?.action?.buttonB = ControllerManager.ButtonAction(press: action.actionB,
+        manager?.action?.buttonB = ControllerManager.ButtonAction(symbol: .b,
+                                                                  press: action.actionB,
                                                                   release: nil)
-        
+
         // Square
-        manager?.action?.buttonX = ControllerManager.ButtonAction(press: action.actionX,
+        manager?.action?.buttonX = ControllerManager.ButtonAction(symbol: .x,
+                                                                  press: action.actionX,
                                                                   release: nil)
-        
+
         // Triangle
-        manager?.action?.buttonY = ControllerManager.ButtonAction(press: nil,
-                                                                  release: action.actionY)
+        manager?.action?.buttonY = ControllerManager.ButtonAction(symbol: .y,
+                                                                  press: action.actionY,
+                                                                  release: nil)
         
         manager?.action?.dpad = ControllerManager.DPadAction(leftPress: action.leftPadActionPress,
                                                              rightPress: action.rightPadActionPress,
@@ -82,20 +86,39 @@ extension GameControllerManager {
     /// Disconnect the virtual controller, remove all controller observers and disable touch events.
     func disable(isUserInteractionEnabled: Bool = false) {
         guard let manager = manager else { return }
+        guard GCController.current == manager.virtualController?.controller else { return }
+        scene.isUserInteractionEnabled = isUserInteractionEnabled
         guard manager.isVirtualControllerEnabled else { return }
         
         manager.disableVirtualController()
         manager.disconnectVirtualController()
-        scene.isUserInteractionEnabled = isUserInteractionEnabled
     }
     
     /// Disconnect the virtual controller, remove all controller observers and disable touch events.
     func enable(isUserInteractionEnabled: Bool = true) {
         guard let manager = manager else { return }
+        guard GCController.current == manager.virtualController?.controller else { return }
+        scene.isUserInteractionEnabled = isUserInteractionEnabled
         guard !manager.isVirtualControllerEnabled else { return }
         
         manager.enableVirtualController()
         manager.connectVirtualController()
-        scene.isUserInteractionEnabled = isUserInteractionEnabled
     }
+}
+
+// MARK: Haptics
+
+extension GameControllerManager {
+    func triggerHaptics(type: ControllerHapticType = .hit) {
+        if GCController.current == manager?.virtualController?.controller {
+            let haptics = HapticsManager()
+            haptics.simpleSuccess()
+        } else {
+            manager?.triggerHaptic(named: type.rawValue)
+        }
+    }
+}
+
+enum ControllerHapticType: String {
+    case hit = "Hit"
 }

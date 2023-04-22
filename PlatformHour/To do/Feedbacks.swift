@@ -12,6 +12,4 @@ import Foundation
 /*
  - Add more SFX for effects.
  - Add haptics when adding action on sequence.
- - Add haptics when falling.
- - Add 
  */

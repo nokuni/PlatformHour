@@ -30,6 +30,7 @@ final class GameContent {
     
     private func generate() {
         generateLevelStructures()
+        digStructureCavities()
         generateLevelCollectibles()
         generateLevelTraps()
         generateLevelObstacles()
@@ -196,8 +197,11 @@ extension GameContent {
                                   contact: [.player, .playerProjectile])
         
         let trapNode = object(name: "\(levelTrap.name) \(levelTrap.id)",
-                              physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                               collision: collision)
+        
+        if let sizeGrowth = levelTrap.sizeGrowth {
+            trapNode.size = trapNode.size * sizeGrowth
+        }
         
         trapNode.logic = LogicBody(health: trapData.logic.health,
                                    damage: trapData.logic.damage,
@@ -211,7 +215,7 @@ extension GameContent {
         }
         
         trapNode.coordinate = levelTrap.coordinate.coordinate
-        trapNode.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
+        trapNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
         trapNode.position = position
         trapNode.texture = SKTexture(imageNamed: trapData.image)
         trapNode.texture?.filteringMode = .nearest
@@ -222,7 +226,9 @@ extension GameContent {
         
         scene.addChildSafely(trapNode)
         
-        logic.dropTrap(trapObject: trapNode)
+        if levelTrap.isFalling != nil {
+            logic.dropTrap(trapObject: trapNode)
+        }
     }
     
     private func createLevelImportant(_ levelImportant: LevelObject) {
@@ -476,6 +482,19 @@ extension GameContent {
         
         SKAction.repeating(action: animation, node: node, count: repeatCount, isRepeatingForever: isRepeatingForever)
     }
+    
+    private func digStructureCavities() {
+        let coordinates = [
+            Coordinate(x: 31, y: 30),
+            Coordinate(x: 31, y: 31),
+            Coordinate(x: 32, y: 30),
+            Coordinate(x: 32, y: 31),
+        ]
+        let objects = environment.map.objects.filter {
+            coordinates.contains($0.coordinate)
+        }
+        objects.forEach { $0.removeFromParent() }
+    }
 }
 
 // MARK: - Creations
@@ -576,6 +595,8 @@ extension GameContent {
         barrierNode.name = "Barrier"
         barrierNode.size = player.node.size
         barrierNode.texture?.filteringMode = .nearest
+        barrierNode.colorBlendFactor = 1
+        barrierNode.color = .blue
         player.node.addChildSafely(barrierNode)
     }
 }

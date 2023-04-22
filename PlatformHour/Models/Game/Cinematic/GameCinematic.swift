@@ -18,7 +18,7 @@ struct GameCinematic: Codable {
     
     enum Category: String, Codable {
         case onLevelStart
-        case onNodeAlteration
+        case onObject
         case onPlayerCoordinate
         case onConversation
     }

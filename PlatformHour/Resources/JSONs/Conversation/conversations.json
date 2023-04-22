@@ -36,7 +36,7 @@
                 "lines": [
                     "Oh I did not present myself, I'm a crystal spirit.",
                     "I do not have any memories, the only thing I know is...",
-                    "...my role is to assist young mage in their process of learning magic.",
+                    "...my role was to assist young mage in their process of learning magic.",
                     "It's been a long time I did not see any forms of life.",
                     "But you are here... If I succeeded to attach myself to you, it means you have soul.",
                     "How is it possible ? What happened to you ?"
@@ -54,11 +54,12 @@
                     "Well... I don't known myself what happened to me.",
                     "For now, we need to leave this place to gather some informations.",
                     "It seems you can't do anything without me.",
-                    "I can make you move but be careful, my energy is limited.",
+                    "I can make you move and fly but I can't help you on the directing part. Every soul has his own way.",
+                    "You'll have to figure it out.",
                     "If I run out of energy, we go bust.",
                     "Let's do it !"
                 ]
-            },
+            }
         ],
         "cinematicCompletion": "Movement Power Up Cinematic"
     },
@@ -69,7 +70,23 @@
             {
                 "character": "Blue Spirit",
                 "lines": [
-                    "Now you can move ! I hope you know how to roll because I don't."
+                    "Now you can move and fly ! I hope you know how to roll because I don't."
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Energy Barrier Conversation",
+        "category": "onLevelStart",
+        "dialogs": [
+            {
+                "character": "Blue Spirit",
+                "lines": [
+                    "Oh crap ! Some rocks are falling from the top !",
+                    "This place seems really dangerous but do not worry.",
+                    "My energy serves as a barrier too.",
+                    "If you get hurt, you'll loose some energy instead of being crushed.",
+                    "Still try not to spend too much energy, or we will never get out of here."
                 ]
             }
         ]
@@ -82,10 +99,8 @@
                 "character": "Blue Spirit",
                 "lines": [
                     "Oh ! Watch ! An active blue crystal !",
-                    "I can absorb some energy with that !",
-                    "We may need it later.",
-                    "I'm too weak to fully absorb it but it's a start.",
-                    "Come closer and touch it. I will do the rest."
+                    "I can refill some energy !",
+                    "Come closer and touch it !"
                 ]
             }
         ],
@@ -98,12 +113,11 @@
             {
                 "character": "Blue Spirit",
                 "lines": [
-                    "I haven't felt this for a long time !",
-                    "it looks like our path is going to be harder and harder.",
-                    "With that energy, I can make you fly for a limited time.",
-                    "Be careful, It will consume my energy, so you need to charge it up again.",
-                    "And... I don't know how your body works since you are dice.",
-                    "I would say... Just try !"
+                    "Now I'm replenished !",
+                    "When you see a crystal like that, use it to refill my energy.",
+                    "And one more thing...",
+                    "If we run out of energy, we are sure to be redirected directly to the last crystal we touched.",
+                    "Cool, nah ?"
                 ]
             }
         ]

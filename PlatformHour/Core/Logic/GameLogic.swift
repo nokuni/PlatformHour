@@ -124,7 +124,7 @@ extension GameLogic {
         
         let objectCoordinate = object.coordinate
         
-        var destinationCoordinate = Coordinate(x: objectCoordinate.x + 1,
+        var destinationCoordinate = Coordinate(x: objectCoordinate.x,
                                                y: objectCoordinate.y)
         
         repeat {
@@ -167,17 +167,21 @@ extension GameLogic {
     
     /// Returns the player land completion animation after the land.
     private var playerLandCompletionAnimation: SKAction {
-        guard let action = scene.game?.controller?.action else { return SKAction.empty() }
-        let animation = SKAction.run {
-            self.scene.player?.state.isJumping = false
-            self.scene.core?.state.switchOn(newStatus: .inDefault)
-            self.scene.game?.controller?.enable()
-            if action.configuration.isLongPressingDPad {
-                self.scene.player?.node.removeAllActions()
-                self.scene.game?.controller?.action.move(on: action.configuration.direction, by: action.configuration.movementSpeed)
-            }
+        return SKAction.run { self.playerLandCompletion() }
+    }
+    
+    /// Player land completion.
+    private func playerLandCompletion() {
+        guard let action = scene.game?.controller?.action else { return }
+        scene.game?.controller?.triggerHaptics()
+        scene.player?.state.isJumping = false
+        scene.core?.state.switchOn(newStatus: .inDefault)
+        scene.game?.controller?.enable()
+        scene.core?.event?.triggerPlayerDeathFall()
+        if action.configuration.isLongPressingDPad {
+            scene.player?.node.removeAllActions()
+            scene.game?.controller?.action.move(on: action.configuration.direction, by: action.configuration.movementSpeed)
         }
-        return animation
     }
     
     /// Make the player fall if possible.
@@ -195,11 +199,18 @@ extension GameLogic {
     /// Make a trap fall repeateadly.
     func dropTrap(trapObject: PKObjectNode) {
         let drop = SKAction.sequence([
-            fallAnimation(object: trapObject, speed: 500),
+            trapFallAnimation(trapObject: trapObject),
             SKAction.run { self.trapCompletion(trapObject: trapObject) }
         ])
         
         trapObject.run(drop)
+    }
+    
+    /// Trap Fall
+    func trapFallAnimation(trapObject: PKObjectNode) -> SKAction {
+        guard let level = scene.game?.level else { return SKAction.empty() }
+        guard let levelTrap = LevelObject.indexedObjectNode(object: trapObject, data: level.objects(category: .trap)) else { return SKAction.empty() }
+        return fallAnimation(object: trapObject, speed: levelTrap.speed ?? 500)
     }
     
     /// Trap completion.

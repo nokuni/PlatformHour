@@ -35,6 +35,9 @@
 		962F255229D0B618007D46B7 /* LevelStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962F255129D0B618007D46B7 /* LevelStructure.swift */; };
 		962F255829D17C51007D46B7 /* enemyObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 962F255729D17C51007D46B7 /* enemyObjects.json */; };
 		9633241A29F1C884002D0795 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633241929F1C884002D0795 /* Todo.swift */; };
+		9633241E29F1F3DE002D0795 /* Achievements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633241D29F1F3DE002D0795 /* Achievements.swift */; };
+		9633242129F42F43002D0795 /* Hit.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 9633242029F42F43002D0795 /* Hit.ahap */; };
+		9633242529F43D15002D0795 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9633242729F43D15002D0795 /* Localizable.strings */; };
 		964435BB29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */; };
 		964435BD29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */; };
 		964435C629E6F81A00812B7A /* effectObjects.json in Resources */ = {isa = PBXBuildFile; fileRef = 964435C529E6F81900812B7A /* effectObjects.json */; };
@@ -139,6 +142,11 @@
 		962F255129D0B618007D46B7 /* LevelStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelStructure.swift; sourceTree = "<group>"; };
 		962F255729D17C51007D46B7 /* enemyObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = enemyObjects.json; sourceTree = "<group>"; };
 		9633241929F1C884002D0795 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		9633241D29F1F3DE002D0795 /* Achievements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievements.swift; sourceTree = "<group>"; };
+		9633242029F42F43002D0795 /* Hit.ahap */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hit.ahap; sourceTree = "<group>"; };
+		9633242629F43D15002D0795 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9633242829F43D1B002D0795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9633242929F44DC7002D0795 /* PlatformHour.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PlatformHour.entitlements; sourceTree = "<group>"; };
 		964435BA29E6ADB200812B7A /* GameCharacterCinematicActionMovement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionMovement.swift; sourceTree = "<group>"; };
 		964435BC29E6ADC400812B7A /* GameCharacterCinematicActionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCharacterCinematicActionEffect.swift; sourceTree = "<group>"; };
 		964435C529E6F81900812B7A /* effectObjects.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = effectObjects.json; sourceTree = "<group>"; };
@@ -342,6 +350,7 @@
 		962A0CBF29891900004DB446 /* PlatformHour */ = {
 			isa = PBXGroup;
 			children = (
+				9633242929F44DC7002D0795 /* PlatformHour.entitlements */,
 				96EE96BA2990143500273A9D /* To do */,
 				96EE9699298EB1F500273A9D /* App */,
 				96EE9696298EB14C00273A9D /* Supporting Files */,
@@ -360,6 +369,38 @@
 				962A0CC729891901004DB446 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9633241B29F1EF04002D0795 /* Cinematic */ = {
+			isa = PBXGroup;
+			children = (
+				9625A9F929E306C40089F309 /* cinematics.json */,
+			);
+			path = Cinematic;
+			sourceTree = "<group>";
+		};
+		9633241C29F1EF0B002D0795 /* Conversation */ = {
+			isa = PBXGroup;
+			children = (
+				96D60F3129E0400100D2C1C3 /* conversations.json */,
+			);
+			path = Conversation;
+			sourceTree = "<group>";
+		};
+		9633241F29F42F34002D0795 /* AHAP */ = {
+			isa = PBXGroup;
+			children = (
+				9633242029F42F43002D0795 /* Hit.ahap */,
+			);
+			path = AHAP;
+			sourceTree = "<group>";
+		};
+		9633242229F43CD6002D0795 /* Language */ = {
+			isa = PBXGroup;
+			children = (
+				9633242729F43D15002D0795 /* Localizable.strings */,
+			);
+			path = Language;
 			sourceTree = "<group>";
 		};
 		964435BE29E6C78B00812B7A /* Collision */ = {
@@ -431,7 +472,8 @@
 		964E7E4D29C1FC6A003CE54B /* JSONs */ = {
 			isa = PBXGroup;
 			children = (
-				96D60F3029E03FDD00D2C1C3 /* Miscellaneous */,
+				9633241C29F1EF0B002D0795 /* Conversation */,
+				9633241B29F1EF04002D0795 /* Cinematic */,
 				96D60F1029DF570400D2C1C3 /* Core */,
 				96D60F1129DF570F00D2C1C3 /* Controls */,
 				96D60F1229DF572300D2C1C3 /* Objects */,
@@ -517,6 +559,7 @@
 		96D60F1029DF570400D2C1C3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				96D60F3329E04F9600D2C1C3 /* characters.json */,
 				9619466329968F0C000859C8 /* worlds.json */,
 				9619466929969407000859C8 /* levels.json */,
 			);
@@ -621,19 +664,11 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
-		96D60F3029E03FDD00D2C1C3 /* Miscellaneous */ = {
-			isa = PBXGroup;
-			children = (
-				96D60F3129E0400100D2C1C3 /* conversations.json */,
-				96D60F3329E04F9600D2C1C3 /* characters.json */,
-				9625A9F929E306C40089F309 /* cinematics.json */,
-			);
-			path = Miscellaneous;
-			sourceTree = "<group>";
-		};
 		96EE967A298D8DDB00273A9D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9633242229F43CD6002D0795 /* Language */,
+				9633241F29F42F34002D0795 /* AHAP */,
 				964E7E4D29C1FC6A003CE54B /* JSONs */,
 				96EE96A4298FCE5000273A9D /* Images */,
 				96EE96A3298FCE4200273A9D /* Fonts */,
@@ -697,6 +732,7 @@
 				20C402A629ED3A7800D3411F /* Feedbacks.swift */,
 				20C402A829ED3B3B00D3411F /* UnusedCode.swift */,
 				9633241929F1C884002D0795 /* Todo.swift */,
+				9633241D29F1F3DE002D0795 /* Achievements.swift */,
 			);
 			path = "To do";
 			sourceTree = "<group>";
@@ -777,6 +813,7 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
 			);
 			mainGroup = 962A0CB429891900004DB446;
 			packageReferences = (
@@ -827,11 +864,13 @@
 				9625AA0229E496910089F309 /* Retro Computer.ttf in Resources */,
 				96D60F3229E0400100D2C1C3 /* conversations.json in Resources */,
 				96D60EF529D8A88F00D2C1C3 /* ChimeraBellsJ.wav in Resources */,
+				9633242529F43D15002D0795 /* Localizable.strings in Resources */,
 				96D60EF129D8A88F00D2C1C3 /* ChimeraBellsD.wav in Resources */,
 				9601D6C329E1F020006624C6 /* npcObjects.json in Resources */,
 				964435D429E9C82200812B7A /* CavernGrounds.atlas in Resources */,
 				9601D6B629E1D038006624C6 /* collectibleObjects.json in Resources */,
 				96D60EF329D8A88F00D2C1C3 /* ChimeraBellsL.wav in Resources */,
+				9633242129F42F43002D0795 /* Hit.ahap in Resources */,
 				9619466429968F0C000859C8 /* worlds.json in Resources */,
 				96D60F0A29DF3B0000D2C1C3 /* structures.json in Resources */,
 				96D60ECF29D77EA300D2C1C3 /* cavernBS.wav in Resources */,
@@ -895,6 +934,7 @@
 				96540522298C21F800620E76 /* GameObject.swift in Sources */,
 				964435D829EAA3D400812B7A /* Stats.swift in Sources */,
 				964E7E5C29C46240003CE54B /* SoundKey.swift in Sources */,
+				9633241E29F1F3DE002D0795 /* Achievements.swift in Sources */,
 				96EE96B5298FF9BB00273A9D /* GameState.swift in Sources */,
 				96D60F2D29E02D3500D2C1C3 /* GameConversation.swift in Sources */,
 				96EE969B298FB1A000273A9D /* GameLogic.swift in Sources */,
@@ -909,6 +949,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9633242729F43D15002D0795 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9633242629F43D15002D0795 /* en */,
+				9633242829F43D1B002D0795 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		962A0CC929891901004DB446 /* Debug */ = {
@@ -1030,6 +1082,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PlatformHour/PlatformHour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PlatformHour/Preview Content\"";
@@ -1059,6 +1112,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PlatformHour/PlatformHour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PlatformHour/Preview Content\"";

@@ -163,6 +163,8 @@ extension GameEnvironment {
             case .none:
                 return ControllerButton.button(.y, of: .nintendo)
             }
+        case .menu:
+            return []
         }
     }
 }

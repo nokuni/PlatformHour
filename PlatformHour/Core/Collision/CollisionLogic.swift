@@ -48,7 +48,7 @@ final class CollisionLogic {
     
     /// When the player has been hitten by a hostile object.
     func hostileHitOnPlayer(_ hostileObject: PKObjectNode) {
-        scene.player?.knockBackHitted(scene: scene, by: hostileObject, onRight: false)
+        scene.player?.blinkHit()
         scene.core?.logic?.damagePlayer(with: hostileObject)
     }
     

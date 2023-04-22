@@ -14,6 +14,8 @@ struct LevelObject: Codable, LevelProtocol {
     let coordinate: String
     let itinerary: Int?
     let sizeGrowth: Double?
+    let speed: Double?
+    var isFalling: Bool?
     
     enum Category: String, Codable {
         case player
@@ -33,6 +35,8 @@ struct LevelObject: Codable, LevelProtocol {
         case coordinate
         case itinerary
         case sizeGrowth
+        case speed
+        case isFalling
     }
 }
 
