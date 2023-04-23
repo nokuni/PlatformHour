@@ -11,79 +11,21 @@ import PlayfulKit
 
 final class Player {
     
-    var orientation: Orientation = .right
-    var currentRoll: Roll = .one
+    var orientation: PlayerOrientation = .right
+    var currentRoll: PlayerRoll = .one
     var interactionStatus: PlayerInteractionStatus = .none
     
     var node = PKObjectNode()
-    var object = GameObject.player
     var state = PlayerState()
     var stats = Stats(range: GameConfiguration.playerConfiguration.range,
                       attackSpeed: GameConfiguration.playerConfiguration.attackSpeed)
     
-    var actions: [SequenceAction] = []
+    var actions: [PlayerSequenceAction] = []
     var bag: [GameObject] = []
     var energy: Int = 0
+    var maxEnergy: Int = 0
     
-    enum Power: String {
-        case movement = "Movement"
-        case levitate = "Levitate"
-    }
-    
-    enum Roll: Int, CaseIterable {
-        case one = 1
-        case two = 2
-        case three = 3
-        case four = 4
-        case five = 5
-        case six = 6
-    }
-    
-    enum Orientation {
-        case right
-        case left
-        case up
-        case down
-    }
-    
-    enum SequenceAction {
-        case none
-        case moveRight
-        case moveLeft
-        case moveUp
-        case moveDown
-        
-        var icon: String {
-            switch self {
-            case .none:
-                return ""
-            case .moveRight:
-                return GameConfiguration.imageKey.rightArrow
-            case .moveLeft:
-                return GameConfiguration.imageKey.leftArrow
-            case .moveUp:
-                return GameConfiguration.imageKey.upArrow
-            case .moveDown:
-                return GameConfiguration.imageKey.downArrow
-            }
-        }
-        
-        var value: (x: Int, y: Int) {
-            switch self {
-            case .none:
-                return (x: 0, y: 0)
-            case .moveRight:
-                return (x: 0, y: 1)
-            case .moveLeft:
-                return (x: 0, y: -1)
-            case .moveUp:
-                return (x: -1, y: 0)
-            case .moveDown:
-                return (x: 1, y: 0)
-            }
-        }
-    }
-    
+    var object: GameObject? { GameObject.player }
     var isAnimating: Bool { node.hasActions() }
 }
 
@@ -105,31 +47,15 @@ extension Player {
         return health
     }
     
-    /// Returns max energy of the player.
-    func maxEnergy(game: Game) -> Int {
-        guard let maxEnergySave = game.currentSave?.maxEnergy else { return 100 }
-        let maxEnergy = Int(maxEnergySave)
-        return maxEnergy
-    }
-    
     /// Refills current energy by a specific amount.
-    func refillEnergy(amount: Int, game: Game) {
-        let maxEnergy = maxEnergy(game: game)
+    func refillEnergy(amount: Int) {
         guard energy < maxEnergy else { return }
         energy += amount
     }
     
     /// Refills all energy.
-    func refillTotalEnergy(game: Game) {
-        let maxEnergy = maxEnergy(game: game)
+    func refillTotalEnergy() {
         energy = maxEnergy
-    }
-    
-    /// Increases max energy by a specific amount.
-    func increaseMaxEnergy(game: Game, amount: Int) {
-        game.currentSave?.maxEnergy += Int32(amount)
-        game.updateSaves()
-        refillTotalEnergy(game: game)
     }
     
     /// Consumes current energy by a specific amount.
@@ -144,37 +70,6 @@ extension Player {
     }
 }
 
-// MARK: - Logic
-
-extension Player {
-    
-    /// Check if the player has his barrier.
-    func hasBarrier(scene: GameScene) -> Bool {
-        guard let passedConversations = scene.game?.currentSave?.passedConversations else { return false }
-        return passedConversations.contains("Energy Power Up Conversation")
-    }
-    
-    /// Unlock a new power for the player depending on his max energy.
-    func unlockPower(game: Game) {
-        let maxEnergy = maxEnergy(game: game)
-        
-        switch true {
-        case maxEnergy == 125:
-            game.currentSave?.powers?.append(Power.levitate.rawValue)
-        default:
-            print("No power unlocked")
-        }
-        
-        game.updateSaves()
-    }
-    
-    /// Check if the player has unlocked a power.
-    func hasPlayerUnlock(game: Game, power: Power) -> Bool {
-        guard let powers = game.currentSave?.powers else { return false }
-        return powers.contains(power.rawValue)
-    }
-}
-
 // MARK: - Sprites
 
 extension Player {
@@ -183,29 +78,6 @@ extension Player {
     var sprite: String? {
         let currentRollValue = currentRoll.rawValue
         return object?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
-    }
-    
-    /// Returns the image frames of the energy HUD.
-    func energyFrames(game: Game) -> [String] {
-        var image = ""
-        let maxEnergy = maxEnergy(game: game)
-        
-        switch true {
-        case energy > maxEnergy.percentageValue(percentage: 90):
-            image = "energyCharged5"
-        case energy > maxEnergy.percentageValue(percentage: 70):
-            image = "energyCharged4"
-        case energy > maxEnergy.percentageValue(percentage: 50):
-            image = "energyCharged3"
-        case energy > maxEnergy.percentageValue(percentage: 30):
-            image = "energyCharged2"
-        case energy > maxEnergy.percentageValue(percentage: 10):
-            image = "energyCharged1"
-        default:
-            image = "energyCharged0"
-        }
-        
-        return ["\(image)0", "\(image)1", "\(image)2", "\(image)3"]
     }
     
     /// Returns the animation frame images of an stateID animation.
@@ -323,26 +195,9 @@ extension Player {
         node.run(hitAnimation)
     }
     
-    /// Play the hit action animation.
-    func knockBackHitted(scene: GameScene,
-                         by enemy: PKObjectNode,
-                         canChooseDirection: Bool = true,
-                         onRight: Bool = true,
-                         completion: (() -> Void)? = nil) {
-        let knockBackAnimation =
-        canChooseDirection ?
-        knockedBack(by: enemy, onRight: onRight) :
-        knockedBack(by: enemy)
-        let groupedAnimation = SKAction.group([hitAnimation, knockBackAnimation])
-        node.removeAllActions()
-        SKAction.animate(action: groupedAnimation, node: node) {
-            completion?()
-        }
-    }
-    
     /// Advance the current roll of the dice.
     func rollUp() {
-        guard let lastRoll = Roll.allCases.last?.rawValue else { return }
+        guard let lastRoll = PlayerRoll.allCases.last?.rawValue else { return }
         if currentRoll.rawValue < lastRoll {
             currentRoll = currentRoll.next()
         } else {
@@ -352,7 +207,7 @@ extension Player {
     
     /// Advance the current roll of the dice.
     func rollDown() {
-        guard let firstRoll = Roll.allCases.first?.rawValue else { return }
+        guard let firstRoll = PlayerRoll.allCases.first?.rawValue else { return }
         if currentRoll.rawValue > firstRoll {
             currentRoll = currentRoll.previous()
         } else {

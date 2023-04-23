@@ -180,7 +180,7 @@ extension GameHUD {
         energyCharger.position = layer.cornerPosition(corner: .topLeft,
                                                       padding: EdgeInsets(top: 40, leading: 60, bottom: 0, trailing: 0))
         
-        let animation = SKAction.animate(with: player.energyFrames(game: game),
+        let animation = SKAction.animate(with: game.energyFrames(energy: player.energy),
                                          filteringMode: .nearest,
                                          timePerFrame: 0.2)
         
@@ -391,11 +391,10 @@ extension GameHUD {
                                               lineSpacing: 5,
                                               padding: padding)
         let dialogText = PKTypewriterNode(container: node, parameter: parameter)
-        dialogText.whileCompletion = { self.scene.core?.sound.textTyping() }
+        //dialogText.whileCompletion = { self.scene.core?.sound.textTyping() }
         dialogText.name = GameConfiguration.nodeKey.conversationText
         node.addChildSafely(dialogText)
         dialogText.start()
-        //scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
     }
     
     /// Add the speaker name to the conversation box.
@@ -440,13 +439,13 @@ extension GameHUD {
     
     /// Display the next line of a dialog.
     func nextLine() {
-        conversationPressEffect {
-            self.removeConversationBox()
-            guard let index = self.scene.game?.currentConversation?.currentDialogIndex else { return }
-            self.scene.game?.currentConversation?.dialogs[index].revealFinalName(game: self.scene.game)
-            self.scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
-            guard let isEndOfLine = self.scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
-            !isEndOfLine ? self.addConversationBox() : self.nextDialog()
+        conversationPressEffect { [weak self] in
+            self?.removeConversationBox()
+            guard let index = self?.scene.game?.currentConversation?.currentDialogIndex else { return }
+            self?.scene.game?.currentConversation?.dialogs[index].revealFinalName(game: self?.scene.game)
+            self?.scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
+            guard let isEndOfLine = self?.scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
+            !isEndOfLine ? self?.addConversationBox() : self?.nextDialog()
         }
     }
     
@@ -494,8 +493,8 @@ extension GameHUD {
         } else {
             scene.core?.state.switchOn(newStatus: .inDefault)
             if game.hasTitleBeenDisplayed { endConversationCompletion() }
-            scene.core?.animation?.titleTransitionEffect(scene: scene) {
-                self.endConversationCompletion()
+            scene.core?.animation?.titleTransitionEffect(scene: scene) { [weak self] in
+                self?.endConversationCompletion()
             }
         }
         disableConversation()

@@ -292,7 +292,7 @@ extension ActionLogic {
         guard !player.state.isJumping else { return }
         guard player.interactionStatus == .none else { return }
         guard !player.isAnimating else { return }
-        guard player.hasPlayerUnlock(game: game, power: .levitate) else { return }
+        guard game.hasPlayerUnlock(power: .levitate) else { return }
         guard player.energy > 0 else { return }
         
         let action = jumpAction(player: player)
@@ -385,13 +385,15 @@ private extension ActionLogic {
             endOfMoveAction(groundCoordinate: groundCoordinate)
         ])
         let isColliding = environment.collisionCoordinates.contains(destinationCoordinate)
-        if !isColliding { scene.player?.rollUp() }
+        if !isColliding { player.rollUp() }
         return isColliding ? SKAction.empty() : sequence
     }
     
     /// Returns the end of the move animation.
     private func endOfMoveAction(groundCoordinate: Coordinate) -> SKAction {
-        return SKAction.run { self.endOfMoveCompletion(groundCoordinate: groundCoordinate) }
+        return SKAction.run { [weak self] in
+            self?.endOfMoveCompletion(groundCoordinate: groundCoordinate)
+        }
     }
     
     /// The completion logic at the end of the movement.
@@ -416,14 +418,14 @@ private extension ActionLogic {
 private extension ActionLogic {
     
     /// Adds an action to the action sequence.
-    private func addSequenceAction(_ action: Player.SequenceAction) {
+    private func addSequenceAction(_ action: PlayerSequenceAction) {
         addPlayerAction(action)
         addActionElement(action)
         scene.core?.logic?.resolveSequenceOfActions()
     }
     
     /// Returns an action element.
-    private func actionElement(_ action: Player.SequenceAction) -> SKSpriteNode {
+    private func actionElement(_ action: PlayerSequenceAction) -> SKSpriteNode {
         let actionElement = SKSpriteNode(imageNamed: action.icon)
         actionElement.texture?.filteringMode = .nearest
         actionElement.zPosition = GameConfiguration.sceneConfiguration.overElementHUDZPosition
@@ -432,14 +434,14 @@ private extension ActionLogic {
     }
     
     /// Adds an action to the action sequence.
-    private func addPlayerAction(_ action: Player.SequenceAction) {
+    private func addPlayerAction(_ action: PlayerSequenceAction) {
         guard let player = scene.player else { return }
         guard player.actions.count < player.currentRoll.rawValue else { return }
         player.actions.append(action)
     }
     
     /// Adds an action element to the action sequence.
-    private func addActionElement(_ action: Player.SequenceAction) {
+    private func addActionElement(_ action: PlayerSequenceAction) {
         guard let player = scene.player else { return }
         let actionElement = actionElement(action)
         let index = player.actions.count - 1
@@ -447,7 +449,9 @@ private extension ActionLogic {
         let animation = SKAction.sequence([
             SKAction.run { actionSquare?.addChildSafely(actionElement) },
             SKAction.wait(forDuration: GameConfiguration.sceneConfiguration.addActionDelay),
-            SKAction.run { self.enable() }
+            SKAction.run { [weak self] in
+                self?.enable()
+            }
         ])
         actionSquare?.run(animation)
     }
@@ -463,17 +467,17 @@ extension ActionLogic {
         guard let game = scene.game else { return }
         guard !player.isAnimating else { return }
         guard !player.state.isJumping else { return }
-        guard player.hasPlayerUnlock(game: game, power: .movement) else { return }
+        guard game.hasPlayerUnlock(power: .movement) else { return }
         guard scene.isUserInteractionEnabled else { return }
         
         configuration.isLongPressingDPad = true
         scene.core?.event?.dismissButtonPopUp()
-        self.configuration.direction = direction
-        changeOrientation(direction: self.configuration.direction)
-        self.configuration.movementSpeed = movementSpeed
-        moveSequence(by: self.configuration.movementSpeed)
-        scene.player?.run()
-        scene.player?.consumeEnergy(amount: 1)
+        configuration.direction = direction
+        changeOrientation(direction: configuration.direction)
+        configuration.movementSpeed = movementSpeed
+        moveSequence(by: configuration.movementSpeed)
+        player.run()
+        player.consumeEnergy(amount: 1)
         scene.core?.hud?.updateEnergy()
     }
     
@@ -519,7 +523,7 @@ extension ActionLogic {
         let moveSequence = moveAction(destinationPosition: destinationPosition,
                                       destinationCoordinate: destinationCoordinate, amount: amount)
         
-        scene.player?.node.run(moveSequence)
+        player.node.run(moveSequence)
     }
     
     /// Changes the player orientation.

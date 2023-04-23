@@ -21,6 +21,8 @@ final class GameEnvironment {
     var map = PKMapNode()
     var backgroundContainer = SKNode()
     
+    var collisionCoordinates: [Coordinate] = []
+    
     private func generate() {
         createMap()
         createBackground()
@@ -66,11 +68,11 @@ extension GameEnvironment {
         return allElements
     }
     
-    /// Returns coordinates from the objects on the current map.
-    var collisionCoordinates: [Coordinate] {
+    /// Setup the coordinates from the objects on the current map.
+    func setupCollisionCoordinates() {
         let objects = map.objects.filter { !$0.logic.isIntangible }
         let coordinates = objects.map { $0.coordinate }
-        return coordinates
+        collisionCoordinates.append(contentsOf: coordinates)
     }
     
     /// Returns true there is a collision with an object at a coordinate, false otherwise.

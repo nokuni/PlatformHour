@@ -64,6 +64,8 @@ extension GameCore {
         content = GameContent(scene: scene, environment: environment, animation: animation, logic: logic)
         gameCamera = GameCamera(scene: scene, environment: environment)
         
+        environment.setupCollisionCoordinates()
+        
         playBackgroundSound(scene: scene)
         
         hud?.removeContent()

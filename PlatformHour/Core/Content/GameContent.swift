@@ -51,7 +51,7 @@ private extension GameContent {
         configurePlayer()
         guard let player = scene.player else { return }
         scene.addChildSafely(player.node)
-        if player.hasBarrier(scene: scene) { addPlayerBarrier() }
+        if isPlayerHasBarrier { addPlayerBarrier() }
     }
     
     /// Generate the enemies on the current level.
@@ -388,6 +388,17 @@ extension GameContent {
     }
 }
 
+// MARK: - Player
+
+extension GameContent {
+    
+    /// Check if the player has his barrier.
+    var isPlayerHasBarrier: Bool {
+        guard let passedConversations = scene.game?.currentSave?.passedConversations else { return false }
+        return passedConversations.contains("Energy Power Up Conversation")
+    }
+}
+
 // MARK: - Objects
 
 extension GameContent {
@@ -454,7 +465,8 @@ extension GameContent {
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
         
-        player.refillTotalEnergy(game: game)
+        player.maxEnergy = game.playerMaxEnergy
+        player.refillTotalEnergy()
         
         player.node = object(name: playerObject.name,
                              collision: collision)

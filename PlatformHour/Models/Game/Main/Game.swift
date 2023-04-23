@@ -123,3 +123,61 @@ final class Game: ObservableObject {
         fetchSaves()
     }
 }
+
+// MARK: - Player
+
+extension Game {
+    
+    /// Returns max energy of the player.
+    var playerMaxEnergy: Int {
+        guard let maxEnergySave = currentSave?.maxEnergy else { return 100 }
+        let maxEnergy = Int(maxEnergySave)
+        return maxEnergy
+    }
+    
+    /// Increases max energy by a specific amount.
+    func increaseMaxEnergy(amount: Int) {
+        currentSave?.maxEnergy += Int32(amount)
+        updateSaves()
+    }
+    
+    /// Unlock a new power for the player depending on his max energy.
+    func unlockPower() {
+        switch true {
+        case playerMaxEnergy == 125:
+            currentSave?.powers?.append(PlayerPower.levitate.rawValue)
+        default:
+            print("No power unlocked")
+        }
+        
+        updateSaves()
+    }
+    
+    /// Returns the image frames of the energy HUD.
+    func energyFrames(energy: Int) -> [String] {
+        var image = ""
+        
+        switch true {
+        case energy > playerMaxEnergy.percentageValue(percentage: 90):
+            image = "energyCharged5"
+        case energy > playerMaxEnergy.percentageValue(percentage: 70):
+            image = "energyCharged4"
+        case energy > playerMaxEnergy.percentageValue(percentage: 50):
+            image = "energyCharged3"
+        case energy > playerMaxEnergy.percentageValue(percentage: 30):
+            image = "energyCharged2"
+        case energy > playerMaxEnergy.percentageValue(percentage: 10):
+            image = "energyCharged1"
+        default:
+            image = "energyCharged0"
+        }
+        
+        return ["\(image)0", "\(image)1", "\(image)2", "\(image)3"]
+    }
+    
+    /// Check if the player has unlocked a power.
+    func hasPlayerUnlock(power: PlayerPower) -> Bool {
+        guard let powers = currentSave?.powers else { return false }
+        return powers.contains(power.rawValue)
+    }
+}

@@ -110,8 +110,8 @@ extension GameAnimation {
         effectNode.position = scene.player?.node.position ?? .zero
         scene.addChild(effectNode)
         let showTitleAction = SKAction.sequence([
-            SKAction.run {
-                self.titleTransitionEffect(scene: scene) {
+            SKAction.run { [weak self] in
+                self?.titleTransitionEffect(scene: scene) {
                     scene.game?.controller?.enable()
                     scene.core?.hud?.addContent()
                 }
@@ -286,5 +286,46 @@ extension GameAnimation {
         SKAction.animate(action: sequence, node: animatedNode, endCompletion: actionAfter)
         
         node.removeFromParent()
+    }
+}
+
+// MARK: - Core
+
+extension GameAnimation {
+    
+    /// Returns a knockback animation.
+    private func knockedBack(node: SKNode, by enemy: PKObjectNode) -> SKAction {
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
+        let knockBack = enemy.xScale > 0 ?
+        SKAction.move(to: CGPoint(x: node.position.x + (tileSize.width * 2), y: node.position.y), duration: 0.1) :
+        SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
+        return knockBack
+    }
+    
+    /// Returns a knockback animation.
+    private func knockedBack(node: SKNode, by enemy: PKObjectNode, onRight: Bool = true) -> SKAction {
+        let tileSize = GameConfiguration.sceneConfiguration.tileSize
+        let knockBack = onRight ?
+        SKAction.move(to: CGPoint(x: node.position.x + (tileSize.width * 2), y: node.position.y), duration: 0.1) :
+        SKAction.move(to: CGPoint(x: node.position.x - (tileSize.width * 2), y: node.position.y), duration: 0.1)
+        return knockBack
+    }
+    
+    /// Play the hit action animation.
+    func knockBackHitted(node: SKNode,
+                         by enemy: PKObjectNode,
+                         hitAnimation: SKAction,
+                         canChooseDirection: Bool = true,
+                         onRight: Bool = true,
+                         completion: (() -> Void)? = nil) {
+        let knockBackAnimation =
+        canChooseDirection ?
+        knockedBack(node: node, by: enemy, onRight: onRight) :
+        knockedBack(node: node, by: enemy)
+        let groupedAnimation = SKAction.group([hitAnimation, knockBackAnimation])
+        node.removeAllActions()
+        SKAction.animate(action: groupedAnimation, node: node) {
+            completion?()
+        }
     }
 }

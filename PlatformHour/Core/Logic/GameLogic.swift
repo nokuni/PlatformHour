@@ -47,11 +47,11 @@ extension GameLogic {
         let moves = positions.map {
             SKAction.sequence([
                 SKAction.move(to: $0, duration: 0.2),
-                SKAction.run {
+                SKAction.run { [weak self] in
                     player.rollUp()
                     player.updateDiceSprite()
                     player.consumeEnergy(amount: 1)
-                    self.scene.core?.hud?.updateEnergy()
+                    self?.scene.core?.hud?.updateEnergy()
                 }
             ])
         }
@@ -167,7 +167,9 @@ extension GameLogic {
     
     /// Returns the player land completion animation after the land.
     private var playerLandCompletionAnimation: SKAction {
-        return SKAction.run { self.playerLandCompletion() }
+        return SKAction.run { [weak self] in
+            self?.playerLandCompletion()
+        }
     }
     
     /// Player land completion.
@@ -200,7 +202,9 @@ extension GameLogic {
     func dropTrap(trapObject: PKObjectNode) {
         let drop = SKAction.sequence([
             trapFallAnimation(trapObject: trapObject),
-            SKAction.run { self.trapCompletion(trapObject: trapObject) }
+            SKAction.run { [weak self] in
+                self?.trapCompletion(trapObject: trapObject)
+            }
         ])
         
         trapObject.run(drop)

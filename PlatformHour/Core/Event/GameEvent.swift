@@ -95,8 +95,8 @@ extension GameEvent {
             let actions: [(SKAction, PKObjectNode)] = cinematic.actions.compactMap {
                 cinematicNodeAction(action: $0)
             }
-            SKAction.nodesSequence(sequence: actions, endCompletion: {
-                self.cinematicEndCompletion(cinematic: cinematic)
+            SKAction.nodesSequence(sequence: actions, endCompletion: { [weak self] in
+                self?.cinematicEndCompletion(cinematic: cinematic)
             })
         }
     }
@@ -120,9 +120,9 @@ extension GameEvent {
         } else {
             scene.core?.gameCamera?.followedObject = player.node
             scene.core?.state.switchOn(newStatus: .inDefault)
-            scene.core?.animation?.titleTransitionEffect(scene: scene) {
-                self.scene.game?.controller?.enable()
-                self.scene.core?.hud?.addContent()
+            scene.core?.animation?.titleTransitionEffect(scene: scene) { [weak self] in
+                self?.scene.game?.controller?.enable()
+                self?.scene.core?.hud?.addContent()
             }
         }
     }
@@ -196,7 +196,9 @@ extension GameEvent {
     private func cinematicNodeMovement(node: PKObjectNode, action: CinematicAction) -> [SKAction] {
         guard let environment = scene.core?.environment else { return [] }
         var actions: [SKAction] = []
-        let cameraAction = SKAction.run { self.scene.core?.gameCamera?.followedObject = node }
+        let cameraAction = SKAction.run { [weak self] in
+            self?.scene.core?.gameCamera?.followedObject = node
+        }
         if let movement = action.movement,
            let destinationPosition = environment.map.tilePosition(from: movement.destinationCoordinate.coordinate) {
             let moveAction = SKAction.move(to: destinationPosition, duration: movement.duration)
@@ -378,8 +380,8 @@ extension GameEvent {
             self.removeEffectFromInteractiveObject()
             self.changeInteractiveObjectAppearance(image: "disabledCrystal")
             self.disableObjectInteraction()
-            self.scene.player?.increaseMaxEnergy(game: game, amount: 25)
-            self.scene.player?.unlockPower(game: game)
+            self.scene.game?.increaseMaxEnergy(amount: 25)
+            self.scene.game?.unlockPower()
             self.scene.core?.hud?.updateEnergy()
             self.scene.game?.controller?.action.enable()
         }
