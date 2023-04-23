@@ -7,6 +7,7 @@
 
 import Foundation
 import PlayfulKit
+import Utility_Toolbox
 
 struct GameLevel: Codable {
     let id: Int
@@ -17,7 +18,7 @@ struct GameLevel: Codable {
     let background: LevelBackground
     let objects: [LevelObject]
     let structures: [LevelStructure]
-    let structureCavities: [String]?
+    @DecodableDefault.EmptyList var structureCavities: [String]
     var conversations: [LevelConversation]
     var cinematics: [LevelCinematic]
 }
