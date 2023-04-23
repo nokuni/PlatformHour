@@ -1,5 +1,5 @@
 {
-    "name": "Dice",
+    "name": "Neo",
     "image": "player#Idle",
     "logic": {
         "health": 1,

@@ -17,6 +17,7 @@ struct GameLevel: Codable {
     let background: LevelBackground
     let objects: [LevelObject]
     let structures: [LevelStructure]
+    let structureCavities: [String]?
     var conversations: [LevelConversation]
     var cinematics: [LevelCinematic]
 }

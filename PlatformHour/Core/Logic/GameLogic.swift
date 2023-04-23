@@ -218,7 +218,9 @@ extension GameLogic {
         guard let level = scene.game?.level else { return }
         guard let levelTrap = LevelObject.indexedObjectNode(object: trapObject, data: level.objects(category: .trap)) else { return }
         scene.core?.animation?.delayedDestroy(scene: scene, node: trapObject, timeInterval: 0.1) {
-            self.scene.core?.content?.createLevelTrap(levelTrap)
+            if levelTrap.isRespawning {
+                self.scene.core?.content?.createLevelTrap(levelTrap)
+            }
         }
     }
 }

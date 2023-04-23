@@ -12,7 +12,7 @@
     },
     {
         "name": "Blue Crystal",
-        "image": "blueCrystal",
+        "image": "enabledCrystal",
         "logic": {
             "health": 1,
             "damage": 0,

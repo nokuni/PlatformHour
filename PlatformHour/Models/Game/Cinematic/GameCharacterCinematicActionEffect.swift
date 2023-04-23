@@ -9,6 +9,7 @@ import Foundation
 
 struct GameCharacterCinematicActionEffect: Codable {
     let stateIDIdentifier: String
+    let sizeGrowth: Double?
     let repeatCount: Int?
     let isRepeatingForever: Bool
 }

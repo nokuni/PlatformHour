@@ -34,11 +34,15 @@ extension GameCore {
                                          isShowingTitle: isShowingLevelTitle(scene: scene)) {
             self.launchStartingCinematic(scene: scene)
             self.launchStartingConversation(scene: scene)
+//            self.startPlaying(scene: scene)
         }
     }
     
     private func isShowingLevelTitle(scene: GameScene) -> Bool {
-        startingCinematic(scene: scene) == nil && startingConversation(scene: scene) == nil
+        guard let game = scene.game else { return false }
+        return startingCinematic(scene: scene) == nil &&
+        startingConversation(scene: scene) == nil &&
+        !game.hasTitleBeenDisplayed
     }
     
     /// Setup the scene.
@@ -80,6 +84,12 @@ extension GameCore {
     func setupControllers(scene: GameScene) {
         guard scene.game?.controller == nil else { return }
         scene.game?.controller = GameControllerManager(scene: scene, state: state)
+    }
+    
+    private func startPlaying(scene: GameScene) {
+        guard !isShowingLevelTitle(scene: scene) else { return }
+        scene.game?.controller?.enable()
+        scene.core?.hud?.addContent()
     }
 }
 

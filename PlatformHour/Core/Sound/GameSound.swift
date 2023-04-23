@@ -20,6 +20,11 @@ final class GameSound {
 
 extension GameSound {
     
+    /// Play the text typing sound.
+    func textTyping() {
+        try? manager.playSFX(name: GameConfiguration.soundKey.textTyping, isSpammable: true)
+    }
+    
     /// Play a step sound.
     func step() {
         try? manager.playSFX(name: GameConfiguration.soundKey.playerStep, volume: GameConfiguration.sceneConfiguration.soundStepVolume)

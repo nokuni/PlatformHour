@@ -206,7 +206,7 @@ extension ActionLogic {
         guard let state = scene.core?.state else { return }
         switch state.status {
         case .inDefault:
-            jump()
+            levitate()
         case .inAction:
             break
         case .inConversation:
@@ -285,12 +285,14 @@ extension ActionLogic {
         }
     }
     
-    /// Jump.
-    private func jump() {
+    /// Levitate.
+    private func levitate() {
         guard let player = scene.player else { return }
+        guard let game = scene.game else { return }
         guard !player.state.isJumping else { return }
         guard player.interactionStatus == .none else { return }
         guard !player.isAnimating else { return }
+        guard player.hasPlayerUnlock(game: game, power: .levitate) else { return }
         guard player.energy > 0 else { return }
         
         let action = jumpAction(player: player)
@@ -458,8 +460,10 @@ extension ActionLogic {
     /// Moves the player.
     func move(on direction: ActionLogicConfiguration.Direction, by movementSpeed: Int) {
         guard let player = scene.player else { return }
+        guard let game = scene.game else { return }
         guard !player.isAnimating else { return }
         guard !player.state.isJumping else { return }
+        guard player.hasPlayerUnlock(game: game, power: .movement) else { return }
         guard scene.isUserInteractionEnabled else { return }
         
         configuration.isLongPressingDPad = true

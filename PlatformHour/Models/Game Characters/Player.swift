@@ -5,6 +5,7 @@
 //  Created by Maertens Yann-Christophe on 01/02/23.
 //
 
+import SwiftUI
 import SpriteKit
 import PlayfulKit
 
@@ -22,8 +23,12 @@ final class Player {
     
     var actions: [SequenceAction] = []
     var bag: [GameObject] = []
-    var energy = 100
-    var maxEnergy = 100
+    var energy: Int = 0
+    
+    enum Power: String {
+        case movement = "Movement"
+        case levitate = "Levitate"
+    }
     
     enum Roll: Int, CaseIterable {
         case one = 1
@@ -100,18 +105,73 @@ extension Player {
         return health
     }
     
-    func refillEnergy() {
+    /// Returns max energy of the player.
+    func maxEnergy(game: Game) -> Int {
+        guard let maxEnergySave = game.currentSave?.maxEnergy else { return 100 }
+        let maxEnergy = Int(maxEnergySave)
+        return maxEnergy
+    }
+    
+    /// Refills current energy by a specific amount.
+    func refillEnergy(amount: Int, game: Game) {
+        let maxEnergy = maxEnergy(game: game)
         guard energy < maxEnergy else { return }
+        energy += amount
+    }
+    
+    /// Refills all energy.
+    func refillTotalEnergy(game: Game) {
+        let maxEnergy = maxEnergy(game: game)
         energy = maxEnergy
     }
     
+    /// Increases max energy by a specific amount.
+    func increaseMaxEnergy(game: Game, amount: Int) {
+        game.currentSave?.maxEnergy += Int32(amount)
+        game.updateSaves()
+        refillTotalEnergy(game: game)
+    }
+    
+    /// Consumes current energy by a specific amount.
     func consumeEnergy(amount: Int) {
         guard energy > 0 else { return }
         if (energy - amount) <= 0 { energy = 0 } else { energy -= amount }
     }
     
+    /// Check if current energy is zero or less.
     var isOutOfEnergy: Bool {
         energy <= 0
+    }
+}
+
+// MARK: - Logic
+
+extension Player {
+    
+    /// Check if the player has his barrier.
+    func hasBarrier(scene: GameScene) -> Bool {
+        guard let passedConversations = scene.game?.currentSave?.passedConversations else { return false }
+        return passedConversations.contains("Energy Power Up Conversation")
+    }
+    
+    /// Unlock a new power for the player depending on his max energy.
+    func unlockPower(game: Game) {
+        let maxEnergy = maxEnergy(game: game)
+        
+        switch true {
+        case maxEnergy == 125:
+            game.currentSave?.powers?.append(Power.levitate.rawValue)
+        default:
+            print("No power unlocked")
+        }
+        
+        game.updateSaves()
+    }
+    
+    /// Check if the player has unlocked a power.
+    func hasPlayerUnlock(game: Game, power: Power) -> Bool {
+        guard let powers = game.currentSave?.powers else { return false }
+        return powers.contains(power.rawValue)
     }
 }
 
@@ -125,19 +185,21 @@ extension Player {
         return object?.image.replacingOccurrences(of: "#", with: "\(currentRollValue)")
     }
     
-    var energyFrames: [String] {
+    /// Returns the image frames of the energy HUD.
+    func energyFrames(game: Game) -> [String] {
         var image = ""
+        let maxEnergy = maxEnergy(game: game)
         
         switch true {
-        case energy == maxEnergy:
+        case energy > maxEnergy.percentageValue(percentage: 90):
             image = "energyCharged5"
-        case energy >= 80:
+        case energy > maxEnergy.percentageValue(percentage: 70):
             image = "energyCharged4"
-        case energy >= 50:
+        case energy > maxEnergy.percentageValue(percentage: 50):
             image = "energyCharged3"
-        case energy >= 20:
+        case energy > maxEnergy.percentageValue(percentage: 30):
             image = "energyCharged2"
-        case energy > 0:
+        case energy > maxEnergy.percentageValue(percentage: 10):
             image = "energyCharged1"
         default:
             image = "energyCharged0"
@@ -242,11 +304,14 @@ extension Player {
     /// Play the hitted animation.
     func blinkHit() {
         guard let barrier = node.childNode(withName: "Barrier") as? SKSpriteNode else { return }
+        var toggle: Bool = true
         let configuration = PKTimerNode.TimerConfiguration(countdown: 10, counter: 1, timeInterval: 0.05, actionOnGoing: {
-            if barrier.color == .white {
+            if toggle {
                 barrier.color = .red
+                toggle.toggle()
             } else {
-                barrier.color = .white
+                barrier.color = UIColor(Color.spiritBlue)
+                toggle.toggle()
             }
         })
         let timerNode = PKTimerNode(configuration: configuration)

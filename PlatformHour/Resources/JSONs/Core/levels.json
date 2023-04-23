@@ -32,7 +32,7 @@
                 "category": "onCinematic"
             },
             {
-                "name": "Movement Power Up Conversation",
+                "name": "Energy Power Up Conversation",
                 "category": "onCinematic"
             }
         ],
@@ -72,63 +72,63 @@
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1010",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 1,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1515",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 2,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1120",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 3,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1825",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 4,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1330",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 5,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1735",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 6,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "2040",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 7,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1445",
-                "isFalling": true
+                "isRespawning": true
             },
             {
                 "id": 8,
                 "name": "Rock Trap",
                 "category": "trap",
                 "coordinate": "1650",
-                "isFalling": true
+                "isRespawning": true
             }
         ],
         "structures": [
@@ -260,6 +260,7 @@
                 "name": "Bubble Trap",
                 "category": "trap",
                 "coordinate": "2721",
+                "hasCollisionTailoring": false,
                 "sizeGrowth": 2.5
             },
             {
@@ -267,6 +268,7 @@
                 "name": "Bubble Trap",
                 "category": "trap",
                 "coordinate": "3035",
+                "hasCollisionTailoring": false,
                 "sizeGrowth": 2.5
             },
             {
@@ -274,6 +276,7 @@
                 "name": "Bubble Trap",
                 "category": "trap",
                 "coordinate": "3044",
+                "hasCollisionTailoring": false,
                 "sizeGrowth": 2.5
             },
             {
@@ -281,6 +284,7 @@
                 "name": "Bubble Trap",
                 "category": "trap",
                 "coordinate": "2144",
+                "hasCollisionTailoring": false,
                 "sizeGrowth": 2.5
             },
             {
@@ -288,7 +292,14 @@
                 "name": "Bubble Trap",
                 "category": "trap",
                 "coordinate": "2132",
+                "hasCollisionTailoring": false,
                 "sizeGrowth": 2.5
+            },
+            {
+                "id": 7,
+                "name": "Blue Gem A",
+                "category": "collectible",
+                "coordinate": "3230"
             },
         ],
         "structures": [
@@ -355,6 +366,7 @@
                 "coordinate": "1836"
             }
         ],
+        "structureCavities": ["3130", "3131", "3230", "3231"],
         "conversations": [],
         "cinematics": []
     }

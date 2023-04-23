@@ -36,6 +36,10 @@ final class Game: ObservableObject {
         return Int(currentLevel)
     }
     
+    // MARK: - Observed objects
+    
+    var currentInteractiveObject: PKObjectNode?
+    
     // MARK: - Conversations
     
     var currentLevelConversation: LevelConversation?
@@ -84,8 +88,14 @@ final class Game: ObservableObject {
         let newSave = SaveEntity(context: saveManager.container.viewContext)
         newSave.id = UUID()
         newSave.level = 0
+        newSave.maxEnergy = 100
+        newSave.powers = ["Movement"]
         newSave.passedCinematics = [""]
         newSave.passedConversations = [""]
+        newSave.characterInformations = [
+            ["Neo": "???"],
+            ["Bloopy": "???"]
+        ]
         updateSaves()
     }
     

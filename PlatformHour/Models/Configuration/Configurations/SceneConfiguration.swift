@@ -19,12 +19,13 @@ struct SceneConfiguration {
     let objectZPosition: CGFloat = 5
     let overObjectZPosition: CGFloat = 6
     let playerZPosition: CGFloat = 7
-    let animationZPosition: CGFloat = 8
-    let hudLayerZPosition: CGFloat = 9
-    let hudZPosition: CGFloat = 10
-    let elementHUDZPosition: CGFloat = 11
-    let overElementHUDZPosition: CGFloat = 12
-    let screenFilterZPosition: CGFloat = 13
+    let overPlayerZPosition: CGFloat = 8
+    let animationZPosition: CGFloat = 9
+    let hudLayerZPosition: CGFloat = 10
+    let hudZPosition: CGFloat = 11
+    let elementHUDZPosition: CGFloat = 12
+    let overElementHUDZPosition: CGFloat = 13
+    let screenFilterZPosition: CGFloat = 14
     
     // MARK: - Camera
     let cameraZoom = UIDevice.isOnPhone ? 1.1 : 1.25
@@ -42,6 +43,7 @@ struct SceneConfiguration {
     var objectCollisionSizeTailoring: CGFloat { -tileSize.width * 0.5 }
     
     // MARK: - Sound
+    let textTypingVolume: Float = 0.2
     let soundStepVolume: Float = 0.2
     let soundFallVolume: Float = 0.3
     let soundBackgroundVolume: Float = 0.1

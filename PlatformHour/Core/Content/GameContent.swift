@@ -51,8 +51,7 @@ private extension GameContent {
         configurePlayer()
         guard let player = scene.player else { return }
         scene.addChildSafely(player.node)
-        guard let currentSave = scene.game?.currentSave else { return }
-        if currentSave.level > 0 { addPlayerBarrier() }
+        if player.hasBarrier(scene: scene) { addPlayerBarrier() }
     }
     
     /// Generate the enemies on the current level.
@@ -132,8 +131,11 @@ extension GameContent {
                                   collision: [.player],
                                   contact: [.npc])
         
-        let interactiveObjectNode = environment.objectElement(name: "\(levelInteractive.name) \(levelInteractive.id)",
-                                                              physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+        let nodeName = "\(levelInteractive.name) \(levelInteractive.id)"
+        let collisionTailoring = levelInteractive.hasCollisionTailoring ? -GameConfiguration.sceneConfiguration.tileSize.width * 0.5 : 0
+        
+        let interactiveObjectNode = environment.objectElement(name: nodeName,
+                                                              physicsBodySizeTailoring: collisionTailoring,
                                                               collision: collision)
         
         createLevelObject(node: interactiveObjectNode,
@@ -152,12 +154,14 @@ extension GameContent {
                                   collision: [.structure],
                                   contact: [.player])
         
+        let collisionTailoring = levelCollectible.hasCollisionTailoring ? -(GameConfiguration.sceneConfiguration.tileSize.width / 2) : 0
+        
         let collectibleNode = environment.objectElement(name: collectibleObject.name,
-                                                        physicsBodySizeTailoring: -(GameConfiguration.sceneConfiguration.tileSize.width / 2),
+                                                        physicsBodySizeTailoring: collisionTailoring,
                                                         collision: collision)
         
         createLevelObject(node: collectibleNode,
-                          zPosition: levelCollectible.sizeGrowth == nil ?
+                          zPosition: levelCollectible.sizeGrowth == 1 ?
                           GameConfiguration.sceneConfiguration.objectZPosition :
                           GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelCollectible,
@@ -174,12 +178,14 @@ extension GameContent {
                                   collision: [.allClear],
                                   contact: [.player, .object])
         
+        let collisionTailoring = levelNPC.hasCollisionTailoring ? -GameConfiguration.sceneConfiguration.tileSize.width * 0.5 : 0
+        
         let npcObjectNode = environment.objectElement(name: levelNPC.name,
-                                                      physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                      physicsBodySizeTailoring: collisionTailoring,
                                                       collision: collision)
         
         createLevelObject(node: npcObjectNode,
-                          zPosition: levelNPC.sizeGrowth == nil ?
+                          zPosition: levelNPC.sizeGrowth == 1 ?
                           GameConfiguration.sceneConfiguration.objectZPosition :
                           GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelNPC,
@@ -196,12 +202,14 @@ extension GameContent {
                                   collision: [.allClear],
                                   contact: [.player, .playerProjectile])
         
-        let trapNode = object(name: "\(levelTrap.name) \(levelTrap.id)",
+        let nodeName = "\(levelTrap.name) \(levelTrap.id)"
+        let collisionTailoring = levelTrap.hasCollisionTailoring ? -GameConfiguration.sceneConfiguration.tileSize.width * 0.5 : 0
+        
+        let trapNode = object(name: nodeName,
+                              physicsBodySizeTailoring: collisionTailoring,
                               collision: collision)
         
-        if let sizeGrowth = levelTrap.sizeGrowth {
-            trapNode.size = trapNode.size * sizeGrowth
-        }
+        trapNode.size = trapNode.size * levelTrap.sizeGrowth
         
         trapNode.logic = LogicBody(health: trapData.logic.health,
                                    damage: trapData.logic.damage,
@@ -215,7 +223,7 @@ extension GameContent {
         }
         
         trapNode.coordinate = levelTrap.coordinate.coordinate
-        trapNode.zPosition = GameConfiguration.sceneConfiguration.objectZPosition
+        trapNode.zPosition = GameConfiguration.sceneConfiguration.overPlayerZPosition
         trapNode.position = position
         trapNode.texture = SKTexture(imageNamed: trapData.image)
         trapNode.texture?.filteringMode = .nearest
@@ -226,7 +234,7 @@ extension GameContent {
         
         scene.addChildSafely(trapNode)
         
-        if levelTrap.isFalling != nil {
+        if levelTrap.isRespawning {
             logic.dropTrap(trapObject: trapNode)
         }
     }
@@ -238,12 +246,15 @@ extension GameContent {
                                   collision: [.allClear],
                                   contact: [.player])
         
-        let importantObjectNode = environment.objectElement(name: levelImportant.name,
-                                                            physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+        let nodeName = "\(levelImportant.name) \(levelImportant.id)"
+        let collisionTailoring = levelImportant.hasCollisionTailoring ? -GameConfiguration.sceneConfiguration.tileSize.width * 0.5 : 0
+        
+        let importantObjectNode = environment.objectElement(name: nodeName,
+                                                            physicsBodySizeTailoring: collisionTailoring,
                                                             collision: collision)
         
         createLevelObject(node: importantObjectNode,
-                          zPosition: levelImportant.sizeGrowth == nil ?
+                          zPosition: levelImportant.sizeGrowth == 1 ?
                           GameConfiguration.sceneConfiguration.objectZPosition :
                           GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelImportant,
@@ -259,8 +270,10 @@ extension GameContent {
                                       collision: [.allClear],
                                       contact: [.player, .playerProjectile])
             
+            let collisionTailoring = levelEnemy.hasCollisionTailoring ? -(CGSize.screen.height * 0.1) : 0
+            
             let enemyNode = object(name: enemyData.name,
-                                   physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
+                                   physicsBodySizeTailoring: collisionTailoring,
                                    collision: collision)
             
             enemyNode.logic = LogicBody(health: enemyData.logic.health,
@@ -324,12 +337,14 @@ extension GameContent {
                                   collision: [.player, .object],
                                   contact: [.player, .object])
         
+        let collisionTailoring = levelObstacle.hasCollisionTailoring ? -GameConfiguration.sceneConfiguration.tileSize.width * 0.5 : 0
+        
         let obstacleObjectNode = environment.objectElement(name: levelObstacle.name,
-                                                           physicsBodySizeTailoring: -GameConfiguration.sceneConfiguration.tileSize.width * 0.5,
+                                                           physicsBodySizeTailoring: collisionTailoring,
                                                            collision: collision)
         
         createLevelObject(node: obstacleObjectNode,
-                          zPosition: levelObstacle.sizeGrowth == nil ?
+                          zPosition: levelObstacle.sizeGrowth == 1 ?
                           GameConfiguration.sceneConfiguration.objectZPosition :
                           GameConfiguration.sceneConfiguration.betweenBackAndSceneZPosition,
                           levelObject: levelObstacle,
@@ -354,9 +369,7 @@ extension GameContent {
         
         node.animations = gameObject.animations
         node.coordinate = coordinate
-        if let sizeGrowth = levelObject.sizeGrowth {
-            node.size = environment.map.squareSize * sizeGrowth
-        }
+        node.size = environment.map.squareSize * levelObject.sizeGrowth
         node.texture = SKTexture(imageNamed: gameObject.image)
         node.texture?.filteringMode = .nearest
         
@@ -432,13 +445,16 @@ extension GameContent {
     
     /// Configure the player object.
     private func configurePlayer() {
-        guard let level = scene.game?.level else { return }
+        guard let game = scene.game else { return }
+        guard let level = game.level else { return }
         guard let player = scene.player else { return }
         guard let playerObject = player.object else { return }
         
         let collision = Collision(category: .player,
                                   collision: [.allClear],
                                   contact: [.enemyProjectile, .object, .npc, .enemy])
+        
+        player.refillTotalEnergy(game: game)
         
         player.node = object(name: playerObject.name,
                              collision: collision)
@@ -484,12 +500,8 @@ extension GameContent {
     }
     
     private func digStructureCavities() {
-        let coordinates = [
-            Coordinate(x: 31, y: 30),
-            Coordinate(x: 31, y: 31),
-            Coordinate(x: 32, y: 30),
-            Coordinate(x: 32, y: 31),
-        ]
+        guard let cavities = scene.game?.level?.structureCavities else { return }
+        let coordinates = cavities.map { $0.coordinate }
         let objects = environment.map.objects.filter {
             coordinates.contains($0.coordinate)
         }
@@ -596,7 +608,7 @@ extension GameContent {
         barrierNode.size = player.node.size
         barrierNode.texture?.filteringMode = .nearest
         barrierNode.colorBlendFactor = 1
-        barrierNode.color = .blue
+        barrierNode.color = UIColor(Color.spiritBlue)
         player.node.addChildSafely(barrierNode)
     }
 }

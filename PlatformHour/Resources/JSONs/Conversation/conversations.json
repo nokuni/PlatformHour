@@ -4,7 +4,7 @@
         "category": "onCinematic",
         "dialogs": [
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
                     "Finally free !",
                     "I was waiting so long for a body to come in this place...",
@@ -12,13 +12,13 @@
                 ]
             },
             {
-                "character": "Dice",
+                "character": "Neo",
                 "lines": [
                     "..."
                 ]
             },
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
                     "...",
                     "Oh no ! I did not pay attention ! You are not a mage, neither a human...",
@@ -26,15 +26,16 @@
                 ]
             },
             {
-                "character": "Dice",
+                "character": "Neo",
                 "lines": [
                     "..."
                 ]
             },
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
+                "revealNameLine": 0,
                 "lines": [
-                    "Oh I did not present myself, I'm a crystal spirit.",
+                    "Oh I did not present myself. I'm Bloopy, a crystal spirit.",
                     "I do not have any memories, the only thing I know is...",
                     "...my role was to assist young mage in their process of learning magic.",
                     "It's been a long time I did not see any forms of life.",
@@ -43,18 +44,19 @@
                 ]
             },
             {
-                "character": "Dice",
+                "character": "Neo",
                 "lines": [
                     "..."
                 ]
             },
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
                     "Well... I don't known myself what happened to me.",
                     "For now, we need to leave this place to gather some informations.",
                     "It seems you can't do anything without me.",
-                    "I can make you move and fly but I can't help you on the directing part. Every soul has his own way.",
+                    "I can only make you move for now but if you find some energy, maybe I can do something more.",
+                    "On the other hand, I can't help you on the control. Every soul has his own way.",
                     "You'll have to figure it out.",
                     "If I run out of energy, we go bust.",
                     "Let's do it !"
@@ -64,13 +66,13 @@
         "cinematicCompletion": "Movement Power Up Cinematic"
     },
     {
-        "name": "Movement Power Up Conversation",
+        "name": "Energy Power Up Conversation",
         "category": "onCinematic",
         "dialogs": [
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
-                    "Now you can move and fly ! I hope you know how to roll because I don't."
+                    "Now you can move ! I hope you know how to roll because I don't."
                 ]
             }
         ]
@@ -80,7 +82,7 @@
         "category": "onLevelStart",
         "dialogs": [
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
                     "Oh crap ! Some rocks are falling from the top !",
                     "This place seems really dangerous but do not worry.",
@@ -96,10 +98,10 @@
         "category": "onCinematic",
         "dialogs": [
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
                     "Oh ! Watch ! An active blue crystal !",
-                    "I can refill some energy !",
+                    "I can get some energy !",
                     "Come closer and touch it !"
                 ]
             }
@@ -111,12 +113,10 @@
         "category": "onObject",
         "dialogs": [
             {
-                "character": "Blue Spirit",
+                "character": "Bloopy",
                 "lines": [
-                    "Now I'm replenished !",
-                    "When you see a crystal like that, use it to refill my energy.",
-                    "And one more thing...",
-                    "If we run out of energy, we are sure to be redirected directly to the last crystal we touched.",
+                    "It feels so good !",
+                    "With that additional energy, I can make you levitate now !",
                     "Cool, nah ?"
                 ]
             }

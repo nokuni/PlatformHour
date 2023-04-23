@@ -6,6 +6,7 @@
 //
 
 import PlayfulKit
+import Utility_Toolbox
 
 struct LevelObject: Codable, LevelProtocol {
     let id: Int
@@ -13,9 +14,10 @@ struct LevelObject: Codable, LevelProtocol {
     let category: Category
     let coordinate: String
     let itinerary: Int?
-    let sizeGrowth: Double?
+    @DecodableDefault.OneFloat var sizeGrowth: Double
+    @DecodableDefault.True var hasCollisionTailoring: Bool
     let speed: Double?
-    var isFalling: Bool?
+    @DecodableDefault.False var isRespawning: Bool
     
     enum Category: String, Codable {
         case player
@@ -35,8 +37,9 @@ struct LevelObject: Codable, LevelProtocol {
         case coordinate
         case itinerary
         case sizeGrowth
+        case hasCollisionTailoring
         case speed
-        case isFalling
+        case isRespawning
     }
 }
 

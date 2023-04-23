@@ -148,9 +148,28 @@ extension GameEvent {
         SKAction.run { node.alpha = 1 }
     }
     
-    /// Returns the animation effect of the current cinematic node.
+    /// Returns an animation effect from the current cinematic node.
+    private func cinematicObjectAnimation(node: PKObjectNode,
+                                          stateIDIdentifier: GameAnimation.StateID,
+                                          effect: GameCharacterCinematicActionEffect) -> SKAction {
+        guard let animation = scene.core?.animation else { return SKAction.empty() }
+        let spriteAnimation = animation.animate(node: node,
+                                                identifier: stateIDIdentifier,
+                                                filteringMode: .nearest,
+                                                timeInterval: 0.1)
+        
+        switch true {
+        case effect.repeatCount != nil:
+            return SKAction.repeat(spriteAnimation, count: effect.repeatCount!)
+        case effect.isRepeatingForever:
+            return SKAction.repeatForever(spriteAnimation)
+        default:
+            return spriteAnimation
+        }
+    }
+    
+    /// Returns all animations effect of the current cinematic node.
     private func cinematicNodeEffect(node: PKObjectNode, action: CinematicAction) -> [SKAction] {
-        guard let animation = scene.core?.animation else { return [] }
         var actions: [SKAction] = []
         
         guard let effect = action.effect else { return [] }
@@ -158,21 +177,9 @@ extension GameEvent {
             return []
         }
         
-        let spriteAnimation = animation.animate(node: node,
-                                                identifier: stateIDIdentifier,
-                                                filteringMode: .nearest,
-                                                timeInterval: 0.1)
-        
-        var objectAnimation: SKAction = SKAction.empty()
-        
-        switch true {
-        case effect.repeatCount != nil:
-            objectAnimation = SKAction.repeat(spriteAnimation, count: effect.repeatCount!)
-        case effect.isRepeatingForever:
-            objectAnimation = SKAction.repeatForever(spriteAnimation)
-        default:
-            objectAnimation = spriteAnimation
-        }
+        let objectAnimation = cinematicObjectAnimation(node: node,
+                                                       stateIDIdentifier: stateIDIdentifier,
+                                                       effect: effect)
         
         switch true {
         case action.movement == nil:
@@ -220,10 +227,11 @@ extension GameEvent {
     private func cinematicNode(action: CinematicAction) -> PKObjectNode? {
         guard let object = GameObject.get(action.objectName) else { return nil }
         guard let startingCoordinate = action.startingCoordinate?.coordinate else { return nil }
+        guard let objectNode = scene.core?.content?.createObject(object, at: startingCoordinate) else { return nil }
         
-        let objectNode = scene.core?.content?.createObject(object, at: startingCoordinate)
-        objectNode?.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
-        objectNode?.alpha = 0
+        objectNode.size = objectNode.size * (action.effect?.sizeGrowth ?? 1)
+        objectNode.zPosition = GameConfiguration.sceneConfiguration.animationZPosition
+        objectNode.alpha = 0
         
         return objectNode
     }
@@ -287,6 +295,7 @@ extension GameEvent {
         }
         popUpButton.removeFromParent()
         scene.player?.interactionStatus = .none
+        scene.game?.currentInteractiveObject = nil
     }
     
     /// Hide the current pop up button.
@@ -350,10 +359,11 @@ extension GameEvent {
         })
     }
     
-    /// Activates a blus crystal power.
+    /// Activates a blue crystal power.
     func activateBlueCrystal() {
         guard let player = scene.player else { return }
-        guard let level = scene.game?.level else { return }
+        guard let game = scene.game else { return }
+        guard let level = game.level else { return }
         scene.game?.controller?.action.disable()
         scene.core?.animation?.addObjectEffect(keyName: GameConfiguration.nodeKey.spiritRefillEffect,
                                                scene: scene,
@@ -365,9 +375,37 @@ extension GameEvent {
             }) {
                 self.playConversation(levelConversation: levelConversation)
             }
-            player.refillEnergy()
+            self.removeEffectFromInteractiveObject()
+            self.changeInteractiveObjectAppearance(image: "disabledCrystal")
+            self.disableObjectInteraction()
+            self.scene.player?.increaseMaxEnergy(game: game, amount: 25)
+            self.scene.player?.unlockPower(game: game)
             self.scene.core?.hud?.updateEnergy()
             self.scene.game?.controller?.action.enable()
         }
+    }
+    
+    func changeInteractiveObjectAppearance(image: String) {
+        guard let currentInteractiveObject = scene.game?.currentInteractiveObject else { return }
+        currentInteractiveObject.texture = SKTexture(imageNamed: image)
+        currentInteractiveObject.texture?.filteringMode = .nearest
+    }
+    
+    func disableObjectInteraction() {
+        guard let currentInteractiveObject = scene.game?.currentInteractiveObject else { return }
+        currentInteractiveObject.physicsBody = nil
+    }
+    
+    func removeEffectFromInteractiveObject() {
+        guard let currentInteractiveObject = scene.game?.currentInteractiveObject else { return }
+        let allEffects = scene.childNodes(named: "Effect")
+        let effect = allEffects.first {
+            if let name = $0.name,
+               let currentInteractiveObjectName = currentInteractiveObject.name {
+                return name.contains(currentInteractiveObjectName)
+            }
+            return false
+        }
+        effect?.removeFromParent()
     }
 }

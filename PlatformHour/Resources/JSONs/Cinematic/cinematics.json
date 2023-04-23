@@ -20,6 +20,7 @@
                 "startingCoordinate": "0714",
                 "effect": {
                     "stateIDIdentifier": "effect",
+                    "sizeGrowth": 3,
                     "repeatCount": 5,
                     "isRepeatingForever": false
                 },
@@ -70,7 +71,7 @@
                 "isFollowedByCamera": false
             }
         ],
-        "conversationCompletion": "Movement Power Up Conversation",
+        "conversationCompletion": "Energy Power Up Conversation",
         "specialCompletion": "barrierAdding"
     },
     {

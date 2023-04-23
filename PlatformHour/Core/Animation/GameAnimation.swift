@@ -38,6 +38,7 @@ extension GameAnimation {
                               scaling: CGFloat = 1.1,
                               duration: TimeInterval = 0.5) {
         let shadow = SKSpriteNode()
+        shadow.name = GameConfiguration.nodeKey.shadowPulseEffect + (node.name ?? "")
         shadow.size = node.size * growth
         shadow.texture = node.texture
         shadow.texture?.filteringMode = .nearest
@@ -122,6 +123,7 @@ extension GameAnimation {
             completion?()
         }
         let sequence = SKAction.sequence([
+            SKAction.run { scene.game?.controller?.disable() },
             effectAction,
             isShowingTitle ? showTitleAction : SKAction.empty(),
             completionAction

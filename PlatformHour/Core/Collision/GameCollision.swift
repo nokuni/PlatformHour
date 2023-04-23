@@ -51,7 +51,7 @@ final class GameCollision {
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
         
-        playerOnBlueCrystal(
+        playerOnCrystal(
             CollisionManager.NodeBody(body: firstBody, bitmaskCategory: CollisionCategory.player.rawValue),
             with: CollisionManager.NodeBody(body: secondBody, bitmaskCategory: CollisionCategory.npc.rawValue)
         )
@@ -137,10 +137,8 @@ extension GameCollision {
         guard let trapNodeName = trapNode.name else { return }
         guard trapNodeName.contains("Trap") else { return }
         if manager.isColliding(first, with: second) {
-            scene.core?.animation?.delayedDestroy(scene: scene,
-                                                  node: trapNode,
-                                                  timeInterval: 0.1)
             collisionLogic.hostileHitOnPlayer(trapNode)
+            scene.core?.logic?.trapCompletion(trapObject: trapNode)
         }
     }
     
@@ -195,19 +193,23 @@ extension GameCollision {
     private func playerOnExit(_ first: CollisionManager.NodeBody,
                               with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameConfiguration.nodeKey.exit else { return }
+        guard let objectName = object.name else { return }
+        guard objectName.contains(GameConfiguration.nodeKey.exit) else { return }
         if manager.isColliding(first, with: second) {
+            scene.game?.currentInteractiveObject = object
             scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
             scene.player?.interactionStatus = .onExit
         }
     }
     
     /// When the player is on the coordinate of a blue crystal.
-    private func playerOnBlueCrystal(_ first: CollisionManager.NodeBody,
+    private func playerOnCrystal(_ first: CollisionManager.NodeBody,
                                      with second: CollisionManager.NodeBody) {
         guard let object = second.body.node as? PKObjectNode else { return }
-        guard object.name == GameConfiguration.nodeKey.blueCrystal else { return }
+        guard let objectName = object.name else { return }
+        guard objectName.contains(GameConfiguration.nodeKey.blueCrystal) else { return }
         if manager.isColliding(first, with: second) {
+            scene.game?.currentInteractiveObject = object
             scene.core?.event?.triggerInteractionPopUp(at: object.coordinate)
             scene.player?.interactionStatus = .onBlueCrystal
         }

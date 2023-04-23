@@ -173,13 +173,14 @@ extension GameHUD {
     /// Adds the energy charger.
     private func addEnergyCharger() {
         guard let player = scene.player else { return }
+        guard let game = scene.game else { return }
         
         energyCharger.size = GameConfiguration.sceneConfiguration.tileSize
         energyCharger.zPosition = GameConfiguration.sceneConfiguration.elementHUDZPosition
         energyCharger.position = layer.cornerPosition(corner: .topLeft,
                                                       padding: EdgeInsets(top: 40, leading: 60, bottom: 0, trailing: 0))
         
-        let animation = SKAction.animate(with: player.energyFrames,
+        let animation = SKAction.animate(with: player.energyFrames(game: game),
                                          filteringMode: .nearest,
                                          timePerFrame: 0.2)
         
@@ -316,7 +317,9 @@ extension GameHUD {
         
         addConversationText(text, node: conversationBox)
         
-        addSpeakerName(dialog, text: dialog.character ?? "???", node: conversationBox)
+        if let speakerName = dialog.character {
+            addSpeakerName(dialog, name: speakerName, node: conversationBox)
+        }
     }
     
     /// Configures the conversation box.
@@ -388,17 +391,21 @@ extension GameHUD {
                                               lineSpacing: 5,
                                               padding: padding)
         let dialogText = PKTypewriterNode(container: node, parameter: parameter)
+        dialogText.whileCompletion = { self.scene.core?.sound.textTyping() }
         dialogText.name = GameConfiguration.nodeKey.conversationText
         node.addChildSafely(dialogText)
         dialogText.start()
-        scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
+        //scene.core?.sound.manager.repeatSoundEffect(timeInterval: 0.1, name: GameConfiguration.soundKey.textTyping, volume: 0.1, repeatCount: text.count / 2)
     }
     
     /// Add the speaker name to the conversation box.
-    private func addSpeakerName(_ dialog: GameDialog, text: String, node: SKNode) {
+    private func addSpeakerName(_ dialog: GameDialog, name: String, node: SKNode) {
+        guard let game = scene.game else { return }
         let textManager = TextManager()
-        
-        let parameter = TextManager.Paramater(content: text,
+        guard let characterInformation = game.currentSave?.characterInformations?.first(where: {
+            $0.keys.first == name
+        }) else { return }
+        let parameter = TextManager.Paramater(content: characterInformation.values.first ?? "???",
                                               fontName: GameConfiguration.sceneConfiguration.titleFont,
                                               fontSize: 10,
                                               fontColor: .white,
@@ -436,6 +443,7 @@ extension GameHUD {
         conversationPressEffect {
             self.removeConversationBox()
             guard let index = self.scene.game?.currentConversation?.currentDialogIndex else { return }
+            self.scene.game?.currentConversation?.dialogs[index].revealFinalName(game: self.scene.game)
             self.scene.game?.currentConversation?.dialogs[index].moveOnNextLine()
             guard let isEndOfLine = self.scene.game?.currentConversation?.dialogs[index].isEndOfLine else { return }
             !isEndOfLine ? self.addConversationBox() : self.nextDialog()
