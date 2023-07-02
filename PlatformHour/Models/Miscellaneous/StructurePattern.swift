@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Utility_Toolbox
 
 struct StructurePattern: Codable {
     
@@ -23,7 +24,7 @@ struct StructurePattern: Codable {
 extension StructurePattern {
     
     static var all: [StructurePattern]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.structures)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.structures)
     }
     
     static func get(_ name: String) -> StructurePattern? {

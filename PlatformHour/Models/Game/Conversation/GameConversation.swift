@@ -43,7 +43,7 @@ extension GameConversation {
     
     /// Returns all the conversations of the game
     static var all: [GameConversation]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.conversations)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.conversations)
     }
     
     static func get(_ name: String) -> GameConversation? {

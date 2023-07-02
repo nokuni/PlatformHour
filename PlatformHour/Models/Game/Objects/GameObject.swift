@@ -7,6 +7,7 @@
 
 import Foundation
 import PlayfulKit
+import Utility_Toolbox
 
 struct GameObject: Codable {
     let name: String
@@ -38,47 +39,48 @@ extension GameObject {
     
     /// Returns the player object of the game.
     static var player: GameObject? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.playerObject)
+        
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.playerObject)
     }
     
     /// Returns important objects of the game.
     static var obstacles: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.obstacleObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.obstacleObjects)
     }
     
     /// Returns important objects of the game.
     static var importants: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.importantObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.importantObjects)
     }
     
     /// Returns NPC objects of the game.
     static var npcs: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.npcObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.npcObjects)
     }
     
     /// Returns enemy objects of the game.
     static var enemies: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.enemyObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.enemyObjects)
     }
     
     /// Returns collectible objects of the game.
     static var collectibles: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.collectibleObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.collectibleObjects)
     }
     
     /// Returns trap objects of the game.
     static var traps: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.trapObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.trapObjects)
     }
     
     /// Returns interactive objects of the game.
     static var interactives: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.interactiveObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.interactiveObjects)
     }
     
     /// Returns effect objects of the game.
     static var effects: [GameObject]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.effectObjects)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.effectObjects)
     }
     
     /// Returns all objects of the game.

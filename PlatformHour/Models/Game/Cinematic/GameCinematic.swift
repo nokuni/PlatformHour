@@ -40,7 +40,7 @@ extension GameCinematic {
     
     /// Returns all the game cinematics.
     static var all: [GameCinematic]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.cinematics)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.cinematics)
     }
     
     static func get(_ name: String) -> GameCinematic? {

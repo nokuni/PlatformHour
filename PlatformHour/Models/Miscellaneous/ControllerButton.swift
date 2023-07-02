@@ -31,7 +31,7 @@ struct ControllerButton: Codable {
 extension ControllerButton {
     
     static var all: [ControllerButton]? {
-        return try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.controllerButtons)
+        return try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.controllerButtons)
     }
     
     static func button(_ category: Category, of product: Product) -> [String] {

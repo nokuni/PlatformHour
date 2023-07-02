@@ -6,6 +6,7 @@
 //
 
 import PlayfulKit
+import Utility_Toolbox
 
 struct GameConfiguration {
     
@@ -21,6 +22,7 @@ struct GameConfiguration {
     
     // MARK: - Managers
     static let assemblyManager = AssemblyManager()
+    static let bundleManager = BundleManager()
     
     static let startingWorldID = 0
     static let startingLevelID = 0

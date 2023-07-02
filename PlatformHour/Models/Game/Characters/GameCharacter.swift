@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Utility_Toolbox
 
 struct GameCharacter: Codable {
     let name: String
@@ -21,7 +22,7 @@ extension GameCharacter {
     
     /// Returns all the game characters of the game.
     static var all: [GameCharacter]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.characters)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.characters)
     }
     
     static func get(_ name: String) -> GameCharacter? {

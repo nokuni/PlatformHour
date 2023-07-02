@@ -27,7 +27,7 @@ extension GameLevel {
     
     /// Returns all the game levels.
     static var all: [GameLevel]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.levels)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.levels)
     }
     
     /// Returns the level objects of a specific category.

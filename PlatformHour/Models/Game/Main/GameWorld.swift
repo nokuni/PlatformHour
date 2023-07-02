@@ -7,6 +7,7 @@
 
 import Foundation
 import PlayfulKit
+import Utility_Toolbox
 
 struct GameWorld: Codable {
     let id: Int
@@ -18,7 +19,7 @@ struct GameWorld: Codable {
 extension GameWorld {
     
     static var all: [GameWorld]? {
-        try? Bundle.main.decodeJSON(GameConfiguration.jsonKey.worlds)
+        try? GameConfiguration.bundleManager.decodeJSON(GameConfiguration.jsonKey.worlds)
     }
     
     static func get(_ id: Int) -> GameWorld? {
