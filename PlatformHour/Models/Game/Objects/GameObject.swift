@@ -7,7 +7,7 @@
 
 import Foundation
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 struct GameObject: Codable {
     let name: String

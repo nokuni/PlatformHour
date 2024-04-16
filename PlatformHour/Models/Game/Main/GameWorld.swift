@@ -7,7 +7,7 @@
 
 import Foundation
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 struct GameWorld: Codable {
     let id: Int

@@ -8,7 +8,7 @@
 import SpriteKit
 import GameController
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 final class GameScene: SKScene {
     
@@ -37,10 +37,7 @@ final class GameScene: SKScene {
         //core?.event?.updatePlatformCoordinates()
     }
     
-    private func didBegin(_ contact: SKPhysicsContact) {
-        
-        guard let collision = core?.collision else { return }
-        
+    private func bodyContacts(_ contact: SKPhysicsContact) -> (SKPhysicsBody, SKPhysicsBody) {
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         
@@ -52,7 +49,13 @@ final class GameScene: SKScene {
             secondBody = contact.bodyA
         }
         
-        collision.all(firstBody: firstBody, secondBody: secondBody)
+        return (firstBody, secondBody)
+    }
+    
+    private func didBegin(_ contact: SKPhysicsContact) {
+        guard let collision = core?.collision else { return }
+        let bodies = bodyContacts(contact)
+        collision.all(firstBody: bodies.0, secondBody: bodies.1)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

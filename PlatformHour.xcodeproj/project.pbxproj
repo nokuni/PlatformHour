@@ -115,6 +115,7 @@
 		96FE62B0298BAFAD00B2C614 /* GameCollision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE62AF298BAFAD00B2C614 /* GameCollision.swift */; };
 		96FE62B5298BCF0B00B2C614 /* GameAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE62B4298BCF0B00B2C614 /* GameAnimation.swift */; };
 		96FE6314298C1E1600B2C614 /* CollisionLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE6313298C1E1600B2C614 /* CollisionLogic.swift */; };
+		A832844E2BCEB40400340237 /* UtilityToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = A832844D2BCEB40400340237 /* UtilityToolbox */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -237,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96EE977B299420A200273A9D /* PlayfulKit in Frameworks */,
+				A832844E2BCEB40400340237 /* UtilityToolbox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,6 +811,7 @@
 			name = PlatformHour;
 			packageProductDependencies = (
 				96EE977A299420A200273A9D /* PlayfulKit */,
+				A832844D2BCEB40400340237 /* UtilityToolbox */,
 			);
 			productName = PlatformHour;
 			productReference = 962A0CBD29891900004DB446 /* PlatformHour.app */;
@@ -841,6 +844,7 @@
 			mainGroup = 962A0CB429891900004DB446;
 			packageReferences = (
 				96EE9779299420A200273A9D /* XCRemoteSwiftPackageReference "PlayfulKitPackage" */,
+				A832844C2BCEB40400340237 /* XCRemoteSwiftPackageReference "UtilityToolbox" */,
 			);
 			productRefGroup = 962A0CBE29891900004DB446 /* Products */;
 			projectDirPath = "";
@@ -1203,6 +1207,14 @@
 				kind = branch;
 			};
 		};
+		A832844C2BCEB40400340237 /* XCRemoteSwiftPackageReference "UtilityToolbox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nokuni/UtilityToolbox";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1210,6 +1222,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 96EE9779299420A200273A9D /* XCRemoteSwiftPackageReference "PlayfulKitPackage" */;
 			productName = PlayfulKit;
+		};
+		A832844D2BCEB40400340237 /* UtilityToolbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A832844C2BCEB40400340237 /* XCRemoteSwiftPackageReference "UtilityToolbox" */;
+			productName = UtilityToolbox;
 		};
 /* End XCSwiftPackageProductDependency section */
 

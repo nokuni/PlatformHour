@@ -8,7 +8,7 @@
 import SwiftUI
 import SpriteKit
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 final class GameContent {
     
@@ -211,10 +211,10 @@ extension GameContent {
         
         trapNode.size = trapNode.size * levelTrap.sizeGrowth
         
-        trapNode.logic = LogicBody(health: trapData.logic.health,
-                                   damage: trapData.logic.damage,
-                                   isDestructible: trapData.logic.isDestructible,
-                                   isIntangible: trapData.logic.isIntangible)
+//        trapNode.logic = LogicBody(health: trapData.logic.health,
+//                                   damage: trapData.logic.damage,
+//                                   isDestructible: trapData.logic.isDestructible,
+//                                   isIntangible: trapData.logic.isIntangible)
         
         trapNode.animations = trapData.animations
         
@@ -276,10 +276,10 @@ extension GameContent {
                                    physicsBodySizeTailoring: collisionTailoring,
                                    collision: collision)
             
-            enemyNode.logic = LogicBody(health: enemyData.logic.health,
-                                        damage: enemyData.logic.damage,
-                                        isDestructible: enemyData.logic.isDestructible,
-                                        isIntangible: enemyData.logic.isIntangible)
+//            enemyNode.logic = LogicBody(health: enemyData.logic.health,
+//                                        damage: enemyData.logic.damage,
+//                                        isDestructible: enemyData.logic.isDestructible,
+//                                        isIntangible: enemyData.logic.isIntangible)
             
             enemyNode.animations = enemyData.animations
             
@@ -362,10 +362,10 @@ extension GameContent {
         
         guard let position = environment.map.tilePosition(from: coordinate) else { return }
         
-        node.logic = LogicBody(health: gameObject.logic.health,
-                               damage: gameObject.logic.damage,
-                               isDestructible: gameObject.logic.isDestructible,
-                               isIntangible: gameObject.logic.isIntangible)
+//        node.logic = LogicBody(health: gameObject.logic.health,
+//                               damage: gameObject.logic.damage,
+//                               isDestructible: gameObject.logic.isDestructible,
+//                               isIntangible: gameObject.logic.isIntangible)
         
         node.animations = gameObject.animations
         node.coordinate = coordinate
@@ -433,7 +433,7 @@ extension GameContent {
                                 physicsBodySizeTailoring: -(CGSize.screen.height * 0.1),
                                 collision: collision)
         
-        attackNode.logic.damage = currentRoll
+        //attackNode.logic.damage = currentRoll
         attackNode.texture = SKTexture(imageNamed: player.node.texture?.name ?? "")
         attackNode.texture?.filteringMode = .nearest
         attackNode.coordinate = player.node.coordinate
@@ -471,10 +471,10 @@ extension GameContent {
         player.node = object(name: playerObject.name,
                              collision: collision)
         
-        player.node.logic = LogicBody(health: playerObject.logic.health,
-                                      damage: playerObject.logic.damage,
-                                      isDestructible: playerObject.logic.isDestructible,
-                                      isIntangible: playerObject.logic.isIntangible)
+//        player.node.logic = LogicBody(health: playerObject.logic.health,
+//                                      damage: playerObject.logic.damage,
+//                                      isDestructible: playerObject.logic.isDestructible,
+//                                      isIntangible: playerObject.logic.isIntangible)
         
         player.node.zPosition = GameConfiguration.sceneConfiguration.playerZPosition
         player.node.physicsBody?.friction = 0

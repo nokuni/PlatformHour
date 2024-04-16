@@ -35,9 +35,10 @@ extension Player {
     
     /// Returns the current health of the player.
     var currentHealth: Int {
+        return 10
         guard let logic = object?.logic else { return 0 }
-        let health = logic.health - node.logic.healthLost
-        return health
+//        let health = logic.health - node.logic.healthLost
+//        return health
     }
     
     /// Returns the current bar health of the player.
@@ -84,7 +85,10 @@ extension Player {
     func frames(stateID: GameAnimation.StateID) -> [String]? {
         let currentRollValue = currentRoll.rawValue
         let animation = object?.animations.first(where: { $0.identifier == stateID.rawValue })
-        let frames = animation?.frames.replacingOccurences(character: "#", newCharacter: "\(currentRollValue)")
+        let frames = animation?.frames.map {
+            $0.replacingOccurrences(of: "#", with: "\(currentRollValue)")
+        }
+//        let frames = animation?.frames.replaceMultipleOccurrences(character: "#", newCharacter: "\(currentRollValue)")
         return frames
     }
 }

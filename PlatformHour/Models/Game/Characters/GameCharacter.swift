@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Utility_Toolbox
+import UtilityToolbox
 
 struct GameCharacter: Codable {
     let name: String

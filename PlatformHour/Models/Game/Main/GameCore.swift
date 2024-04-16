@@ -7,7 +7,7 @@
 
 import SpriteKit
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 struct GameCore {
     var state: GameState = GameState()

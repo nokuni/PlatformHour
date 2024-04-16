@@ -8,7 +8,7 @@
 import SwiftUI
 import SpriteKit
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 final class GameEnvironment {
     
@@ -70,8 +70,8 @@ extension GameEnvironment {
     
     /// Setup the coordinates from the objects on the current map.
     func setupCollisionCoordinates() {
-        let objects = map.objects.filter { !$0.logic.isIntangible }
-        let coordinates = objects.map { $0.coordinate }
+//        let objects = map.objects.filter { !$0.logic.isIntangible }
+        let coordinates = map.objects.map { $0.coordinate }
         collisionCoordinates.append(contentsOf: coordinates)
     }
     
@@ -90,7 +90,9 @@ extension GameEnvironment {
                        collision: Collision) -> PKObjectNode {
         
         let texture = SKTexture()
-        let object = PKObjectNode(texture: texture, size: map.squareSize)
+        let object = PKObjectNode()
+        object.texture = texture
+        object.size = map.squareSize
         object.name = name
         
         object.applyPhysicsBody(

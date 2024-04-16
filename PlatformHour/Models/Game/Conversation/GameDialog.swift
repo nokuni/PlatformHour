@@ -16,7 +16,7 @@ struct GameDialog: Codable {
     var isEndOfLine: Bool = false
     
     mutating func moveOnNextLine() {
-        if lines.canGoNext(currentLineIndex) {
+        if lines.canGoNext(from: currentLineIndex) {
             currentLineIndex += 1
         } else {
             isEndOfLine = true

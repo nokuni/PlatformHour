@@ -7,7 +7,7 @@
 
 import SpriteKit
 import PlayfulKit
-import Utility_Toolbox
+import UtilityToolbox
 
 final class GameLogic {
     
@@ -235,19 +235,20 @@ extension GameLogic {
     
     /// Damage an object with a projectile.
     func damageObject(_ objectNode: PKObjectNode, with projectileNode: PKObjectNode) {
-        guard objectNode.logic.isDestructible else { return }
-        objectNode.logic.healthLost += projectileNode.logic.damage
+//        guard objectNode.logic.isDestructible else { return }
+//        objectNode.logic.healthLost += projectileNode.logic.damage
         damage(objectNode)
     }
     
     /// Returns true is an object is destroyed, false otherwise.
     private func isDestroyed(_ objectNode: PKObjectNode) -> Bool {
-        objectNode.logic.healthLost >= objectNode.logic.health
+        return true
+        //objectNode.logic.healthLost >= objectNode.logic.health
     }
     
     /// Destroy an object then play his death animation.
     func instantDestroy(_ objectNode: PKObjectNode) {
-        objectNode.logic.healthLost = objectNode.logic.health
+//        objectNode.logic.healthLost = objectNode.logic.health
         if isDestroyed(objectNode) {
             objectNode.physicsBody?.categoryBitMask = .zero
             objectNode.physicsBody?.contactTestBitMask = .zero
@@ -293,7 +294,7 @@ extension GameLogic {
     /// Damage player.
     func damagePlayer(with enemyNode: PKObjectNode) {
         guard let player = scene.player else { return }
-        player.consumeEnergy(amount: enemyNode.logic.damage)
+//        player.consumeEnergy(amount: enemyNode.logic.damage)
         scene.core?.hud?.updateEnergy()
         playerDestroy()
     }

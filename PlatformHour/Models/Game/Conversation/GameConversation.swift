@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Utility_Toolbox
+import UtilityToolbox
 
 struct GameConversation: Codable {
     let name: String
@@ -17,7 +17,7 @@ struct GameConversation: Codable {
     var isEndOfConversation: Bool = false
     
     mutating func moveOnNextDialog() {
-        if dialogs.canGoNext(currentDialogIndex) {
+        if dialogs.canGoNext(from: currentDialogIndex) {
             currentDialogIndex += 1
         } else {
             isEndOfConversation = true
